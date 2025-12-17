@@ -32,6 +32,8 @@ service rpcServer {
 - `option cc_generic_services = true;` 必须设置，否则不会生成服务基类和Stub类，无法使用brpc的RPC功能
 - HTTP请求的message通常为空（如httpRequest、httpRespond），因为HTTP请求的详细信息通过Controller获取，不需要在protobuf中定义
 - service中定义的rpc方法名会直接影响HTTP路径，格式为 `/ServiceName/MethodName`
+- rpcServer由服务器继承并实现虚函数
+- 客户端通过rpcServer\_Stub发起请求
 
 ## **server基本使用**
 
@@ -56,11 +58,11 @@ class rpcServerMy : public namespace::rpcServer {
                   Closure* done) override {
         ClosureGuard done_guard(done);
         Controller* cntl = (Controller*)controller;
-      
+  
         // 获取请求信息
         cntl->http_request().method();
         cntl->request_attachment().to_string();
-      
+  
         // 设置响应
         cntl->response_attachment().append(响应内容);
         cntl->http_response().set_status_code(200);
@@ -75,6 +77,7 @@ class rpcServerMy : public namespace::rpcServer {
 - **Controller类型转换**：在HTTP方法中需要将 `RpcController*` 转换为 `brpc::Controller*`，因为HTTP相关的API都在brpc::Controller中
 - **HTTP响应必须设置状态码**：`set_status_code(200)` 必须调用，否则客户端可能收到默认错误状态码
 - **request和response的生命周期**：这些对象由brpc框架管理，函数返回后会被销毁，不要保存指针或引用
+- **异步调用时：**在实现部分开一个线程将 `ClosureGuard done_guard(done)`放入新线程，进行线程分离就实现了异步
 
 ### **服务器启动流程**
 
@@ -88,7 +91,7 @@ options.idle_timeout_sec = -1;  // -1表示不超时
 
 // 3. 创建服务器并添加服务
 Server server;
-server.AddService(&service, SERVER_DOESNT_OWN_SERVICE);
+server.AddService(&service, brpc::SERVER_DOESNT_OWN_SERVICE);
 
 // 4. 启动服务器
 server.Start(端口, &options);
@@ -151,6 +154,16 @@ if (!cntl.Failed()) {
 ChannelOptions options;
 options.protocol = PROTOCOL_BAIDU_STD;
 
+#if ASYNC
+//以便二次封装用同一个回调包装器统一处理所有 RPC
+using callback_t = std::function<void()>;
+struct Object {
+    callback_t callback;
+};
+#endif
+void Callback(const Object obj) {
+    obj.callback();
+}
 // 2. 初始化Channel
 Channel channel;
 channel.Init(服务器地址, &options);
@@ -159,18 +172,41 @@ channel.Init(服务器地址, &options);
 rpcServer_Stub stub(&channel);
 
 // 4. 准备请求响应对象
-request req;
-response rsp;
+request request;
+response response;
 req.set_parameter(参数值);
 
 // 5. 发起RPC调用
-Controller cntl;
-stub.rpcCall(&cntl, &req, &rsp, nullptr);
 
-// 6. 处理响应
-if (!cntl.Failed()) {
-    rsp.result();  // 获取结果
-}
+#if SYNC
+   //同步
+   Controller cntl;
+   stub.rpcCall(&cntl, &request, &response, nullptr);
+   //处理响应
+   if (!cntl.Failed()) {
+       rsp.result();  // 获取结果
+   }
+
+#else ASYNC
+   //异步
+   Object obj;
+       obj.callback = [=]() {
+           std::unique_ptr<brpc::Controller> cntl_guard(cntl);
+           std::unique_ptr<cal::request> req_guard(request);
+           std::unique_ptr<cal::response> rsp_guard(response);
+           if (cntl_guard->Failed() == true) {
+              std::cout << "rpc请求失败: " << cntl_guard->ErrorText() << std::endl;
+              return ;
+           }
+       	   std::cout << rsp_guard->result() << std::endl;
+       };
+       google::protobuf::Closure* closure = brpc::NewCallback(Callback, obj);
+       stub.Add(cntl, request, response, closure);
+       getchar();
+
+#endif
+
+
 ```
 
 **注意事项：**
@@ -242,11 +278,15 @@ cntl.ErrorText()     // 错误信息
 - `ErrorText()` - 错误信息
 - `ErrorCode()` - 错误码
 
+## **brpc二次封装**
+
+
 ## **注意事项**
 
 1. **ClosureGuard**: 服务端必须使用 `ClosureGuard done_guard(done)` 管理回调
 2. **HTTP路径格式**: `/ServiceName/MethodName`，需与服务端对应
 3. **协议选择**:
+
    - `PROTOCOL_HTTP` - HTTP协议
    - `PROTOCOL_BAIDU_STD` - 标准RPC协议
 4. **服务器选项**: `idle_timeout_sec = -1` 表示连接不超时

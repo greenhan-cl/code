@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-1c285856f632ec86eca5.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "BitPlayer",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "BitPlayer::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-BitPlayer-Debug-d8e3277bbc8f90a7b9f8.json",
+					"name" : "BitPlayer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "BitPlayer_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-BitPlayer_autogen-Debug-4fbabe6b0914b4795974.json",
+					"name" : "BitPlayer_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "BitPlayer_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-BitPlayer_autogen_timestamp_deps-Debug-7a054726648ce4b946e6.json",
+					"name" : "BitPlayer_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug",
+		"source" : "D:/code/project/cpp-microservice-videoplayer/client/BitPlayer"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
