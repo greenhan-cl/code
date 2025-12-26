@@ -1,8 +1,0 @@
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/BitPlayer.dir
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/edit_cache.dir
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/rebuild_cache.dir
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/list_install_components.dir
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/install.dir
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/install/local.dir
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/BitPlayer_autogen_timestamp_deps.dir
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/BitPlayer_autogen.dir

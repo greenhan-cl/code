@@ -1,3 +1,0 @@
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/CMakeScratch/TryCompile-5obxwx/CMakeFiles/cmTC_f4775.dir
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/CMakeScratch/TryCompile-5obxwx/CMakeFiles/edit_cache.dir
-D:/code/project/cpp-microservice-videoplayer/client/BitPlayer/out/build/debug/CMakeFiles/CMakeScratch/TryCompile-5obxwx/CMakeFiles/rebuild_cache.dir
