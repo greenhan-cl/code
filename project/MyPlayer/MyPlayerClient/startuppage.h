@@ -1,13 +1,14 @@
 #ifndef STARTUPPAGE_H
 #define STARTUPPAGE_H
 
-#include <QWidget>
+#include <QDialog>
 
-class startupPage : public QWidget
+class startupPage : public QDialog
 {
     Q_OBJECT
 public:
     explicit startupPage(QWidget *parent = nullptr);
+    void startTimer();
 
 signals:
 };
