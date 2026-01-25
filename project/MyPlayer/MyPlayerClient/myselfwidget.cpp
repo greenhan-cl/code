@@ -23,6 +23,7 @@ MyselfWidget::MyselfWidget(QWidget *parent)
     connect(ui->uploadVideoBtn, &QPushButton::clicked, this,
             &MyselfWidget::uploadViewBtnClicked);
 
+
 }
 
 MyselfWidget::~MyselfWidget()

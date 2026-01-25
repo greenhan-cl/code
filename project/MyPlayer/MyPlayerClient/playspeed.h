@@ -15,6 +15,9 @@ public:
     explicit PlaySpeed(QWidget *parent = nullptr);
     ~PlaySpeed();
 
+signals:
+    void setPlaySpeed(double speed);
+
 private:
     void onPlay05Speed();
     void onPlay10Speed();

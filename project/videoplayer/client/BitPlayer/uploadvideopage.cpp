@@ -14,11 +14,17 @@ UploadVideoPage::UploadVideoPage(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // 获取所有分类数据
+    // 美食视频点播系统 - 固定使用美食分类，隐藏分类下拉框，自动加载标签
     auto dataCenter = model::DataCenter::getInstance();
     auto kindAndTagPtr = dataCenter->getKindAndTagClassPtr();
-    ui->kinds->addItems(kindAndTagPtr->getAllKinds());
-    ui->kinds->setCurrentIndex(-1);
+    
+    // 隐藏分类下拉框（固定为美食分类）
+    ui->kinds->hide();
+    
+    // 自动加载美食分类的标签
+    addTagsByKind("美食");
+    
+    // 如果需要显示分类标签，可以添加一个只读的标签显示"美食"
 
     // 默认情况下，将上传视频的图标隐藏，待视频上传成功之后再显示出来
     ui->downIcon->hide();
@@ -90,7 +96,8 @@ void UploadVideoPage::onCommitBtnClicked()
         videoDesc.photoFileId = coverImageId;
         videoDesc.videoTitle = ui->videoTittle->text();
         videoDesc.videoDesc = ui->plainTextEdit->toPlainText();
-        videoDesc.kind = ui->kinds->currentText();
+        // 美食视频点播系统 - 固定使用美食分类
+        videoDesc.kind = "美食";
         videoDesc.duration = duration;
 
         QList<QPushButton*> tagBtns = ui->tagContent->findChildren<QPushButton*>();
@@ -245,9 +252,9 @@ void UploadVideoPage::resetPage()
     ui->plainTextEdit->setPlainText("");
     ui->imageLabel->setStyleSheet("#imageLabel{border-image : url(:/images/uploadVideoPage/fenmian.png);}");
 
-    // 分类和标签恢复到默认值
-    ui->kinds->setCurrentIndex(-1);
-    addTagsByKind("");
+    // 美食视频点播系统 - 分类和标签恢复到默认值（固定为美食分类）
+    // ui->kinds->setCurrentIndex(-1);  // 不需要重置分类，因为固定为美食
+    addTagsByKind("美食");
 
     videoPath = "";
     isUploadVideoOK = false;

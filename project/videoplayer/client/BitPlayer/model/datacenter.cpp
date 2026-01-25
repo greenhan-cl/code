@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 #include <QFileInfo>
 #include <QSettings>
+#include <QCoreApplication>
 #include "../util.h"
 namespace  model {
 
@@ -30,6 +31,10 @@ DataCenter::DataCenter(QObject *parent)
     // 将JSON中的数据读取到文件
     loadDataFile();
     // 将serverurl交给httpClient
+    LOG()<<"[DataCenter] 初始化完成，设置服务器地址: "<<serverUrl;
+    if(serverUrl.isEmpty()){
+        LOG()<<"[DataCenter] 警告: serverUrl 为空，可能导致网络请求失败！";
+    }
     httpClient.setHTTPURL(serverUrl);
 }
 
@@ -144,18 +149,31 @@ void DataCenter::loadDataFile()
     }
 
     // 加载服务器的配置信息：ip地址 和 端口号----config.ini文件保存在exe所在目录
-    QDir dir(QDir::currentPath());
-    QString configPath = dir.absolutePath();
-    configPath += "/config.ini";
+    // 使用 QCoreApplication::applicationDirPath() 获取 exe 所在目录，而不是当前工作目录
+    QString exeDir = QCoreApplication::applicationDirPath();
+    QString configPath = exeDir + "/config.ini";
+    
+    LOG()<<"尝试从以下路径读取配置文件: "<<configPath;
 
     // 读取ini文件中信息
     QSettings config(configPath, QSettings::IniFormat);
-    config.beginGroup("server");    // 进入sever节
-    serverUrl += "http://";
-    serverUrl += config.value("serverIp").toString();  // 获取服务器id并拼接到url
-    serverUrl += ":";
-    serverUrl += config.value("serverPort").toString();  // 读取服务器端口号并拼接到url
-    LOG()<<serverUrl;
+    config.beginGroup("server");    // 进入server节
+    QString serverIp = config.value("serverIp").toString();
+    QString serverPort = config.value("serverPort").toString();
+    
+    // 如果配置文件中没有找到值，使用默认值
+    if(serverIp.isEmpty()){
+        serverIp = "127.0.0.1";
+        LOG()<<"未找到 serverIp 配置，使用默认值: "<<serverIp;
+    }
+    if(serverPort.isEmpty()){
+        serverPort = "8000";
+        LOG()<<"未找到 serverPort 配置，使用默认值: "<<serverPort;
+    }
+    
+    // 重新构建 serverUrl（而不是追加），确保格式正确
+    serverUrl = "http://" + serverIp + ":" + serverPort;
+    LOG()<<"服务器地址: "<<serverUrl;
 }
 
 const QString &DataCenter::getServerUrl() const

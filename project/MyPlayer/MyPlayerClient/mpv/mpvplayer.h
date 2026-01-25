@@ -8,56 +8,39 @@ class MpvPlayer : public QObject
 {
     Q_OBJECT
 public:
-    explicit MpvPlayer(QWidget* videoRenderWnd = nullptr, QObject *parent = nullptr);
+    explicit MpvPlayer(QObject *parent = nullptr ,QWidget* videoRenderWnd = nullptr);
     ~MpvPlayer();
 
-    // 处理mpv具体的事件
-    void handleMpvEvent(mpv_event* event);
-
-    // 播放视频
+    // 加载视频
     void startPlay(const QString& videoPath);
-
+    // 播放
     void play();
+    //暂停
     void pause();
-
     // 倍速播放
     void setPlaySpeed(double speed);
-
-    // 静音功能
-    void setMute(bool isMute);
-
-    // 音量调节
+    //静音模式
+    void setMute(bool isMuted);
+    // 设置⾳量⼤⼩
     void setVolume(int64_t volume);
+    // 设置视频播放位置
+    void setCurrentPlayPosition(int64_t seconds);
 
-    // seek功能
-    void setCurrentPlayPositon(int64_t seconds);
-
-    // 获取整个视频的当前播放时间
-    int64_t getPlayTime()const;
-
-    // 获取视频首帧图
-    static QString getVideoFirstFrame(const QString& videoPath);
-
-private slots:
+public slots:
     void onMpvEvents();
 
 signals:
-    // 当mpv触发事件时，在回调函数中发射该信号，由用户程序处理mpv的事件
+    //当mpv触发事件时，在回调函数发射信号，由用户程序处理mpv的事件
     void mpvEvents();
-
-    // 通知界面更新当前播放时间
+    //当播放时间发生变化
     void playPositionChanged(int64_t seconds);
 
-    // 整个视频播放结束信号
-    void endOfPlaylist();
-
-    // 总时长变化
-    void durationChanged(int64_t duration);
+private:
+    // 处理mpv的事件
+    void handleMpvEvent(mpv_event* event);
 
 private:
-    mpv_handle* mpv = nullptr;
-    // 保存整个视频的当前播放时间
-    int64_t curPlayTime = 0;
+    mpv_handle* mpv=nullptr;
 };
 
 #endif // MPVPLAYER_H

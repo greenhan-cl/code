@@ -65,6 +65,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         test/TestHttp.h
         confirmdialog.h confirmdialog.cpp
         BitPlayer.rc
+        networkclient.h networkclient.cpp
 
 
 
@@ -98,6 +99,8 @@ target_link_libraries(BitPlayer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 set(MPV_DLL ${CMAKE_CURRENT_SOURCE_DIR}/mpv/dll/libmpv-2.dll) #设置mpv库目录
 target_link_libraries(BitPlayer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${MPV_DLL} Qt6::Network)
+
+
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

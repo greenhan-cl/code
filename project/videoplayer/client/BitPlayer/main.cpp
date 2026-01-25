@@ -8,7 +8,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    // 不使用系统的默认样式，使用Fusion样式来创建元素
+
+
+    //不使用系统的默认样式，使用Fusion样式来创建元素
     a.setStyle(QStyleFactory::create("Fusion"));
 
     QSharedMemory sharedMemoty("BitPlayer");

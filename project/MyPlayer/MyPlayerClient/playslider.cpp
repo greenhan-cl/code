@@ -38,6 +38,9 @@ void PlaySlider::mouseReleaseEvent(QMouseEvent *event)
     if(event->button() == Qt::LeftButton){
         playGrogress = event->pos().x();
         moveSlider();
+
+        // 设置设置播放进度信号
+        emit setPlayProgress(playGrogress / (double)ui->inLine->width());
         return;
     }
     QWidget::mouseReleaseEvent(event);
@@ -64,11 +67,23 @@ void PlaySlider::mouseMoveEvent(QMouseEvent *event)
             playGrogress = maxWidth;
         }
         moveSlider();
+        // 设置设置播放进度信号
+        emit setPlayProgress(playGrogress / (double)maxWidth);
         return;
     }
     QWidget::mouseMoveEvent(event);
 }
 
+//设置进度条
+void PlaySlider::setPlayStep(double stepRatio)
+{
+    int maxWidth = stepRatio*ui->inLine->width();
+    playGrogress = maxWidth;
+    LOG()<<playGrogress;
+    moveSlider();
+}
+
+//移动进度条
 void PlaySlider::moveSlider()
 {
     // 根据playGrogress或⿏标的x坐标位置设置outLine的geometry，以突出播放进度

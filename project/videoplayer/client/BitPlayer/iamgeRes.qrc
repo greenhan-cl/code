@@ -58,5 +58,7 @@
         <file>images/uploadVideoPage/wenjian.png</file>
         <file>images/uploadVideoPage/xiala.png</file>
         <file>images/uploadVideoPage/xuanze.png</file>
+        <file>images/MyPlayer.ico</file>
+        <file>images/startupPage/MyPlayer.png</file>
     </qresource>
 </RCC>

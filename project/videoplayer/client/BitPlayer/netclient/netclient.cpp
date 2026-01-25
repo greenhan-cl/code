@@ -31,8 +31,13 @@ QNetworkReply *NetClient::sendHttpRequest(const QString &resourcePath, QJsonObje
 {
     reqBody["requestId"] = makeRequestId();
 
+    QString fullUrl = HTTP_URL + resourcePath;
+    LOG()<<"[NetClient] 发送请求，完整URL: "<<fullUrl;
+    LOG()<<"[NetClient] HTTP_URL = "<<HTTP_URL;
+    LOG()<<"[NetClient] resourcePath = "<<resourcePath;
+
     QNetworkRequest httpReq;
-    httpReq.setUrl(HTTP_URL + resourcePath);
+    httpReq.setUrl(fullUrl);
     httpReq.setHeader(QNetworkRequest::ContentTypeHeader, "application/json;charset=utf8");
 
     // 2. 发送请求

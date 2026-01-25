@@ -37,13 +37,13 @@ void MyPlayer::initUI()
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     //设置窗口图标
-    //setWindowIcon(QIcon(":/images/MyPlayer.ico"));
-    QIcon windows_ico(":/images/bitPlayer.ico");
-    if (windows_ico.isNull() == true) {
-        qDebug() << "Windows icon is nullptr";
-    }
-    this->setWindowIcon(windows_ico);
-    QApplication::setWindowIcon(windows_ico);
+    setWindowIcon(QIcon(":/images/MyPlayer.ico"));
+    // QIcon windows_ico(":/images/bitPlayer.ico");
+    // if (windows_ico.isNull() == true) {
+    //     qDebug() << "Windows icon is nullptr";
+    // }
+    // this->setWindowIcon(windows_ico);
+    // QApplication::setWindowIcon(windows_ico);
 
     //添加窗口阴影
     QGraphicsDropShadowEffect* dropShow =new QGraphicsDropShadowEffect(this);

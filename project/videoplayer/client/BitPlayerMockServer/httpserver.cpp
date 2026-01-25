@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDir>
+#include <QMap>
 #include "util.h"
 
 HttpServer* HttpServer::instance = nullptr;
@@ -413,6 +414,7 @@ QHttpServerResponse HttpServer::allVideoList(const QHttpServerRequest &request)
     const QJsonObject& jsonReq = docReq.object();
     LOG()<<"[allVideoList] 收到 allVideoList 请求， requestId = "<<jsonReq["requestId"].toString();
 
+    // 美食视频点播系统 - allVideoList 只返回美食分类的视频
     // 2. 构造响应体
     QJsonObject jsonResp;
     jsonResp["requestId"] = jsonReq["requestId"].toString();
@@ -426,27 +428,46 @@ QHttpServerResponse HttpServer::allVideoList(const QHttpServerRequest &request)
     int videoId = 10000;
     int userId = 10000;
     int resourceId = 10000;
+    
+    // 美食相关的标题和描述模板
+    QList<QString> foodTitles = {
+        "【美食探店】这家餐厅的招牌菜真的绝了",
+        "【美食教程】教你做出地道的家常菜",
+        "【美食分享】今天发现了一家超好吃的小店",
+        "【美食测评】测评网上很火的网红美食",
+        "【美食记录】记录今天的美食之旅",
+        "【水果推荐】这些水果真的太好吃啦",
+        "【海鲜大餐】新鲜海鲜，原汁原味"
+    };
+    
+    QList<QString> foodDescs = {
+        "今天来到这家网红餐厅，环境很不错，招牌菜味道真的很赞，推荐大家来试试~",
+        "教大家做一道简单的家常菜，步骤详细，小白也能学会，赶紧收藏吧！",
+        "和朋友一起来这家小店，虽然店面不大，但是味道真的很不错，性价比很高！",
+        "测评一下网上很火的这款美食，看看是不是真的那么好吃，结果...",
+        "今天的美食之旅，去了好几家店，发现了不少好吃的，记录下来分享给大家！",
+        "推荐几款当季水果，新鲜又好吃，营养价值也很高，一定要试试！",
+        "新鲜捕捞的海鲜，原汁原味，口感真的很棒，喜欢吃海鲜的朋友不要错过！"
+    };
+    
     QJsonArray videoLists;
     for(int i = 0; i < pageCount; ++i){
         QJsonObject videoJsonObj;
         videoJsonObj["videoId"] = QString::number(videoId++);
         videoJsonObj["userId"] = QString::number(userId++);
         videoJsonObj["userAvatarId"] = QString::number(resourceId++);
-        videoJsonObj["nickname"] = "用户昵称";
+        videoJsonObj["nickname"] = "美食达人";
         videoJsonObj["photoFileId"] = QString::number(resourceId++);
         videoJsonObj["videoFileId"] = QString::number(resourceId++);
-        videoJsonObj["likeCount"] = 1234;
-        videoJsonObj["playCount"] = 3456;
+        videoJsonObj["likeCount"] = 1234 + i * 100;
+        videoJsonObj["playCount"] = 3456 + i * 500;
         videoJsonObj["videoSize"] = 10240;
-        videoJsonObj["videoDesc"] = "【北京旅游攻略】一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩~";
-        videoJsonObj["videoTitle"] = "【北京旅游攻略】一条视频告诉你去了北京该怎么玩";
-        videoJsonObj["videoDuration"] = 10;
+        
+        // 使用美食相关的描述和标题
+        int index = i % foodTitles.size();
+        videoJsonObj["videoTitle"] = foodTitles[index];
+        videoJsonObj["videoDesc"] = foodDescs[index];
+        videoJsonObj["videoDuration"] = 10 + i % 20;
         videoJsonObj["videoUpTime"] = "9-16 12:28:58";
 
         videoLists.append(videoJsonObj);
@@ -469,12 +490,33 @@ QHttpServerResponse HttpServer::typeVideoList(const QHttpServerRequest &request)
     QJsonDocument docReq = QJsonDocument::fromJson(request.body());
     const QJsonObject& jsonReq = docReq.object();
     LOG()<<"[typeVideoList] 收到 typeVideoList 请求， requestId = "<<jsonReq["requestId"].toString();
+    
+    // 美食视频点播系统 - 验证分类ID是否为美食分类（10001）
+    int videoTypeId = jsonReq["videoTypeId"].toInt();
+    LOG()<<"[typeVideoList] videoTypeId = "<<videoTypeId;
+    
+    const int FOOD_KIND_ID = 10001; // 美食分类ID
 
     // 2. 构造响应体
     QJsonObject jsonResp;
     jsonResp["requestId"] = jsonReq["requestId"].toString();
     jsonResp["errorCode"] = 0;
     jsonResp["errorMsg"] = "";
+
+    // 美食视频点播系统 - 如果分类ID不是美食分类，返回空列表
+    if(videoTypeId != FOOD_KIND_ID){
+        LOG()<<"[typeVideoList] 分类ID不是美食分类，返回空列表";
+        QJsonObject resultJsonObj;
+        resultJsonObj["totalCount"] = 0;
+        resultJsonObj["videoList"] = QJsonArray();
+        jsonResp["result"] = resultJsonObj;
+        
+        QJsonDocument docResp;
+        docResp.setObject(jsonResp);
+        QHttpServerResponse httpResp(docResp.toJson(), QHttpServerResponse::StatusCode::Ok);
+        httpResp.setHeader("Content-Type", "application/json; charset=utf-8");
+        return httpResp;
+    }
 
     int pageCount = jsonReq["pageCount"].toInt();
     pageCount = 10;
@@ -484,27 +526,46 @@ QHttpServerResponse HttpServer::typeVideoList(const QHttpServerRequest &request)
     int videoId = 20000;
     int userId = 20000;
     int resourceId = 20000;
+    
+    // 美食相关的标题和描述模板
+    QList<QString> foodTitles = {
+        "【美食探店】这家餐厅的招牌菜真的绝了",
+        "【美食教程】教你做出地道的家常菜",
+        "【美食分享】今天发现了一家超好吃的小店",
+        "【美食测评】测评网上很火的网红美食",
+        "【美食记录】记录今天的美食之旅",
+        "【水果推荐】这些水果真的太好吃啦",
+        "【海鲜大餐】新鲜海鲜，原汁原味"
+    };
+    
+    QList<QString> foodDescs = {
+        "今天来到这家网红餐厅，环境很不错，招牌菜味道真的很赞，推荐大家来试试~",
+        "教大家做一道简单的家常菜，步骤详细，小白也能学会，赶紧收藏吧！",
+        "和朋友一起来这家小店，虽然店面不大，但是味道真的很不错，性价比很高！",
+        "测评一下网上很火的这款美食，看看是不是真的那么好吃，结果...",
+        "今天的美食之旅，去了好几家店，发现了不少好吃的，记录下来分享给大家！",
+        "推荐几款当季水果，新鲜又好吃，营养价值也很高，一定要试试！",
+        "新鲜捕捞的海鲜，原汁原味，口感真的很棒，喜欢吃海鲜的朋友不要错过！"
+    };
+    
     QJsonArray videoLists;
     for(int i = 0; i < pageCount; ++i){
         QJsonObject videoJsonObj;
         videoJsonObj["videoId"] = QString::number(videoId++);
         videoJsonObj["userId"] = QString::number(userId++);
         videoJsonObj["userAvatarId"] = QString::number(resourceId++);
-        videoJsonObj["nickname"] = "用户昵称";
+        videoJsonObj["nickname"] = "美食达人";
         videoJsonObj["photoFileId"] = QString::number(resourceId++);
         videoJsonObj["videoFileId"] = QString::number(resourceId++);
-        videoJsonObj["likeCount"] = 1234;
-        videoJsonObj["playCount"] = 23456;
+        videoJsonObj["likeCount"] = 1234 + i * 100;
+        videoJsonObj["playCount"] = 23456 + i * 500;
         videoJsonObj["videoSize"] = 10240;
-        videoJsonObj["videoDesc"] = "【北京旅游攻略】一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩~";
-        videoJsonObj["videoTitle"] = "【北京旅游攻略】一条视频告诉你去了北京该怎么玩";
-        videoJsonObj["videoDuration"] = 10;
+        
+        // 使用美食相关的描述和标题
+        int index = i % foodTitles.size();
+        videoJsonObj["videoTitle"] = foodTitles[index];
+        videoJsonObj["videoDesc"] = foodDescs[index];
+        videoJsonObj["videoDuration"] = 10 + i % 20;
         videoJsonObj["videoUpTime"] = "9-16 12:28:58";
 
         videoLists.append(videoJsonObj);
@@ -527,12 +588,35 @@ QHttpServerResponse HttpServer::tagVideoList(const QHttpServerRequest &request)
     QJsonDocument docReq = QJsonDocument::fromJson(request.body());
     const QJsonObject& jsonReq = docReq.object();
     LOG()<<"[tagVideoList] 收到 tagVideoList 请求， requestId = "<<jsonReq["requestId"].toString();
+    
+    // 美食视频点播系统 - 验证标签ID是否为美食标签（10008-10014）
+    int videoTag = jsonReq["videoTag"].toInt();
+    LOG()<<"[tagVideoList] videoTag = "<<videoTag;
+    
+    // 美食标签ID范围：10008-10014（探店、教程、分享、测评、记录、水果、海鲜）
+    const int FOOD_TAG_MIN = 10008;
+    const int FOOD_TAG_MAX = 10014;
 
     // 2. 构造响应体
     QJsonObject jsonResp;
     jsonResp["requestId"] = jsonReq["requestId"].toString();
     jsonResp["errorCode"] = 0;
     jsonResp["errorMsg"] = "";
+
+    // 美食视频点播系统 - 如果标签ID不在美食标签范围内，返回空列表
+    if(videoTag < FOOD_TAG_MIN || videoTag > FOOD_TAG_MAX){
+        LOG()<<"[tagVideoList] 标签ID不是美食标签，返回空列表";
+        QJsonObject resultJsonObj;
+        resultJsonObj["totalCount"] = 0;
+        resultJsonObj["videoList"] = QJsonArray();
+        jsonResp["result"] = resultJsonObj;
+        
+        QJsonDocument docResp;
+        docResp.setObject(jsonResp);
+        QHttpServerResponse httpResp(docResp.toJson(), QHttpServerResponse::StatusCode::Ok);
+        httpResp.setHeader("Content-Type", "application/json; charset=utf-8");
+        return httpResp;
+    }
 
     int pageCount = jsonReq["pageCount"].toInt();
     pageCount = 13;
@@ -542,27 +626,38 @@ QHttpServerResponse HttpServer::tagVideoList(const QHttpServerRequest &request)
     int videoId = 30000;
     int userId = 30000;
     int resourceId = 30000;
+    
+    // 根据标签ID生成对应标签的视频标题和描述
+    // 10008:探店, 10009:教程, 10010:分享, 10011:测评, 10012:记录, 10013:水果, 10014:海鲜
+    QMap<int, QString> tagNames = {
+        {10008, "探店"},
+        {10009, "教程"},
+        {10010, "分享"},
+        {10011, "测评"},
+        {10012, "记录"},
+        {10013, "水果"},
+        {10014, "海鲜"}
+    };
+    
+    QString tagName = tagNames.value(videoTag, "美食");
+    
     QJsonArray videoLists;
     for(int i = 0; i < pageCount; ++i){
         QJsonObject videoJsonObj;
         videoJsonObj["videoId"] = QString::number(videoId++);
         videoJsonObj["userId"] = QString::number(userId++);
         videoJsonObj["userAvatarId"] = QString::number(resourceId++);
-        videoJsonObj["nickname"] = "用户昵称";
+        videoJsonObj["nickname"] = "美食达人";
         videoJsonObj["photoFileId"] = QString::number(resourceId++);
         videoJsonObj["videoFileId"] = QString::number(resourceId++);
-        videoJsonObj["likeCount"] = 1234;
-        videoJsonObj["playCount"] = 23456;
+        videoJsonObj["likeCount"] = 1234 + i * 100;
+        videoJsonObj["playCount"] = 23456 + i * 500;
         videoJsonObj["videoSize"] = 10240;
-        videoJsonObj["videoDesc"] = "【北京旅游攻略】一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩~";
-        videoJsonObj["videoTitle"] = "【北京旅游攻略】一条视频告诉你去了北京该怎么玩";
-        videoJsonObj["videoDuration"] = 10;
+        
+        // 根据标签生成对应的标题和描述
+        videoJsonObj["videoTitle"] = QString("【美食%1】第%2期：美食相关内容分享").arg(tagName).arg(i + 1);
+        videoJsonObj["videoDesc"] = QString("这是一个关于美食%1的视频，内容丰富，值得一看~").arg(tagName);
+        videoJsonObj["videoDuration"] = 10 + i % 20;
         videoJsonObj["videoUpTime"] = "9-16 12:28:58";
 
         videoLists.append(videoJsonObj);
@@ -585,8 +680,10 @@ QHttpServerResponse HttpServer::keyVideoList(const QHttpServerRequest &request)
     QJsonDocument docReq = QJsonDocument::fromJson(request.body());
     const QJsonObject& jsonReq = docReq.object();
     LOG()<<"[keyVideoList] 收到 keyVideoList 请求， requestId = "<<jsonReq["requestId"].toString();
-    LOG()<<jsonReq["searchKey"].toString();
+    QString searchKey = jsonReq["searchKey"].toString();
+    LOG()<<"[keyVideoList] searchKey = "<<searchKey;
 
+    // 美食视频点播系统 - 搜索时只返回美食相关的视频
     // 2. 构造响应体
     QJsonObject jsonResp;
     jsonResp["requestId"] = jsonReq["requestId"].toString();
@@ -594,34 +691,58 @@ QHttpServerResponse HttpServer::keyVideoList(const QHttpServerRequest &request)
     jsonResp["errorMsg"] = "";
 
     int pageCount = jsonReq["pageCount"].toInt();
-    pageCount = 1;
+    pageCount = 20; // 搜索时返回更多结果
     QJsonObject resultJsonObj;
-    resultJsonObj["totalCount"] = 100;
+    resultJsonObj["totalCount"] = 50;
 
     int videoId = 40000;
     int userId = 40000;
     int resourceId = 40000;
+    
+    // 美食相关的标题模板，根据搜索关键词生成
+    QList<QString> foodTitles = {
+        "【美食探店】" + searchKey + " - 这家餐厅值得一试",
+        "【美食教程】" + searchKey + " 制作方法详解",
+        "【美食分享】关于" + searchKey + "的美食体验",
+        "【美食测评】" + searchKey + " 真实测评",
+        "【美食记录】" + searchKey + " 美食之旅",
+        "【水果推荐】" + searchKey + " 水果选购指南",
+        "【海鲜大餐】" + searchKey + " 海鲜料理分享"
+    };
+    
+    QList<QString> foodDescs = {
+        "今天来到这家餐厅，特别推荐" + searchKey + "这道菜，味道真的很赞！",
+        "教大家如何制作" + searchKey + "，步骤详细，简单易学，赶紧试试吧！",
+        "分享一下关于" + searchKey + "的美食体验，真的太好吃了~",
+        "真实测评" + searchKey + "，看看是不是真的那么好吃，结果...",
+        "记录今天的美食之旅，特别推荐" + searchKey + "，值得一试！",
+        "推荐" + searchKey + "这款水果，新鲜又好吃，营养价值也很高！",
+        "新鲜的海鲜料理，今天特别推荐" + searchKey + "，口感真的很棒！"
+    };
+    
     QJsonArray videoLists;
     for(int i = 0; i < pageCount; ++i){
         QJsonObject videoJsonObj;
         videoJsonObj["videoId"] = QString::number(videoId++);
         videoJsonObj["userId"] = QString::number(userId++);
         videoJsonObj["userAvatarId"] = QString::number(resourceId++);
-        videoJsonObj["nickname"] = "用户昵称";
+        videoJsonObj["nickname"] = "美食达人";
         videoJsonObj["photoFileId"] = QString::number(resourceId++);
         videoJsonObj["videoFileId"] = QString::number(resourceId++);
-        videoJsonObj["likeCount"] = 1234;
-        videoJsonObj["playCount"] = 23456;
+        videoJsonObj["likeCount"] = 1234 + i * 50;
+        videoJsonObj["playCount"] = 23456 + i * 200;
         videoJsonObj["videoSize"] = 10240;
-        videoJsonObj["videoDesc"] = "【北京旅游攻略】一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩一条视频告诉你去了北京该怎么玩"
-                                    "一条视频告诉你去了北京该怎么玩~";
-        videoJsonObj["videoTitle"] = "【北京旅游攻略】一条视频告诉你去了北京该怎么玩";
-        videoJsonObj["videoDuration"] = 10;
+        
+        // 使用美食相关的描述和标题，如果搜索关键词为空，使用默认标题
+        if(searchKey.isEmpty()){
+            videoJsonObj["videoTitle"] = QString("【美食搜索】第%1期：美食相关内容").arg(i + 1);
+            videoJsonObj["videoDesc"] = "这是一个关于美食的视频，内容丰富，值得一看~";
+        } else {
+            int index = i % foodTitles.size();
+            videoJsonObj["videoTitle"] = foodTitles[index];
+            videoJsonObj["videoDesc"] = foodDescs[index];
+        }
+        videoJsonObj["videoDuration"] = 10 + i % 20;
         videoJsonObj["videoUpTime"] = "9-16 12:28:58";
 
         videoLists.append(videoJsonObj);

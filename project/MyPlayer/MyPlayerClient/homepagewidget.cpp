@@ -2,6 +2,7 @@
 #include "ui_homepagewidget.h"
 #include "util.h"
 #include "videobox.h"
+#include "./model/datacenter.h"
 
 HomePageWidget::HomePageWidget(QWidget *parent)
     : QWidget(parent)
@@ -25,35 +26,17 @@ HomePageWidget::~HomePageWidget()
 
 void HomePageWidget::initKindsAndTags()
 {
-    // 创建分类按钮
     QPushButton *kindBtn = buildSelectBtn(ui->classify, "#3ECEFF", "分类");
     ui->classifyHLayout->addWidget(kindBtn);
-    //创建分类
-    QList<QString> kinds = {"分享", "教程", "探店", "测评", "记录", "专题", "食材", "杂谈"};
-    //创建分类按钮
-    for (auto &kind : kinds)
-    {
-        QPushButton *kindBtn = buildSelectBtn(ui->classify, "#222222", kind);
-        ui->classifyHLayout->addWidget(kindBtn);
-        // 按钮点击后修改按钮上颜⾊
-        connect(kindBtn, &QPushButton::clicked, this, [=](){
-            onKindBtnClicked(kindBtn);
-        });
-    }
+    // 到数据中⼼中获取所有分类数据
+    auto dataCenter = model::DataCenter::getInstance();
+    auto kindAndTagPtr = dataCenter->getKindAndTagsClassPtr();
+    auto kinds = kindAndTagPtr->getAllKinds();
 
     ui->classifyHLayout->setSpacing(8);
 
-    // 分类和该分类下所有标签映射
-    tags = {
-        {"分享", {"美食分享", "私藏推荐", "外卖分享", "回购清单"}},
-        {"教程", {"家常菜", "川菜", "粤菜", "湘菜", "简减脂餐", "糕点"}},
-        {"探店", {"餐厅探店", "路边小吃", "夜市", "老字号", "新店体验"}},
-        {"测评", {"性价比", "外卖测评", "零食测评", "餐厅对比"}},
-        {"记录", {"吃播", "一日三餐", "美食Vlog", "宵夜时间"}},
-        {"专题", {"地方美食", "节日美食", "时令美食", "美食排行邦"}},
-        {"食材", {"素食", "肉类", "海鲜", "时令蔬果", "半成品"}},
-        {"杂谈", {"吃货感悟", "饮食习惯", "真香现场", "踩坑经历"}}};
-    resetTags(tags["分享"]);
+    // 获取分类下标签，默认显⽰第0个分类
+    auto tags = kindAndTagPtr->getTagsByKind(kinds[0]).keys();
 }
 
 void HomePageWidget::initVideos()
@@ -144,7 +127,9 @@ void HomePageWidget::onKindBtnClicked(QPushButton *clickedkindBtn)
         delete label;
     }
     // 根据当前选中分类，重新添加标签
-    resetTags(tags[clickedkindBtn->text()]);
+    auto dataCenter = model::DataCenter::getInstance();
+    auto kindAndTagPtr = dataCenter->getKindAndTagsClassPtr();
+    resetTags(kindAndTagPtr->getTagsByKind(clickedkindBtn->text()).keys());
 }
 
 void HomePageWidget::onTagBtnClicked(QPushButton *clickedLabelBtn)

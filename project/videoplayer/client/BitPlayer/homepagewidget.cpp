@@ -28,27 +28,19 @@ HomePageWidget::~HomePageWidget()
 
 void HomePageWidget::initKindsAndTags()
 {
-    // 分类
+    // 美食视频点播系统 - 固定使用美食分类，隐藏分类按钮，直接显示标签作为主要筛选维度
     auto dataCenter = model::DataCenter::getInstance();
     auto kindAndTagPtr = dataCenter->getKindAndTagClassPtr();
-    auto kinds = kindAndTagPtr->getAllKinds();
-
-    // 创建分类按钮
-    QPushButton* kindBtn = buildSelectBtn(ui->classifys, "#3ECEFF", "分类");
-    kindBtn->setObjectName("kindBtn");
-    ui->classifyHLayout->addWidget(kindBtn);
-    connect(kindBtn, &QPushButton::clicked, this, &HomePageWidget::onKindsBtnClicked);
-
-    // 具体的分类按钮
-    for(auto& kind : kinds){
-        QPushButton* kindItemBtn = buildSelectBtn(ui->classifys, "#222222", kind);
-        ui->classifyHLayout->addWidget(kindItemBtn);
-
-        // 给分类按钮绑定槽函数
-        connect(kindItemBtn, &QPushButton::clicked, this, [=]{
-            onKindBtnClicked(kindItemBtn);
-        });
-    }
+    
+    // 设置当前分类为"美食"
+    curKind = "美食";
+    
+    // 隐藏分类按钮区域（因为只有美食一个分类，不需要显示）
+    ui->classifys->hide();
+    
+    // 默认显示美食分类下的所有标签（这些标签作为主要筛选维度）
+    auto tags = kindAndTagPtr->getTagsByKind(curKind).keys();
+    resetTags(tags);
 
     ui->classifyHLayout->setSpacing(8);
 }
@@ -122,11 +114,13 @@ void HomePageWidget::initVideos()
     ui->videoGLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     ui->videoScroll->verticalScrollBar()->setValue(0);
 
-    // 初始情况下，应该从服务器获取所有视频列表中的 第一页的视频，默认获取20个视频
-    // 默认获取的是所有视频列表
-    videoListStyle = AllStyle;
+    // 美食视频点播系统 - 初始情况下，默认获取美食分类下的所有视频
+    videoListStyle = KindStyle;
+    curKind = "美食";
+    curTag = "";
     auto dataCenter = model::DataCenter::getInstance();
-    dataCenter->getAllVideoListAsync();
+    auto kindAndTagPtr = dataCenter->getKindAndTagClassPtr();
+    dataCenter->getAllVideoListInKindAsync(kindAndTagPtr->getKindId(curKind));
 }
 
 void HomePageWidget::connectSignalAndSlot()
@@ -252,6 +246,7 @@ void HomePageWidget::onTagBtnClicked(QPushButton *clickedTagBtn)
 
 void HomePageWidget::onKindsBtnClicked()
 {
+    // 美食视频点播系统 - 分类按钮点击时，获取美食分类下的所有视频（显示所有标签对应的视频）
     // 只展示分类按钮不展示标签按钮，将所有标签按钮删除掉
     QList<QPushButton*> tagBtns = ui->labels->findChildren<QPushButton*>();
     for(auto& tagBtn : tagBtns){
@@ -262,27 +257,22 @@ void HomePageWidget::onKindsBtnClicked()
     // 先清空界面上的旧视频数据
     clearLayoutVidoes();
 
-    // 将所有分类按钮样式设置为未点击样式
-    QList<QPushButton*> kindBtns = ui->classifys->findChildren<QPushButton*>();
-    for(auto& kindBtn : kindBtns){
-        kindBtn->setStyleSheet("color : #222222;");
-    }
-    // 让文本为分类的按钮高亮
-    QPushButton* kind = ui->classifys->findChild<QPushButton*>("kindBtn");
-    kind->setStyleSheet("background-color : #F1FDFF;"
-                        "color : #3ECEFF;");
-
-    // 分类按钮点击，获取所有视频列表
-    curKind = "";
+    // 美食视频点播系统 - 固定使用美食分类
+    curKind = "美食";
     curTag = "";
-    videoListStyle = AllStyle;
+    videoListStyle = KindStyle;
     auto dataCenter = model::DataCenter::getInstance();
-    dataCenter->getAllVideoListAsync();
+    auto kindAndTagPtr = dataCenter->getKindAndTagClassPtr();
+    dataCenter->getAllVideoListInKindAsync(kindAndTagPtr->getKindId(curKind));
+    
+    // 重新显示标签按钮
+    auto tags = kindAndTagPtr->getTagsByKind(curKind).keys();
+    resetTags(tags);
 }
 
 void HomePageWidget::onTagsBtnClicked()
 {
-    // 文本为标签的按钮点击，获取该标签所在分类下的是有视频列表
+    // 美食视频点播系统 - 文本为标签的按钮点击，获取美食分类下该标签对应的视频列表
     // 先清空界面上的旧视频数据
     clearLayoutVidoes();
 
@@ -295,7 +285,8 @@ void HomePageWidget::onTagsBtnClicked()
     tag->setStyleSheet("background-color : #F1FDFF;"
                        "color : #3ECEFF;");
 
-    // 获取分类视频列表
+    // 美食视频点播系统 - 获取美食分类下的所有视频（不限定标签）
+    curKind = "美食";
     curTag = "";
     videoListStyle = KindStyle;
     auto dataCenter = model::DataCenter::getInstance();
@@ -314,12 +305,20 @@ void HomePageWidget::onRefreshBtnClicked()
     // 获取之前先将界面上旧的视频内容清空掉
     clearLayoutVidoes();
 
-    // 重新到服务器上去获取视频
+    // 美食视频点播系统 - 重新到服务器上去获取视频（确保使用美食分类）
     auto dataCenter = model::DataCenter::getInstance();
     auto kindAndTagPtr = dataCenter->getKindAndTagClassPtr();
+    
+    // 确保curKind为美食
+    if(curKind.isEmpty()){
+        curKind = "美食";
+    }
+    
     switch (videoListStyle) {
     case AllStyle:
-        dataCenter->getAllVideoListAsync();
+        // 美食视频点播系统 - AllStyle也使用美食分类
+        videoListStyle = KindStyle;
+        dataCenter->getAllVideoListInKindAsync(kindAndTagPtr->getKindId("美食"));
         break;
     case KindStyle:
         dataCenter->getAllVideoListInKindAsync(kindAndTagPtr->getKindId(curKind));
@@ -328,6 +327,7 @@ void HomePageWidget::onRefreshBtnClicked()
         dataCenter->getAllVideoListInTagAsync(kindAndTagPtr->getTagId(curKind, curTag));
         break;
     case SearchStyle:
+        // 搜索时也需要限制在美食分类，但这里保持原有逻辑，由后端处理
         dataCenter->getAllVideoListSearchTextAsync(ui->search->text());
         break;
     default:
@@ -355,18 +355,9 @@ void HomePageWidget::onSearchVideos(const QString &searchText)
     // 先清空界面上的旧视频数据
     clearLayoutVidoes();
 
-    // 清空分类和标签的标记
-    curKind = "";
+    // 美食视频点播系统 - 搜索时保持美食分类
+    curKind = "美食";
     curTag = "";
-
-    // 重置所有分类按钮状态，并选中文本为分类的按钮
-    QList<QPushButton*> kindBtns = ui->classifys->findChildren<QPushButton*>();
-    for(auto& kindBtn : kindBtns){
-        kindBtn->setStyleSheet("color : #222222;");
-    }
-    QPushButton* kind = ui->classifys->findChild<QPushButton*>("kindBtn");
-    kind->setStyleSheet("background-color : #F1FDFF;"
-                        "color : #3ECEFF");
 
     // 重置所有标签按钮状态，并选中文本为标签的按钮
     QList<QPushButton*> tagBtns = ui->labels->findChildren<QPushButton*>();
@@ -377,7 +368,7 @@ void HomePageWidget::onSearchVideos(const QString &searchText)
     tag->setStyleSheet("background-color : #F1FDFF;"
                         "color : #3ECEFF");
 
-    // 向服务器获取搜索视频列表
+    // 向服务器获取搜索视频列表（后端需要限制在美食分类）
     videoListStyle = SearchStyle;
     auto dataCenter = model::DataCenter::getInstance();
     dataCenter->getAllVideoListSearchTextAsync(searchText);
@@ -392,12 +383,20 @@ void HomePageWidget::OnScrollBarValueChanged(int value)
         return;
     }
 
-    // 当垂直滚动条滑动到最下面时，自动获取下一页视频
+    // 美食视频点播系统 - 当垂直滚动条滑动到最下面时，自动获取下一页视频
     auto kindAndTagPtr = dataCenter->getKindAndTagClassPtr();
+    
+    // 确保curKind为美食
+    if(curKind.isEmpty()){
+        curKind = "美食";
+    }
+    
     if(value == ui->videoScroll->verticalScrollBar()->maximum()){
         switch (videoListStyle) {
         case AllStyle:
-            dataCenter->getAllVideoListAsync();
+            // 美食视频点播系统 - AllStyle也使用美食分类
+            videoListStyle = KindStyle;
+            dataCenter->getAllVideoListInKindAsync(kindAndTagPtr->getKindId("美食"));
             break;
         case KindStyle:
             dataCenter->getAllVideoListInKindAsync(kindAndTagPtr->getKindId(curKind));
@@ -406,6 +405,7 @@ void HomePageWidget::OnScrollBarValueChanged(int value)
             dataCenter->getAllVideoListInTagAsync(kindAndTagPtr->getTagId(curKind, curTag));
             break;
         case SearchStyle:
+            // 搜索时也需要限制在美食分类，但这里保持原有逻辑，由后端处理
             dataCenter->getAllVideoListSearchTextAsync(ui->search->text());
             break;
         default:

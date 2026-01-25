@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 project(MyPlayerClient LANGUAGES CXX)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
 
 qt_standard_project_setup()
 
@@ -46,6 +47,8 @@ qt_add_executable(MyPlayerClient
     paginator.h paginator.cpp
     toast.h toast.cpp
     mpv/mpv/render_gl.h mpv/mpv/stream_cb.h mpv/client.h mpv/mpvplayer.cpp mpv/mpvplayer.h mpv/render.h mpv/render_gl.h mpv/stream_cb.h
+    model/datacenter.h model/datacenter.cpp
+    model/data.h model/data.cpp
 )
 
 target_link_libraries(MyPlayerClient
@@ -53,6 +56,10 @@ target_link_libraries(MyPlayerClient
         Qt::Core
         Qt::Widgets
 )
+
+set(MPV_DLL ${CMAKE_CURRENT_SOURCE_DIR}/mpv/dll/libmpv-2.dll) #设置mpv库⽬录
+target_link_libraries(MyPlayerClient PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+${MPV_DLL} Qt6::Network))
 
 # 让 uic 生成的 `#include <pageswitchbutton.h>` 能找到工程目录下的头文件
 target_include_directories(MyPlayerClient PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
