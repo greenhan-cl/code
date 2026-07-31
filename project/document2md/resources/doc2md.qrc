@@ -1,0 +1,18 @@
+<RCC>
+ <qresource prefix="/doc2md">
+  <file alias="styles/light.qss">styles/light.qss</file>
+  <file alias="images/app.png">images/icon.png</file>
+  <file alias="images/file.png">images/文件.png</file>
+  <file alias="images/settings.png">images/设置.png</file>
+  <file alias="icons/upload.svg">icons/upload.svg</file>
+  <file alias="icons/empty-state.svg">icons/empty-state.svg</file>
+  <file alias="icons/settings.svg">icons/settings.svg</file>
+  <file alias="icons/about.svg">icons/about.svg</file>
+  <file alias="icons/play.svg">icons/play.svg</file>
+  <file alias="icons/preview.svg">icons/preview.svg</file>
+  <file alias="icons/open-default.svg">icons/open-default.svg</file>
+  <file alias="icons/open-with.svg">icons/open-with.svg</file>
+  <file alias="icons/rename.svg">icons/rename.svg</file>
+  <file alias="icons/remove.svg">icons/remove.svg</file>
+ </qresource>
+</RCC>
