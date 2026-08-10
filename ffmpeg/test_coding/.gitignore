@@ -1,0 +1,14 @@
+/.vs/
+/build/
+/out/
+/output/
+/CMakeUserPresets.json
+
+# MSVC and linker outputs
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.exp
+*.lib
