@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 
 /**
  * @file
- * timestamp utils, mostly useful for debugging/logging purposes
+ * 时间戳工具，主要用于调试和日志记录
  */
 
 #ifndef AVUTIL_TIMESTAMP_H
@@ -33,12 +33,11 @@
 #define AV_TS_MAX_STRING_SIZE 32
 
 /**
- * Fill the provided buffer with a string containing a timestamp
- * representation.
+ * 使用包含时间戳表示形式的字符串填充给定缓冲区。
  *
- * @param buf a buffer with size in bytes of at least AV_TS_MAX_STRING_SIZE
- * @param ts the timestamp to represent
- * @return the buffer in input
+ * @param buf 大小至少为 AV_TS_MAX_STRING_SIZE 字节的缓冲区
+ * @param ts 要表示的时间戳
+ * @return 输入的缓冲区
  */
 static inline char *av_ts_make_string(char *buf, int64_t ts)
 {
@@ -48,25 +47,22 @@ static inline char *av_ts_make_string(char *buf, int64_t ts)
 }
 
 /**
- * Convenience macro, the return value should be used only directly in
- * function arguments but never stand-alone.
+ * 便捷宏。返回值只能直接用于函数参数，不能单独使用。
  */
 #define av_ts2str(ts) av_ts_make_string((char[AV_TS_MAX_STRING_SIZE]){0}, ts)
 
 /**
- * Fill the provided buffer with a string containing a timestamp time
- * representation.
+ * 使用包含时间戳时间表示形式的字符串填充给定缓冲区。
  *
- * @param buf a buffer with size in bytes of at least AV_TS_MAX_STRING_SIZE
- * @param ts the timestamp to represent
- * @param tb the timebase of the timestamp
- * @return the buffer in input
+ * @param buf 大小至少为 AV_TS_MAX_STRING_SIZE 字节的缓冲区
+ * @param ts 要表示的时间戳
+ * @param tb 时间戳的时间基
+ * @return 输入的缓冲区
  */
 char *av_ts_make_time_string2(char *buf, int64_t ts, AVRational tb);
 
 /**
- * Fill the provided buffer with a string containing a timestamp
- * representation.
+ * 使用包含时间戳表示形式的字符串填充给定缓冲区。
  *
  * @see av_ts_make_time_string2
  */
@@ -77,8 +73,7 @@ static inline char *av_ts_make_time_string(char *buf, int64_t ts,
 }
 
 /**
- * Convenience macro, the return value should be used only directly in
- * function arguments but never stand-alone.
+ * 便捷宏。返回值只能直接用于函数参数，不能单独使用。
  */
 #define av_ts2timestr(ts, tb) av_ts_make_time_string((char[AV_TS_MAX_STRING_SIZE]){0}, ts, tb)
 

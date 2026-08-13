@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -24,134 +24,120 @@
 /**
  * @file
  * @ingroup lavu
- * Convenience header that includes @ref lavu "libavutil"'s core.
+ * 包含 @ref lavu "libavutil" 核心组件的便捷头文件。
  */
 
 /**
  * @mainpage
  *
- * @section ffmpeg_intro Introduction
+ * @section ffmpeg_intro 简介
  *
- * This document describes the usage of the different libraries
- * provided by FFmpeg.
+ * 本文档描述 FFmpeg 提供的不同库的用法。
  *
- * @li @ref libavc "libavcodec" encoding/decoding library
- * @li @ref lavfi "libavfilter" graph-based frame editing library
- * @li @ref libavf "libavformat" I/O and muxing/demuxing library
- * @li @ref lavd "libavdevice" special devices muxing/demuxing library
- * @li @ref lavu "libavutil" common utility library
- * @li @ref lswr "libswresample" audio resampling, format conversion and mixing
- * @li @ref libsws "libswscale" color conversion and scaling library
+ * @li @ref libavc "libavcodec" 编码/解码库
+ * @li @ref lavfi "libavfilter" 基于图的帧编辑库
+ * @li @ref libavf "libavformat" I/O 和复用/解复用库
+ * @li @ref lavd "libavdevice" 特殊设备复用/解复用库
+ * @li @ref lavu "libavutil" 通用工具库
+ * @li @ref lswr "libswresample" 音频重采样、格式转换和混音库
+ * @li @ref libsws "libswscale" 颜色转换和缩放库
  *
- * @section ffmpeg_versioning Versioning and compatibility
+ * @section ffmpeg_versioning 版本管理与兼容性
  *
- * Each of the FFmpeg libraries contains a version.h header, which defines a
- * major, minor and micro version number with the
- * <em>LIBRARYNAME_VERSION_{MAJOR,MINOR,MICRO}</em> macros. The major version
- * number is incremented with backward incompatible changes - e.g. removing
- * parts of the public API, reordering public struct members, etc. The minor
- * version number is incremented for backward compatible API changes or major
- * new features - e.g. adding a new public function or a new decoder. The micro
- * version number is incremented for smaller changes that a calling program
- * might still want to check for - e.g. changing behavior in a previously
- * unspecified situation.
+ * 每个 FFmpeg 库都包含 version.h，它通过
+ * <em>LIBRARYNAME_VERSION_{MAJOR,MINOR,MICRO}</em> 宏定义主、次和微版本号。
+ * 主版本号在发生不向后兼容的变化时递增，例如删除部分公共 API、重新排列公共
+ * 结构成员等。次版本号在发生向后兼容的 API 变化或增加主要新功能时递增，例如
+ * 添加公共函数或解码器。微版本号在调用程序可能仍需检查的较小变化时递增，
+ * 例如改变以前未规定场景中的行为。
  *
- * FFmpeg guarantees backward API and ABI compatibility for each library as long
- * as its major version number is unchanged. This means that no public symbols
- * will be removed or renamed. Types and names of the public struct members and
- * values of public macros and enums will remain the same (unless they were
- * explicitly declared as not part of the public API). Documented behavior will
- * not change.
+ * 只要库的主版本号不变，FFmpeg 就保证其 API 和 ABI 向后兼容。这意味着不会
+ * 删除或重命名公共符号。公共结构成员的类型和名称、公共宏和枚举的值会保持
+ * 不变（明确声明不属于公共 API 的除外），已记录的行为也不会改变。
  *
- * In other words, any correct program that works with a given FFmpeg snapshot
- * should work just as well without any changes with any later snapshot with the
- * same major versions. This applies to both rebuilding the program against new
- * FFmpeg versions or to replacing the dynamic FFmpeg libraries that a program
- * links against.
+ * 换言之，任何能在给定 FFmpeg 快照上正确工作的程序，都应无需修改即可在主版本
+ * 相同的后续快照上正常工作。这既适用于针对新版 FFmpeg 重新构建程序，也适用于
+ * 替换程序所链接的 FFmpeg 动态库。
  *
- * However, new public symbols may be added and new members may be appended to
- * public structs whose size is not part of public ABI (most public structs in
- * FFmpeg). New macros and enum values may be added. Behavior in undocumented
- * situations may change slightly (and be documented). All those are accompanied
- * by an entry in doc/APIchanges and incrementing either the minor or micro
- * version number.
+ * 不过，可以添加新的公共符号，也可向大小不属于公共 ABI 的公共结构（FFmpeg
+ * 中的大多数公共结构）末尾添加新成员，还可添加新宏和枚举值。未记录场景中的
+ * 行为可能略有变化（随后会记录）。所有这些变化都会在 doc/APIchanges 中添加
+ * 条目，并递增次版本号或微版本号。
  */
 
 /**
  * @defgroup lavu libavutil
- * Common code shared across all FFmpeg libraries.
+ * 所有 FFmpeg 库共享的通用代码。
  *
  * @note
- * libavutil is designed to be modular. In most cases, in order to use the
- * functions provided by one component of libavutil you must explicitly include
- * the specific header containing that feature. If you are only using
- * media-related components, you could simply include libavutil/avutil.h, which
- * brings in most of the "core" components.
+ * libavutil 采用模块化设计。多数情况下，要使用 libavutil 某组件提供的函数，
+ * 必须显式包含提供该功能的特定头文件。若只使用媒体相关组件，可直接包含
+ * libavutil/avutil.h，它会引入大多数“核心”组件。
  *
  * @{
  *
- * @defgroup lavu_crypto Crypto and Hashing
+ * @defgroup lavu_crypto 加密与哈希
  *
  * @{
  * @}
  *
- * @defgroup lavu_math Mathematics
+ * @defgroup lavu_math 数学
  * @{
  *
  * @}
  *
- * @defgroup lavu_string String Manipulation
- *
- * @{
- *
- * @}
- *
- * @defgroup lavu_mem Memory Management
+ * @defgroup lavu_string 字符串操作
  *
  * @{
  *
  * @}
  *
- * @defgroup lavu_data Data Structures
- * @{
- *
- * @}
- *
- * @defgroup lavu_video Video related
+ * @defgroup lavu_mem 内存管理
  *
  * @{
  *
  * @}
  *
- * @defgroup lavu_audio Audio related
+ * @defgroup lavu_data 数据结构
+ * @{
+ *
+ * @}
+ *
+ * @defgroup lavu_video 视频相关
  *
  * @{
  *
  * @}
  *
- * @defgroup lavu_error Error Codes
+ * @defgroup lavu_audio 音频相关
  *
  * @{
  *
  * @}
  *
- * @defgroup lavu_log Logging Facility
+ * @defgroup lavu_error 错误码
  *
  * @{
  *
  * @}
  *
- * @defgroup lavu_misc Other
- *
- * @{
- *
- * @defgroup preproc_misc Preprocessor String Macros
+ * @defgroup lavu_log 日志工具
  *
  * @{
  *
  * @}
  *
- * @defgroup version_utils Library Version Macros
+ * @defgroup lavu_misc 其他
+ *
+ * @{
+ *
+ * @defgroup preproc_misc 预处理器字符串宏
+ *
+ * @{
+ *
+ * @}
+ *
+ * @defgroup version_utils 库版本宏
  *
  * @{
  *
@@ -165,24 +151,23 @@
  */
 
 /**
- * Return the LIBAVUTIL_VERSION_INT constant.
+ * 返回 LIBAVUTIL_VERSION_INT 常量。
  */
 unsigned avutil_version(void);
 
 /**
- * Return an informative version string. This usually is the actual release
- * version number or a git commit description. This string has no fixed format
- * and can change any time. It should never be parsed by code.
+ * 返回包含信息的版本字符串，通常是实际发行版本号或 git 提交说明。该字符串
+ * 没有固定格式，可能随时改变，代码绝不应解析它。
  */
 const char *av_version_info(void);
 
 /**
- * Return the libavutil build-time configuration.
+ * 返回 libavutil 的构建时配置。
  */
 const char *avutil_configuration(void);
 
 /**
- * Return the libavutil license.
+ * 返回 libavutil 的许可证文本。
  */
 const char *avutil_license(void);
 
@@ -191,73 +176,71 @@ const char *avutil_license(void);
  */
 
 /**
- * @addtogroup lavu_media Media Type
- * @brief Media Type
+ * @addtogroup lavu_media 媒体类型
+ * @brief 媒体类型
  */
 
 enum AVMediaType {
-    AVMEDIA_TYPE_UNKNOWN = -1,  ///< Usually treated as AVMEDIA_TYPE_DATA
+    AVMEDIA_TYPE_UNKNOWN = -1,  ///< 通常按 AVMEDIA_TYPE_DATA 处理
     AVMEDIA_TYPE_VIDEO,
     AVMEDIA_TYPE_AUDIO,
-    AVMEDIA_TYPE_DATA,          ///< Opaque data information usually continuous
+    AVMEDIA_TYPE_DATA,          ///< 通常连续的不透明数据信息
     AVMEDIA_TYPE_SUBTITLE,
-    AVMEDIA_TYPE_ATTACHMENT,    ///< Opaque data information usually sparse
+    AVMEDIA_TYPE_ATTACHMENT,    ///< 通常稀疏的不透明数据信息
     AVMEDIA_TYPE_NB
 };
 
 /**
- * Return a string describing the media_type enum, NULL if media_type
- * is unknown.
+ * 返回描述 media_type 枚举的字符串；media_type 未知时返回 NULL。
  */
 const char *av_get_media_type_string(enum AVMediaType media_type);
 
 /**
- * @defgroup lavu_const Constants
+ * @defgroup lavu_const 常量
  * @{
  *
- * @defgroup lavu_enc Encoding specific
+ * @defgroup lavu_enc 编码相关
  *
- * @note those definition should move to avcodec
+ * @note 这些定义应移至 avcodec
  * @{
  */
 
 #define FF_LAMBDA_SHIFT 7
 #define FF_LAMBDA_SCALE (1<<FF_LAMBDA_SHIFT)
-#define FF_QP2LAMBDA 118 ///< factor to convert from H.263 QP to lambda
+#define FF_QP2LAMBDA 118 ///< 从 H.263 QP 转换为 lambda 的因子
 #define FF_LAMBDA_MAX (256*128-1)
 
-#define FF_QUALITY_SCALE FF_LAMBDA_SCALE //FIXME maybe remove
+#define FF_QUALITY_SCALE FF_LAMBDA_SCALE //FIXME 可能移除
 
 /**
  * @}
- * @defgroup lavu_time Timestamp specific
+ * @defgroup lavu_time 时间戳相关
  *
- * FFmpeg internal timebase and timestamp definitions
+ * FFmpeg 内部时间基和时间戳定义
  *
  * @{
  */
 
 /**
- * @brief Undefined timestamp value
+ * @brief 未定义的时间戳值
  *
- * Usually reported by demuxer that work on containers that do not provide
- * either pts or dts.
+ * 通常由处理既不提供 pts 也不提供 dts 的容器的解复用器报告。
  */
 
 #define AV_NOPTS_VALUE          ((int64_t)UINT64_C(0x8000000000000000))
 
 /**
- * Internal time base represented as integer
+ * 以整数表示的内部时间基
  */
 
 #define AV_TIME_BASE            1000000
 
 /**
- * Internal time base represented as fractional value
+ * 以分数表示的内部时间基
  */
 
 #ifdef __cplusplus
-/* ISO C++ forbids compound-literals. */
+/* ISO C++ 禁止复合字面量。 */
 #define AV_TIME_BASE_Q          av_make_q(1, AV_TIME_BASE)
 #else
 #define AV_TIME_BASE_Q          (AVRational){1, AV_TIME_BASE}
@@ -266,30 +249,29 @@ const char *av_get_media_type_string(enum AVMediaType media_type);
 /**
  * @}
  * @}
- * @defgroup lavu_picture Image related
+ * @defgroup lavu_picture 图像相关
  *
- * AVPicture types, pixel formats and basic image planes manipulation.
+ * AVPicture 类型、像素格式和基本图像平面操作。
  *
  * @{
  */
 
 enum AVPictureType {
-    AV_PICTURE_TYPE_NONE = 0, ///< Undefined
-    AV_PICTURE_TYPE_I,     ///< Intra
-    AV_PICTURE_TYPE_P,     ///< Predicted
-    AV_PICTURE_TYPE_B,     ///< Bi-dir predicted
+    AV_PICTURE_TYPE_NONE = 0, ///< 未定义
+    AV_PICTURE_TYPE_I,     ///< 帧内预测
+    AV_PICTURE_TYPE_P,     ///< 前向预测
+    AV_PICTURE_TYPE_B,     ///< 双向预测
     AV_PICTURE_TYPE_S,     ///< S(GMC)-VOP MPEG-4
-    AV_PICTURE_TYPE_SI,    ///< Switching Intra
-    AV_PICTURE_TYPE_SP,    ///< Switching Predicted
-    AV_PICTURE_TYPE_BI,    ///< BI type
+    AV_PICTURE_TYPE_SI,    ///< 切换帧内帧
+    AV_PICTURE_TYPE_SP,    ///< 切换预测帧
+    AV_PICTURE_TYPE_BI,    ///< BI 类型
 };
 
 /**
- * Return a single letter to describe the given picture type
- * pict_type.
+ * 返回单个字母描述给定图像类型 pict_type。
  *
- * @param[in] pict_type the picture type @return a single character
- * representing the picture type, '?' if pict_type is unknown
+ * @param[in] pict_type 图像类型
+ * @return 表示图像类型的单个字符；pict_type 未知时为 '?'
  */
 char av_get_picture_type_char(enum AVPictureType pict_type);
 
@@ -306,7 +288,7 @@ char av_get_picture_type_char(enum AVPictureType pict_type);
 #include "pixfmt.h"
 
 /**
- * Return x default pointer in case p is NULL.
+ * p 为 NULL 时返回默认指针 x。
  */
 static inline void *av_x_if_null(const void *p, const void *x)
 {
@@ -314,7 +296,7 @@ static inline void *av_x_if_null(const void *p, const void *x)
 }
 
 /**
- * Return the fractional representation of the internal time base.
+ * 返回内部时间基的分数表示。
  */
 AVRational av_get_time_base_q(void);
 
@@ -323,12 +305,11 @@ AVRational av_get_time_base_q(void);
 #define av_fourcc2str(fourcc) av_fourcc_make_string((char[AV_FOURCC_MAX_STRING_SIZE]){0}, fourcc)
 
 /**
- * Fill the provided buffer with a string containing a FourCC (four-character
- * code) representation.
+ * 使用包含 FourCC（四字符代码）表示的字符串填充所提供的缓冲区。
  *
- * @param buf    a buffer with size in bytes of at least AV_FOURCC_MAX_STRING_SIZE
- * @param fourcc the fourcc to represent
- * @return the buffer in input
+ * @param buf    字节大小至少为 AV_FOURCC_MAX_STRING_SIZE 的缓冲区
+ * @param fourcc 要表示的 fourcc
+ * @return 输入缓冲区
  */
 char *av_fourcc_make_string(char *buf, uint32_t fourcc);
 

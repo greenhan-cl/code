@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2014 Vittorio Giovara <vittorio.giovara@gmail.com>
  *
  * This file is part of FFmpeg.
@@ -21,7 +21,7 @@
 /**
  * @file
  * @ingroup lavu_video_display
- * Display matrix
+ * 显示矩阵
  */
 
 #ifndef AVUTIL_DISPLAY_H
@@ -30,14 +30,13 @@
 #include <stdint.h>
 
 /**
- * @defgroup lavu_video_display Display transformation matrix functions
+ * @defgroup lavu_video_display 显示变换矩阵函数
  * @ingroup lavu_video
  *
- * The display transformation matrix specifies an affine transformation that
- * should be applied to video frames for correct presentation. It is compatible
- * with the matrices stored in the ISO/IEC 14496-12 container format.
+ * 显示变换矩阵指定应应用于视频帧以正确呈现的仿射变换。它与 ISO/IEC 14496-12
+ * 容器格式中存储的矩阵兼容。
  *
- * The data is a 3x3 matrix represented as a 9-element array:
+ * 数据是用 9 元素数组表示的 3x3 矩阵：
  *
  * @code{.unparsed}
  *                                  | a b u |
@@ -45,12 +44,11 @@
  *                                  | x y w |
  * @endcode
  *
- * All numbers are stored in native endianness, as 16.16 fixed-point values,
- * except for u, v and w, which are stored as 2.30 fixed-point values.
+ * 所有数均以本机字节序存储；除 u、v、w 使用 2.30 定点值外，其余使用
+ * 16.16 定点值。
  *
- * The transformation maps a point (p, q) in the source (pre-transformation)
- * frame to the point (p', q') in the destination (post-transformation) frame as
- * follows:
+ * 该变换按如下方式将源（变换前）帧中的点 (p, q) 映射到目标（变换后）帧中的
+ * 点 (p', q')：
  *
  * @code{.unparsed}
  *               | a b u |
@@ -58,8 +56,7 @@
  *               | x y w |
  * @endcode
  *
- * The transformation can also be more explicitly written in components as
- * follows:
+ * 也可以更明确地按分量写出该变换：
  *
  * @code{.unparsed}
  *   p' = (a * p + c * q + x) / z;
@@ -71,34 +68,30 @@
  */
 
 /**
- * Extract the rotation component of the transformation matrix.
+ * 提取变换矩阵的旋转分量。
  *
- * @param matrix the transformation matrix
- * @return the angle (in degrees) by which the transformation rotates the frame
- *         counterclockwise. The angle will be in range [-180.0, 180.0],
- *         or NaN if the matrix is singular.
+ * @param matrix 变换矩阵
+ * @return 变换使帧逆时针旋转的角度（单位为度）。角度范围为 [-180.0, 180.0]；
+ *         如果矩阵是奇异矩阵，则返回 NaN。
  *
- * @note floating point numbers are inherently inexact, so callers are
- *       recommended to round the return value to nearest integer before use.
+ * @note 浮点数本质上并不精确，因此建议调用者在使用前将返回值舍入到最接近的整数。
  */
 double av_display_rotation_get(const int32_t matrix[9]);
 
 /**
- * Initialize a transformation matrix describing a pure clockwise
- * rotation by the specified angle (in degrees).
+ * 初始化一个描述按指定角度（单位为度）纯顺时针旋转的变换矩阵。
  *
- * @param[out] matrix a transformation matrix (will be fully overwritten
- *                    by this function)
- * @param angle rotation angle in degrees.
+ * @param[out] matrix 变换矩阵（会被此函数完全覆盖）
+ * @param angle 旋转角度，单位为度。
  */
 void av_display_rotation_set(int32_t matrix[9], double angle);
 
 /**
- * Flip the input matrix horizontally and/or vertically.
+ * 水平和/或垂直翻转输入矩阵。
  *
- * @param[in,out] matrix a transformation matrix
- * @param hflip whether the matrix should be flipped horizontally
- * @param vflip whether the matrix should be flipped vertically
+ * @param[in,out] matrix 变换矩阵
+ * @param hflip 是否水平翻转矩阵
+ * @param vflip 是否垂直翻转矩阵
  */
 void av_display_matrix_flip(int32_t matrix[9], int hflip, int vflip);
 

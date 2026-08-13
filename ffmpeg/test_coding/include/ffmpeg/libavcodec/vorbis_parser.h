@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -18,9 +18,9 @@
 
 /**
  * @file
- * A public API for Vorbis parsing
+ * Vorbis 解析的公共 API
  *
- * Determines the duration for each packet.
+ * 确定每个数据包的时长。
  */
 
 #ifndef AVCODEC_VORBIS_PARSER_H
@@ -31,13 +31,13 @@
 typedef struct AVVorbisParseContext AVVorbisParseContext;
 
 /**
- * Allocate and initialize the Vorbis parser using headers in the extradata.
+ * 使用 extradata 中的头信息分配并初始化 Vorbis 解析器。
  */
 AVVorbisParseContext *av_vorbis_parse_init(const uint8_t *extradata,
                                            int extradata_size);
 
 /**
- * Free the parser and everything associated with it.
+ * 释放解析器及其关联的所有内容。
  */
 void av_vorbis_parse_free(AVVorbisParseContext **s);
 
@@ -46,25 +46,24 @@ void av_vorbis_parse_free(AVVorbisParseContext **s);
 #define VORBIS_FLAG_SETUP   0x00000004
 
 /**
- * Get the duration for a Vorbis packet.
+ * 获取 Vorbis 数据包的时长。
  *
- * If @p flags is @c NULL,
- * special frames are considered invalid.
+ * 如果 @p flags 为 @c NULL，则特殊帧会被视为无效。
  *
- * @param s        Vorbis parser context
- * @param buf      buffer containing a Vorbis frame
- * @param buf_size size of the buffer
- * @param flags    flags for special frames
+ * @param s        Vorbis 解析器上下文
+ * @param buf      包含 Vorbis 帧的缓冲区
+ * @param buf_size 缓冲区大小
+ * @param flags    特殊帧标志
  */
 int av_vorbis_parse_frame_flags(AVVorbisParseContext *s, const uint8_t *buf,
                                 int buf_size, int *flags);
 
 /**
- * Get the duration for a Vorbis packet.
+ * 获取 Vorbis 数据包的时长。
  *
- * @param s        Vorbis parser context
- * @param buf      buffer containing a Vorbis frame
- * @param buf_size size of the buffer
+ * @param s        Vorbis 解析器上下文
+ * @param buf      包含 Vorbis 帧的缓冲区
+ * @param buf_size 缓冲区大小
  */
 int av_vorbis_parse_frame(AVVorbisParseContext *s, const uint8_t *buf,
                           int buf_size);

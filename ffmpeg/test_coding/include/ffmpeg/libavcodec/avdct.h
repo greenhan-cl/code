@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -25,9 +25,8 @@
 #include "libavutil/opt.h"
 
 /**
- * AVDCT context.
- * @note function pointers can be NULL if the specific features have been
- *       disabled at build time.
+ * AVDCT 上下文。
+ * @note 如果特定功能在构建时被禁用，相应函数指针可能为 NULL。
  */
 typedef struct AVDCT {
     const AVClass *av_class;
@@ -35,12 +34,11 @@ typedef struct AVDCT {
     void (*idct)(int16_t *block /* align 16 */);
 
     /**
-     * IDCT input permutation.
-     * Several optimized IDCTs need a permutated input (relative to the
-     * normal order of the reference IDCT).
-     * This permutation must be performed before the idct_put/add.
-     * Note, normally this can be merged with the zigzag/alternate scan<br>
-     * An example to avoid confusion:
+     * IDCT 输入排列。
+     * 一些优化的 IDCT 需要经过排列的输入（相对于参考 IDCT 的正常顺序）。
+     * 此排列必须在 idct_put/add 之前执行。
+     * 注意，通常可将它与 zigzag/alternate 扫描合并。<br>
+     * 为避免混淆，示例如下：
      * - (->decode coeffs -> zigzag reorder -> dequant -> reference IDCT -> ...)
      * - (x -> reference DCT -> reference IDCT -> x)
      * - (x -> reference DCT -> simple_mmx_perm = idct_permutation
@@ -54,14 +52,14 @@ typedef struct AVDCT {
 
 
     /**
-     * DCT algorithm.
-     * must use AVOptions to set this field.
+     * DCT 算法。
+     * 必须使用 AVOptions 设置此字段。
      */
     int dct_algo;
 
     /**
-     * IDCT algorithm.
-     * must use AVOptions to set this field.
+     * IDCT 算法。
+     * 必须使用 AVOptions 设置此字段。
      */
     int idct_algo;
 
@@ -77,11 +75,10 @@ typedef struct AVDCT {
 } AVDCT;
 
 /**
- * Allocates a AVDCT context.
- * This needs to be initialized with avcodec_dct_init() after optionally
- * configuring it with AVOptions.
+ * 分配 AVDCT 上下文。
+ * 可先使用 AVOptions 对其进行配置，然后需要调用 avcodec_dct_init() 初始化。
  *
- * To free it use av_free()
+ * 使用 av_free() 释放。
  */
 AVDCT *avcodec_dct_alloc(void);
 int avcodec_dct_init(AVDCT *);

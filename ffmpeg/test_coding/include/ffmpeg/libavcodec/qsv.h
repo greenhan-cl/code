@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Intel MediaSDK QSV public API
  *
  * This file is part of FFmpeg.
@@ -26,83 +26,72 @@
 #include "libavutil/buffer.h"
 
 /**
- * This struct is used for communicating QSV parameters between libavcodec and
- * the caller. It is managed by the caller and must be assigned to
- * AVCodecContext.hwaccel_context.
- * - decoding: hwaccel_context must be set on return from the get_format()
- *             callback
- * - encoding: hwaccel_context must be set before avcodec_open2()
+ * 此结构体用于在 libavcodec 与调用方之间传递 QSV 参数。它由调用方管理，
+ * 且必须赋给 AVCodecContext.hwaccel_context。
+ * - 解码：必须在 get_format() 回调返回时设置 hwaccel_context
+ * - 编码：必须在 avcodec_open2() 之前设置 hwaccel_context
  */
 typedef struct AVQSVContext {
     /**
-     * If non-NULL, the session to use for encoding or decoding.
-     * Otherwise, libavcodec will try to create an internal session.
+     * 非 NULL 时，指定用于编码或解码的会话。
+     * 否则，libavcodec 将尝试创建内部会话。
      */
     mfxSession session;
 
     /**
-     * The IO pattern to use.
+     * 要使用的 IO 模式。
      */
     int iopattern;
 
     /**
-     * Extra buffers to pass to encoder or decoder initialization.
+     * 初始化编码器或解码器时传入的额外缓冲区。
      */
     mfxExtBuffer **ext_buffers;
     int         nb_ext_buffers;
 
     /**
-     * Encoding only. If this field is set to non-zero by the caller, libavcodec
-     * will create an mfxExtOpaqueSurfaceAlloc extended buffer and pass it to
-     * the encoder initialization. This only makes sense if iopattern is also
-     * set to MFX_IOPATTERN_IN_OPAQUE_MEMORY.
+     * 仅用于编码。如果调用方将此字段设为非零，libavcodec 将创建
+     * mfxExtOpaqueSurfaceAlloc 扩展缓冲区并将其传给编码器初始化过程。
+     * 仅当 iopattern 同时设为 MFX_IOPATTERN_IN_OPAQUE_MEMORY 时才有意义。
      *
-     * The number of allocated opaque surfaces will be the sum of the number
-     * required by the encoder and the user-provided value nb_opaque_surfaces.
-     * The array of the opaque surfaces will be exported to the caller through
-     * the opaque_surfaces field.
+     * 分配的不透明表面数量等于编码器所需数量加上用户提供的
+     * nb_opaque_surfaces。其数组通过 opaque_surfaces 字段导出给调用方。
      *
-     * The caller must set this field to zero for oneVPL (MFX_VERSION >= 2.0)
+     * 使用 oneVPL（MFX_VERSION >= 2.0）时，调用方必须将此字段设为零。
      */
     int opaque_alloc;
 
     /**
-     * Encoding only, and only if opaque_alloc is set to non-zero. Before
-     * calling avcodec_open2(), the caller should set this field to the number
-     * of extra opaque surfaces to allocate beyond what is required by the
-     * encoder.
+     * 仅用于编码，且仅当 opaque_alloc 非零时有效。调用 avcodec_open2() 前，
+     * 调用方应将此字段设为在编码器需求之外额外分配的不透明表面数量。
      *
-     * On return from avcodec_open2(), this field will be set by libavcodec to
-     * the total number of allocated opaque surfaces.
+     * avcodec_open2() 返回时，libavcodec 会将此字段设为已分配不透明表面的总数。
      */
     int nb_opaque_surfaces;
 
     /**
-     * Encoding only, and only if opaque_alloc is set to non-zero. On return
-     * from avcodec_open2(), this field will be used by libavcodec to export the
-     * array of the allocated opaque surfaces to the caller, so they can be
-     * passed to other parts of the pipeline.
+     * 仅用于编码，且仅当 opaque_alloc 非零时有效。avcodec_open2() 返回时，
+     * libavcodec 使用此字段将已分配的不透明表面数组导出给调用方，
+     * 以便传递给处理流水线的其他部分。
      *
-     * The buffer reference exported here is owned and managed by libavcodec,
-     * the callers should make their own reference with av_buffer_ref() and free
-     * it with av_buffer_unref() when it is no longer needed.
+     * 此处导出的缓冲区引用由 libavcodec 拥有并管理。调用方应使用
+     * av_buffer_ref() 创建自己的引用，不再需要时使用 av_buffer_unref() 释放。
      *
-     * The buffer data is an nb_opaque_surfaces-sized array of mfxFrameSurface1.
+     * 缓冲区数据是一个包含 nb_opaque_surfaces 个 mfxFrameSurface1 的数组。
      */
     AVBufferRef *opaque_surfaces;
 
     /**
-     * Encoding only, and only if opaque_alloc is set to non-zero. On return
-     * from avcodec_open2(), this field will be set to the surface type used in
-     * the opaque allocation request.
+     * 仅用于编码，且仅当 opaque_alloc 非零时有效。avcodec_open2() 返回时，
+     * 此字段会被设为不透明分配请求中使用的表面类型。
      */
     int opaque_alloc_type;
 } AVQSVContext;
 
 /**
- * Allocate a new context.
+ * 分配新上下文。
  *
- * It must be freed by the caller with av_free().
+ * 调用方必须使用 av_free() 将其释放。
  */
 AVQSVContext *av_qsv_alloc_context(void);
 

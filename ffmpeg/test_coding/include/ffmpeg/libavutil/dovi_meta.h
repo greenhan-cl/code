@@ -1,21 +1,21 @@
-/*
- * Copyright (c) 2020 Vacing Fang <vacingfang@tencent.com>
+﻿/*
+ * 复制right (c) 2020 Vacing Fang <vacingfang@tencent.com>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 /**
@@ -35,22 +35,22 @@
 
 /*
  * DOVI configuration
- * ref: dolby-vision-bitstreams-within-the-iso-base-media-file-format-v2.1.2
+ * ref: dolby-vision-bitstreams-within-the-iso-base-media-file-格式-v2.1.2
         dolby-vision-bitstreams-in-mpeg-2-transport-stream-multiplex-v1.2
  * @code
- * uint8_t  dv_version_major, the major version number that the stream complies with
- * uint8_t  dv_version_minor, the minor version number that the stream complies with
+ * uint8_t  dv_version_major, the major version 数量 that the stream complies with
+ * uint8_t  dv_version_minor, the minor version 数量 that the stream complies with
  * uint8_t  dv_profile, the Dolby Vision profile
  * uint8_t  dv_level, the Dolby Vision level
- * uint8_t  rpu_present_flag
- * uint8_t  el_present_flag
- * uint8_t  bl_present_flag
+ * uint8_t  rpu_present_标志
+ * uint8_t  el_present_标志
+ * uint8_t  bl_present_标志
  * uint8_t  dv_bl_signal_compatibility_id
- * uint8_t  dv_md_compression, the compression method in use
+ * uint8_t  dv_md_compression, the compression method 中 use
  * @endcode
  *
- * @note The struct must be allocated with av_dovi_alloc() and
- *       its size is not a part of the public ABI.
+ * @note struct must be 分配d，使用 av_dovi_alloc() and
+ *       its 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVDOVIDecoderConfigurationRecord {
     uint8_t dv_version_major;
@@ -72,17 +72,17 @@ enum AVDOVICompression {
 };
 
 /**
- * Allocate a AVDOVIDecoderConfigurationRecord structure and initialize its
- * fields to default values.
+ * 分配 a AVDOVI解码器ConfigurationRecord 结构体 和 初始化 its
+ * fields 到 默认 值.
  *
- * @return the newly allocated struct or NULL on failure
+ * @返回 the newly 分配d struct 或 NULL 上 failure
  */
 AVDOVIDecoderConfigurationRecord *av_dovi_alloc(size_t *size);
 
 /**
  * Dolby Vision RPU data header.
  *
- * @note sizeof(AVDOVIRpuDataHeader) is not part of the public ABI.
+ * @note 大小of(AVDOVIRpuDataHeader) is not part 的 the 公共 ABI.
  */
 typedef struct AVDOVIRpuDataHeader {
     uint8_t rpu_type;
@@ -110,8 +110,8 @@ enum AVDOVIMappingMethod {
 };
 
 /**
- * Coefficients of a piece-wise function. The pieces of the function span the
- * value ranges between two adjacent pivot values.
+ * Coefficients 的 a piece-wise function. pieces 的 the function span the
+ * 值 ranges between two adjacent pivot 值.
  */
 #define AV_DOVI_MAX_PIECES 8
 typedef struct AVDOVIReshapingCurve {
@@ -133,8 +133,8 @@ enum AVDOVINLQMethod {
 };
 
 /**
- * Coefficients of the non-linear inverse quantization. For the interpretation
- * of these, see ETSI GS CCM 001.
+ * Coefficients 的 the non-linear inverse quantization. For the interpretation
+ * 的 these, 参见 ETSI GS CCM 001.
  */
 typedef struct AVDOVINLQParams {
     uint16_t nlq_offset;
@@ -147,7 +147,7 @@ typedef struct AVDOVINLQParams {
 /**
  * Dolby Vision RPU data mapping parameters.
  *
- * @note sizeof(AVDOVIDataMapping) is not part of the public ABI.
+ * @note 大小of(AVDOVIDataMapping) is not part 的 the 公共 ABI.
  */
 typedef struct AVDOVIDataMapping {
     uint8_t vdr_rpu_id;
@@ -164,28 +164,28 @@ typedef struct AVDOVIDataMapping {
 } AVDOVIDataMapping;
 
 /**
- * Dolby Vision RPU colorspace metadata parameters.
+ * Dolby Vision RPU colorspace 元数据 parameters.
  *
- * @note sizeof(AVDOVIColorMetadata) is not part of the public ABI.
+ * @note 大小of(AVDOVIColor元数据) is not part 的 the 公共 ABI.
  */
 typedef struct AVDOVIColorMetadata {
     uint8_t dm_metadata_id;
     uint8_t scene_refresh_flag;
 
     /**
-     * Coefficients of the custom Dolby Vision IPT-PQ matrices. These are to be
-     * used instead of the matrices indicated by the frame's colorspace tags.
-     * The output of rgb_to_lms_matrix is to be fed into a BT.2020 LMS->RGB
-     * matrix based on a Hunt-Pointer-Estevez transform, but without any
-     * crosstalk. (See the definition of the ICtCp colorspace for more
-     * information.)
+     * Coefficients 的 the custom Dolby Vision IPT-PQ matrices. These are 到 be
+     * used instead 的 the matrices indicated by the 帧's colorspace tags.
+     * 输出 的 rgb_to_lms_matrix is 到 be fed into a BT.2020 LMS->RGB
+     * matrix based 上 a Hunt-指针-Estevez transform, but without any
+     * crosstalk. (参见 the definition 的 the ICtCp colorspace 用于 more
+     * in格式ion.)
      */
     AVRational ycc_to_rgb_matrix[9]; /* before PQ linearization */
     AVRational ycc_to_rgb_offset[3]; /* input offset of neutral value */
     AVRational rgb_to_lms_matrix[9]; /* after PQ linearization */
 
     /**
-     * Extra signal metadata (see Dolby patents for more info).
+     * Extra signal 元数据 (参见 Dolby patents 用于 more info).
      */
     uint16_t signal_eotf;
     uint16_t signal_eotf_param0;
@@ -201,14 +201,14 @@ typedef struct AVDOVIColorMetadata {
 } AVDOVIColorMetadata;
 
 typedef struct AVDOVIDmLevel1 {
-    /* Per-frame brightness metadata */
+    /* Per-帧 brightness 元数据 */
     uint16_t min_pq;
     uint16_t max_pq;
     uint16_t avg_pq;
 } AVDOVIDmLevel1;
 
 typedef struct AVDOVIDmLevel2 {
-    /* Usually derived from level 8 (at different levels) */
+    /* Usually derived，来自 level 8 (at d如果ferent levels) */
     uint16_t target_max_pq;
     uint16_t trim_slope;
     uint16_t trim_offset;
@@ -238,7 +238,7 @@ typedef struct AVDOVIDmLevel5 {
 } AVDOVIDmLevel5;
 
 typedef struct AVDOVIDmLevel6 {
-    /* Static HDR10 metadata */
+    /* Static HDR10 元数据 */
     uint16_t max_luminance;
     uint16_t min_luminance;
     uint16_t max_cll;
@@ -246,7 +246,7 @@ typedef struct AVDOVIDmLevel6 {
 } AVDOVIDmLevel6;
 
 typedef struct AVDOVIDmLevel8 {
-    /* Extended version of level 2 */
+    /* Extended version 的 level 2 */
     uint8_t target_display_index;
     uint16_t trim_slope;
     uint16_t trim_offset;
@@ -296,24 +296,24 @@ typedef struct AVDOVIDmLevel11 {
 } AVDOVIDmLevel11;
 
 typedef struct AVDOVIDmLevel254 {
-    /* DMv2 info block, always present in samples with DMv2 metadata */
+    /* DMv2 info block, always present 中 采样s，使用 DMv2 元数据 */
     uint8_t dm_mode;
     uint8_t dm_version_index;
 } AVDOVIDmLevel254;
 
 typedef struct AVDOVIDmLevel255 {
-    /* Debug block, not really used in samples */
+    /* Debug block, not really used 中 采样s */
     uint8_t dm_run_mode;
     uint8_t dm_run_version;
     uint8_t dm_debug[4];
 } AVDOVIDmLevel255;
 
 /**
- * Dolby Vision metadata extension block. Dynamic extension blocks may change
- * from frame to frame, while static blocks are constant throughout the entire
+ * Dolby Vision 元数据 extension block. Dynamic extension blocks may change
+ *，来自 帧 到 帧, while static blocks are constant throughout the entire
  * sequence.
  *
- * @note sizeof(AVDOVIDmData) is not part of the public API.
+ * @note 大小of(AVDOVIDmData) is not part 的 the 公共 API.
  */
 typedef struct AVDOVIDmData {
     uint8_t level; /* [1, 255] */
@@ -335,16 +335,16 @@ typedef struct AVDOVIDmData {
 } AVDOVIDmData;
 
 /**
- * Combined struct representing a combination of header, mapping and color
- * metadata, for attaching to frames as side data.
+ * Combined struct representing a combination 的 header, mapping 和 color
+ * 元数据, 用于 attaching 到 帧s as side data.
  *
- * @note The struct must be allocated with av_dovi_metadata_alloc() and
- *       its size is not a part of the public ABI.
+ * @note struct must be 分配d，使用 av_dovi_元数据_alloc() and
+ *       its 大小 is not a part 的 the 公共 ABI.
  */
 
 typedef struct AVDOVIMetadata {
     /**
-     * Offset in bytes from the beginning of this structure at which the
+     * Off设置 中 bytes，来自 the beginning 的 this 结构体 at which the
      * respective structs start.
      */
     size_t header_offset;   /* AVDOVIRpuDataHeader */
@@ -355,7 +355,7 @@ typedef struct AVDOVIMetadata {
     size_t ext_block_size; /* size per element */
     int num_ext_blocks; /* number of extension blocks */
 
-    /* static limit on num_ext_blocks, derived from bitstream limitations */
+    /* static limit 上 num_ext_blocks, derived，来自 bitstream limitations */
 #define AV_DOVI_MAX_EXT_BLOCKS 32
 } AVDOVIMetadata;
 
@@ -378,8 +378,8 @@ av_dovi_get_color(const AVDOVIMetadata *data)
 }
 
 /**
- * Gets the specified Dolby Vision Display Management (DM) metadata
- * @param index must be non negative and below data->num_ext_blocks
+ * 获取s the spec如果ied Dolby Vision Display Management (DM) 元数据
+ * @param index must be non negative 和 below data->num_ext_blocks
  */
 static av_always_inline AVDOVIDmData *
 av_dovi_get_ext(const AVDOVIMetadata *data, int index)
@@ -389,19 +389,19 @@ av_dovi_get_ext(const AVDOVIMetadata *data, int index)
 }
 
 /**
- * Find an extension block with a given level, or NULL. In the case of
- * multiple extension blocks, only the first is returned.
+ * Find an extension block，使用 a given level, 或 NULL. In the case of
+ * multiple extension blocks, only the first is 返回ed.
  */
 AVDOVIDmData *av_dovi_find_level(const AVDOVIMetadata *data, uint8_t level);
 
 /**
- * Allocate an AVDOVIMetadata structure and initialize its
- * fields to default values.
+ * 分配 an AVDOVI元数据 结构体 和 初始化 its
+ * fields 到 默认 值.
  *
- * @param size If this parameter is non-NULL, the size in bytes of the
- *             allocated struct will be written here on success
+ * @param 大小 如果 this parameter is non-NULL, the 大小 中 bytes 的 the
+ *             分配d struct will be written here 上 success
  *
- * @return the newly allocated struct or NULL on failure
+ * @返回 the newly 分配d struct 或 NULL 上 failure
  */
 AVDOVIMetadata *av_dovi_metadata_alloc(size_t *size);
 

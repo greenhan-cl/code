@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -25,11 +25,11 @@
 #define AV_AAC_ADTS_HEADER_SIZE 7
 
 /**
- * Extract the number of samples and frames from AAC data.
- * @param[in]  buf     pointer to AAC data buffer
- * @param[out] samples Pointer to where number of samples is written
- * @param[out] frames  Pointer to where number of frames is written
- * @return Returns 0 on success, error code on failure.
+ * 从 AAC 数据中提取采样数和帧数。
+ * @param[in]  buf     指向 AAC 数据缓冲区的指针
+ * @param[out] samples 用于写入采样数的位置
+ * @param[out] frames  用于写入帧数的位置
+ * @return 成功返回 0，失败返回错误码。
  */
 int av_adts_header_parse(const uint8_t *buf, uint32_t *samples,
                          uint8_t *frames);

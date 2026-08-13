@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -25,8 +25,7 @@
 
 typedef struct AVDetectionBBox {
     /**
-     * Distance in pixels from the left/top edge of the frame,
-     * together with width and height, defining the bounding box.
+     * 与帧左边缘/上边缘的像素距离，与宽度和高度一起定义边界框。
      */
     int x;
     int y;
@@ -36,16 +35,14 @@ typedef struct AVDetectionBBox {
 #define AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE 64
 
     /**
-     * Detect result with confidence
+     * 带置信度的检测结果
      */
     char detect_label[AV_DETECTION_BBOX_LABEL_NAME_MAX_SIZE];
     AVRational detect_confidence;
 
     /**
-     * At most 4 classifications based on the detected bounding box.
-     * For example, we can get max 4 different attributes with 4 different
-     * DNN models on one bounding box.
-     * classify_count is zero if no classification.
+     * 基于检测边界框的分类最多有 4 个。例如，可以在一个边界框上使用 4 个不同的
+     * DNN 模型获得最多 4 个不同属性。没有分类时 classify_count 为零。
      */
 #define AV_NUM_DETECTION_BBOX_CLASSIFY 4
     uint32_t classify_count;
@@ -55,30 +52,28 @@ typedef struct AVDetectionBBox {
 
 typedef struct AVDetectionBBoxHeader {
     /**
-     * Information about how the bounding box is generated.
-     * for example, the DNN model name.
+     * 边界框生成方式的信息，例如 DNN 模型名称。
      */
     char source[256];
 
     /**
-     * Number of bounding boxes in the array.
+     * 数组中的边界框数量。
      */
     uint32_t nb_bboxes;
 
     /**
-     * Offset in bytes from the beginning of this structure at which
-     * the array of bounding boxes starts.
+     * 边界框数组起始处相对于此结构开头的字节偏移量。
      */
     size_t bboxes_offset;
 
     /**
-     * Size of each bounding box in bytes.
+     * 每个边界框的字节大小。
      */
     size_t bbox_size;
 } AVDetectionBBoxHeader;
 
 /*
- * Get the bounding box at the specified {@code idx}. Must be between 0 and nb_bboxes.
+ * 获取指定 {@code idx} 处的边界框。idx 必须在 0 和 nb_bboxes 之间。
  */
 static av_always_inline AVDetectionBBox *
 av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned int idx)
@@ -89,20 +84,18 @@ av_get_detection_bbox(const AVDetectionBBoxHeader *header, unsigned int idx)
 }
 
 /**
- * Allocates memory for AVDetectionBBoxHeader, plus an array of {@code nb_bboxes}
- * AVDetectionBBox, and initializes the variables.
- * Can be freed with a normal av_free() call.
+ * 为 AVDetectionBBoxHeader 以及包含 {@code nb_bboxes} 个 AVDetectionBBox 的数组
+ * 分配内存，并初始化变量。可以使用普通的 av_free() 调用释放。
  *
- * @param nb_bboxes number of AVDetectionBBox structures to allocate
- * @param out_size if non-NULL, the size in bytes of the resulting data array is
- * written here.
+ * @param nb_bboxes 要分配的 AVDetectionBBox 结构数量
+ * @param out_size 非 NULL 时，会在这里写入结果数据数组的字节大小。
  */
 AVDetectionBBoxHeader *av_detection_bbox_alloc(uint32_t nb_bboxes, size_t *out_size);
 
 /**
- * Allocates memory for AVDetectionBBoxHeader, plus an array of {@code nb_bboxes}
- * AVDetectionBBox, in the given AVFrame {@code frame} as AVFrameSideData of type
- * AV_FRAME_DATA_DETECTION_BBOXES and initializes the variables.
+ * 在给定 AVFrame {@code frame} 中，以 AV_FRAME_DATA_DETECTION_BBOXES 类型的
+ * AVFrameSideData 形式，为 AVDetectionBBoxHeader 以及包含 {@code nb_bboxes}
+ * 个 AVDetectionBBox 的数组分配内存，并初始化变量。
  */
 AVDetectionBBoxHeader *av_detection_bbox_create_side_data(AVFrame *frame, uint32_t nb_bboxes);
 #endif

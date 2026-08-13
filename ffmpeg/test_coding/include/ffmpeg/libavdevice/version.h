@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 /**
  * @file
  * @ingroup lavd
- * Libavdevice version macros
+ * Libavdevice 版本宏
  */
 
 #include "libavutil/version.h"

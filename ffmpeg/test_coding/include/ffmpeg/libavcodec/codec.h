@@ -1,4 +1,4 @@
-/*
+﻿/*
  * AVCodec public API
  *
  * This file is part of FFmpeg.
@@ -36,122 +36,103 @@
  */
 
 /**
- * Decoder can use draw_horiz_band callback.
+ * 解码器可以使用 draw_horiz_band 回调。
  */
 #define AV_CODEC_CAP_DRAW_HORIZ_BAND     (1 <<  0)
 /**
- * Codec uses get_buffer() or get_encode_buffer() for allocating buffers and
- * supports custom allocators.
- * If not set, it might not use get_buffer() or get_encode_buffer() at all, or
- * use operations that assume the buffer was allocated by
- * avcodec_default_get_buffer2 or avcodec_default_get_encode_buffer.
+ * 编解码器使用 get_buffer() 或 get_encode_buffer() 分配缓冲区，并支持自定义分配器。
+ * 如果未设置，编解码器可能完全不使用这两个函数，或者执行假定缓冲区由
+ * avcodec_default_get_buffer2 或 avcodec_default_get_encode_buffer 分配的操作。
  */
 #define AV_CODEC_CAP_DR1                 (1 <<  1)
 /**
- * Encoder or decoder requires flushing with NULL input at the end in order to
- * give the complete and correct output.
+ * 编码器或解码器需要在末尾使用 NULL 输入进行冲刷，才能得到完整且正确的输出。
  *
- * NOTE: If this flag is not set, the codec is guaranteed to never be fed with
- *       with NULL data. The user can still send NULL data to the public encode
- *       or decode function, but libavcodec will not pass it along to the codec
- *       unless this flag is set.
+ * 注意：如果未设置此标志，保证不会向编解码器传入 NULL 数据。用户仍可向公共编码
+ *       或解码函数发送 NULL 数据，但除非设置此标志，否则 libavcodec 不会将其传给编解码器。
  *
- * Decoders:
- * The decoder has a non-zero delay and needs to be fed with avpkt->data=NULL,
- * avpkt->size=0 at the end to get the delayed data until the decoder no longer
- * returns frames.
+ * 解码器：
+ * 解码器具有非零延迟，末尾需要持续输入 avpkt->data=NULL、avpkt->size=0，
+ * 以获取延迟数据，直到解码器不再返回帧。
  *
- * Encoders:
- * The encoder needs to be fed with NULL data at the end of encoding until the
- * encoder no longer returns data.
+ * 编码器：
+ * 编码结束时需要持续向编码器输入 NULL 数据，直到编码器不再返回数据。
  *
- * NOTE: For encoders implementing the AVCodec.encode2() function, setting this
- *       flag also means that the encoder must set the pts and duration for
- *       each output packet. If this flag is not set, the pts and duration will
- *       be determined by libavcodec from the input frame.
+ * 注意：对于实现 AVCodec.encode2() 的编码器，设置此标志还意味着编码器必须为
+ *       每个输出包设置 pts 和 duration。如果未设置此标志，libavcodec 将根据输入帧
+ *       确定 pts 和 duration。
  */
 #define AV_CODEC_CAP_DELAY               (1 <<  5)
 /**
- * Codec can be fed a final frame with a smaller size.
- * This can be used to prevent truncation of the last audio samples.
+ * 可以向编解码器输入尺寸较小的最后一帧。
+ * 这可用于防止最后的音频采样被截断。
  */
 #define AV_CODEC_CAP_SMALL_LAST_FRAME    (1 <<  6)
 
 /**
- * Codec is experimental and is thus avoided in favor of non experimental
- * encoders
+ * 编解码器是实验性的，因此会优先选择非实验性编码器而避开它。
  */
 #define AV_CODEC_CAP_EXPERIMENTAL        (1 <<  9)
 /**
- * Codec should fill in channel configuration and samplerate instead of container
+ * 应由编解码器而不是容器填充声道配置和采样率。
  */
 #define AV_CODEC_CAP_CHANNEL_CONF        (1 << 10)
 /**
- * Codec supports frame-level multithreading.
+ * 编解码器支持帧级多线程。
  */
 #define AV_CODEC_CAP_FRAME_THREADS       (1 << 12)
 /**
- * Codec supports slice-based (or partition-based) multithreading.
+ * 编解码器支持基于切片（或分区）的多线程。
  */
 #define AV_CODEC_CAP_SLICE_THREADS       (1 << 13)
 /**
- * Codec supports changed parameters at any point.
+ * 编解码器支持随时更改参数。
  */
 #define AV_CODEC_CAP_PARAM_CHANGE        (1 << 14)
 /**
- * Codec supports multithreading through a method other than slice- or
- * frame-level multithreading. Typically this marks wrappers around
- * multithreading-capable external libraries.
+ * 编解码器通过切片级或帧级多线程之外的方法支持多线程。
+ * 通常用于标记对支持多线程的外部库的包装器。
  */
 #define AV_CODEC_CAP_OTHER_THREADS       (1 << 15)
 /**
- * Audio encoder supports receiving a different number of samples in each call.
+ * 音频编码器支持每次调用接收不同数量的采样。
  */
 #define AV_CODEC_CAP_VARIABLE_FRAME_SIZE (1 << 16)
 /**
- * Decoder is not a preferred choice for probing.
- * This indicates that the decoder is not a good choice for probing.
- * It could for example be an expensive to spin up hardware decoder,
- * or it could simply not provide a lot of useful information about
- * the stream.
- * A decoder marked with this flag should only be used as last resort
- * choice for probing.
+ * 解码器不是探测时的首选。
+ * 这表示该解码器不适合用于探测。例如，它可能是启动成本很高的硬件解码器，
+ * 或者无法提供很多有用的流信息。带有此标志的解码器只能作为探测的最后选择。
  */
 #define AV_CODEC_CAP_AVOID_PROBING       (1 << 17)
 
 /**
- * Codec is backed by a hardware implementation. Typically used to
- * identify a non-hwaccel hardware decoder. For information about hwaccels, use
- * avcodec_get_hw_config() instead.
+ * 编解码器由硬件实现支持。通常用于标识非 hwaccel 硬件解码器。
+ * 如需 hwaccel 信息，请改用 avcodec_get_hw_config()。
  */
 #define AV_CODEC_CAP_HARDWARE            (1 << 18)
 
 /**
- * Codec is potentially backed by a hardware implementation, but not
- * necessarily. This is used instead of AV_CODEC_CAP_HARDWARE, if the
- * implementation provides some sort of internal fallback.
+ * 编解码器可能由硬件实现支持，但并非必然如此。如果实现提供某种内部回退机制，
+ * 则使用此标志而不是 AV_CODEC_CAP_HARDWARE。
  */
 #define AV_CODEC_CAP_HYBRID              (1 << 19)
 
 /**
- * This encoder can reorder user opaque values from input AVFrames and return
- * them with corresponding output packets.
+ * 此编码器可以重排输入 AVFrame 中的用户 opaque 值，并随对应输出包返回这些值。
  * @see AV_CODEC_FLAG_COPY_OPAQUE
  */
 #define AV_CODEC_CAP_ENCODER_REORDERED_OPAQUE (1 << 20)
 
 /**
- * This encoder can be flushed using avcodec_flush_buffers(). If this flag is
- * not set, the encoder must be closed and reopened to ensure that no frames
- * remain pending.
+ * 可以使用 avcodec_flush_buffers() 冲刷此编码器。如果未设置此标志，
+ * 必须关闭并重新打开编码器，以确保没有帧仍处于待处理状态。
  */
 #define AV_CODEC_CAP_ENCODER_FLUSH   (1 << 21)
 
 /**
- * The encoder is able to output reconstructed frame data, i.e. raw frames that
- * would be produced by decoding the encoded bitstream.
+ * 编码器能够输出重建帧数据，即解码已编码比特流后会产生的原始帧。
  *
- * Reconstructed frame output is enabled by the AV_CODEC_FLAG_RECON_FRAME flag.
+ * 通过 AV_CODEC_FLAG_RECON_FRAME 标志启用重建帧输出。
  */
 #define AV_CODEC_CAP_ENCODER_RECON_FRAME (1 << 22)
 
@@ -160,7 +141,7 @@
  */
 typedef struct AVProfile {
     int profile;
-    const char *name; ///< short name for the profile
+    const char *name; ///< 配置文件的短名称
 } AVProfile;
 
 /**
@@ -168,173 +149,157 @@ typedef struct AVProfile {
  */
 typedef struct AVCodec {
     /**
-     * Name of the codec implementation.
-     * The name is globally unique among encoders and among decoders (but an
-     * encoder and a decoder can share the same name).
-     * This is the primary way to find a codec from the user perspective.
+     * 编解码器实现的名称。
+     * 该名称在编码器之间及解码器之间全局唯一（但编码器和解码器可以同名）。
+     * 从用户角度看，这是查找编解码器的主要方式。
      */
     const char *name;
     /**
-     * Descriptive name for the codec, meant to be more human readable than name.
-     * You should use the NULL_IF_CONFIG_SMALL() macro to define it.
+     * 编解码器的描述性名称，旨在比 name 更易读。
+     * 应使用 NULL_IF_CONFIG_SMALL() 宏定义它。
      */
     const char *long_name;
     enum AVMediaType type;
     enum AVCodecID id;
     /**
-     * Codec capabilities.
-     * see AV_CODEC_CAP_*
+     * 编解码器能力。参见 AV_CODEC_CAP_*。
      */
     int capabilities;
-    uint8_t max_lowres;                     ///< maximum value for lowres supported by the decoder
+    uint8_t max_lowres;                     ///< 解码器支持的 lowres 最大值
 
-    const AVClass *priv_class;              ///< AVClass for the private context
-    const AVProfile *profiles;              ///< array of recognized profiles, or NULL if unknown, array is terminated by {AV_PROFILE_UNKNOWN}
+    const AVClass *priv_class;              ///< 私有上下文的 AVClass
+    const AVProfile *profiles;              ///< 可识别配置文件的数组；未知时为 NULL；数组以 {AV_PROFILE_UNKNOWN} 结尾
 
     /**
-     * Group name of the codec implementation.
-     * This is a short symbolic name of the wrapper backing this codec. A
-     * wrapper uses some kind of external implementation for the codec, such
-     * as an external library, or a codec implementation provided by the OS or
-     * the hardware.
-     * If this field is NULL, this is a builtin, libavcodec native codec.
-     * If non-NULL, this will be the suffix in AVCodec.name in most cases
-     * (usually AVCodec.name will be of the form "<codec_name>_<wrapper_name>").
+     * 编解码器实现的组名称。
+     * 这是支持此编解码器的包装器的简短符号名称。包装器使用某种外部实现，
+     * 例如外部库，或操作系统/硬件提供的编解码器实现。
+     * 此字段为 NULL 时，表示内置的 libavcodec 原生编解码器。
+     * 非 NULL 时，大多数情况下它是 AVCodec.name 的后缀
+     * （AVCodec.name 通常形如 "<codec_name>_<wrapper_name>"）。
      */
     const char *wrapper_name;
 } AVCodec;
 
 /**
- * Iterate over all registered codecs.
+ * 遍历所有已注册的编解码器。
  *
- * @param opaque a pointer where libavcodec will store the iteration state. Must
- *               point to NULL to start the iteration.
+ * @param opaque libavcodec 用于存储迭代状态的指针。开始迭代时必须指向 NULL。
  *
- * @return the next registered codec or NULL when the iteration is
- *         finished
+ * @return 下一个已注册的编解码器；迭代结束时返回 NULL
  */
 const AVCodec *av_codec_iterate(void **opaque);
 
 /**
- * Find a registered decoder with a matching codec ID.
+ * 查找具有匹配编解码器 ID 的已注册解码器。
  *
- * @param id AVCodecID of the requested decoder
- * @return A decoder if one was found, NULL otherwise.
+ * @param id 所请求解码器的 AVCodecID
+ * @return 找到时返回解码器，否则返回 NULL。
  */
 const AVCodec *avcodec_find_decoder(enum AVCodecID id);
 
 /**
- * Find a registered decoder with the specified name.
+ * 查找具有指定名称的已注册解码器。
  *
- * @param name name of the requested decoder
- * @return A decoder if one was found, NULL otherwise.
+ * @param name 所请求解码器的名称
+ * @return 找到时返回解码器，否则返回 NULL。
  */
 const AVCodec *avcodec_find_decoder_by_name(const char *name);
 
 /**
- * Find a registered encoder with a matching codec ID.
+ * 查找具有匹配编解码器 ID 的已注册编码器。
  *
- * @param id AVCodecID of the requested encoder
- * @return An encoder if one was found, NULL otherwise.
+ * @param id 所请求编码器的 AVCodecID
+ * @return 找到时返回编码器，否则返回 NULL。
  */
 const AVCodec *avcodec_find_encoder(enum AVCodecID id);
 
 /**
- * Find a registered encoder with the specified name.
+ * 查找具有指定名称的已注册编码器。
  *
- * @param name name of the requested encoder
- * @return An encoder if one was found, NULL otherwise.
+ * @param name 所请求编码器的名称
+ * @return 找到时返回编码器，否则返回 NULL。
  */
 const AVCodec *avcodec_find_encoder_by_name(const char *name);
 /**
- * @return a non-zero number if codec is an encoder, zero otherwise
+ * @return codec 是编码器时返回非零值，否则返回 0
  */
 int av_codec_is_encoder(const AVCodec *codec);
 
 /**
- * @return a non-zero number if codec is a decoder, zero otherwise
+ * @return codec 是解码器时返回非零值，否则返回 0
  */
 int av_codec_is_decoder(const AVCodec *codec);
 
 /**
- * Return a name for the specified profile, if available.
+ * 如果可用，返回指定配置文件的名称。
  *
- * @param codec the codec that is searched for the given profile
- * @param profile the profile value for which a name is requested
- * @return A name for the profile if found, NULL otherwise.
+ * @param codec 在其中搜索给定配置文件的编解码器
+ * @param profile 要获取名称的配置文件值
+ * @return 找到时返回配置文件名称，否则返回 NULL。
  */
 const char *av_get_profile_name(const AVCodec *codec, int profile);
 
 enum {
     /**
-     * The codec supports this format via the hw_device_ctx interface.
+     * 编解码器通过 hw_device_ctx 接口支持此格式。
      *
-     * When selecting this format, AVCodecContext.hw_device_ctx should
-     * have been set to a device of the specified type before calling
-     * avcodec_open2().
+     * 选择此格式时，应在调用 avcodec_open2() 前将 AVCodecContext.hw_device_ctx
+     * 设置为指定类型的设备。
      */
     AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX = 0x01,
     /**
-     * The codec supports this format via the hw_frames_ctx interface.
+     * 编解码器通过 hw_frames_ctx 接口支持此格式。
      *
-     * When selecting this format for a decoder,
-     * AVCodecContext.hw_frames_ctx should be set to a suitable frames
-     * context inside the get_format() callback.  The frames context
-     * must have been created on a device of the specified type.
+     * 为解码器选择此格式时，应在 get_format() 回调内将
+     * AVCodecContext.hw_frames_ctx 设为适当的帧上下文。
+     * 该帧上下文必须在指定类型的设备上创建。
      *
-     * When selecting this format for an encoder,
-     * AVCodecContext.hw_frames_ctx should be set to the context which
-     * will be used for the input frames before calling avcodec_open2().
+     * 为编码器选择此格式时，应在调用 avcodec_open2() 前将
+     * AVCodecContext.hw_frames_ctx 设为输入帧所使用的上下文。
      */
     AV_CODEC_HW_CONFIG_METHOD_HW_FRAMES_CTX = 0x02,
     /**
-     * The codec supports this format by some internal method.
+     * 编解码器通过某种内部方法支持此格式。
      *
-     * This format can be selected without any additional configuration -
-     * no device or frames context is required.
+     * 无需任何额外配置即可选择此格式，不需要设备或帧上下文。
      */
     AV_CODEC_HW_CONFIG_METHOD_INTERNAL      = 0x04,
     /**
-     * The codec supports this format by some ad-hoc method.
+     * 编解码器通过某种临时专用方法支持此格式。
      *
-     * Additional settings and/or function calls are required.  See the
-     * codec-specific documentation for details.  (Methods requiring
-     * this sort of configuration are deprecated and others should be
-     * used in preference.)
+     * 需要额外设置和/或函数调用。详情参见编解码器专用文档。
+     * （需要此类配置的方法已弃用，应优先使用其他方法。）
      */
     AV_CODEC_HW_CONFIG_METHOD_AD_HOC        = 0x08,
 };
 
 typedef struct AVCodecHWConfig {
     /**
-     * For decoders, a hardware pixel format which that decoder may be
-     * able to decode to if suitable hardware is available.
+     * 对解码器而言，表示在具有合适硬件时可能解码到的硬件像素格式。
      *
-     * For encoders, a pixel format which the encoder may be able to
-     * accept.  If set to AV_PIX_FMT_NONE, this applies to all pixel
-     * formats supported by the codec.
+     * 对编码器而言，表示编码器可能接受的像素格式。如果设为 AV_PIX_FMT_NONE，
+     * 则适用于编解码器支持的所有像素格式。
      */
     enum AVPixelFormat pix_fmt;
     /**
-     * Bit set of AV_CODEC_HW_CONFIG_METHOD_* flags, describing the possible
-     * setup methods which can be used with this configuration.
+     * AV_CODEC_HW_CONFIG_METHOD_* 标志的位集合，描述此配置可使用的设置方法。
      */
     int methods;
     /**
-     * The device type associated with the configuration.
+     * 与配置关联的设备类型。
      *
-     * Must be set for AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX and
-     * AV_CODEC_HW_CONFIG_METHOD_HW_FRAMES_CTX, otherwise unused.
+     * 使用 AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX 和
+     * AV_CODEC_HW_CONFIG_METHOD_HW_FRAMES_CTX 时必须设置，否则不使用。
      */
     enum AVHWDeviceType device_type;
 } AVCodecHWConfig;
 
 /**
- * Retrieve supported hardware configurations for a codec.
+ * 获取编解码器支持的硬件配置。
  *
- * Values of index from zero to some maximum return the indexed configuration
- * descriptor; all other values return NULL.  If the codec does not support
- * any hardware configurations then it will always return NULL.
+ * index 从 0 到某个最大值时返回对应索引的配置描述符，其他值返回 NULL。
+ * 如果编解码器不支持任何硬件配置，则始终返回 NULL。
  */
 const AVCodecHWConfig *avcodec_get_hw_config(const AVCodec *codec, int index);
 

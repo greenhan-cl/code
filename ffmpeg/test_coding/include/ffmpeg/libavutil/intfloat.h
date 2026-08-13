@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2011 Mans Rullgard
  *
  * This file is part of FFmpeg.
@@ -35,7 +35,7 @@ union av_intfloat64 {
 };
 
 /**
- * Reinterpret a 32-bit integer as a float.
+ * 将 32 位整数按位重新解释为 float。
  */
 static av_always_inline float av_int2float(uint32_t i)
 {
@@ -45,7 +45,7 @@ static av_always_inline float av_int2float(uint32_t i)
 }
 
 /**
- * Reinterpret a float as a 32-bit integer.
+ * 将 float 按位重新解释为 32 位整数。
  */
 static av_always_inline uint32_t av_float2int(float f)
 {
@@ -55,7 +55,7 @@ static av_always_inline uint32_t av_float2int(float f)
 }
 
 /**
- * Reinterpret a 64-bit integer as a double.
+ * 将 64 位整数按位重新解释为 double。
  */
 static av_always_inline double av_int2double(uint64_t i)
 {
@@ -65,7 +65,7 @@ static av_always_inline double av_int2double(uint64_t i)
 }
 
 /**
- * Reinterpret a double as a 64-bit integer.
+ * 将 double 按位重新解释为 64 位整数。
  */
 static av_always_inline uint64_t av_double2int(double f)
 {

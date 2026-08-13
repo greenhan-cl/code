@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -23,62 +23,58 @@
 
 /**
  * @file
- * An API-specific header for AV_HWDEVICE_TYPE_QSV.
+ * AV_HWDEVICE_TYPE_QSV 专用 API 头文件。
  *
- * AVHWFramesContext.pool must contain AVBufferRefs whose data pointer points
- * to a mfxFrameSurface1 struct.
+ * AVHWFramesContext.pool 必须包含数据指针指向 mfxFrameSurface1 结构的
+ * AVBufferRef。
  */
 
 /**
- * This struct is allocated as AVHWDeviceContext.hwctx
+ * 此结构被分配为 AVHWDeviceContext.hwctx。
  */
 typedef struct AVQSVDeviceContext {
     mfxSession session;
     /**
-     * The mfxLoader handle used for mfxSession creation
+     * 用于创建 mfxSession 的 mfxLoader 句柄
      *
-     * This field is only available for oneVPL user. For non-oneVPL user, this
-     * field must be set to NULL.
+     * 此字段仅供 oneVPL 用户使用。对于非 oneVPL 用户，必须将此字段设为 NULL。
      *
-     * Filled by the user before calling av_hwdevice_ctx_init() and should be
-     * cast to mfxLoader handle. Deallocating the AVHWDeviceContext will always
-     * release this interface.
+     * 由用户在调用 av_hwdevice_ctx_init() 前填充，并应转换为 mfxLoader 句柄。
+     * 释放 AVHWDeviceContext 时始终会释放此接口。
      */
     void *loader;
 } AVQSVDeviceContext;
 
 /**
- * This struct is allocated as AVHWFramesContext.hwctx
+ * 此结构被分配为 AVHWFramesContext.hwctx。
  */
 typedef struct AVQSVFramesContext {
     /**
-     * A pointer to a mfxFrameSurface1 struct
+     * 指向 mfxFrameSurface1 结构的指针
      *
-     * It is available when nb_surfaces is non-zero.
+     * 当 nb_surfaces 非零时可用。
      */
     mfxFrameSurface1 *surfaces;
 
     /**
-     * Number of frames in the pool
+     * 池中的帧数量
      *
-     * It is 0 for dynamic frame pools or AVHWFramesContext.initial_pool_size
-     * for fixed frame pools.
+     * 动态帧池时为 0，固定帧池时为 AVHWFramesContext.initial_pool_size。
      *
-     * Note only oneVPL GPU runtime 2.9+ can support dynamic frame pools
-     * on d3d11va or vaapi
+     * 注意，只有 oneVPL GPU runtime 2.9+ 能在 d3d11va 或 vaapi 上支持动态帧池。
      */
     int            nb_surfaces;
 
     /**
-     * A combination of MFX_MEMTYPE_* describing the frame pool.
+     * 描述帧池的 MFX_MEMTYPE_* 组合。
      */
     int frame_type;
 
     /**
-     * A pointer to a mfxFrameInfo struct
+     * 指向 mfxFrameInfo 结构的指针
      *
-     * It is available when nb_surfaces is 0, all buffers allocated from the
-     * pool have the same mfxFrameInfo.
+     * 当 nb_surfaces 为 0 时可用；从池中分配的所有缓冲区具有相同的
+     * mfxFrameInfo。
      */
     mfxFrameInfo *info;
 } AVQSVFramesContext;

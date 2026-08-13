@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -18,13 +18,11 @@
 
 /**
  * @file
- * Public dictionary API.
+ * 公共字典 API。
  * @deprecated
- *  AVDictionary is provided for compatibility with libav. It is both in
- *  implementation as well as API inefficient. It does not scale and is
- *  extremely slow with large dictionaries.
- *  It is recommended that new code uses our tree container from tree.c/h
- *  where applicable, which uses AVL trees to achieve O(log n) performance.
+ *  AVDictionary 为兼容 libav 而提供，其实现和 API 效率都很低，扩展性差，
+ *  处理大型字典时极慢。适用时建议新代码使用 tree.c/h 中基于 AVL 树、
+ *  可达到 O(log n) 性能的树容器。
  */
 
 #ifndef AVUTIL_DICT_H
@@ -36,18 +34,17 @@
  * @addtogroup lavu_dict AVDictionary
  * @ingroup lavu_data
  *
- * @brief Simple key:value store
+ * @brief 简单的键值存储
  *
  * @{
- * Dictionaries are used for storing key-value pairs.
+ * 字典用于存储键值对。
  *
- * - To **create an AVDictionary**, simply pass an address of a NULL
- *   pointer to av_dict_set(). NULL can be used as an empty dictionary
- *   wherever a pointer to an AVDictionary is required.
- * - To **insert an entry**, use av_dict_set().
- * - Use av_dict_get() to **retrieve an entry**.
- * - To **iterate over all entries**, use av_dict_iterate().
- * - In order to **free the dictionary and all its contents**, use av_dict_free().
+ * - 要**创建 AVDictionary**，只需将 NULL 指针的地址传给 av_dict_set()。
+ *   需要 AVDictionary 指针的任何地方，都可以使用 NULL 表示空字典。
+ * - 使用 av_dict_set() **插入条目**。
+ * - 使用 av_dict_get() **获取条目**。
+ * - 使用 av_dict_iterate() **遍历所有条目**。
+ * - 使用 av_dict_free() **释放字典及其全部内容**。
  *
  @code
    AVDictionary *d = NULL;           // "create" an empty dictionary
@@ -67,22 +64,18 @@
  */
 
 /**
- * @name AVDictionary Flags
- * Flags that influence behavior of the matching of keys or insertion to the dictionary.
+ * @name AVDictionary 标志
+ * 影响键匹配或向字典插入行为的标志。
  * @{
  */
-#define AV_DICT_MATCH_CASE      1   /**< Only get an entry with exact-case key match. Only relevant in av_dict_get(). */
-#define AV_DICT_IGNORE_SUFFIX   2   /**< Return first entry in a dictionary whose first part corresponds to the search key,
-                                         ignoring the suffix of the found key string. Only relevant in av_dict_get(). */
-#define AV_DICT_DONT_STRDUP_KEY 4   /**< Take ownership of a key that's been
-                                         allocated with av_malloc() or another memory allocation function. */
-#define AV_DICT_DONT_STRDUP_VAL 8   /**< Take ownership of a value that's been
-                                         allocated with av_malloc() or another memory allocation function. */
-#define AV_DICT_DONT_OVERWRITE 16   /**< Don't overwrite existing entries. */
-#define AV_DICT_APPEND         32   /**< If the entry already exists, append to it.  Note that no
-                                         delimiter is added, the strings are simply concatenated. */
-#define AV_DICT_MULTIKEY       64   /**< Allow to store several equal keys in the dictionary */
-#define AV_DICT_DEDUP         128   /**< If inserting a value that already exists for a key, do nothing. Only relevant with AV_DICT_MULTIKEY. */
+#define AV_DICT_MATCH_CASE      1   /**< 仅获取键大小写完全匹配的条目。仅与 av_dict_get() 有关。 */
+#define AV_DICT_IGNORE_SUFFIX   2   /**< 返回字典中首部与搜索键对应的第一个条目，忽略找到的键字符串后缀。仅与 av_dict_get() 有关。 */
+#define AV_DICT_DONT_STRDUP_KEY 4   /**< 接管由 av_malloc() 或其他内存分配函数分配的键的所有权。 */
+#define AV_DICT_DONT_STRDUP_VAL 8   /**< 接管由 av_malloc() 或其他内存分配函数分配的值的所有权。 */
+#define AV_DICT_DONT_OVERWRITE 16   /**< 不覆盖现有条目。 */
+#define AV_DICT_APPEND         32   /**< 条目已存在时追加。注意不会添加分隔符，只会直接拼接字符串。 */
+#define AV_DICT_MULTIKEY       64   /**< 允许在字典中存储多个相同的键 */
+#define AV_DICT_DEDUP         128   /**< 插入键下已存在的值时不执行操作。仅与 AV_DICT_MULTIKEY 一起使用。 */
 /**
  * @}
  */
@@ -95,33 +88,30 @@ typedef struct AVDictionaryEntry {
 typedef struct AVDictionary AVDictionary;
 
 /**
- * Get a dictionary entry with matching key.
+ * 获取键匹配的字典条目。
  *
- * The returned entry key or value must not be changed, or it will
- * cause undefined behavior.
+ * 不得更改返回条目的键或值，否则会导致未定义行为。
  *
- * @param prev  Set to the previous matching element to find the next.
- *              If set to NULL the first matching element is returned.
- * @param key   Matching key
- * @param flags A collection of AV_DICT_* flags controlling how the
- *              entry is retrieved
+ * @param prev  设为前一个匹配元素以查找下一个；为 NULL 时返回第一个匹配元素。
+ * @param key   匹配键
+ * @param flags 控制获取条目方式的 AV_DICT_* 标志集合
  *
- * @return      Found entry or NULL in case no matching entry was found in the dictionary
+ * @return 找到的条目；字典中没有匹配条目时返回 NULL
  */
 AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
                                const AVDictionaryEntry *prev, int flags);
 
 /**
- * Iterate over a dictionary
+ * 遍历字典。
  *
- * Iterates through all entries in the dictionary.
+ * 遍历字典中的所有条目。
  *
- * @warning The returned AVDictionaryEntry key/value must not be changed.
+ * @warning 不得更改返回的 AVDictionaryEntry 键/值。
  *
- * @warning As av_dict_set() invalidates all previous entries returned
- * by this function, it must not be called while iterating over the dict.
+ * @warning av_dict_set() 会使此函数之前返回的所有条目失效，因此遍历字典时
+ * 不得调用它。
  *
- * Typical usage:
+ * 典型用法：
  * @code
  * const AVDictionaryEntry *e = NULL;
  * while ((e = av_dict_iterate(m, e))) {
@@ -129,108 +119,100 @@ AVDictionaryEntry *av_dict_get(const AVDictionary *m, const char *key,
  * }
  * @endcode
  *
- * @param m     The dictionary to iterate over
- * @param prev  Pointer to the previous AVDictionaryEntry, NULL initially
+ * @param m     要遍历的字典
+ * @param prev  指向前一个 AVDictionaryEntry 的指针，初始为 NULL
  *
- * @retval AVDictionaryEntry* The next element in the dictionary
- * @retval NULL               No more elements in the dictionary
+ * @retval AVDictionaryEntry* 字典中的下一个元素
+ * @retval NULL               字典中没有更多元素
  */
 const AVDictionaryEntry *av_dict_iterate(const AVDictionary *m,
                                          const AVDictionaryEntry *prev);
 
 /**
- * Get number of entries in dictionary.
+ * 获取字典中的条目数。
  *
- * @param m dictionary
- * @return  number of entries in dictionary
+ * @param m 字典
+ * @return 字典中的条目数
  */
 int av_dict_count(const AVDictionary *m);
 
 /**
- * Set the given entry in *pm, overwriting an existing entry.
+ * 在 *pm 中设置给定条目，覆盖现有条目。
  *
- * Note: If AV_DICT_DONT_STRDUP_KEY or AV_DICT_DONT_STRDUP_VAL is set,
- * these arguments will be freed on error.
+ * 注意：如果设置 AV_DICT_DONT_STRDUP_KEY 或 AV_DICT_DONT_STRDUP_VAL，
+ * 出错时会释放这些参数。
  *
- * @warning Adding a new entry to a dictionary invalidates all existing entries
- * previously returned with av_dict_get() or av_dict_iterate().
+ * @warning 向字典添加新条目会使之前由 av_dict_get() 或 av_dict_iterate()
+ * 返回的所有现有条目失效。
  *
- * @param pm        Pointer to a pointer to a dictionary struct. If *pm is NULL
- *                  a dictionary struct is allocated and put in *pm.
- * @param key       Entry key to add to *pm (will either be av_strduped or added as a new key depending on flags)
- * @param value     Entry value to add to *pm (will be av_strduped or added as a new key depending on flags).
- *                  Passing a NULL value will cause an existing entry to be deleted.
+ * @param pm        指向字典结构指针的指针。*pm 为 NULL 时会分配字典结构并放入 *pm。
+ * @param key       要添加到 *pm 的条目键（根据 flags 复制或作为新键添加）
+ * @param value     要添加到 *pm 的条目值（根据 flags 复制或作为新值添加）。
+ *                  传入 NULL 值会删除现有条目。
  *
- * @return          >= 0 on success otherwise an error code <0
+ * @return 成功时 >= 0，否则返回 <0 的错误码
  */
 int av_dict_set(AVDictionary **pm, const char *key, const char *value, int flags);
 
 /**
- * Convenience wrapper for av_dict_set() that converts the value to a string
- * and stores it.
+ * av_dict_set() 的便捷封装，将值转换为字符串并存储。
  *
- * Note: If ::AV_DICT_DONT_STRDUP_KEY is set, key will be freed on error.
+ * 注意：设置 ::AV_DICT_DONT_STRDUP_KEY 时，出错会释放 key。
  */
 int av_dict_set_int(AVDictionary **pm, const char *key, int64_t value, int flags);
 
 /**
- * Parse the key/value pairs list and add the parsed entries to a dictionary.
+ * 解析键/值对列表，并将解析出的条目添加到字典。
  *
- * In case of failure, all the successfully set entries are stored in
- * *pm. You may need to manually free the created dictionary.
+ * 失败时，所有成功设置的条目都会存储在 *pm 中。可能需要手动释放创建的字典。
  *
- * @param key_val_sep  A 0-terminated list of characters used to separate
- *                     key from value
- * @param pairs_sep    A 0-terminated list of characters used to separate
- *                     two pairs from each other
- * @param flags        Flags to use when adding to the dictionary.
- *                     ::AV_DICT_DONT_STRDUP_KEY and ::AV_DICT_DONT_STRDUP_VAL
- *                     are ignored since the key/value tokens will always
- *                     be duplicated.
+ * @param key_val_sep  用于分隔键和值、以 0 结尾的字符列表
+ * @param pairs_sep    用于分隔两个键值对、以 0 结尾的字符列表
+ * @param flags        添加到字典时使用的标志。由于键/值标记始终会被复制，
+ *                     因此忽略 ::AV_DICT_DONT_STRDUP_KEY 和
+ *                     ::AV_DICT_DONT_STRDUP_VAL。
  *
- * @return             0 on success, negative AVERROR code on failure
+ * @return 成功时返回 0，失败时返回负的 AVERROR 错误码
  */
 int av_dict_parse_string(AVDictionary **pm, const char *str,
                          const char *key_val_sep, const char *pairs_sep,
                          int flags);
 
 /**
- * Copy entries from one AVDictionary struct into another.
+ * 将一个 AVDictionary 结构中的条目复制到另一个结构。
  *
- * @note Metadata is read using the ::AV_DICT_IGNORE_SUFFIX flag
+ * @note 使用 ::AV_DICT_IGNORE_SUFFIX 标志读取元数据
  *
- * @param dst   Pointer to a pointer to a AVDictionary struct to copy into. If *dst is NULL,
- *              this function will allocate a struct for you and put it in *dst
- * @param src   Pointer to the source AVDictionary struct to copy items from.
- * @param flags Flags to use when setting entries in *dst
+ * @param dst   指向目标 AVDictionary 结构指针的指针。*dst 为 NULL 时，此函数会
+ *              分配结构并放入 *dst
+ * @param src   指向源 AVDictionary 结构的指针
+ * @param flags 在 *dst 中设置条目时使用的标志
  *
- * @return 0 on success, negative AVERROR code on failure. If dst was allocated
- *           by this function, callers should free the associated memory.
+ * @return 成功时返回 0，失败时返回负的 AVERROR 错误码。如果 dst 由此函数分配，
+ *         调用者应释放相关内存。
  */
 int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags);
 
 /**
- * Free all the memory allocated for an AVDictionary struct
- * and all keys and values.
+ * 释放为 AVDictionary 结构及所有键和值分配的全部内存。
  */
 void av_dict_free(AVDictionary **m);
 
 /**
- * Get dictionary entries as a string.
+ * 以字符串形式获取字典条目。
  *
- * Create a string containing dictionary's entries.
- * Such string may be passed back to av_dict_parse_string().
- * @note String is escaped with backslashes ('\').
+ * 创建包含字典条目的字符串。该字符串可传回 av_dict_parse_string()。
+ * @note 字符串使用反斜杠（'\'）转义。
  *
- * @warning Separators cannot be neither '\\' nor '\0'. They also cannot be the same.
+ * @warning 分隔符不能是 '\\' 或 '\0'，也不能彼此相同。
  *
- * @param[in]  m             The dictionary
- * @param[out] buffer        Pointer to buffer that will be allocated with string containing entries.
- *                           Buffer must be freed by the caller when is no longer needed.
- * @param[in]  key_val_sep   Character used to separate key from value
- * @param[in]  pairs_sep     Character used to separate two pairs from each other
+ * @param[in]  m             字典
+ * @param[out] buffer        指向将被分配并保存条目字符串的缓冲区的指针。
+ *                           不再需要时必须由调用者释放缓冲区。
+ * @param[in]  key_val_sep   用于分隔键和值的字符
+ * @param[in]  pairs_sep     用于分隔两个键值对的字符
  *
- * @return                   >= 0 on success, negative on error
+ * @return 成功时 >= 0，出错时为负值
  */
 int av_dict_get_string(const AVDictionary *m, char **buffer,
                        const char key_val_sep, const char pairs_sep);

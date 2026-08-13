@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2001 Fabrice Bellard
  *
  * This file is part of FFmpeg.
@@ -24,7 +24,7 @@
 /**
  * @file
  * @ingroup libavc
- * Libavcodec external API header
+ * Libavcodec 外部 API 头文件
  */
 
 #include "libavutil/samplefmt.h"
@@ -44,9 +44,8 @@
 #include "packet.h"
 #include "version_major.h"
 #ifndef HAVE_AV_CONFIG_H
-/* When included as part of the ffmpeg build, only include the major version
- * to avoid unnecessary rebuilds. When included externally, keep including
- * the full version information. */
+/* 作为 ffmpeg 构建的一部分包含时，仅包含主版本以避免不必要的重新构建。
+ * 从外部包含时，仍包含完整版本信息。 */
 #include "version.h"
 
 #include "codec_desc.h"
@@ -57,31 +56,31 @@ struct AVCodecParameters;
 
 /**
  * @defgroup libavc libavcodec
- * Encoding/Decoding Library
+ * 编码/解码库
  *
  * @{
  *
- * @defgroup lavc_decoding Decoding
+ * @defgroup lavc_decoding 解码
  * @{
  * @}
  *
- * @defgroup lavc_encoding Encoding
+ * @defgroup lavc_encoding 编码
  * @{
  * @}
  *
- * @defgroup lavc_codec Codecs
+ * @defgroup lavc_codec 编解码器
  * @{
- * @defgroup lavc_codec_native Native Codecs
- * @{
- * @}
- * @defgroup lavc_codec_wrappers External library wrappers
+ * @defgroup lavc_codec_native 原生编解码器
  * @{
  * @}
- * @defgroup lavc_codec_hwaccel Hardware Accelerators bridge
+ * @defgroup lavc_codec_wrappers 外部库包装器
+ * @{
+ * @}
+ * @defgroup lavc_codec_hwaccel 硬件加速桥接
  * @{
  * @}
  * @}
- * @defgroup lavc_internal Internal
+ * @defgroup lavc_internal 内部接口
  * @{
  * @}
  * @}
@@ -89,101 +88,68 @@ struct AVCodecParameters;
 
 /**
  * @ingroup libavc
- * @defgroup lavc_encdec send/receive encoding and decoding API overview
+ * @defgroup lavc_encdec 发送/接收式编码和解码 API 概述
  * @{
  *
- * The avcodec_send_packet()/avcodec_receive_frame()/avcodec_send_frame()/
- * avcodec_receive_packet() functions provide an encode/decode API, which
- * decouples input and output.
+ * avcodec_send_packet()/avcodec_receive_frame()/avcodec_send_frame()/
+ * avcodec_receive_packet() 提供将输入与输出解耦的编码/解码 API。
  *
- * The API is very similar for encoding/decoding and audio/video, and works as
- * follows:
- * - Set up and open the AVCodecContext as usual.
- * - Send valid input:
- *   - For decoding, call avcodec_send_packet() to give the decoder raw
- *     compressed data in an AVPacket.
- *   - For encoding, call avcodec_send_frame() to give the encoder an AVFrame
- *     containing uncompressed audio or video.
+ * 编码/解码以及音频/视频使用此 API 的方式非常相似，流程如下：
+ * - 按通常方式设置并打开 AVCodecContext。
+ * - 发送有效输入：
+ *   - 解码时，调用 avcodec_send_packet()，通过 AVPacket 向解码器提供原始压缩数据。
+ *   - 编码时，调用 avcodec_send_frame()，通过 AVFrame 向编码器提供未压缩音频或视频。
  *
- *   In both cases, it is recommended that AVPackets and AVFrames are
- *   refcounted, or libavcodec might have to copy the input data. (libavformat
- *   always returns refcounted AVPackets, and av_frame_get_buffer() allocates
- *   refcounted AVFrames.)
- * - Receive output in a loop. Periodically call one of the avcodec_receive_*()
- *   functions and process their output:
- *   - For decoding, call avcodec_receive_frame(). On success, it will return
- *     an AVFrame containing uncompressed audio or video data.
- *   - For encoding, call avcodec_receive_packet(). On success, it will return
- *     an AVPacket with a compressed frame.
+ *   两种情况下都建议 AVPacket 和 AVFrame 使用引用计数，否则 libavcodec 可能需要
+ *   复制输入数据。（libavformat 始终返回引用计数 AVPacket，av_frame_get_buffer()
+ *   分配引用计数 AVFrame。）
+ * - 循环接收输出。定期调用 avcodec_receive_*() 函数并处理输出：
+ *   - 解码时调用 avcodec_receive_frame()，成功时返回包含未压缩音视频的 AVFrame。
+ *   - 编码时调用 avcodec_receive_packet()，成功时返回包含压缩帧的 AVPacket。
  *
- *   Repeat this call until it returns AVERROR(EAGAIN) or an error. The
- *   AVERROR(EAGAIN) return value means that new input data is required to
- *   return new output. In this case, continue with sending input. For each
- *   input frame/packet, the codec will typically return 1 output frame/packet,
- *   but it can also be 0 or more than 1.
+ *   重复调用直到返回 AVERROR(EAGAIN) 或错误。AVERROR(EAGAIN) 表示需要新输入
+ *   才能产生新输出，此时继续发送输入。每个输入帧/包通常产生 1 个输出帧/包，
+ *   但也可能为 0 个或多个。
  *
- * At the beginning of decoding or encoding, the codec might accept multiple
- * input frames/packets without returning a frame, until its internal buffers
- * are filled. This situation is handled transparently if you follow the steps
- * outlined above.
+ * 编解码开始时，编解码器可能接受多个输入帧/包而不返回帧，直到内部缓冲区填满。
+ * 按上述步骤操作即可透明处理这种情况。
  *
- * In theory, sending input can result in EAGAIN - this should happen only if
- * not all output was received. You can use this to structure alternative decode
- * or encode loops other than the one suggested above. For example, you could
- * try sending new input on each iteration, and try to receive output if that
- * returns EAGAIN.
+ * 理论上发送输入可能返回 EAGAIN，这只应发生在尚未取完全部输出时。
+ * 可利用此特性组织不同于上述建议的编解码循环。例如每次迭代尝试发送新输入，
+ * 返回 EAGAIN 时再尝试接收输出。
  *
- * End of stream situations. These require "flushing" (aka draining) the codec,
- * as the codec might buffer multiple frames or packets internally for
- * performance or out of necessity (consider B-frames).
- * This is handled as follows:
- * - Instead of valid input, send NULL to the avcodec_send_packet() (decoding)
- *   or avcodec_send_frame() (encoding) functions. This will enter draining
- *   mode.
- * - Call avcodec_receive_frame() (decoding) or avcodec_receive_packet()
- *   (encoding) in a loop until AVERROR_EOF is returned. The functions will
- *   not return AVERROR(EAGAIN), unless you forgot to enter draining mode.
- * - Before decoding can be resumed again, the codec has to be reset with
- *   avcodec_flush_buffers().
+ * 流结束时需要“冲刷”（即排空）编解码器，因为出于性能或必要性（如 B 帧），
+ * 编解码器内部可能缓冲多个帧或包。处理方式如下：
+ * - 不发送有效输入，而是向 avcodec_send_packet()（解码）或
+ *   avcodec_send_frame()（编码）发送 NULL，进入排空模式。
+ * - 循环调用 avcodec_receive_frame()（解码）或 avcodec_receive_packet()（编码），
+ *   直到返回 AVERROR_EOF。除非忘记进入排空模式，否则不会返回 AVERROR(EAGAIN)。
+ * - 再次恢复解码前，必须使用 avcodec_flush_buffers() 重置编解码器。
  *
- * Using the API as outlined above is highly recommended. But it is also
- * possible to call functions outside of this rigid schema. For example, you can
- * call avcodec_send_packet() repeatedly without calling
- * avcodec_receive_frame(). In this case, avcodec_send_packet() will succeed
- * until the codec's internal buffer has been filled up (which is typically of
- * size 1 per output frame, after initial input), and then reject input with
- * AVERROR(EAGAIN). Once it starts rejecting input, you have no choice but to
- * read at least some output.
+ * 强烈建议按上述方式使用 API，但也可在此固定模式之外调用函数。例如可连续调用
+ * avcodec_send_packet() 而不调用 avcodec_receive_frame()。在内部缓冲区填满前
+ * avcodec_send_packet() 会成功，随后以 AVERROR(EAGAIN) 拒绝输入。
+ * 一旦开始拒绝输入，就必须读取至少一部分输出。
  *
- * Not all codecs will follow a rigid and predictable dataflow; the only
- * guarantee is that an AVERROR(EAGAIN) return value on a send/receive call on
- * one end implies that a receive/send call on the other end will succeed, or
- * at least will not fail with AVERROR(EAGAIN). In general, no codec will
- * permit unlimited buffering of input or output.
+ * 并非所有编解码器都遵循严格可预测的数据流。唯一保证是：一端发送/接收调用返回
+ * AVERROR(EAGAIN) 时，另一端的接收/发送调用会成功，或至少不会也以
+ * AVERROR(EAGAIN) 失败。一般而言，编解码器不允许无限缓冲输入或输出。
  *
- * A codec is not allowed to return AVERROR(EAGAIN) for both sending and receiving. This
- * would be an invalid state, which could put the codec user into an endless
- * loop. The API has no concept of time either: it cannot happen that trying to
- * do avcodec_send_packet() results in AVERROR(EAGAIN), but a repeated call 1 second
- * later accepts the packet (with no other receive/flush API calls involved).
- * The API is a strict state machine, and the passage of time is not supposed
- * to influence it. Some timing-dependent behavior might still be deemed
- * acceptable in certain cases. But it must never result in both send/receive
- * returning EAGAIN at the same time at any point. It must also absolutely be
- * avoided that the current state is "unstable" and can "flip-flop" between
- * the send/receive APIs allowing progress. For example, it's not allowed that
- * the codec randomly decides that it actually wants to consume a packet now
- * instead of returning a frame, after it just returned AVERROR(EAGAIN) on an
- * avcodec_send_packet() call.
+ * 编解码器不允许发送和接收同时返回 AVERROR(EAGAIN)，否则会形成可能使用户陷入
+ * 无限循环的无效状态。API 也没有时间概念：不能在 avcodec_send_packet() 返回
+ * AVERROR(EAGAIN) 后，不进行其他接收/冲刷调用，仅等待一秒再调用就接受数据包。
+ * 此 API 是严格状态机，时间流逝不应影响它。某些情况下可接受依赖时序的行为，
+ * 但绝不能使发送/接收在任何时刻同时返回 EAGAIN，也必须避免状态“不稳定”并在
+ * 发送/接收 API 之间来回切换才可推进。例如 avcodec_send_packet() 刚返回
+ * AVERROR(EAGAIN) 后，编解码器不能随机改为想消费数据包而不是返回帧。
  * @}
  */
 
 /**
- * @defgroup lavc_core Core functions/structures.
+ * @defgroup lavc_core 核心函数/结构体
  * @ingroup libavc
  *
- * Basic definitions, functions for querying libavcodec capabilities,
- * allocating core structures, etc.
+ * 基本定义、查询 libavcodec 能力的函数、核心结构体的分配等。
  * @{
  */
 
@@ -193,257 +159,235 @@ struct AVCodecParameters;
 typedef struct RcOverride{
     int start_frame;
     int end_frame;
-    int qscale; // If this is 0 then quality_factor will be used instead.
+    int qscale; // 若为 0，则改用 quality_factor。
     float quality_factor;
 } RcOverride;
 
-/* encoding support
-   These flags can be passed in AVCodecContext.flags before initialization.
-   Note: Not everything is supported yet.
+/* 编码支持
+   可在初始化前通过 AVCodecContext.flags 传入这些标志。
+   注意：目前尚未支持所有功能。
 */
 
 /**
- * Allow decoders to produce frames with data planes that are not aligned
- * to CPU requirements (e.g. due to cropping).
+ * 允许解码器生成数据平面未按 CPU 要求对齐的帧（例如因裁剪所致）。
  */
 #define AV_CODEC_FLAG_UNALIGNED       (1 <<  0)
 /**
- * Use fixed qscale.
+ * 使用固定 qscale。
  */
 #define AV_CODEC_FLAG_QSCALE          (1 <<  1)
 /**
- * 4 MV per MB allowed / advanced prediction for H.263.
+ * 允许每个 MB 使用 4 个 MV / H.263 高级预测。
  */
 #define AV_CODEC_FLAG_4MV             (1 <<  2)
 /**
- * Output even those frames that might be corrupted.
+ * 即使帧可能损坏也将其输出。
  */
 #define AV_CODEC_FLAG_OUTPUT_CORRUPT  (1 <<  3)
 /**
- * Use qpel MC.
+ * 使用四分之一像素运动补偿。
  */
 #define AV_CODEC_FLAG_QPEL            (1 <<  4)
 /**
- * Request the encoder to output reconstructed frames, i.e.\ frames that would
- * be produced by decoding the encoded bitstream. These frames may be retrieved
- * by calling avcodec_receive_frame() immediately after a successful call to
- * avcodec_receive_packet().
+ * 请求编码器输出重建帧，即解码已编码比特流时会产生的帧。成功调用
+ * avcodec_receive_packet() 后，可立即调用 avcodec_receive_frame() 获取这些帧。
  *
- * Should only be used with encoders flagged with the
- * @ref AV_CODEC_CAP_ENCODER_RECON_FRAME capability.
+ * 只能用于带有 @ref AV_CODEC_CAP_ENCODER_RECON_FRAME 能力标志的编码器。
  *
  * @note
- * Each reconstructed frame returned by the encoder corresponds to the last
- * encoded packet, i.e. the frames are returned in coded order rather than
- * presentation order.
+ * 编码器返回的每个重建帧都对应最后一个已编码数据包，即帧按编码顺序而非显示顺序返回。
  *
  * @note
- * Frame parameters (like pixel format or dimensions) do not have to match the
- * AVCodecContext values. Make sure to use the values from the returned frame.
+ * 帧参数（如像素格式或尺寸）不一定与 AVCodecContext 中的值一致。请务必使用返回帧中的值。
  */
 #define AV_CODEC_FLAG_RECON_FRAME     (1 <<  6)
 /**
- * @par decoding
- * Request the decoder to propagate each packet's AVPacket.opaque and
- * AVPacket.opaque_ref to its corresponding output AVFrame.
+ * @par 解码
+ * 请求解码器将每个数据包的 AVPacket.opaque 和 AVPacket.opaque_ref 传播到其对应的输出 AVFrame。
  *
- * @par encoding:
- * Request the encoder to propagate each frame's AVFrame.opaque and
- * AVFrame.opaque_ref values to its corresponding output AVPacket.
+ * @par 编码：
+ * 请求编码器将每个帧的 AVFrame.opaque 和 AVFrame.opaque_ref 值传播到其对应的输出 AVPacket。
  *
  * @par
- * May only be set on encoders that have the
- * @ref AV_CODEC_CAP_ENCODER_REORDERED_OPAQUE capability flag.
+ * 只能在带有 @ref AV_CODEC_CAP_ENCODER_REORDERED_OPAQUE 能力标志的编码器上设置。
  *
  * @note
- * While in typical cases one input frame produces exactly one output packet
- * (perhaps after a delay), in general the mapping of frames to packets is
- * M-to-N, so
- * - Any number of input frames may be associated with any given output packet.
- *   This includes zero - e.g. some encoders may output packets that carry only
- *   metadata about the whole stream.
- * - A given input frame may be associated with any number of output packets.
- *   Again this includes zero - e.g. some encoders may drop frames under certain
- *   conditions.
+ * 典型情况下，一个输入帧恰好产生一个输出数据包（可能有延迟），但一般而言，帧到数据包
+ * 的映射是 M 对 N，因此：
+ * - 任意数量的输入帧都可与某个输出数据包关联，包括零个；例如，某些编码器可能输出
+ *   仅携带整个流元数据的数据包。
+ * - 某个输入帧可与任意数量的输出数据包关联，同样包括零个；例如，某些编码器可能在
+ *   特定条件下丢帧。
  * .
- * This implies that when using this flag, the caller must NOT assume that
- * - a given input frame's opaques will necessarily appear on some output packet;
- * - every output packet will have some non-NULL opaque value.
+ * 这意味着使用此标志时，调用方不得假定：
+ * - 某个输入帧的 opaque 一定会出现在某个输出数据包上；
+ * - 每个输出数据包都会有非 NULL 的 opaque 值。
  * .
- * When an output packet contains multiple frames, the opaque values will be
- * taken from the first of those.
+ * 当一个输出数据包包含多个帧时，opaque 值取自其中第一个帧。
  *
  * @note
- * The converse holds for decoders, with frames and packets switched.
+ * 对解码器则相反，只需将帧与数据包互换。
  */
 #define AV_CODEC_FLAG_COPY_OPAQUE     (1 <<  7)
 /**
- * Signal to the encoder that the values of AVFrame.duration are valid and
- * should be used (typically for transferring them to output packets).
+ * 告知编码器 AVFrame.duration 的值有效且应被使用（通常用于传递到输出数据包）。
  *
- * If this flag is not set, frame durations are ignored.
+ * 若未设置此标志，则忽略帧时长。
  */
 #define AV_CODEC_FLAG_FRAME_DURATION  (1 <<  8)
 /**
- * Use internal 2pass ratecontrol in first pass mode.
+ * 在第一遍模式下使用内部两遍码率控制。
  */
 #define AV_CODEC_FLAG_PASS1           (1 <<  9)
 /**
- * Use internal 2pass ratecontrol in second pass mode.
+ * 在第二遍模式下使用内部两遍码率控制。
  */
 #define AV_CODEC_FLAG_PASS2           (1 << 10)
 /**
- * loop filter.
+ * 环路滤波器。
  */
 #define AV_CODEC_FLAG_LOOP_FILTER     (1 << 11)
 /**
- * Only decode/encode grayscale.
+ * 仅解码/编码灰度图像。
  */
 #define AV_CODEC_FLAG_GRAY            (1 << 13)
 /**
- * error[?] variables will be set during encoding.
+ * 编码期间将设置 error[?] 变量。
  */
 #define AV_CODEC_FLAG_PSNR            (1 << 15)
 /**
- * Use interlaced DCT.
+ * 使用隔行 DCT。
  */
 #define AV_CODEC_FLAG_INTERLACED_DCT  (1 << 18)
 /**
- * Force low delay.
+ * 强制低延迟。
  */
 #define AV_CODEC_FLAG_LOW_DELAY       (1 << 19)
 /**
- * Place global headers in extradata instead of every keyframe.
+ * 将全局头放入 extradata，而不是放入每个关键帧。
  */
 #define AV_CODEC_FLAG_GLOBAL_HEADER   (1 << 22)
 /**
- * Use only bitexact stuff (except (I)DCT).
+ * 仅使用位精确处理（(I)DCT 除外）。
  */
 #define AV_CODEC_FLAG_BITEXACT        (1 << 23)
-/* Fx : Flag for H.263+ extra options */
+/* Fx：H.263+ 额外选项的标志 */
 /**
- * H.263 advanced intra coding / MPEG-4 AC prediction
+ * H.263 高级帧内编码 / MPEG-4 AC 预测
  */
 #define AV_CODEC_FLAG_AC_PRED         (1 << 24)
 /**
- * interlaced motion estimation
+ * 隔行运动估计
  */
 #define AV_CODEC_FLAG_INTERLACED_ME   (1 << 29)
 #define AV_CODEC_FLAG_CLOSED_GOP      (1U << 31)
 
 /**
- * Allow non spec compliant speedup tricks.
+ * 允许不符合规范的加速技巧。
  */
 #define AV_CODEC_FLAG2_FAST           (1 <<  0)
 /**
- * Skip bitstream encoding.
+ * 跳过比特流编码。
  */
 #define AV_CODEC_FLAG2_NO_OUTPUT      (1 <<  2)
 /**
- * Place global headers at every keyframe instead of in extradata.
+ * 将全局头放入每个关键帧，而不是放入 extradata。
  */
 #define AV_CODEC_FLAG2_LOCAL_HEADER   (1 <<  3)
 
 /**
- * Input bitstream might be truncated at a packet boundaries
- * instead of only at frame boundaries.
+ * 输入比特流可能在数据包边界处截断，而不只是在帧边界处截断。
  */
 #define AV_CODEC_FLAG2_CHUNKS         (1 << 15)
 /**
- * Discard cropping information from SPS.
+ * 丢弃 SPS 中的裁剪信息。
  */
 #define AV_CODEC_FLAG2_IGNORE_CROP    (1 << 16)
 /**
- * Force audio encoders to use a fixed frame size.
+ * 强制音频编码器使用固定帧大小。
  */
 #define AV_CODEC_FLAG2_FIXED_FRAME_SIZE (1 << 17)
 
 /**
- * Show all frames before the first keyframe
+ * 显示第一个关键帧之前的所有帧
  */
 #define AV_CODEC_FLAG2_SHOW_ALL       (1 << 22)
 /**
- * Export motion vectors through frame side data
+ * 通过帧侧数据导出运动矢量
  */
 #define AV_CODEC_FLAG2_EXPORT_MVS     (1 << 28)
 /**
- * Do not skip samples and export skip information as frame side data
+ * 不跳过采样，并将跳过信息导出为帧侧数据
  */
 #define AV_CODEC_FLAG2_SKIP_MANUAL    (1 << 29)
 /**
- * Do not reset ASS ReadOrder field on flush (subtitles decoding)
+ * 冲刷时不重置 ASS ReadOrder 字段（字幕解码）
  */
 #define AV_CODEC_FLAG2_RO_FLUSH_NOOP  (1 << 30)
 /**
- * Generate/parse ICC profiles on encode/decode, as appropriate for the type of
- * file. No effect on codecs which cannot contain embedded ICC profiles, or
- * when compiled without support for lcms2.
+ * 编码/解码时根据文件类型生成/解析 ICC 配置文件。对无法包含嵌入式 ICC 配置文件的
+ * 编解码器，或编译时未启用 lcms2 支持时无效。
  */
 #define AV_CODEC_FLAG2_ICC_PROFILES   (1U << 31)
 
-/* Exported side data.
-   These flags can be passed in AVCodecContext.export_side_data before initialization.
+/* 导出的侧数据。
+   可在初始化前通过 AVCodecContext.export_side_data 传入这些标志。
 */
 /**
- * Export motion vectors through frame side data
+ * 通过帧侧数据导出运动矢量
  */
 #define AV_CODEC_EXPORT_DATA_MVS         (1 << 0)
 /**
- * Export encoder Producer Reference Time through packet side data
+ * 通过数据包侧数据导出编码器生产者参考时间
  */
 #define AV_CODEC_EXPORT_DATA_PRFT        (1 << 1)
 /**
- * Decoding only.
- * Export the AVVideoEncParams structure through frame side data.
+ * 仅用于解码。
+ * 通过帧侧数据导出 AVVideoEncParams 结构体。
  */
 #define AV_CODEC_EXPORT_DATA_VIDEO_ENC_PARAMS (1 << 2)
 /**
- * Decoding only.
- * Do not apply film grain, export it instead.
+ * 仅用于解码。
+ * 不应用胶片颗粒，而是将其导出。
  */
 #define AV_CODEC_EXPORT_DATA_FILM_GRAIN (1 << 3)
 
 /**
- * Decoding only.
- * Do not apply picture enhancement layers, export them instead.
+ * 仅用于解码。
+ * 不应用图像增强层，而是将其导出。
  */
 #define AV_CODEC_EXPORT_DATA_ENHANCEMENTS (1 << 4)
 
 /**
- * The decoder will keep a reference to the frame and may reuse it later.
+ * 解码器将保留对该帧的引用，并可能稍后复用它。
  */
 #define AV_GET_BUFFER_FLAG_REF (1 << 0)
 
 /**
- * The encoder will keep a reference to the packet and may reuse it later.
+ * 编码器将保留对该数据包的引用，并可能稍后复用它。
  */
 #define AV_GET_ENCODE_BUFFER_FLAG_REF (1 << 0)
 
 /**
- * The decoder will bypass frame threading and return the next frame as soon as
- * possible. Note that this may deliver frames earlier than the advertised
- * `AVCodecContext.delay`. No effect when frame threading is disabled, or on
- * encoding.
+ * 解码器将绕过帧级线程，并尽快返回下一帧。注意，这可能会比公布的
+ * `AVCodecContext.delay` 更早交付帧。帧级线程被禁用时或编码时无效。
  */
 #define AV_CODEC_RECEIVE_FRAME_FLAG_SYNCHRONOUS (1 << 0)
 
 /**
- * main external API structure.
- * New fields can be added to the end with minor version bumps.
- * Removal, reordering and changes to existing fields require a major
- * version bump.
- * You can use AVOptions (av_opt* / av_set/get*()) to access these fields from user
- * applications.
- * The name string for AVOptions options matches the associated command line
- * parameter name and can be found in libavcodec/options_table.h
- * The AVOption/command line parameter names differ in some cases from the C
- * structure field names for historic reasons or brevity.
- * sizeof(AVCodecContext) must not be used outside libav*.
+ * 主要的外部 API 结构体。
+ * 小版本升级时可以在末尾添加新字段。
+ * 删除、重新排序或更改现有字段需要升级主版本。
+ * 用户应用程序可使用 AVOptions（av_opt* / av_set/get*()）访问这些字段。
+ * AVOptions 选项的名称字符串与对应命令行参数名一致，可在
+ * libavcodec/options_table.h 中找到。
+ * 由于历史原因或为简洁起见，AVOption/命令行参数名有时与 C 结构体字段名不同。
+ * 不得在 libav* 外部使用 sizeof(AVCodecContext)。
  */
 typedef struct AVCodecContext {
     /**
-     * information on struct for av_log
-     * - set by avcodec_alloc_context3
+     * 用于 av_log 的结构体信息
+     * - 由 avcodec_alloc_context3 设置
      */
     const AVClass *av_class;
     int log_level_offset;
@@ -453,429 +397,381 @@ typedef struct AVCodecContext {
     enum AVCodecID     codec_id; /* see AV_CODEC_ID_xxx */
 
     /**
-     * fourcc (LSB first, so "ABCD" -> ('D'<<24) + ('C'<<16) + ('B'<<8) + 'A').
-     * This is used to work around some encoder bugs.
-     * A demuxer should set this to what is stored in the field used to identify the codec.
-     * If there are multiple such fields in a container then the demuxer should choose the one
-     * which maximizes the information about the used codec.
-     * If the codec tag field in a container is larger than 32 bits then the demuxer should
-     * remap the longer ID to 32 bits with a table or other structure. Alternatively a new
-     * extra_codec_tag + size could be added but for this a clear advantage must be demonstrated
-     * first.
-     * - encoding: Set by user, if not then the default based on codec_id will be used.
-     * - decoding: Set by user, will be converted to uppercase by libavcodec during init.
+     * fourcc（最低有效字节在前，因此 "ABCD" -> ('D'<<24) + ('C'<<16) + ('B'<<8) + 'A'）。
+     * 用于规避某些编码器缺陷。
+     * 解复用器应将其设置为用于标识编解码器的字段中存储的值。
+     * 如果容器中存在多个此类字段，解复用器应选择最能描述所用编解码器的字段。
+     * 如果容器中的编解码器标签字段大于 32 位，解复用器应通过表或其他结构将较长 ID
+     * 映射为 32 位。也可以添加 extra_codec_tag + size，但必须先证明这样做有明显优势。
+     * - 编码：由用户设置；否则使用基于 codec_id 的默认值。
+     * - 解码：由用户设置，libavcodec 初始化期间会将其转换为大写。
      */
     unsigned int codec_tag;
 
     void *priv_data;
 
     /**
-     * Private context used for internal data.
+     * 用于内部数据的私有上下文。
      *
-     * Unlike priv_data, this is not codec-specific. It is used in general
-     * libavcodec functions.
+     * 与 priv_data 不同，它并非特定于编解码器，而由通用 libavcodec 函数使用。
      */
     struct AVCodecInternal *internal;
 
     /**
-     * Private data of the user, can be used to carry app specific stuff.
-     * - encoding: Set by user.
-     * - decoding: Set by user.
+     * 用户私有数据，可用于携带应用程序特有内容。
+     * - 编码：由用户设置。
+     * - 解码：由用户设置。
      */
     void *opaque;
 
     /**
-     * the average bitrate
-     * - encoding: Set by user; unused for constant quantizer encoding.
-     * - decoding: Set by user, may be overwritten by libavcodec
-     *             if this info is available in the stream
+     * 平均码率
+     * - 编码：由用户设置；恒定量化器编码不使用。
+     * - 解码：由用户设置；若流中有此信息，可能被 libavcodec 覆盖。
      */
     int64_t bit_rate;
 
     /**
      * AV_CODEC_FLAG_*.
-     * - encoding: Set by user.
-     * - decoding: Set by user.
+     * - 编码：由用户设置。
+     * - 解码：由用户设置。
      */
     int flags;
 
     /**
      * AV_CODEC_FLAG2_*
-     * - encoding: Set by user.
-     * - decoding: Set by user.
+     * - 编码：由用户设置。
+     * - 解码：由用户设置。
      */
     int flags2;
 
     /**
-     * Out-of-band global headers that may be used by some codecs.
+     * 某些编解码器可能使用的带外全局头。
      *
-     * - decoding: Should be set by the caller when available (typically from a
-     *   demuxer) before opening the decoder; some decoders require this to be
-     *   set and will fail to initialize otherwise.
+     * - 解码：若可用（通常来自解复用器），调用方应在打开解码器前设置；某些解码器
+     *   要求设置此项，否则初始化会失败。
      *
-     *   The array must be allocated with the av_malloc() family of functions;
-     *   allocated size must be at least AV_INPUT_BUFFER_PADDING_SIZE bytes
-     *   larger than extradata_size.
+     *   数组必须使用 av_malloc() 系列函数分配；分配大小必须至少比 extradata_size
+     *   多 AV_INPUT_BUFFER_PADDING_SIZE 字节。
      *
-     * - encoding: May be set by the encoder in avcodec_open2() (possibly
-     *   depending on whether the AV_CODEC_FLAG_GLOBAL_HEADER flag is set).
+     * - 编码：可能由编码器在 avcodec_open2() 中设置（可能取决于是否设置
+     *   AV_CODEC_FLAG_GLOBAL_HEADER 标志）。
      *
-     * After being set, the array is owned by the codec and freed in
-     * avcodec_free_context().
+     * 设置后，该数组归编解码器所有，并在 avcodec_free_context() 中释放。
      */
     uint8_t *extradata;
     int extradata_size;
 
     /**
-     * This is the fundamental unit of time (in seconds) in terms
-     * of which frame timestamps are represented. For fixed-fps content,
-     * timebase should be 1/framerate and timestamp increments should be
-     * identically 1.
-     * This often, but not always is the inverse of the frame rate or field rate
-     * for video. 1/time_base is not the average frame rate if the frame rate is not
-     * constant.
+     * 这是表示帧时间戳的基本时间单位（秒）。对于固定帧率内容，timebase 应为
+     * 1/framerate，时间戳增量应始终为 1。
+     * 对视频而言，它通常但不总是帧率或场率的倒数。若帧率不恒定，1/time_base
+     * 并非平均帧率。
      *
-     * Like containers, elementary streams also can store timestamps, 1/time_base
-     * is the unit in which these timestamps are specified.
-     * As example of such codec time base see ISO/IEC 14496-2:2001(E)
-     * vop_time_increment_resolution and fixed_vop_rate
-     * (fixed_vop_rate == 0 implies that it is different from the framerate)
+     * 与容器一样，基本流也可存储时间戳，1/time_base 是这些时间戳采用的单位。
+     * 此类编解码器时基的示例见 ISO/IEC 14496-2:2001(E) 中的
+     * vop_time_increment_resolution 和 fixed_vop_rate
+     *（fixed_vop_rate == 0 表示它与帧率不同）。
      *
-     * - encoding: MUST be set by user.
-     * - decoding: unused.
+     * - 编码：必须由用户设置。
+     * - 解码：不使用。
      */
     AVRational time_base;
 
     /**
-     * Timebase in which pkt_dts/pts and AVPacket.dts/pts are expressed.
-     * - encoding: unused.
-     * - decoding: set by user.
+     * pkt_dts/pts 和 AVPacket.dts/pts 所使用的时基。
+     * - 编码：不使用。
+     * - 解码：由用户设置。
      */
     AVRational pkt_timebase;
 
     /**
-     * - decoding: For codecs that store a framerate value in the compressed
-     *             bitstream, the decoder may export it here. { 0, 1} when
-     *             unknown.
-     * - encoding: May be used to signal the framerate of CFR content to an
-     *             encoder.
+     * - 解码：对于在压缩比特流中存储帧率值的编解码器，解码器可在此导出该值。
+     *         未知时为 { 0, 1}。
+     * - 编码：可用于向编码器指示 CFR 内容的帧率。
      */
     AVRational framerate;
 
     /**
-     * Codec delay.
+     * 编解码器延迟。
      *
-     * Encoding: Number of frames delay there will be from the encoder input to
-     *           the decoder output. (we assume the decoder matches the spec)
-     * Decoding: Number of frames delay in addition to what a standard decoder
-     *           as specified in the spec would produce.
+     * 编码：从编码器输入到解码器输出的帧延迟数（假定解码器符合规范）。
+     * 解码：在规范所定义标准解码器产生的延迟之外增加的帧延迟数。
      *
-     * Video:
-     *   Number of frames the decoded output will be delayed relative to the
-     *   encoded input.
+     * 视频：
+     *   解码输出相对于编码输入延迟的帧数。
      *
-     * Audio:
-     *   For encoding, this field is unused (see initial_padding).
+     * 音频：
+     *   编码时不使用此字段（见 initial_padding）。
      *
-     *   For decoding, this is the number of samples the decoder needs to
-     *   output before the decoder's output is valid. When seeking, you should
-     *   start decoding this many samples prior to your desired seek point.
+     *   解码时，这是解码器输出有效前需要输出的采样数。定位时，应从目标定位点之前
+     *   这么多个采样处开始解码。
      *
-     * - encoding: Set by libavcodec.
-     * - decoding: Set by libavcodec.
+     * - 编码：由 libavcodec 设置。
+     * - 解码：由 libavcodec 设置。
      */
     int delay;
 
 
-    /* video only */
+    /* 仅视频 */
     /**
-     * picture width / height.
+     * 图像宽度/高度。
      *
-     * @note Those fields may not match the values of the last
-     * AVFrame output by avcodec_receive_frame() due frame
-     * reordering.
+     * @note 由于帧重排序，这些字段可能与 avcodec_receive_frame() 最后输出的
+     * AVFrame 中的值不一致。
      *
-     * - encoding: MUST be set by user.
-     * - decoding: May be set by the user before opening the decoder if known e.g.
-     *             from the container. Some decoders will require the dimensions
-     *             to be set by the caller. During decoding, the decoder may
-     *             overwrite those values as required while parsing the data.
+     * - 编码：必须由用户设置。
+     * - 解码：若已知（例如来自容器），用户可在打开解码器前设置。某些解码器要求
+     *         调用方设置尺寸。解码期间，解码器可能在解析数据时按需覆盖这些值。
      */
     int width, height;
 
     /**
-     * Bitstream width / height, may be different from width/height e.g. when
-     * the decoded frame is cropped before being output or lowres is enabled.
+     * 比特流宽度/高度，可能与 width/height 不同，例如解码帧在输出前被裁剪或启用了 lowres。
      *
-     * @note Those field may not match the value of the last
-     * AVFrame output by avcodec_receive_frame() due frame
-     * reordering.
+     * @note 由于帧重排序，这些字段可能与 avcodec_receive_frame() 最后输出的
+     * AVFrame 中的值不一致。
      *
-     * - encoding: unused
-     * - decoding: May be set by the user before opening the decoder if known
-     *             e.g. from the container. During decoding, the decoder may
-     *             overwrite those values as required while parsing the data.
+     * - 编码：不使用。
+     * - 解码：若已知（例如来自容器），用户可在打开解码器前设置。解码期间，解码器
+     *         可能在解析数据时按需覆盖这些值。
      */
     int coded_width, coded_height;
 
     /**
-     * sample aspect ratio (0 if unknown)
-     * That is the width of a pixel divided by the height of the pixel.
-     * Numerator and denominator must be relatively prime and smaller than 256 for some video standards.
-     * - encoding: Set by user.
-     * - decoding: Set by libavcodec.
+     * 采样宽高比（未知时为 0），即像素宽度除以像素高度。
+     * 对某些视频标准，分子和分母必须互质且小于 256。
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
     AVRational sample_aspect_ratio;
 
     /**
-     * Pixel format, see AV_PIX_FMT_xxx.
-     * May be set by the demuxer if known from headers.
-     * May be overridden by the decoder if it knows better.
+     * 像素格式，见 AV_PIX_FMT_xxx。
+     * 若可从头信息获知，可由解复用器设置；解码器掌握更准确信息时可覆盖它。
      *
-     * @note This field may not match the value of the last
-     * AVFrame output by avcodec_receive_frame() due frame
-     * reordering.
+     * @note 由于帧重排序，此字段可能与 avcodec_receive_frame() 最后输出的
+     * AVFrame 中的值不一致。
      *
-     * - encoding: Set by user.
-     * - decoding: Set by user if known, overridden by libavcodec while
-     *             parsing the data.
+     * - 编码：由用户设置。
+     * - 解码：若已知则由用户设置，解析数据时由 libavcodec 覆盖。
      */
     enum AVPixelFormat pix_fmt;
 
     /**
-     * Nominal unaccelerated pixel format, see AV_PIX_FMT_xxx.
-     * - encoding: unused.
-     * - decoding: Set by libavcodec before calling get_format()
+     * 名义上的非加速像素格式，见 AV_PIX_FMT_xxx。
+     * - 编码：不使用。
+     * - 解码：由 libavcodec 在调用 get_format() 前设置。
      */
     enum AVPixelFormat sw_pix_fmt;
 
     /**
-     * Chromaticity coordinates of the source primaries.
-     * - encoding: Set by user
-     * - decoding: Set by libavcodec
+     * 源基色的色度坐标。
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
     enum AVColorPrimaries color_primaries;
 
     /**
-     * Color Transfer Characteristic.
-     * - encoding: Set by user
-     * - decoding: Set by libavcodec
+     * 颜色传递特性。
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
     enum AVColorTransferCharacteristic color_trc;
 
     /**
-     * YUV colorspace type.
-     * - encoding: Set by user
-     * - decoding: Set by libavcodec
+     * YUV 色彩空间类型。
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
     enum AVColorSpace colorspace;
 
     /**
-     * MPEG vs JPEG YUV range.
-     * - encoding: Set by user to override the default output color range value,
-     *   If not specified, libavcodec sets the color range depending on the
-     *   output format.
-     * - decoding: Set by libavcodec, can be set by the user to propagate the
-     *   color range to components reading from the decoder context.
+     * MPEG 与 JPEG 的 YUV 范围。
+     * - 编码：由用户设置以覆盖默认输出颜色范围；若未指定，libavcodec 根据输出格式设置。
+     * - 解码：由 libavcodec 设置；用户也可设置，以将颜色范围传播给读取解码器上下文的组件。
      */
     enum AVColorRange color_range;
 
     /**
-     * This defines the location of chroma samples.
-     * - encoding: Set by user
-     * - decoding: Set by libavcodec
+     * 定义色度采样的位置。
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
     enum AVChromaLocation chroma_sample_location;
 
-    /** Field order
-     * - encoding: set by libavcodec
-     * - decoding: Set by user.
+    /** 场顺序
+     * - 编码：由 libavcodec 设置。
+     * - 解码：由用户设置。
      */
     enum AVFieldOrder field_order;
 
     /**
-     * number of reference frames
-     * - encoding: Set by user.
-     * - decoding: Set by lavc.
+     * 参考帧数量
+     * - 编码：由用户设置。
+     * - 解码：由 lavc 设置。
      */
     int refs;
 
     /**
-     * Size of the frame reordering buffer in the decoder.
-     * For MPEG-2 it is 1 IPB or 0 low delay IP.
-     * - encoding: Set by libavcodec.
-     * - decoding: Set by libavcodec.
+     * 解码器中帧重排序缓冲区的大小。
+     * 对 MPEG-2，IPB 为 1，低延迟 IP 为 0。
+     * - 编码：由 libavcodec 设置。
+     * - 解码：由 libavcodec 设置。
      */
     int has_b_frames;
 
     /**
-     * slice flags
-     * - encoding: unused
-     * - decoding: Set by user.
+     * 切片标志
+     * - 编码：不使用。
+     * - 解码：由用户设置。
      */
     int slice_flags;
-#define SLICE_FLAG_CODED_ORDER    0x0001 ///< draw_horiz_band() is called in coded order instead of display
-#define SLICE_FLAG_ALLOW_FIELD    0x0002 ///< allow draw_horiz_band() with field slices (MPEG-2 field pics)
-#define SLICE_FLAG_ALLOW_PLANE    0x0004 ///< allow draw_horiz_band() with 1 component at a time (SVQ1)
+#define SLICE_FLAG_CODED_ORDER    0x0001 ///< 按编码顺序而非显示顺序调用 draw_horiz_band()
+#define SLICE_FLAG_ALLOW_FIELD    0x0002 ///< 允许 draw_horiz_band() 使用场切片（MPEG-2 场图像）
+#define SLICE_FLAG_ALLOW_PLANE    0x0004 ///< 允许 draw_horiz_band() 每次处理一个分量（SVQ1）
 
     /**
-     * If non NULL, 'draw_horiz_band' is called by the libavcodec
-     * decoder to draw a horizontal band. It improves cache usage. Not
-     * all codecs can do that. You must check the codec capabilities
-     * beforehand.
-     * When multithreading is used, it may be called from multiple threads
-     * at the same time; threads might draw different parts of the same AVFrame,
-     * or multiple AVFrames, and there is no guarantee that slices will be drawn
-     * in order.
-     * The function is also used by hardware acceleration APIs.
-     * It is called at least once during frame decoding to pass
-     * the data needed for hardware render.
-     * In that mode instead of pixel data, AVFrame points to
-     * a structure specific to the acceleration API. The application
-     * reads the structure and can change some fields to indicate progress
-     * or mark state.
-     * - encoding: unused
-     * - decoding: Set by user.
-     * @param height the height of the slice
-     * @param y the y position of the slice
-     * @param type 1->top field, 2->bottom field, 3->frame
-     * @param offset offset into the AVFrame.data from which the slice should be read
+     * 若非 NULL，libavcodec 解码器会调用 'draw_horiz_band' 绘制水平带，以提高缓存利用率。
+     * 并非所有编解码器都支持，必须事先检查编解码器能力。
+     * 使用多线程时，可能由多个线程同时调用；线程可能绘制同一 AVFrame 的不同部分，
+     * 或绘制多个 AVFrame，且不保证切片按顺序绘制。
+     * 此函数也供硬件加速 API 使用。帧解码期间至少调用一次，以传递硬件渲染所需数据。
+     * 在该模式下，AVFrame 不指向像素数据，而指向加速 API 特有的结构体。应用程序读取
+     * 此结构体，并可更改某些字段以指示进度或标记状态。
+     * - 编码：不使用。
+     * - 解码：由用户设置。
+     * @param height 切片高度
+     * @param y 切片的 y 位置
+     * @param type 1->顶场，2->底场，3->帧
+     * @param offset 应从中读取切片的 AVFrame.data 偏移量
      */
     void (*draw_horiz_band)(struct AVCodecContext *s,
                             const AVFrame *src, int offset[AV_NUM_DATA_POINTERS],
                             int y, int type, int height);
 
     /**
-     * Callback to negotiate the pixel format. Decoding only, may be set by the
-     * caller before avcodec_open2().
+     * 协商像素格式的回调。仅用于解码，可由调用方在 avcodec_open2() 前设置。
      *
-     * Called by some decoders to select the pixel format that will be used for
-     * the output frames. This is mainly used to set up hardware acceleration,
-     * then the provided format list contains the corresponding hwaccel pixel
-     * formats alongside the "software" one. The software pixel format may also
-     * be retrieved from \ref sw_pix_fmt.
+     * 某些解码器调用它来选择输出帧使用的像素格式。主要用于设置硬件加速，此时提供的
+     * 格式列表同时包含相应硬件加速像素格式和“软件”格式。也可从 \ref sw_pix_fmt
+     * 获取软件像素格式。
      *
-     * This callback will be called when the coded frame properties (such as
-     * resolution, pixel format, etc.) change and more than one output format is
-     * supported for those new properties. If a hardware pixel format is chosen
-     * and initialization for it fails, the callback may be called again
-     * immediately.
+     * 当编码帧属性（如分辨率、像素格式等）发生变化，且新属性支持多个输出格式时，
+     * 会调用此回调。若选择硬件像素格式但初始化失败，可能立即再次调用此回调。
      *
-     * This callback may be called from different threads if the decoder is
-     * multi-threaded, but not from more than one thread simultaneously.
+     * 若解码器使用多线程，此回调可能从不同线程调用，但不会同时由多个线程调用。
      *
-     * @param fmt list of formats which may be used in the current
-     *            configuration, terminated by AV_PIX_FMT_NONE.
-     * @warning Behavior is undefined if the callback returns a value other
-     *          than one of the formats in fmt or AV_PIX_FMT_NONE.
-     * @return the chosen format or AV_PIX_FMT_NONE
+     * @param fmt 当前配置可使用的格式列表，以 AV_PIX_FMT_NONE 结尾。
+     * @warning 若回调返回 fmt 中格式和 AV_PIX_FMT_NONE 之外的值，则行为未定义。
+     * @return 选中的格式或 AV_PIX_FMT_NONE
      */
     enum AVPixelFormat (*get_format)(struct AVCodecContext *s, const enum AVPixelFormat * fmt);
 
     /**
-     * maximum number of B-frames between non-B-frames
-     * Note: The output will be delayed by max_b_frames+1 relative to the input.
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 非 B 帧之间允许的最大 B 帧数
+     * 注意：输出相对输入将延迟 max_b_frames+1 帧。
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int max_b_frames;
 
     /**
-     * qscale factor between IP and B-frames
-     * If > 0 then the last P-frame quantizer will be used (q= lastp_q*factor+offset).
-     * If < 0 then normal ratecontrol will be done (q= -normal_q*factor+offset).
-     * - encoding: Set by user.
-     * - decoding: unused
+     * IP 帧与 B 帧之间的 qscale 因子
+     * 若 > 0，使用最后一个 P 帧量化器（q= lastp_q*factor+offset）。
+     * 若 < 0，执行普通码率控制（q= -normal_q*factor+offset）。
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float b_quant_factor;
 
     /**
-     * qscale offset between IP and B-frames
-     * - encoding: Set by user.
-     * - decoding: unused
+     * IP 帧与 B 帧之间的 qscale 偏移
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float b_quant_offset;
 
     /**
-     * qscale factor between P- and I-frames
-     * If > 0 then the last P-frame quantizer will be used (q = lastp_q * factor + offset).
-     * If < 0 then normal ratecontrol will be done (q= -normal_q*factor+offset).
-     * - encoding: Set by user.
-     * - decoding: unused
+     * P 帧与 I 帧之间的 qscale 因子
+     * 若 > 0，使用最后一个 P 帧量化器（q = lastp_q * factor + offset）。
+     * 若 < 0，执行普通码率控制（q= -normal_q*factor+offset）。
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float i_quant_factor;
 
     /**
-     * qscale offset between P and I-frames
-     * - encoding: Set by user.
-     * - decoding: unused
+     * P 帧与 I 帧之间的 qscale 偏移
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float i_quant_offset;
 
     /**
-     * luminance masking (0-> disabled)
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 亮度掩蔽（0->禁用）
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float lumi_masking;
 
     /**
-     * temporary complexity masking (0-> disabled)
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 时间复杂度掩蔽（0->禁用）
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float temporal_cplx_masking;
 
     /**
-     * spatial complexity masking (0-> disabled)
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 空间复杂度掩蔽（0->禁用）
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float spatial_cplx_masking;
 
     /**
-     * p block masking (0-> disabled)
-     * - encoding: Set by user.
-     * - decoding: unused
+     * P 块掩蔽（0->禁用）
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float p_masking;
 
     /**
-     * darkness masking (0-> disabled)
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 暗部掩蔽（0->禁用）
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float dark_masking;
 
     /**
-     * noise vs. sse weight for the nsse comparison function
-     * - encoding: Set by user.
-     * - decoding: unused
+     * nsse 比较函数中噪声相对于 sse 的权重
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
      int nsse_weight;
 
     /**
-     * motion estimation comparison function
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 运动估计比较函数
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int me_cmp;
     /**
-     * subpixel motion estimation comparison function
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 亚像素运动估计比较函数
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int me_sub_cmp;
     /**
-     * macroblock comparison function (not supported yet)
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 宏块比较函数（尚不支持）
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int mb_cmp;
     /**
-     * interlaced DCT comparison function
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 隔行 DCT 比较函数
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int ildct_cmp;
 #define FF_CMP_SAD          0
@@ -897,89 +793,89 @@ typedef struct AVCodecContext {
 #define FF_CMP_CHROMA       256
 
     /**
-     * ME diamond size & shape
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 运动估计菱形搜索的大小和形状
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int dia_size;
 
     /**
-     * amount of previous MV predictors (2a+1 x 2a+1 square)
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 先前 MV 预测器的数量（2a+1 x 2a+1 方形）
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int last_predictor_count;
 
     /**
-     * motion estimation prepass comparison function
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 运动估计预处理比较函数
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int me_pre_cmp;
 
     /**
-     * ME prepass diamond size & shape
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 运动估计预处理菱形搜索的大小和形状
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int pre_dia_size;
 
     /**
-     * subpel ME quality
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 亚像素运动估计质量
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int me_subpel_quality;
 
     /**
-     * maximum motion estimation search range in subpel units
-     * If 0 then no limit.
+     * 以亚像素为单位的最大运动估计搜索范围
+     * 为 0 时不限制。
      *
-     * - encoding: Set by user.
-     * - decoding: unused
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int me_range;
 
     /**
-     * macroblock decision mode
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 宏块决策模式
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int mb_decision;
-#define FF_MB_DECISION_SIMPLE 0        ///< uses mb_cmp
-#define FF_MB_DECISION_BITS   1        ///< chooses the one which needs the fewest bits
-#define FF_MB_DECISION_RD     2        ///< rate distortion
+#define FF_MB_DECISION_SIMPLE 0        ///< 使用 mb_cmp
+#define FF_MB_DECISION_BITS   1        ///< 选择需要比特数最少的方案
+#define FF_MB_DECISION_RD     2        ///< 率失真
 
     /**
-     * custom intra quantization matrix
-     * Must be allocated with the av_malloc() family of functions, and will be freed in
+     * 自定义帧内量化矩阵
+     * 必须使用 av_malloc() 系列函数分配，并将在
      * avcodec_free_context().
-     * - encoding: Set/allocated by user, freed by libavcodec. Can be NULL.
-     * - decoding: Set/allocated/freed by libavcodec.
+     * - 编码：由用户设置/分配，由 libavcodec 释放。可以为 NULL。
+     * - 解码：由 libavcodec 设置/分配/释放。
      */
     uint16_t *intra_matrix;
 
     /**
-     * custom inter quantization matrix
-     * Must be allocated with the av_malloc() family of functions, and will be freed in
+     * 自定义帧间量化矩阵
+     * 必须使用 av_malloc() 系列函数分配，并将在
      * avcodec_free_context().
-     * - encoding: Set/allocated by user, freed by libavcodec. Can be NULL.
-     * - decoding: Set/allocated/freed by libavcodec.
+     * - 编码：由用户设置/分配，由 libavcodec 释放。可以为 NULL。
+     * - 解码：由 libavcodec 设置/分配/释放。
      */
     uint16_t *inter_matrix;
 
     /**
-     * custom intra quantization matrix
-     * - encoding: Set by user, can be NULL.
-     * - decoding: unused.
+     * 自定义帧内量化矩阵
+     * - encoding: 由用户设置, can be NULL.
+     * - decoding: 不使用.
      */
     uint16_t *chroma_intra_matrix;
 
 #if FF_API_INTRA_DC_PRECISION
     /**
-     * precision of the intra DC coefficient - 8
-     * - encoding: Set by user.
-     * - decoding: Set by libavcodec
+     * 帧内 DC 系数精度减 8
+     * - encoding: 由用户设置.
+     * - decoding: 由 libavcodec 设置
      * @deprecated Use the MPEG-2 encoder's private option "intra_dc_precision" instead.
      */
     attribute_deprecated
@@ -987,363 +883,331 @@ typedef struct AVCodecContext {
 #endif
 
     /**
-     * minimum MB Lagrange multiplier
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 最小宏块拉格朗日乘数
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int mb_lmin;
 
     /**
-     * maximum MB Lagrange multiplier
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 最大宏块拉格朗日乘数
+     * - encoding: 由用户设置.
+     * - decoding: 不使用
      */
     int mb_lmax;
 
     /**
-     * - encoding: Set by user.
-     * - decoding: unused
+     * - encoding: 由用户设置.
+     * - decoding: 不使用
      */
     int bidir_refine;
 
     /**
-     * minimum GOP size
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 最小 GOP 大小
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int keyint_min;
 
     /**
-     * the number of pictures in a group of pictures, or 0 for intra_only
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 图像组中的图像数量，intra_only 时为 0
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int gop_size;
 
     /**
-     * Note: Value depends upon the compare function used for fullpel ME.
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 注意：该值取决于全像素运动估计使用的比较函数。
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int mv0_threshold;
 
     /**
-     * Number of slices.
-     * Indicates number of picture subdivisions. Used for parallelized
-     * decoding.
-     * - encoding: Set by user
-     * - decoding: unused
+     * 切片数量。
+     * 表示图像细分数量，用于并行解码。
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int slices;
 
-    /* audio only */
-    int sample_rate; ///< samples per second
+    /* 仅音频 */
+    int sample_rate; ///< 每秒采样数
 
     /**
-     * audio sample format
-     * - encoding: Set by user.
-     * - decoding: Set by libavcodec.
+     * 音频采样格式
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
-    enum AVSampleFormat sample_fmt;  ///< sample format
+    enum AVSampleFormat sample_fmt;  ///< 采样格式
 
     /**
-     * Audio channel layout.
-     * - encoding: must be set by the caller, to one of AVCodec.ch_layouts.
-     * - decoding: may be set by the caller if known e.g. from the container.
-     *             The decoder can then override during decoding as needed.
+     * 音频声道布局。
+     * - 编码：必须由调用方设置为 AVCodec.ch_layouts 中的一项。
+     * - 解码：若已知（例如来自容器），可由调用方设置；解码器随后可在解码期间按需覆盖。
      */
     AVChannelLayout ch_layout;
 
     /**
-     * Number of samples per channel in an audio frame.
+     * 音频帧中每个声道的采样数。
      *
-     * - encoding: may be set by the user before calling avcodec_open2(), and
-     *   libavcodec may then overwrite it if needed. Each submitted frame
-     *   except the last must contain exactly frame_size samples per channel.
-     *   May be 0 when the codec has AV_CODEC_CAP_VARIABLE_FRAME_SIZE set, except
-     *   when AV_CODEC_FLAG2_FIXED_FRAME_SIZE is requested, then the
-     *   frame size is not restricted.
-     * - decoding: may be set by some decoders to indicate constant frame size
+     * - 编码：可由用户在调用 avcodec_open2() 前设置，libavcodec 随后可按需覆盖。
+     *   除最后一帧外，每个提交帧的每个声道必须恰好包含 frame_size 个采样。
+     *   当编解码器设置 AV_CODEC_CAP_VARIABLE_FRAME_SIZE 时可以为 0；请求
+     *   AV_CODEC_FLAG2_FIXED_FRAME_SIZE 时除外，此时帧大小不受限制。
+     * - 解码：某些解码器可设置它以指示固定帧大小。
      */
     int frame_size;
 
-    /* The following data should not be initialized. */
+    /* 以下数据不应初始化。 */
     /**
-     * number of bytes per packet if constant and known or 0
-     * Used by some WAV based audio codecs.
+     * 若每个数据包的字节数固定且已知，则为该字节数，否则为 0。
+     * 某些基于 WAV 的音频编解码器使用此字段。
      */
     int block_align;
 
     /**
-     * Audio cutoff bandwidth (0 means "automatic")
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 音频截止带宽（0 表示“自动”）
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int cutoff;
 
     /**
-     * Type of service that the audio stream conveys.
-     * - encoding: Set by user.
-     * - decoding: Set by libavcodec.
+     * 音频流承载的服务类型。
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
     enum AVAudioServiceType audio_service_type;
 
     /**
-     * desired sample format
-     * - encoding: Not used.
-     * - decoding: Set by user.
-     * Decoder will decode to this format if it can.
+     * 期望的采样格式
+     * - 编码：不使用。
+     * - 解码：由用户设置。若可行，解码器将解码为此格式。
      */
     enum AVSampleFormat request_sample_fmt;
 
     /**
-     * Audio only. The number of "priming" samples (padding) inserted by the
-     * encoder at the beginning of the audio. I.e. this number of leading
-     * decoded samples must be discarded by the caller to get the original audio
-     * without leading padding.
+     * 仅音频。编码器在音频开头插入的“预热”采样（填充）数量。调用方必须丢弃这么多个
+     * 开头的解码采样，才能得到没有前置填充的原始音频。
      *
-     * - decoding: unused
-     * - encoding: Set by libavcodec. The timestamps on the output packets are
-     *             adjusted by the encoder so that they always refer to the
-     *             first sample of the data actually contained in the packet,
-     *             including any added padding.  E.g. if the timebase is
-     *             1/samplerate and the timestamp of the first input sample is
-     *             0, the timestamp of the first output packet will be
-     *             -initial_padding.
+     * - 解码：不使用。
+     * - 编码：由 libavcodec 设置。编码器会调整输出数据包的时间戳，使其始终指向
+     *   数据包实际包含数据的第一个采样（包括新增填充）。例如，若时基为 1/samplerate，
+     *   第一个输入采样的时间戳为 0，则第一个输出数据包的时间戳为 -initial_padding。
      */
     int initial_padding;
 
     /**
-     * Audio only. The amount of padding (in samples) appended by the encoder to
-     * the end of the audio. I.e. this number of decoded samples must be
-     * discarded by the caller from the end of the stream to get the original
-     * audio without any trailing padding.
+     * 仅音频。编码器追加到音频末尾的填充量（以采样计）。调用方必须从流末尾丢弃
+     * 这么多个解码采样，才能得到没有尾部填充的原始音频。
      *
-     * - decoding: unused
-     * - encoding: unused
+     * - 解码：不使用。
+     * - 编码：不使用。
      */
     int trailing_padding;
 
     /**
-     * Number of samples to skip after a discontinuity
-     * - decoding: unused
-     * - encoding: set by libavcodec
+     * 发生不连续后要跳过的采样数
+     * - 解码：不使用。
+     * - 编码：由 libavcodec 设置。
      */
     int seek_preroll;
 
     /**
-     * This callback is called at the beginning of each frame to get data
-     * buffer(s) for it. There may be one contiguous buffer for all the data or
-     * there may be a buffer per each data plane or anything in between. What
-     * this means is, you may set however many entries in buf[] you feel necessary.
-     * Each buffer must be reference-counted using the AVBuffer API (see description
-     * of buf[] below).
+     * 每帧开始时调用此回调，为该帧获取数据缓冲区。所有数据可共用一个连续缓冲区，
+     * 也可每个数据平面各用一个缓冲区，或采用介于两者之间的方式。因此可按需要设置
+     * buf[] 中任意数量的条目。每个缓冲区必须使用 AVBuffer API 进行引用计数
+     *（见下文 buf[] 的说明）。
      *
-     * The following fields will be set in the frame before this callback is
-     * called:
+     * 调用此回调前，帧中的以下字段会被设置：
      * - format
-     * - width, height (video only)
-     * - sample_rate, channel_layout, nb_samples (audio only)
-     * Their values may differ from the corresponding values in
-     * AVCodecContext. This callback must use the frame values, not the codec
-     * context values, to calculate the required buffer size.
+     * - width、height（仅视频）
+     * - sample_rate、channel_layout、nb_samples（仅音频）
+     * 它们的值可能与 AVCodecContext 中对应值不同。此回调必须使用帧中的值而非
+     * 编解码器上下文中的值来计算所需缓冲区大小。
      *
-     * This callback must fill the following fields in the frame:
+     * 此回调必须填充帧中的以下字段：
      * - data[]
      * - linesize[]
      * - extended_data:
-     *   * if the data is planar audio with more than 8 channels, then this
-     *     callback must allocate and fill extended_data to contain all pointers
-     *     to all data planes. data[] must hold as many pointers as it can.
-     *     extended_data must be allocated with av_malloc() and will be freed in
-     *     av_frame_unref().
-     *   * otherwise extended_data must point to data
-     * - buf[] must contain one or more pointers to AVBufferRef structures. Each of
-     *   the frame's data and extended_data pointers must be contained in these. That
-     *   is, one AVBufferRef for each allocated chunk of memory, not necessarily one
-     *   AVBufferRef per data[] entry. See: av_buffer_create(), av_buffer_alloc(),
-     *   and av_buffer_ref().
-     * - extended_buf and nb_extended_buf must be allocated with av_malloc() by
-     *   this callback and filled with the extra buffers if there are more
-     *   buffers than buf[] can hold. extended_buf will be freed in
-     *   av_frame_unref().
-     *   Decoders will generally initialize the whole buffer before it is output
-     *   but it can in rare error conditions happen that uninitialized data is passed
-     *   through. \important The buffers returned by get_buffer* should thus not contain sensitive
-     *   data.
+     *   * 若数据是超过 8 个声道的平面音频，此回调必须分配并填充 extended_data，
+     *     使其包含所有数据平面的全部指针。data[] 应容纳尽可能多的指针。
+     *     extended_data 必须用 av_malloc() 分配，并在 av_frame_unref() 中释放。
+     *   * 否则 extended_data 必须指向 data。
+     * - buf[] 必须包含一个或多个指向 AVBufferRef 结构体的指针。帧的每个 data 和
+     *   extended_data 指针都必须包含在这些缓冲区中。即每个已分配内存块对应一个
+     *   AVBufferRef，不一定每个 data[] 条目对应一个。见 av_buffer_create()、
+     *   av_buffer_alloc() 和 av_buffer_ref()。
+     * - 若缓冲区数量超过 buf[] 容量，此回调必须用 av_malloc() 分配 extended_buf 和
+     *   nb_extended_buf，并用额外缓冲区填充。extended_buf 将在 av_frame_unref() 中释放。
+     *   解码器通常会在输出前初始化整个缓冲区，但极少数错误情况下可能传出未初始化数据。
+     *   \important 因此，get_buffer* 返回的缓冲区不应包含敏感数据。
      *
-     * If AV_CODEC_CAP_DR1 is not set then get_buffer2() must call
-     * avcodec_default_get_buffer2() instead of providing buffers allocated by
-     * some other means.
+     * 若未设置 AV_CODEC_CAP_DR1，则 get_buffer2() 必须调用 avcodec_default_get_buffer2()，
+     * 而不能提供以其他方式分配的缓冲区。
      *
-     * Each data plane must be aligned to the maximum required by the target
-     * CPU.
+     * 每个数据平面必须按目标 CPU 所需的最大对齐方式对齐。
      *
      * @see avcodec_default_get_buffer2()
      *
-     * Video:
+     * 视频：
      *
-     * If AV_GET_BUFFER_FLAG_REF is set in flags then the frame may be reused
-     * (read and/or written to if it is writable) later by libavcodec.
+     * 若 flags 中设置 AV_GET_BUFFER_FLAG_REF，该帧稍后可能被 libavcodec 复用
+     *（读取；若可写，也可能写入）。
      *
-     * avcodec_align_dimensions2() should be used to find the required width and
-     * height, as they normally need to be rounded up to the next multiple of 16.
+     * 应使用 avcodec_align_dimensions2() 获取所需宽高，因为通常需向上取整到 16 的倍数。
      *
-     * Some decoders do not support linesizes changing between frames.
+     * 某些解码器不支持帧间 linesize 改变。
      *
-     * If frame multithreading is used, this callback may be called from a
-     * different thread, but not from more than one at once. Does not need to be
-     * reentrant.
+     * 使用帧级多线程时，此回调可能从不同线程调用，但不会同时由多个线程调用，
+     * 因此无需可重入。
      *
      * @see avcodec_align_dimensions2()
      *
-     * Audio:
+     * 音频：
      *
-     * Decoders request a buffer of a particular size by setting
-     * AVFrame.nb_samples prior to calling get_buffer2(). The decoder may,
-     * however, utilize only part of the buffer by setting AVFrame.nb_samples
-     * to a smaller value in the output frame.
+     * 解码器通过在调用 get_buffer2() 前设置 AVFrame.nb_samples 请求特定大小的缓冲区。
+     * 但解码器可能仅使用缓冲区的一部分，即在输出帧中将 AVFrame.nb_samples 设为较小值。
      *
-     * As a convenience, av_samples_get_buffer_size() and
-     * av_samples_fill_arrays() in libavutil may be used by custom get_buffer2()
-     * functions to find the required data size and to fill data pointers and
-     * linesize. In AVFrame.linesize, only linesize[0] may be set for audio
-     * since all planes must be the same size.
+     * 为方便起见，自定义 get_buffer2() 函数可使用 libavutil 中的
+     * av_samples_get_buffer_size() 和 av_samples_fill_arrays() 查找所需数据大小，
+     * 并填充数据指针和 linesize。对于音频，AVFrame.linesize 中只能设置 linesize[0]，
+     * 因为所有平面大小必须相同。
      *
      * @see av_samples_get_buffer_size(), av_samples_fill_arrays()
      *
-     * - encoding: unused
-     * - decoding: Set by libavcodec, user can override.
+     * - 编码：不使用。
+     * - 解码：由 libavcodec 设置，用户可覆盖。
      */
     int (*get_buffer2)(struct AVCodecContext *s, AVFrame *frame, int flags);
 
-    /* - encoding parameters */
+    /* - 编码参数 */
     /**
-     * number of bits the bitstream is allowed to diverge from the reference.
-     *           the reference can be CBR (for CBR pass1) or VBR (for pass2)
-     * - encoding: Set by user; unused for constant quantizer encoding.
-     * - decoding: unused
+     * 允许比特流偏离参考值的比特数。参考值可以是 CBR（用于 CBR 第一遍）或 VBR（用于第二遍）。
+     * - 编码：由用户设置；恒定量化器编码不使用。
+     * - 解码：不使用。
      */
     int bit_rate_tolerance;
 
     /**
-     * Global quality for codecs which cannot change it per frame.
-     * This should be proportional to MPEG-1/2/4 qscale.
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 无法逐帧更改质量的编解码器所使用的全局质量。
+     * 该值应与 MPEG-1/2/4 qscale 成正比。
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int global_quality;
 
     /**
-     * - encoding: Set by user.
-     * - decoding: unused
+     * - encoding: 由用户设置.
+     * - decoding: 不使用
      */
     int compression_level;
 #define FF_COMPRESSION_DEFAULT -1
 
-    float qcompress;  ///< amount of qscale change between easy & hard scenes (0.0-1.0)
-    float qblur;      ///< amount of qscale smoothing over time (0.0-1.0)
+    float qcompress;  ///< 简单与复杂场景之间的 qscale 变化量（0.0-1.0）
+    float qblur;      ///< qscale 随时间的平滑程度（0.0-1.0）
 
     /**
-     * minimum quantizer
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 最小量化器
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int qmin;
 
     /**
-     * maximum quantizer
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 最大量化器
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int qmax;
 
     /**
-     * maximum quantizer difference between frames
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 帧间最大量化器差值
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int max_qdiff;
 
     /**
-     * decoder bitstream buffer size
-     * - encoding: Set by user.
-     * - decoding: May be set by libavcodec.
+     * 解码器比特流缓冲区大小
+     * - 编码：由用户设置。
+     * - 解码：可能由 libavcodec 设置。
      */
     int rc_buffer_size;
 
     /**
-     * ratecontrol override, see RcOverride
-     * - encoding: Allocated/set/freed by user.
-     * - decoding: unused
+     * 码率控制覆盖，见 RcOverride
+     * - 编码：由用户分配/设置/释放。
+     * - 解码：不使用。
      */
     int rc_override_count;
     RcOverride *rc_override;
 
     /**
-     * maximum bitrate
-     * - encoding: Set by user.
-     * - decoding: Set by user, may be overwritten by libavcodec.
+     * 最大码率
+     * - 编码：由用户设置。
+     * - 解码：由用户设置，可能被 libavcodec 覆盖。
      */
     int64_t rc_max_rate;
 
     /**
-     * minimum bitrate
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 最小码率
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int64_t rc_min_rate;
 
     /**
-     * Ratecontrol attempt to use, at maximum, <value> of what can be used without an underflow.
-     * - encoding: Set by user.
-     * - decoding: unused.
+     * 码率控制尝试最多使用在不发生下溢情况下可用量的 <value>。
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float rc_max_available_vbv_use;
 
     /**
-     * Ratecontrol attempt to use, at least, <value> times the amount needed to prevent a vbv overflow.
-     * - encoding: Set by user.
-     * - decoding: unused.
+     * 码率控制尝试至少使用防止 VBV 上溢所需量的 <value> 倍。
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     float rc_min_vbv_overflow_use;
 
     /**
-     * Number of bits which should be loaded into the rc buffer before decoding starts.
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 解码开始前应载入 rc 缓冲区的比特数。
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int rc_initial_buffer_occupancy;
 
     /**
-     * trellis RD quantization
-     * - encoding: Set by user.
-     * - decoding: unused
+     * 网格 RD 量化
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int trellis;
 
     /**
-     * pass1 encoding statistics output buffer
-     * - encoding: Set by libavcodec.
-     * - decoding: unused
+     * 第一遍编码统计信息输出缓冲区
+     * - 编码：由 libavcodec 设置。
+     * - 解码：不使用。
      */
     char *stats_out;
 
     /**
-     * pass2 encoding statistics input buffer
-     * Concatenated stuff from stats_out of pass1 should be placed here.
-     * - encoding: Allocated/set/freed by user.
-     * - decoding: unused
+     * 第二遍编码统计信息输入缓冲区
+     * 应在此放置第一遍 stats_out 拼接后的内容。
+     * - 编码：由用户分配/设置/释放。
+     * - 解码：不使用。
      */
     char *stats_in;
 
     /**
-     * Work around bugs in encoders which sometimes cannot be detected automatically.
-     * - encoding: Set by user
-     * - decoding: Set by user
+     * 规避编码器中有时无法自动检测的缺陷。
+     * - 编码：由用户设置。
+     * - 解码：由用户设置。
      */
     int workaround_bugs;
-#define FF_BUG_AUTODETECT       1  ///< autodetection
+#define FF_BUG_AUTODETECT       1  ///< 自动检测
 #define FF_BUG_XVID_ILACE       4
 #define FF_BUG_UMP4             8
 #define FF_BUG_NO_PADDING       16
@@ -1355,29 +1219,26 @@ typedef struct AVCodecContext {
 #define FF_BUG_EDGE             1024
 #define FF_BUG_HPEL_CHROMA      2048
 #define FF_BUG_DC_CLIP          4096
-#define FF_BUG_MS               8192 ///< Work around various bugs in Microsoft's broken decoders.
+#define FF_BUG_MS               8192 ///< 规避 Microsoft 有缺陷的解码器中的各种问题。
 #define FF_BUG_TRUNCATED       16384
 #define FF_BUG_IEDGE           32768
 
     /**
-     * strictly follow the standard (MPEG-4, ...).
-     * - encoding: Set by user.
-     * - decoding: Set by user.
-     * Setting this to STRICT or higher means the encoder and decoder will
-     * generally do stupid things, whereas setting it to unofficial or lower
-     * will mean the encoder might produce output that is not supported by all
-     * spec-compliant decoders. Decoders don't differentiate between normal,
-     * unofficial and experimental (that is, they always try to decode things
-     * when they can) unless they are explicitly asked to behave stupidly
-     * (=strictly conform to the specs)
-     * This may only be set to one of the FF_COMPLIANCE_* values in defs.h.
+     * 严格遵循标准（MPEG-4 等）。
+     * - 编码：由用户设置。
+     * - 解码：由用户设置。
+     * 设置为 STRICT 或更高时，编码器和解码器通常会采取较为刻板的行为；设置为
+     * unofficial 或更低时，编码器可能产生并非所有符合规范的解码器都支持的输出。
+     * 解码器通常不区分 normal、unofficial 和 experimental（即只要能解码就会尝试），
+     * 除非明确要求严格遵循规范。
+     * 只能设为 defs.h 中的 FF_COMPLIANCE_* 值之一。
      */
     int strict_std_compliance;
 
     /**
-     * error concealment flags
-     * - encoding: unused
-     * - decoding: Set by user.
+     * 错误隐藏标志
+     * - 编码：不使用。
+     * - 解码：由用户设置。
      */
     int error_concealment;
 #define FF_EC_GUESS_MVS   1
@@ -1385,9 +1246,9 @@ typedef struct AVCodecContext {
 #define FF_EC_FAVOR_INTER 256
 
     /**
-     * debug
-     * - encoding: Set by user.
-     * - decoding: Set by user.
+     * 调试
+     * - 编码：由用户设置。
+     * - 解码：由用户设置。
      */
     int debug;
 #define FF_DEBUG_PICT_INFO   1
@@ -1407,18 +1268,18 @@ typedef struct AVCodecContext {
 #define FF_DEBUG_NOMC        0x01000000
 
     /**
-     * Error recognition; may misdetect some more or less valid parts as errors.
-     * This is a bitfield of the AV_EF_* values defined in defs.h.
+     * 错误识别；可能将某些基本有效的部分误判为错误。
+     * 这是 defs.h 中定义的 AV_EF_* 值的位字段。
      *
-     * - encoding: Set by user.
-     * - decoding: Set by user.
+     * - encoding: 由用户设置.
+     * - decoding: 由用户设置.
      */
     int err_recognition;
 
     /**
-     * Hardware accelerator in use
-     * - encoding: unused.
-     * - decoding: Set by libavcodec
+     * 正在使用的硬件加速器
+     * - 编码：不使用。
+     * - 解码：由 libavcodec 设置。
      */
     const struct AVHWAccel *hwaccel;
 
@@ -1471,61 +1332,47 @@ typedef struct AVCodecContext {
     AVBufferRef *hw_frames_ctx;
 
     /**
-     * A reference to the AVHWDeviceContext describing the device which will
-     * be used by a hardware encoder/decoder.  The reference is set by the
-     * caller and afterwards owned (and freed) by libavcodec.
+     * 对描述硬件编码器/解码器所用设备的 AVHWDeviceContext 的引用。该引用由调用方设置，
+     * 随后归 libavcodec 所有（并由其释放）。
      *
-     * This should be used if either the codec device does not require
-     * hardware frames or any that are used are to be allocated internally by
-     * libavcodec.  If the user wishes to supply any of the frames used as
-     * encoder input or decoder output then hw_frames_ctx should be used
-     * instead.  When hw_frames_ctx is set in get_format() for a decoder, this
-     * field will be ignored while decoding the associated stream segment, but
-     * may again be used on a following one after another get_format() call.
+     * 若编解码器设备不需要硬件帧，或使用的硬件帧均由 libavcodec 内部分配，则应使用
+     * 此字段。若用户希望提供编码器输入或解码器输出所用的任何帧，则应改用
+     * hw_frames_ctx。对解码器在 get_format() 中设置 hw_frames_ctx 后，解码关联流段时
+     * 会忽略此字段；再次调用 get_format() 后，它可用于后续流段。
      *
-     * For both encoders and decoders this field should be set before
-     * avcodec_open2() is called and must not be written to thereafter.
+     * 对编码器和解码器，此字段都应在调用 avcodec_open2() 前设置，此后不得写入。
      *
-     * Note that some decoders may require this field to be set initially in
-     * order to support hw_frames_ctx at all - in that case, all frames
-     * contexts used must be created on the same device.
+     * 注意，某些解码器可能要求最初设置此字段才能支持 hw_frames_ctx；此时所有使用的
+     * 帧上下文都必须在同一设备上创建。
      */
     AVBufferRef *hw_device_ctx;
 
     /**
-     * Bit set of AV_HWACCEL_FLAG_* flags, which affect hardware accelerated
-     * decoding (if active).
-     * - encoding: unused
-     * - decoding: Set by user (either before avcodec_open2(), or in the
-     *             AVCodecContext.get_format callback)
+     * AV_HWACCEL_FLAG_* 标志位集合，影响硬件加速解码（若启用）。
+     * - 编码：不使用。
+     * - 解码：由用户设置（在 avcodec_open2() 前或 AVCodecContext.get_format 回调中）。
      */
     int hwaccel_flags;
 
     /**
-     * Video decoding only.  Sets the number of extra hardware frames which
-     * the decoder will allocate for use by the caller.  This must be set
-     * before avcodec_open2() is called.
+     * 仅视频解码。设置解码器为调用方分配的额外硬件帧数量。必须在调用 avcodec_open2() 前设置。
      *
-     * Some hardware decoders require all frames that they will use for
-     * output to be defined in advance before decoding starts.  For such
-     * decoders, the hardware frame pool must therefore be of a fixed size.
-     * The extra frames set here are on top of any number that the decoder
-     * needs internally in order to operate normally (for example, frames
-     * used as reference pictures).
+     * 某些硬件解码器要求在解码开始前预先定义所有输出帧，因此其硬件帧池必须为固定大小。
+     * 此处设置的额外帧是在解码器正常运行所需内部帧（例如用作参考图像的帧）之外增加的。
      */
     int extra_hw_frames;
 
     /**
-     * error
-     * - encoding: Set by libavcodec if flags & AV_CODEC_FLAG_PSNR.
-     * - decoding: unused
+     * 错误
+     * - 编码：若 flags & AV_CODEC_FLAG_PSNR，则由 libavcodec 设置。
+     * - 解码：不使用。
      */
     uint64_t error[AV_NUM_DATA_POINTERS];
 
     /**
-     * DCT algorithm, see FF_DCT_* below
-     * - encoding: Set by user.
-     * - decoding: unused
+     * DCT 算法，见下方 FF_DCT_*
+     * - 编码：由用户设置。
+     * - 解码：不使用。
      */
     int dct_algo;
 #define FF_DCT_AUTO    0
@@ -1537,9 +1384,9 @@ typedef struct AVCodecContext {
 #define FF_DCT_NEON    7
 
     /**
-     * IDCT algorithm, see FF_IDCT_* below.
-     * - encoding: Set by user.
-     * - decoding: Set by user.
+     * IDCT 算法，见下方 FF_IDCT_*。
+     * - 编码：由用户设置。
+     * - 解码：由用户设置。
      */
     int idct_algo;
 #define FF_IDCT_AUTO          0
@@ -1557,175 +1404,164 @@ typedef struct AVCodecContext {
 #define FF_IDCT_SIMPLEAUTO    128
 
     /**
-     * bits per sample/pixel from the demuxer (needed for huffyuv).
-     * - encoding: Set by libavcodec.
-     * - decoding: Set by user.
+     * 来自解复用器的每采样/像素位数（huffyuv 需要）。
+     * - 编码：由 libavcodec 设置。
+     * - 解码：由用户设置。
      */
      int bits_per_coded_sample;
 
     /**
-     * Bits per sample/pixel of internal libavcodec pixel/sample format.
-     * - encoding: set by user.
-     * - decoding: set by libavcodec.
+     * libavcodec 内部像素/采样格式的每采样/像素位数。
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
     int bits_per_raw_sample;
 
     /**
-     * thread count
-     * is used to decide how many independent tasks should be passed to execute()
-     * - encoding: Set by user.
-     * - decoding: Set by user.
+     * 线程数，用于决定应向 execute() 传递多少个独立任务。
+     * - 编码：由用户设置。
+     * - 解码：由用户设置。
      */
     int thread_count;
 
     /**
-     * Which multithreading methods to use.
-     * Use of FF_THREAD_FRAME will increase decoding delay by one frame per thread,
-     * so clients which cannot provide future frames should not use it.
+     * 使用哪些多线程方式。
+     * 使用 FF_THREAD_FRAME 会使每个线程增加一帧解码延迟，因此无法提供后续帧的客户端不应使用。
      *
-     * - encoding: Set by user, otherwise the default is used.
-     * - decoding: Set by user, otherwise the default is used.
+     * - 编码：由用户设置，否则使用默认值。
+     * - 解码：由用户设置，否则使用默认值。
      */
     int thread_type;
-#define FF_THREAD_FRAME   1 ///< Decode more than one frame at once
-#define FF_THREAD_SLICE   2 ///< Decode more than one part of a single frame at once
+#define FF_THREAD_FRAME   1 ///< 同时解码多个帧
+#define FF_THREAD_SLICE   2 ///< 同时解码单个帧的多个部分
 
     /**
-     * Which multithreading methods are in use by the codec.
-     * - encoding: Set by libavcodec.
-     * - decoding: Set by libavcodec.
+     * 编解码器正在使用的多线程方式。
+     * - 编码：由 libavcodec 设置。
+     * - 解码：由 libavcodec 设置。
      */
     int active_thread_type;
 
     /**
-     * The codec may call this to execute several independent things.
-     * It will return only after finishing all tasks.
-     * The user may replace this with some multithreaded implementation,
-     * the default implementation will execute the parts serially.
-     * @param count the number of things to execute
-     * - encoding: Set by libavcodec, user can override.
-     * - decoding: Set by libavcodec, user can override.
+     * 编解码器可调用它执行若干独立任务。只有完成全部任务后才返回。
+     * 用户可将其替换为某种多线程实现；默认实现串行执行各部分。
+     * @param count 要执行的任务数量
+     * - 编码：由 libavcodec 设置，用户可覆盖。
+     * - 解码：由 libavcodec 设置，用户可覆盖。
      */
     int (*execute)(struct AVCodecContext *c, int (*func)(struct AVCodecContext *c2, void *arg), void *arg2, int *ret, int count, int size);
 
     /**
-     * The codec may call this to execute several independent things.
-     * It will return only after finishing all tasks.
-     * The user may replace this with some multithreaded implementation,
-     * the default implementation will execute the parts serially.
-     * @param c context passed also to func
-     * @param count the number of things to execute
-     * @param arg2 argument passed unchanged to func
-     * @param ret return values of executed functions, must have space for "count" values. May be NULL.
-     * @param func function that will be called count times, with jobnr from 0 to count-1.
-     *             threadnr will be in the range 0 to c->thread_count-1 < MAX_THREADS and so that no
-     *             two instances of func executing at the same time will have the same threadnr.
-     * @return always 0 currently, but code should handle a future improvement where when any call to func
-     *         returns < 0 no further calls to func may be done and < 0 is returned.
-     * - encoding: Set by libavcodec, user can override.
-     * - decoding: Set by libavcodec, user can override.
+     * 编解码器可调用它执行若干独立任务。只有完成全部任务后才返回。
+     * 用户可将其替换为某种多线程实现；默认实现串行执行各部分。
+     * @param c 同样传递给 func 的上下文
+     * @param count 要执行的任务数量
+     * @param arg2 原样传递给 func 的参数
+     * @param ret 已执行函数的返回值，必须能容纳 "count" 个值，可以为 NULL。
+     * @param func 将调用 count 次的函数，jobnr 范围为 0 到 count-1。
+     *             threadnr 范围为 0 到 c->thread_count-1 < MAX_THREADS，并保证同时执行的
+     *             两个 func 实例不会具有相同的 threadnr。
+     * @return 当前始终为 0，但代码应兼容未来改进：任一 func 调用返回 < 0 时，
+     *         不再继续调用 func，并返回 < 0。
+     * - 编码：由 libavcodec 设置，用户可覆盖。
+     * - 解码：由 libavcodec 设置，用户可覆盖。
      */
     int (*execute2)(struct AVCodecContext *c, int (*func)(struct AVCodecContext *c2, void *arg, int jobnr, int threadnr), void *arg2, int *ret, int count);
 
     /**
-     * profile
-     * - encoding: Set by user.
-     * - decoding: Set by libavcodec.
-     * See the AV_PROFILE_* defines in defs.h.
+     * 配置档次
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
+     * 见 defs.h 中的 AV_PROFILE_* 定义。
      */
      int profile;
 
     /**
-     * Encoding level descriptor.
-     * - encoding: Set by user, corresponds to a specific level defined by the
-     *   codec, usually corresponding to the profile level, if not specified it
-     *   is set to AV_LEVEL_UNKNOWN.
-     * - decoding: Set by libavcodec.
-     * See AV_LEVEL_* in defs.h.
+     * 编码级别描述符。
+     * - 编码：由用户设置，对应编解码器定义的特定级别，通常对应配置档次级别；
+     *   若未指定，则设为 AV_LEVEL_UNKNOWN。
+     * - 解码：由 libavcodec 设置。
+     * 见 defs.h 中的 AV_LEVEL_*。
      */
      int level;
 
     /**
-     * Skip loop filtering for selected frames.
-     * - encoding: unused
-     * - decoding: Set by user.
+     * 对选定帧跳过环路滤波。
+     * - 编码：不使用。
+     * - 解码：由用户设置。
      */
     enum AVDiscard skip_loop_filter;
 
     /**
-     * Skip IDCT/dequantization for selected frames.
-     * - encoding: unused
-     * - decoding: Set by user.
+     * 对选定帧跳过 IDCT/反量化。
+     * - 编码：不使用。
+     * - 解码：由用户设置。
      */
     enum AVDiscard skip_idct;
 
     /**
-     * Skip decoding for selected frames.
-     * - encoding: unused
-     * - decoding: Set by user.
+     * 对选定帧跳过解码。
+     * - 编码：不使用。
+     * - 解码：由用户设置。
      */
     enum AVDiscard skip_frame;
 
     /**
-     * Skip processing alpha if supported by codec.
-     * Note that if the format uses pre-multiplied alpha (common with VP6,
-     * and recommended due to better video quality/compression)
-     * the image will look as if alpha-blended onto a black background.
-     * However for formats that do not use pre-multiplied alpha
-     * there might be serious artefacts (though e.g. libswscale currently
-     * assumes pre-multiplied alpha anyway).
+     * 若编解码器支持，则跳过 Alpha 处理。
+     * 注意，若格式使用预乘 Alpha（VP6 中很常见，且因视频质量/压缩效果更好而推荐），
+     * 图像会像是以 Alpha 混合到黑色背景上。但对不使用预乘 Alpha 的格式，可能出现
+     * 严重伪影（不过例如 libswscale 当前仍假定使用预乘 Alpha）。
      *
-     * - decoding: set by user
-     * - encoding: unused
+     * - 解码：由用户设置。
+     * - 编码：不使用。
      */
     int skip_alpha;
 
     /**
-     * Number of macroblock rows at the top which are skipped.
-     * - encoding: unused
-     * - decoding: Set by user.
+     * 顶部要跳过的宏块行数。
+     * - 编码：不使用。
+     * - 解码：由用户设置。
      */
     int skip_top;
 
     /**
-     * Number of macroblock rows at the bottom which are skipped.
-     * - encoding: unused
-     * - decoding: Set by user.
+     * 底部要跳过的宏块行数。
+     * - 编码：不使用。
+     * - 解码：由用户设置。
      */
     int skip_bottom;
 
     /**
-     * low resolution decoding, 1-> 1/2 size, 2->1/4 size
-     * - encoding: unused
-     * - decoding: Set by user.
+     * 低分辨率解码，1->1/2 大小，2->1/4 大小
+     * - 编码：不使用。
+     * - 解码：由用户设置。
      */
      int lowres;
 
     /**
      * AVCodecDescriptor
-     * - encoding: unused.
-     * - decoding: set by libavcodec.
+     * - 编码：不使用。
+     * - 解码：由 libavcodec 设置。
      */
     const struct AVCodecDescriptor *codec_descriptor;
 
     /**
-     * Character encoding of the input subtitles file.
-     * - decoding: set by user
-     * - encoding: unused
+     * 输入字幕文件的字符编码。
+     * - 解码：由用户设置。
+     * - 编码：不使用。
      */
     char *sub_charenc;
 
     /**
-     * Subtitles character encoding mode. Formats or codecs might be adjusting
-     * this setting (if they are doing the conversion themselves for instance).
-     * - decoding: set by libavcodec
-     * - encoding: unused
+     * 字幕字符编码模式。格式或编解码器可能会调整此设置（例如自行执行转换时）。
+     * - 解码：由 libavcodec 设置。
+     * - 编码：不使用。
      */
     int sub_charenc_mode;
-#define FF_SUB_CHARENC_MODE_DO_NOTHING  -1  ///< do nothing (demuxer outputs a stream supposed to be already in UTF-8, or the codec is bitmap for instance)
-#define FF_SUB_CHARENC_MODE_AUTOMATIC    0  ///< libavcodec will select the mode itself
-#define FF_SUB_CHARENC_MODE_PRE_DECODER  1  ///< the AVPacket data needs to be recoded to UTF-8 before being fed to the decoder, requires iconv
-#define FF_SUB_CHARENC_MODE_IGNORE       2  ///< neither convert the subtitles, nor check them for valid UTF-8
+#define FF_SUB_CHARENC_MODE_DO_NOTHING  -1  ///< 不执行操作（例如解复用器输出假定已是 UTF-8 的流，或编解码器为位图）
+#define FF_SUB_CHARENC_MODE_AUTOMATIC    0  ///< libavcodec 自行选择模式
+#define FF_SUB_CHARENC_MODE_PRE_DECODER  1  ///< AVPacket 数据送入解码器前需重新编码为 UTF-8，需要 iconv
+#define FF_SUB_CHARENC_MODE_IGNORE       2  ///< 既不转换字幕，也不检查其是否为有效 UTF-8
 
     /**
      * Header containing style information for text subtitles.
@@ -1746,15 +1582,15 @@ typedef struct AVCodecContext {
     /**
      * dump format separator.
      * can be ", " or "\n      " or anything else
-     * - encoding: Set by user.
-     * - decoding: Set by user.
+     * - encoding: 由用户设置.
+     * - decoding: 由用户设置.
      */
     uint8_t *dump_separator;
 
     /**
      * ',' separated list of allowed decoders.
      * If NULL then all are allowed
-     * - encoding: unused
+     * - encoding: 不使用
      * - decoding: set by user
      */
     char *codec_whitelist;
@@ -1817,7 +1653,7 @@ typedef struct AVCodecContext {
      * The percentage of damaged samples to discard a frame.
      *
      * - decoding: set by user
-     * - encoding: unused
+     * - encoding: 不使用
      */
     int discard_damaged_percentage;
 
@@ -1866,8 +1702,8 @@ typedef struct AVCodecContext {
      *
      * @see avcodec_default_get_encode_buffer()
      *
-     * - encoding: Set by libavcodec, user can override.
-     * - decoding: unused
+     * - encoding: 由 libavcodec 设置, user can override.
+     * - decoding: 不使用
      */
     int (*get_encode_buffer)(struct AVCodecContext *s, AVPacket *pkt, int flags);
 
@@ -1931,8 +1767,8 @@ typedef struct AVCodecContext {
 
     /**
      * Indicates how the alpha channel of the video is represented.
-     * - encoding: Set by user
-     * - decoding: Set by libavcodec
+     * - encoding: 由用户设置
+     * - decoding: 由 libavcodec 设置
      */
     enum AVAlphaMode alpha_mode;
 } AVCodecContext;
@@ -1989,7 +1825,7 @@ typedef struct AVHWAccel {
 
 /**
  * Hardware acceleration should be used for decoding even if the codec level
- * used is unknown or higher than the maximum supported level reported by the
+ * used is 未知 or higher than the maximum supported level reported by the
  * hardware driver.
  *
  * It's generally a good idea to pass this flag unless you have a specific
@@ -2013,7 +1849,7 @@ typedef struct AVHWAccel {
  *
  * @warning If the stream is actually not supported then the behaviour is
  *          undefined, and may include returning entirely incorrect output
- *          while indicating success.
+ *          while indicating 成功.
  */
 #define AV_HWACCEL_FLAG_ALLOW_PROFILE_MISMATCH (1 << 2)
 
@@ -2112,7 +1948,7 @@ const char *avcodec_license(void);
  * Allocate an AVCodecContext and set its fields to default values. The
  * resulting struct should be freed with avcodec_free_context().
  *
- * @param codec if non-NULL, allocate private data and initialize defaults
+ * @param codec if non-NULL, allocate 私有数据 and initialize defaults
  *              for the given codec. It is illegal to then call avcodec_open2()
  *              with a different codec.
  *              If NULL, then the codec-specific defaults won't be initialized,
@@ -2124,7 +1960,7 @@ const char *avcodec_license(void);
 AVCodecContext *avcodec_alloc_context3(const AVCodec *codec);
 
 /**
- * Free the codec context and everything associated with it and write NULL to
+ * Free the 编解码器上下文 and everything associated with it and write NULL to
  * the provided pointer.
  */
 void avcodec_free_context(AVCodecContext **avctx);
@@ -2150,7 +1986,7 @@ const AVClass *avcodec_get_subtitle_rect_class(void);
  * context. Any allocated fields in par are freed and replaced with duplicates
  * of the corresponding fields in codec.
  *
- * @return >= 0 on success, a negative AVERROR code on failure
+ * @return >= 0 on 成功, a negative AVERROR code on failure
  *
  * @relates AVCodecParameters
  */
@@ -2158,12 +1994,12 @@ int avcodec_parameters_from_context(struct AVCodecParameters *par,
                                     const AVCodecContext *codec);
 
 /**
- * Fill the codec context based on the values from the supplied codec
+ * Fill the 编解码器上下文 based on the values from the supplied codec
  * parameters. Any allocated fields in codec that have a corresponding field in
  * par are freed and replaced with duplicates of the corresponding field in par.
  * Fields in codec that do not have a counterpart in par are not touched.
  *
- * @return >= 0 on success, a negative AVERROR code on failure.
+ * @return >= 0 on 成功, a negative AVERROR code on failure.
  *
  * @relates AVCodecParameters
  */
@@ -2178,12 +2014,12 @@ int avcodec_parameters_to_context(AVCodecContext *codec,
  * avcodec_find_decoder() and avcodec_find_encoder() provide an easy way for
  * retrieving a codec.
  *
- * Depending on the codec, you might need to set options in the codec context
+ * Depending on the codec, you might need to set options in the 编解码器上下文
  * also for decoding (e.g. width, height, or the pixel or audio sample format in
  * the case the information is not available in the bitstream, as when decoding
  * raw audio or video).
  *
- * Options in the codec context can be set either by setting them in the options
+ * Options in the 编解码器上下文 can be set either by setting them in the options
  * AVDictionary, or by setting the values in the context itself, directly or by
  * using the av_opt_set() API before calling this function.
  *
@@ -2202,7 +2038,7 @@ int avcodec_parameters_to_context(AVCodecContext *codec,
  *
  * In the case AVCodecParameters are available (e.g. when demuxing a stream
  * using libavformat, and accessing the AVStream contained in the demuxer), the
- * codec parameters can be copied to the codec context using
+ * codec parameters can be copied to the 编解码器上下文 using
  * avcodec_parameters_to_context(), as in the following example:
  *
  * @code
@@ -2225,9 +2061,9 @@ int avcodec_parameters_to_context(AVCodecContext *codec,
  * @param options A dictionary filled with AVCodecContext and codec-private
  *                options, which are set on top of the options already set in
  *                avctx, can be NULL. On return this object will be filled with
- *                options that were not found in the avctx codec context.
+ *                options that were not found in the avctx 编解码器上下文.
  *
- * @return zero on success, a negative value on error
+ * @return zero on 成功, a negative value on error
  * @see avcodec_alloc_context3(), avcodec_find_decoder(), avcodec_find_encoder(),
  *      av_dict_set(), av_opt_set(), av_opt_find(), avcodec_parameters_to_context()
  */
@@ -2303,7 +2139,7 @@ void avcodec_align_dimensions2(AVCodecContext *s, int *width, int *height,
  * @note The AVCodecContext MUST have been opened with @ref avcodec_open2()
  * before packets may be fed to the decoder.
  *
- * @param avctx the codec context
+ * @param avctx the 编解码器上下文
  * @param[out] sub The preallocated AVSubtitle in which the decoded subtitle will be stored,
  *                 must be freed with avsubtitle_free if *got_sub_ptr is set.
  * @param[in,out] got_sub_ptr Zero if no subtitle could be decompressed, otherwise, it is nonzero.
@@ -2327,7 +2163,7 @@ int avcodec_decode_subtitle2(AVCodecContext *avctx, AVSubtitle *sub,
  * @note The AVCodecContext MUST have been opened with @ref avcodec_open2()
  *       before packets may be fed to the decoder.
  *
- * @param avctx codec context
+ * @param avctx 编解码器上下文
  * @param[in] avpkt The input AVPacket. Usually, this will be a single video
  *                  frame, or several complete audio frames.
  *                  Ownership of the packet remains with the caller, and the
@@ -2341,12 +2177,12 @@ int avcodec_decode_subtitle2(AVCodecContext *avctx, AVSubtitle *sub,
  *                  It can be NULL (or an AVPacket with data set to NULL and
  *                  size set to 0); in this case, it is considered a flush
  *                  packet, which signals the end of the stream. Sending the
- *                  first flush packet will return success. Subsequent ones are
+ *                  first flush packet will return 成功. Subsequent ones are
  *                  unnecessary and will return AVERROR_EOF. If the decoder
  *                  still has frames buffered, it will return them after sending
  *                  a flush packet.
  *
- * @retval 0                 success
+ * @retval 0                 成功
  * @retval AVERROR(EAGAIN)   input is not accepted in the current state - user
  *                           must read output with avcodec_receive_frame() (once
  *                           all output is read, the packet should be resent,
@@ -2364,14 +2200,14 @@ int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt);
  * Return decoded output data from a decoder or encoder (when the
  * @ref AV_CODEC_FLAG_RECON_FRAME flag is used).
  *
- * @param avctx codec context
+ * @param avctx 编解码器上下文
  * @param frame This will be set to a reference-counted video or audio
  *              frame (depending on the decoder type) allocated by the
  *              codec. Note that the function will always call
  *              av_frame_unref(frame) before doing anything else.
  * @param flags Combination of AV_CODEC_RECEIVE_FRAME_FLAG_* flags.
  *
- * @retval 0                success, a frame was returned
+ * @retval 0                成功, a frame was returned
  * @retval AVERROR(EAGAIN)  output is not available in this state - user must
  *                          try to send new input
  * @retval AVERROR_EOF      the codec has been fully flushed, and there will be
@@ -2391,7 +2227,7 @@ int avcodec_receive_frame(AVCodecContext *avctx, AVFrame *frame);
  * Supply a raw video or audio frame to the encoder. Use avcodec_receive_packet()
  * to retrieve buffered output packets.
  *
- * @param avctx     codec context
+ * @param avctx     编解码器上下文
  * @param[in] frame AVFrame containing the raw audio or video frame to be encoded.
  *                  Ownership of the frame remains with the caller, and the
  *                  encoder will not write to the frame. The encoder may create
@@ -2411,7 +2247,7 @@ int avcodec_receive_frame(AVCodecContext *avctx, AVFrame *frame);
  *                  requested, then frame->nb_samples must be equal to
  *                  avctx->frame_size for all frames except the last.
  *                  The final frame may be smaller than avctx->frame_size.
- * @retval 0                 success
+ * @retval 0                 成功
  * @retval AVERROR(EAGAIN)   input is not accepted in the current state - user must
  *                           read output with avcodec_receive_packet() (once all
  *                           output is read, the packet should be resent, and the
@@ -2420,58 +2256,58 @@ int avcodec_receive_frame(AVCodecContext *avctx, AVFrame *frame);
  *                           be sent to it
  * @retval AVERROR(EINVAL)   codec not opened, it is a decoder, or requires flush
  * @retval AVERROR(ENOMEM)   failed to add packet to internal queue, or similar
- * @retval "another negative error code" legitimate encoding errors
+ * @retval "another negative error code" 合法的编码错误
  */
 int avcodec_send_frame(AVCodecContext *avctx, const AVFrame *frame);
 
 /**
- * Read encoded data from the encoder.
+ * 从编码器读取已编码数据。
  *
- * @param avctx codec context
+ * @param avctx 编解码器上下文
  * @param avpkt This will be set to a reference-counted packet allocated by the
  *              encoder. Note that the function will always call
  *              av_packet_unref(avpkt) before doing anything else.
- * @retval 0               success
- * @retval AVERROR(EAGAIN) output is not available in the current state - user must
- *                         try to send input
- * @retval AVERROR_EOF     the encoder has been fully flushed, and there will be no
- *                         more output packets
- * @retval AVERROR(EINVAL) codec not opened, or it is a decoder
- * @retval "another negative error code" legitimate encoding errors
+ * @retval 0               成功
+ * @retval AVERROR(EAGAIN) 当前状态下没有可用输出——用户必须
+ *                         尝试发送输入
+ * @retval AVERROR_EOF     编码器已完全冲刷，不会再有
+ *                         更多输出数据包
+ * @retval AVERROR(EINVAL) 编解码器未打开，或当前是解码器
+ * @retval "another negative error code" 合法的编码错误
  */
 int avcodec_receive_packet(AVCodecContext *avctx, AVPacket *avpkt);
 
 /**
- * Create and return a AVHWFramesContext with values adequate for hardware
- * decoding. This is meant to get called from the get_format callback, and is
- * a helper for preparing a AVHWFramesContext for AVCodecContext.hw_frames_ctx.
- * This API is for decoding with certain hardware acceleration modes/APIs only.
+ * 创建并返回适用于硬件
+ * 解码的 AVHWFramesContext。此函数应从 get_format 回调中调用，用于
+ * 为 AVCodecContext.hw_frames_ctx 准备 AVHWFramesContext。
+ * 此 API 仅适用于使用特定硬件加速模式/API 的解码。
  *
- * The returned AVHWFramesContext is not initialized. The caller must do this
+ * 返回的 AVHWFramesContext 尚未初始化。调用方必须执行此操作
  * with av_hwframe_ctx_init().
  *
- * Calling this function is not a requirement, but makes it simpler to avoid
- * codec or hardware API specific details when manually allocating frames.
+ * 调用此函数并非强制要求，但可简化操作，避免
+ * 手动分配帧时处理编解码器或硬件 API 的具体细节。
  *
  * Alternatively to this, an API user can set AVCodecContext.hw_device_ctx,
  * which sets up AVCodecContext.hw_frames_ctx fully automatically, and makes
  * it unnecessary to call this function or having to care about
  * AVHWFramesContext initialization at all.
  *
- * There are a number of requirements for calling this function:
+ * 调用此函数有以下要求：
  *
  * - It must be called from get_format with the same avctx parameter that was
  *   passed to get_format. Calling it outside of get_format is not allowed, and
  *   can trigger undefined behavior.
- * - The function is not always supported (see description of return values).
- *   Even if this function returns successfully, hwaccel initialization could
+ * - 此函数并非始终受支持（见返回值说明）。
+ *   Even if this function returns 成功fully, hwaccel initialization could
  *   fail later. (The degree to which implementations check whether the stream
  *   is actually supported varies. Some do this check only after the user's
  *   get_format callback returns.)
- * - The hw_pix_fmt must be one of the choices suggested by get_format. If the
+ * - hw_pix_fmt 必须是 get_format 建议的选项之一。 If the
  *   user decides to use a AVHWFramesContext prepared with this API function,
  *   the user must return the same hw_pix_fmt from get_format.
- * - The device_ref passed to this function must support the given hw_pix_fmt.
+ * - 传给此函数的 device_ref 必须支持给定的 hw_pix_fmt。
  * - After calling this API function, it is the user's responsibility to
  *   initialize the AVHWFramesContext (returned by the out_frames_ref parameter),
  *   and to set AVCodecContext.hw_frames_ctx to it. If done, this must be done
@@ -2515,8 +2351,8 @@ int avcodec_receive_packet(AVCodecContext *avctx, AVPacket *avpkt);
  * Essentially, out_frames_ref returns the same as av_hwframe_ctx_alloc(), but
  * with basic frame parameters set.
  *
- * The function is stateless, and does not change the AVCodecContext or the
- * device_ref AVHWDeviceContext.
+ * 此函数无状态，不会更改 AVCodecContext 或
+ * device_ref 指向的 AVHWDeviceContext。
  *
  * @param avctx The context which is currently calling get_format, and which
  *              implicitly contains all state needed for filling the returned
@@ -2524,11 +2360,11 @@ int avcodec_receive_packet(AVCodecContext *avctx, AVPacket *avpkt);
  * @param device_ref A reference to the AVHWDeviceContext describing the device
  *                   which will be used by the hardware decoder.
  * @param hw_pix_fmt The hwaccel format you are going to return from get_format.
- * @param out_frames_ref On success, set to a reference to an _uninitialized_
+ * @param out_frames_ref On 成功, set to a reference to an _uninitialized_
  *                       AVHWFramesContext, created from the given device_ref.
  *                       Fields will be set to values required for decoding.
  *                       Not changed if an error is returned.
- * @return zero on success, a negative value on error. The following error codes
+ * @return zero on 成功, a negative value on error. The following error codes
  *         have special semantics:
  *      AVERROR(ENOENT): the decoder does not support this functionality. Setup
  *                       is always manual, or it is a decoder which does not
@@ -2555,18 +2391,18 @@ enum AVCodecConfig {
 };
 
 /**
- * Retrieve a list of all supported values for a given configuration type.
+ * 获取给定配置类型支持的所有值。
  *
  * @param avctx An optional context to use. Values such as
  *              `strict_std_compliance` may affect the result. If NULL,
  *              default values are used.
  * @param codec The codec to query, or NULL to use avctx->codec.
  * @param config The configuration to query.
- * @param flags Currently unused; should be set to zero.
- * @param out_configs On success, set to a list of configurations, terminated
+ * @param flags Currently 不使用; should be set to zero.
+ * @param out_configs On 成功, set to a list of configurations, terminated
  *                    by a config-specific terminator, or NULL if all
  *                    possible values are supported.
- * @param out_num_configs On success, set to the number of elements in
+ * @param out_num_configs On 成功, set to the number of elements in
                           *out_configs, excluding the terminator. Optional.
  */
 int avcodec_get_supported_config(const AVCodecContext *avctx,
@@ -2577,15 +2413,15 @@ int avcodec_get_supported_config(const AVCodecContext *avctx,
 
 
 /**
- * @defgroup lavc_parsing Frame parsing
+ * @defgroup lavc_parsing 帧解析
  * @{
  */
 
 enum AVPictureStructure {
-    AV_PICTURE_STRUCTURE_UNKNOWN,      ///< unknown
-    AV_PICTURE_STRUCTURE_TOP_FIELD,    ///< coded as top field
-    AV_PICTURE_STRUCTURE_BOTTOM_FIELD, ///< coded as bottom field
-    AV_PICTURE_STRUCTURE_FRAME,        ///< coded as frame
+    AV_PICTURE_STRUCTURE_UNKNOWN,      ///< 未知
+    AV_PICTURE_STRUCTURE_TOP_FIELD,    ///< 编码为顶场
+    AV_PICTURE_STRUCTURE_BOTTOM_FIELD, ///< 编码为底场
+    AV_PICTURE_STRUCTURE_FRAME,        ///< 编码为帧
 };
 
 typedef struct AVCodecParserContext {
@@ -2610,7 +2446,7 @@ typedef struct AVCodecParserContext {
     int64_t pts;     /* pts of the current frame */
     int64_t dts;     /* dts of the current frame */
 
-    /* private data */
+    /* 私有数据 */
     int64_t last_pts;
     int64_t last_dts;
     int fetch_timestamp;
@@ -2624,11 +2460,11 @@ typedef struct AVCodecParserContext {
     int flags;
 #define PARSER_FLAG_COMPLETE_FRAMES           0x0001
 #define PARSER_FLAG_ONCE                      0x0002
-/// Set if the parser has a valid file offset
+/// 解析器具有有效文件偏移时设置
 #define PARSER_FLAG_FETCHED_OFFSET            0x0004
 #define PARSER_FLAG_USE_CODEC_TS              0x1000
 
-    int64_t offset;      ///< byte offset from starting packet start
+    int64_t offset;      ///< 相对于起始数据包起点的字节偏移
     int64_t cur_frame_end[AV_PARSER_PTS_NB];
 
     /**
@@ -2639,7 +2475,7 @@ typedef struct AVCodecParserContext {
      */
     int key_frame;
 
-    // Timestamp generation support:
+    // 时间戳生成支持：
     /**
      * Synchronization point for start of timestamp generation.
      *
@@ -2655,7 +2491,7 @@ typedef struct AVCodecParserContext {
      * Offset of the current timestamp against last timestamp sync point in
      * units of AVCodecContext.time_base.
      *
-     * Set to INT_MIN when dts_sync_point unused. Otherwise, it must
+     * Set to INT_MIN when dts_sync_point 不使用. Otherwise, it must
      * contain a valid timestamp offset.
      *
      * Note that the timestamp of sync point has usually a nonzero
@@ -2669,7 +2505,7 @@ typedef struct AVCodecParserContext {
     /**
      * Presentation delay of current frame in units of AVCodecContext.time_base.
      *
-     * Set to INT_MIN when dts_sync_point unused. Otherwise, it must
+     * Set to INT_MIN when dts_sync_point 不使用. Otherwise, it must
      * contain valid non-negative timestamp delta (presentation time of a frame
      * must not lie in the past).
      *
@@ -2681,7 +2517,7 @@ typedef struct AVCodecParserContext {
     int pts_dts_delta;
 
     /**
-     * Position of the packet in file.
+     * 数据包在文件中的位置。
      *
      * Analogous to cur_frame_pts/dts
      */
@@ -2693,12 +2529,12 @@ typedef struct AVCodecParserContext {
     int64_t pos;
 
     /**
-     * Previous frame byte position.
+     * 前一帧的字节位置。
      */
     int64_t last_pos;
 
     /**
-     * Duration of the current frame.
+     * 当前帧的时长。
      * For audio, this is in units of 1 / AVCodecContext.sample_rate.
      * For all other types, this is in units of AVCodecContext.time_base.
      */
@@ -2725,13 +2561,13 @@ typedef struct AVCodecParserContext {
     int output_picture_number;
 
     /**
-     * Dimensions of the decoded video intended for presentation.
+     * 用于显示的已解码视频尺寸。
      */
     int width;
     int height;
 
     /**
-     * Dimensions of the coded video.
+     * 已编码视频的尺寸。
      */
     int coded_width;
     int coded_height;
@@ -2752,7 +2588,7 @@ typedef struct AVCodecParser {
 } AVCodecParser;
 
 /**
- * Iterate over all registered codec parsers.
+ * 遍历所有已注册的编解码器解析器。
  *
  * @param opaque a pointer where libavcodec will store the iteration state. Must
  *               point to NULL to start the iteration.
@@ -2765,10 +2601,10 @@ const AVCodecParser *av_parser_iterate(void **opaque);
 AVCodecParserContext *av_parser_init(enum AVCodecID codec_id);
 
 /**
- * Parse a packet.
+ * 解析数据包。
  *
  * @param s             parser context.
- * @param avctx         codec context.
+ * @param avctx         编解码器上下文.
  * @param poutbuf       set to pointer to parsed buffer or NULL if not yet finished.
  * @param poutbuf_size  set to size of parsed buffer or zero if not yet finished.
  * @param buf           input buffer.
@@ -2823,7 +2659,7 @@ int avcodec_encode_subtitle(AVCodecContext *avctx, uint8_t *buf, int buf_size,
  */
 
 /**
- * @defgroup lavc_misc Utility functions
+ * @defgroup lavc_misc 实用函数
  * @ingroup libavc
  *
  * Miscellaneous utility functions related to both encoding and decoding
@@ -2832,9 +2668,9 @@ int avcodec_encode_subtitle(AVCodecContext *avctx, uint8_t *buf, int buf_size,
  */
 
 /**
- * @defgroup lavc_misc_pixfmt Pixel formats
+ * @defgroup lavc_misc_pixfmt 像素格式
  *
- * Functions for working with pixel formats.
+ * 用于处理像素格式的函数。
  * @{
  */
 
@@ -2860,7 +2696,7 @@ unsigned int avcodec_pix_fmt_to_codec_tag(enum AVPixelFormat pix_fmt);
  * @param[in] src_pix_fmt source pixel format
  * @param[in] has_alpha Whether the source pixel format alpha channel is used.
  * @param[out] loss_ptr Combination of flags informing you what kind of losses will occur.
- * @return The best pixel format to convert to or -1 if none was found.
+ * @return 要转换到的最佳像素格式；若未找到则返回 -1。
  */
 enum AVPixelFormat avcodec_find_best_pix_fmt_of_list(const enum AVPixelFormat *pix_fmt_list,
                                             enum AVPixelFormat src_pix_fmt,
@@ -2879,7 +2715,7 @@ int avcodec_default_execute2(AVCodecContext *c, int (*func)(AVCodecContext *c2, 
 //FIXME func typedef
 
 /**
- * Fill AVFrame audio data and linesize pointers.
+ * 填充 AVFrame 音频数据和 linesize 指针。
  *
  * The buffer buf must be a preallocated buffer with a size big enough
  * to contain the specified samples amount. The filled AVFrame data
@@ -2897,17 +2733,17 @@ int avcodec_default_execute2(AVCodecContext *c, int (*func)(AVCodecContext *c2, 
  * @param buf         buffer to use for frame data
  * @param buf_size    size of buffer
  * @param align       plane size sample alignment (0 = default)
- * @return            >=0 on success, negative error code on failure
+ * @return            >=0 on 成功, negative error code on failure
  * @todo return the size in bytes required to store the samples in
- * case of success, at the next libavutil bump
+ * case of 成功, at the next libavutil bump
  */
 int avcodec_fill_audio_frame(AVFrame *frame, int nb_channels,
                              enum AVSampleFormat sample_fmt, const uint8_t *buf,
                              int buf_size, int align);
 
 /**
- * Reset the internal codec state / flush internal buffers. Should be called
- * e.g. when seeking or when switching to a different stream.
+ * 重置内部编解码器状态/冲刷内部缓冲区。应在以下情况调用
+ * 例如定位或切换到其他流时。
  *
  * @note for decoders, this function just releases any references the decoder
  * might keep internally, but the caller's references remain valid.
@@ -2922,10 +2758,10 @@ int avcodec_fill_audio_frame(AVFrame *frame, int nb_channels,
 void avcodec_flush_buffers(AVCodecContext *avctx);
 
 /**
- * Return audio frame duration.
+ * 返回音频帧时长。
  *
- * @param avctx        codec context
- * @param frame_bytes  size of the frame, or 0 if unknown
+ * @param avctx        编解码器上下文
+ * @param frame_bytes  size of the frame, or 0 if 未知
  * @return             frame duration, in samples, if known. 0 if not able to
  *                     determine.
  */
@@ -2934,8 +2770,8 @@ int av_get_audio_frame_duration(AVCodecContext *avctx, int frame_bytes);
 /* memory */
 
 /**
- * Same behaviour av_fast_malloc but the buffer has additional
- * AV_INPUT_BUFFER_PADDING_SIZE at the end which will always be 0.
+ * 行为与 av_fast_malloc 相同，但缓冲区末尾额外包含
+ * AV_INPUT_BUFFER_PADDING_SIZE ，该区域始终为 0。
  *
  * In addition the whole buffer will initially and after resizes
  * be 0-initialized so that no uninitialized data will ever appear.
@@ -2943,14 +2779,14 @@ int av_get_audio_frame_duration(AVCodecContext *avctx, int frame_bytes);
 void av_fast_padded_malloc(void *ptr, unsigned int *size, size_t min_size);
 
 /**
- * Same behaviour av_fast_padded_malloc except that buffer will always
- * be 0-initialized after call.
+ * 行为与 av_fast_padded_malloc 相同，但缓冲区调用后始终
+ * 被初始化为 0。
  */
 void av_fast_padded_mallocz(void *ptr, unsigned int *size, size_t min_size);
 
 /**
- * @return a positive value if s is open (i.e. avcodec_open2() was called on it),
- * 0 otherwise.
+ * @return 若 s 已打开则返回正值 (i.e. avcodec_open2() was called on it),
+ * 否则返回 0。
  */
 int avcodec_is_open(AVCodecContext *s);
 
@@ -2959,3 +2795,5 @@ int avcodec_is_open(AVCodecContext *s);
  */
 
 #endif /* AVCODEC_AVCODEC_H */
+
+

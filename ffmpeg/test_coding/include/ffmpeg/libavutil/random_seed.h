@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2009 Baptiste Coudurier <baptiste.coudurier@gmail.com>
  *
  * This file is part of FFmpeg.
@@ -29,24 +29,19 @@
  */
 
 /**
- * Get a seed to use in conjunction with random functions.
- * This function tries to provide a good seed at a best effort bases.
- * Its possible to call this function multiple times if more bits are needed.
- * It can be quite slow, which is why it should only be used as seed for a faster
- * PRNG. The quality of the seed depends on the platform.
+ * 获取与随机函数配合使用的种子。此函数会尽力提供高质量种子；需要更多位时可多次调用。
+ * 它可能很慢，因此只应作为更快 PRNG 的种子。种子质量取决于平台。
  */
 uint32_t av_get_random_seed(void);
 
 /**
- * Generate cryptographically secure random data, i.e. suitable for use as
- * encryption keys and similar.
+ * 生成密码学安全的随机数据，适合用作加密密钥等。
  *
- * @param buf buffer into which the random data will be written
- * @param len size of buf in bytes
+ * @param buf 写入随机数据的缓冲区
+ * @param len buf 的大小，单位为字节
  *
- * @retval 0                         success, len bytes of random data was written
- *                                   into buf
- * @retval "a negative AVERROR code" random data could not be generated
+ * @retval 0                         成功，已向 buf 写入 len 字节随机数据
+ * @retval "a negative AVERROR code" 无法生成随机数据
  */
 int av_random_bytes(uint8_t *buf, size_t len);
 

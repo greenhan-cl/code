@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -30,16 +30,16 @@
 
 /**
  * @file
- * An API-specific header for AV_HWDEVICE_TYPE_CUDA.
+ * AV_HWDEVICE_TYPE_CUDA 专用 API 头文件。
  *
- * This API supports dynamic frame pools. AVHWFramesContext.pool must return
- * AVBufferRefs whose data pointer is a CUdeviceptr.
+ * 此 API 支持动态帧池。AVHWFramesContext.pool 必须返回 data 指针为
+ * CUdeviceptr 的 AVBufferRef。
  */
 
 typedef struct AVCUDADeviceContextInternal AVCUDADeviceContextInternal;
 
 /**
- * This struct is allocated as AVHWDeviceContext.hwctx
+ * 此结构体作为 AVHWDeviceContext.hwctx 分配。
  */
 typedef struct AVCUDADeviceContext {
     CUcontext cuda_ctx;
@@ -48,94 +48,86 @@ typedef struct AVCUDADeviceContext {
 } AVCUDADeviceContext;
 
 /**
- * CUDA frame descriptor for pool allocation of AV_PIX_FMT_CUARRAY frames.
+ * 用于 AV_PIX_FMT_CUARRAY 帧池分配的 CUDA 帧描述符。
  *
- * In user-allocated pools, AVHWFramesContext.pool must return AVBufferRefs
- * with the data pointer pointing at an object of this type describing the
- * planes of the frame.
+ * 在用户分配的池中，AVHWFramesContext.pool 必须返回 AVBufferRef，
+ * 其 data 指针指向描述帧各平面的此类型对象。
  *
- * This has no use outside of custom allocation, and AVFrame AVBufferRef do not
- * necessarily point to an instance of this struct.
+ * 此结构体仅用于自定义分配；AVFrame 的 AVBufferRef 不一定指向此结构体实例。
  */
 typedef struct AVCUDAArrayFrameDescriptor {
     /**
-     * The CUarray containing the frame data.
+     * 包含帧数据的 CUarray。
      *
-     * Normally stored in AVFrame.data[0].
+     * 通常存储在 AVFrame.data[0] 中。
      */
     CUarray array;
 
     /**
-     * The index into AVCUDAFramesContext.cuarray_surfaces, or 0 if not applicable.
+     * AVCUDAFramesContext.cuarray_surfaces 中的索引；不适用时为 0。
      *
-     * Normally stored in AVFrame.data[1] (cast from intptr_t).
+     * 通常存储在 AVFrame.data[1] 中（从 intptr_t 转换）。
      */
     intptr_t index;
 } AVCUDAArrayFrameDescriptor;
 
 /**
- * This struct is allocated as AVHWFramesContext.hwctx
+ * 此结构体作为 AVHWFramesContext.hwctx 分配。
  */
 typedef struct AVCUDAFramesContext {
     /**
-     * CUDA_ARRAY3D_DESCRIPTOR CUarrays will be initialized with.
-     * Mostly used to provide external Flags.
+     * 初始化 CUarray 时使用的 CUDA_ARRAY3D_DESCRIPTOR，主要用于提供外部 Flags。
      *
-     * Width, Height and Format only honored if != 0.
-     * Filled with default parameters from the FramesContext otherwise.
+     * Width、Height 和 Format 仅在 != 0 时生效，否则使用 FramesContext 默认参数填充。
      *
-     * Only applicable for AV_PIX_FMT_CUARRAY.
+     * 仅适用于 AV_PIX_FMT_CUARRAY。
      */
     CUDA_ARRAY3D_DESCRIPTOR cuarray_desc;
 
     /**
-     * If >0, pre-allocate a fixed pool of surfaces.
-     * The surfaces will be available via cuarray_surfaces after init.
-     * Size of the pool cannot be changed afterwards.
+     * 如果 >0，则预分配固定表面池。初始化后可通过 cuarray_surfaces 访问表面，
+     * 此后不能更改池大小。
      *
-     * Only applicable for AV_PIX_FMT_CUARRAY.
+     * 仅适用于 AV_PIX_FMT_CUARRAY。
      */
     int cuarray_num_surfaces;
 
     /**
-     * If cuarray_num_surfaces is >0, this contains the array of pre-allocated surfaces.
+     * cuarray_num_surfaces >0 时，包含预分配表面数组。
      *
-     * Only applicable for AV_PIX_FMT_CUARRAY.
+     * 仅适用于 AV_PIX_FMT_CUARRAY。
      */
     CUarray *cuarray_surfaces;
 } AVCUDAFramesContext;
 
 /**
- * CUDA hardware pipeline configuration details.
+ * CUDA 硬件流水线配置详情。
  *
- * Passed to av_hwdevice_get_hwframe_constraints() to query
- * per-hw-format constraints. When provided, valid_sw_formats
- * will be filtered to only those compatible with the specified
- * hw_format.
+ * 传给 av_hwdevice_get_hwframe_constraints() 以查询各硬件格式约束。
+ * 提供时，valid_sw_formats 仅保留与指定 hw_format 兼容的格式。
  */
 typedef struct AVCUDAHWConfig {
     /**
-     * The hardware pixel format to query constraints for.
-     * Must be AV_PIX_FMT_CUDA or AV_PIX_FMT_CUARRAY.
+     * 要查询约束的硬件像素格式。必须为 AV_PIX_FMT_CUDA 或 AV_PIX_FMT_CUARRAY。
      */
     enum AVPixelFormat hw_format;
 } AVCUDAHWConfig;
 
 /**
- * @defgroup hwcontext_cuda Device context creation flags
+ * @defgroup hwcontext_cuda 设备上下文创建标志
  *
- * Flags for av_hwdevice_ctx_create.
+ * av_hwdevice_ctx_create 的标志。
  *
  * @{
  */
 
 /**
- * Use primary device context instead of creating a new one.
+ * 使用主设备上下文，而不是创建新上下文。
  */
 #define AV_CUDA_USE_PRIMARY_CONTEXT (1 << 0)
 
 /**
- * Use current device context instead of creating a new one.
+ * 使用当前设备上下文，而不是创建新上下文。
  */
 #define AV_CUDA_USE_CURRENT_CONTEXT (1 << 1)
 

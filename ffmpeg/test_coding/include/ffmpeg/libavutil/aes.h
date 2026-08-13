@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2007 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -36,29 +36,29 @@ extern const int av_aes_size;
 struct AVAES;
 
 /**
- * Allocate an AVAES context.
+ * 分配 AVAES 上下文。
  */
 struct AVAES *av_aes_alloc(void);
 
 /**
- * Initialize an AVAES context.
+ * 初始化 AVAES 上下文。
  *
- * @param a The AVAES context
- * @param key Pointer to the key
- * @param key_bits 128, 192 or 256
- * @param decrypt 0 for encryption, 1 for decryption
+ * @param a AVAES 上下文
+ * @param key 指向密钥的指针
+ * @param key_bits 128、192 或 256
+ * @param decrypt 0 表示加密，1 表示解密
  */
 int av_aes_init(struct AVAES *a, const uint8_t *key, int key_bits, int decrypt);
 
 /**
- * Encrypt or decrypt a buffer using a previously initialized context.
+ * 使用之前初始化的上下文加密或解密缓冲区。
  *
- * @param a The AVAES context
- * @param dst destination array, can be equal to src
- * @param src source array, can be equal to dst
- * @param count number of 16 byte blocks
- * @param iv initialization vector for CBC mode, if NULL then ECB will be used
- * @param decrypt 0 for encryption, 1 for decryption
+ * @param a AVAES 上下文
+ * @param dst 目标数组，可以与 src 相同
+ * @param src 源数组，可以与 dst 相同
+ * @param count 16 字节块的数量
+ * @param iv CBC 模式的初始化向量；为 NULL 时使用 ECB
+ * @param decrypt 0 表示加密，1 表示解密
  */
 void av_aes_crypt(struct AVAES *a, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
 

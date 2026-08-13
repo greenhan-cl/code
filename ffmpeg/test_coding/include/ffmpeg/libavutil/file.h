@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -26,36 +26,31 @@
 
 /**
  * @file
- * Misc file utilities.
+ * 杂项文件工具。
  */
 
 /**
- * Read the file with name filename, and put its content in a newly
- * allocated buffer or map it with mmap() when available.
- * In case of success set *bufptr to the read or mmapped buffer, and
- * *size to the size in bytes of the buffer in *bufptr.
- * Unlike mmap this function succeeds with zero sized files, in this
- * case *bufptr will be set to NULL and *size will be set to 0.
- * The returned buffer must be released with av_file_unmap().
+ * 读取名为 filename 的文件，并将内容放入新分配的缓冲区；可用时则使用 mmap()
+ * 映射。成功时，将 *bufptr 设为读取或映射的缓冲区，将 *size 设为 *bufptr 中
+ * 缓冲区的字节大小。与 mmap 不同，此函数对零大小文件也会成功；此时
+ * *bufptr 设为 NULL，*size 设为 0。返回的缓冲区必须使用 av_file_unmap() 释放。
  *
- * @param filename path to the file
- * @param[out] bufptr pointee is set to the mapped or allocated buffer
- * @param[out] size pointee is set to the size in bytes of the buffer
- * @param log_offset loglevel offset used for logging
- * @param log_ctx context used for logging
- * @return a non negative number in case of success, a negative value
- * corresponding to an AVERROR error code in case of failure
+ * @param filename 文件路径
+ * @param[out] bufptr 将其指向的对象设为映射或分配的缓冲区
+ * @param[out] size 将其指向的对象设为缓冲区的字节大小
+ * @param log_offset 用于日志记录的日志级别偏移量
+ * @param log_ctx 用于日志记录的上下文
+ * @return 成功时返回非负数，失败时返回与 AVERROR 错误码对应的负值
  */
 av_warn_unused_result
 int av_file_map(const char *filename, uint8_t **bufptr, size_t *size,
                 int log_offset, void *log_ctx);
 
 /**
- * Unmap or free the buffer bufptr created by av_file_map().
+ * 取消映射或释放 av_file_map() 创建的缓冲区 bufptr。
  *
- * @param bufptr the buffer previously created with av_file_map()
- * @param size size in bytes of bufptr, must be the same as returned
- * by av_file_map()
+ * @param bufptr 之前使用 av_file_map() 创建的缓冲区
+ * @param size bufptr 的字节大小，必须与 av_file_map() 返回的值相同
  */
 void av_file_unmap(uint8_t *bufptr, size_t size);
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2000-2003 Fabrice Bellard
  *
  * This file is part of FFmpeg.
@@ -24,32 +24,26 @@
 #include <stdint.h>
 
 /**
- * Get the current time in microseconds.
+ * 获取当前时间，单位为微秒。
  */
 int64_t av_gettime(void);
 
 /**
- * Get the current time in microseconds since some unspecified starting point.
- * On platforms that support it, the time comes from a monotonic clock
- * This property makes this time source ideal for measuring relative time.
- * The returned values may not be monotonic on platforms where a monotonic
- * clock is not available.
+ * 获取从某个未指定起点开始的当前时间，单位为微秒。支持的平台使用单调时钟，
+ * 因而非常适合测量相对时间；不提供单调时钟的平台上返回值可能不单调。
  */
 int64_t av_gettime_relative(void);
 
 /**
- * Indicates with a boolean result if the av_gettime_relative() time source
- * is monotonic.
+ * 以布尔结果指示 av_gettime_relative() 的时间源是否单调。
  */
 int av_gettime_relative_is_monotonic(void);
 
 /**
- * Sleep for a period of time.  Although the duration is expressed in
- * microseconds, the actual delay may be rounded to the precision of the
- * system timer.
+ * 休眠一段时间。虽然时长以微秒表示，实际延迟可能按系统定时器精度取整。
  *
- * @param  usec Number of microseconds to sleep.
- * @return zero on success or (negative) error code.
+ * @param  usec 要休眠的微秒数
+ * @return 成功返回 0，否则返回负错误码
  */
 int av_usleep(unsigned usec);
 

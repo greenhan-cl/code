@@ -1,4 +1,4 @@
-/*
+﻿/*
  * RC4 encryption/decryption/pseudo-random number generator
  *
  * This file is part of FFmpeg.
@@ -35,30 +35,30 @@ typedef struct AVRC4 {
 } AVRC4;
 
 /**
- * Allocate an AVRC4 context.
+ * 分配 AVRC4 上下文。
  */
 AVRC4 *av_rc4_alloc(void);
 
 /**
- * @brief Initializes an AVRC4 context.
+ * @brief 初始化 AVRC4 上下文。
  *
- * @param d pointer to the AVRC4 context
- * @param key buffer containing the key
- * @param key_bits must be a multiple of 8
- * @param decrypt 0 for encryption, 1 for decryption, currently has no effect
- * @return zero on success, negative value otherwise
+ * @param d 指向 AVRC4 上下文的指针
+ * @param key 包含密钥的缓冲区
+ * @param key_bits 必须为 8 的倍数
+ * @param decrypt 0 表示加密，1 表示解密；当前不起作用
+ * @return 成功返回 0，否则返回负值
  */
 int av_rc4_init(struct AVRC4 *d, const uint8_t *key, int key_bits, int decrypt);
 
 /**
- * @brief Encrypts / decrypts using the RC4 algorithm.
+ * @brief 使用 RC4 算法加密/解密。
  *
- * @param d pointer to the AVRC4 context
- * @param count number of bytes
- * @param dst destination array, can be equal to src
- * @param src source array, can be equal to dst, may be NULL
- * @param iv not (yet) used for RC4, should be NULL
- * @param decrypt 0 for encryption, 1 for decryption, not (yet) used
+ * @param d 指向 AVRC4 上下文的指针
+ * @param count 字节数
+ * @param dst 目标数组，可以等于 src
+ * @param src 源数组，可以等于 dst，也可以为 NULL
+ * @param iv RC4 尚未使用，应为 NULL
+ * @param decrypt 0 表示加密，1 表示解密；尚未使用
  */
 void av_rc4_crypt(struct AVRC4 *d, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
 

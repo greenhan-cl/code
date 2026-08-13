@@ -1,5 +1,5 @@
-/*
- * Version macros.
+﻿/*
+ * 版本宏。
  *
  * This file is part of FFmpeg.
  *
@@ -23,8 +23,7 @@
 
 /**
  * @file
- * @ingroup libavf
- * Libavformat version macros
+ * @ingroup libavf Libavformat 版本宏
  */
 
 #include "libavutil/version.h"

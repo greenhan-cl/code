@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Blowfish algorithm
  * Copyright (c) 2012 Samuel Pitoiset
  *
@@ -38,39 +38,39 @@ typedef struct AVBlowfish {
 } AVBlowfish;
 
 /**
- * Allocate an AVBlowfish context.
+ * 分配 AVBlowfish 上下文。
  */
 AVBlowfish *av_blowfish_alloc(void);
 
 /**
- * Initialize an AVBlowfish context.
+ * 初始化 AVBlowfish 上下文。
  *
- * @param ctx an AVBlowfish context
- * @param key a key
- * @param key_len length of the key
+ * @param ctx AVBlowfish 上下文
+ * @param key 密钥
+ * @param key_len 密钥长度
  */
 void av_blowfish_init(struct AVBlowfish *ctx, const uint8_t *key, int key_len);
 
 /**
- * Encrypt or decrypt a buffer using a previously initialized context.
+ * 使用之前初始化的上下文加密或解密缓冲区。
  *
- * @param ctx an AVBlowfish context
- * @param xl left four bytes halves of input to be encrypted
- * @param xr right four bytes halves of input to be encrypted
- * @param decrypt 0 for encryption, 1 for decryption
+ * @param ctx AVBlowfish 上下文
+ * @param xl 待加密输入的左侧 4 字节半块
+ * @param xr 待加密输入的右侧 4 字节半块
+ * @param decrypt 0 表示加密，1 表示解密
  */
 void av_blowfish_crypt_ecb(struct AVBlowfish *ctx, uint32_t *xl, uint32_t *xr,
                            int decrypt);
 
 /**
- * Encrypt or decrypt a buffer using a previously initialized context.
+ * 使用之前初始化的上下文加密或解密缓冲区。
  *
- * @param ctx an AVBlowfish context
- * @param dst destination array, can be equal to src
- * @param src source array, can be equal to dst
- * @param count number of 8 byte blocks
- * @param iv initialization vector for CBC mode, if NULL ECB will be used
- * @param decrypt 0 for encryption, 1 for decryption
+ * @param ctx AVBlowfish 上下文
+ * @param dst 目标数组，可以与 src 相同
+ * @param src 源数组，可以与 dst 相同
+ * @param count 8 字节块的数量
+ * @param iv CBC 模式的初始化向量；为 NULL 时使用 ECB
+ * @param decrypt 0 表示加密，1 表示解密
  */
 void av_blowfish_crypt(struct AVBlowfish *ctx, uint8_t *dst, const uint8_t *src,
                        int count, uint8_t *iv, int decrypt);

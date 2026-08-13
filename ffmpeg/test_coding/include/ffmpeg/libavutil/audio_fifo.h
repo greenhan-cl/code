@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Audio FIFO
  * Copyright (c) 2012 Justin Ruggles <justin.ruggles@gmail.com>
  *
@@ -21,7 +21,7 @@
 
 /**
  * @file
- * Audio FIFO Buffer
+ * 音频 FIFO 缓冲区
  */
 
 #ifndef AVUTIL_AUDIO_FIFO_H
@@ -34,148 +34,143 @@
  * @addtogroup lavu_audio
  * @{
  *
- * @defgroup lavu_audiofifo Audio FIFO Buffer
+ * @defgroup lavu_audiofifo 音频 FIFO 缓冲区
  * @{
  */
 
 /**
- * Context for an Audio FIFO Buffer.
+ * 音频 FIFO 缓冲区的上下文。
  *
- * - Operates at the sample level rather than the byte level.
- * - Supports multiple channels with either planar or packed sample format.
- * - Automatic reallocation when writing to a full buffer.
+ * - 在样本级别而非字节级别操作。
+ * - 支持采用平面或打包采样格式的多声道。
+ * - 向已满缓冲区写入时自动重新分配。
  */
 typedef struct AVAudioFifo AVAudioFifo;
 
 /**
- * Free an AVAudioFifo.
+ * 释放 AVAudioFifo。
  *
- * @param af  AVAudioFifo to free
+ * @param af 要释放的 AVAudioFifo
  */
 void av_audio_fifo_free(AVAudioFifo *af);
 
 /**
- * Allocate an AVAudioFifo.
+ * 分配 AVAudioFifo。
  *
- * @param sample_fmt  sample format
- * @param channels    number of channels
- * @param nb_samples  initial allocation size, in samples
- * @return            newly allocated AVAudioFifo, or NULL on error
+ * @param sample_fmt  采样格式
+ * @param channels    声道数量
+ * @param nb_samples  初始分配大小，以样本数计
+ * @return            新分配的 AVAudioFifo；出错时返回 NULL
  */
 AVAudioFifo *av_audio_fifo_alloc(enum AVSampleFormat sample_fmt, int channels,
                                  int nb_samples);
 
 /**
- * Reallocate an AVAudioFifo.
+ * 重新分配 AVAudioFifo。
  *
- * @param af          AVAudioFifo to reallocate
- * @param nb_samples  new allocation size, in samples
- * @return            0 if OK, or negative AVERROR code on failure
+ * @param af          要重新分配的 AVAudioFifo
+ * @param nb_samples  新的分配大小，以样本数计
+ * @return            成功时返回 0，失败时返回负的 AVERROR 错误码
  */
 av_warn_unused_result
 int av_audio_fifo_realloc(AVAudioFifo *af, int nb_samples);
 
 /**
- * Write data to an AVAudioFifo.
+ * 向 AVAudioFifo 写入数据。
  *
- * The AVAudioFifo will be reallocated automatically if the available space
- * is less than nb_samples.
+ * 如果可用空间少于 nb_samples，AVAudioFifo 会自动重新分配。
  *
  * @see enum AVSampleFormat
- * The documentation for AVSampleFormat describes the data layout.
+ * AVSampleFormat 的文档描述了数据布局。
  *
- * @param af          AVAudioFifo to write to
- * @param data        audio data plane pointers
- * @param nb_samples  number of samples to write
- * @return            number of samples actually written, or negative AVERROR
- *                    code on failure. If successful, the number of samples
- *                    actually written will always be nb_samples.
+ * @param af          要写入的 AVAudioFifo
+ * @param data        音频数据平面指针
+ * @param nb_samples  要写入的样本数
+ * @return            实际写入的样本数；失败时返回负的 AVERROR 错误码。成功时，
+ *                    实际写入的样本数始终为 nb_samples。
  */
 int av_audio_fifo_write(AVAudioFifo *af, void * const *data, int nb_samples);
 
 /**
- * Peek data from an AVAudioFifo.
+ * 查看 AVAudioFifo 中的数据但不移除。
  *
  * @see enum AVSampleFormat
- * The documentation for AVSampleFormat describes the data layout.
+ * AVSampleFormat 的文档描述了数据布局。
  *
- * @param af          AVAudioFifo to read from
- * @param data        audio data plane pointers
- * @param nb_samples  number of samples to peek
- * @return            number of samples actually peek, or negative AVERROR code
- *                    on failure. The number of samples actually peek will not
- *                    be greater than nb_samples, and will only be less than
- *                    nb_samples if av_audio_fifo_size is less than nb_samples.
+ * @param af          要读取的 AVAudioFifo
+ * @param data        音频数据平面指针
+ * @param nb_samples  要查看的样本数
+ * @return            实际查看的样本数；失败时返回负的 AVERROR 错误码。实际查看的
+ *                    样本数不会大于 nb_samples，且仅当 av_audio_fifo_size 小于
+ *                    nb_samples 时才会少于 nb_samples。
  */
 int av_audio_fifo_peek(const AVAudioFifo *af, void * const *data, int nb_samples);
 
 /**
- * Peek data from an AVAudioFifo.
+ * 查看 AVAudioFifo 中的数据但不移除。
  *
  * @see enum AVSampleFormat
- * The documentation for AVSampleFormat describes the data layout.
+ * AVSampleFormat 的文档描述了数据布局。
  *
- * @param af          AVAudioFifo to read from
- * @param data        audio data plane pointers
- * @param nb_samples  number of samples to peek
- * @param offset      offset from current read position
- * @return            number of samples actually peek, or negative AVERROR code
- *                    on failure. The number of samples actually peek will not
- *                    be greater than nb_samples, and will only be less than
- *                    nb_samples if av_audio_fifo_size is less than nb_samples.
+ * @param af          要读取的 AVAudioFifo
+ * @param data        音频数据平面指针
+ * @param nb_samples  要查看的样本数
+ * @param offset      相对于当前读取位置的偏移量
+ * @return            实际查看的样本数；失败时返回负的 AVERROR 错误码。实际查看的
+ *                    样本数不会大于 nb_samples，且仅当 av_audio_fifo_size 小于
+ *                    nb_samples 时才会少于 nb_samples。
  */
 int av_audio_fifo_peek_at(const AVAudioFifo *af, void * const *data,
                           int nb_samples, int offset);
 
 /**
- * Read data from an AVAudioFifo.
+ * 从 AVAudioFifo 读取数据。
  *
  * @see enum AVSampleFormat
- * The documentation for AVSampleFormat describes the data layout.
+ * AVSampleFormat 的文档描述了数据布局。
  *
- * @param af          AVAudioFifo to read from
- * @param data        audio data plane pointers
- * @param nb_samples  number of samples to read
- * @return            number of samples actually read, or negative AVERROR code
- *                    on failure. The number of samples actually read will not
- *                    be greater than nb_samples, and will only be less than
- *                    nb_samples if av_audio_fifo_size is less than nb_samples.
+ * @param af          要读取的 AVAudioFifo
+ * @param data        音频数据平面指针
+ * @param nb_samples  要读取的样本数
+ * @return            实际读取的样本数；失败时返回负的 AVERROR 错误码。实际读取的
+ *                    样本数不会大于 nb_samples，且仅当 av_audio_fifo_size 小于
+ *                    nb_samples 时才会少于 nb_samples。
  */
 int av_audio_fifo_read(AVAudioFifo *af, void * const *data, int nb_samples);
 
 /**
- * Drain data from an AVAudioFifo.
+ * 从 AVAudioFifo 中排出数据。
  *
- * Removes the data without reading it.
+ * 不读取数据而将其移除。
  *
- * @param af          AVAudioFifo to drain
- * @param nb_samples  number of samples to drain
- * @return            0 if OK, or negative AVERROR code on failure
+ * @param af          要排出数据的 AVAudioFifo
+ * @param nb_samples  要排出的样本数
+ * @return            成功时返回 0，失败时返回负的 AVERROR 错误码
  */
 int av_audio_fifo_drain(AVAudioFifo *af, int nb_samples);
 
 /**
- * Reset the AVAudioFifo buffer.
+ * 重置 AVAudioFifo 缓冲区。
  *
- * This empties all data in the buffer.
+ * 这会清空缓冲区中的所有数据。
  *
- * @param af  AVAudioFifo to reset
+ * @param af 要重置的 AVAudioFifo
  */
 void av_audio_fifo_reset(AVAudioFifo *af);
 
 /**
- * Get the current number of samples in the AVAudioFifo available for reading.
+ * 获取 AVAudioFifo 中当前可供读取的样本数。
  *
- * @param af  the AVAudioFifo to query
- * @return    number of samples available for reading
+ * @param af 要查询的 AVAudioFifo
+ * @return   可供读取的样本数
  */
 int av_audio_fifo_size(AVAudioFifo *af);
 
 /**
- * Get the current number of samples in the AVAudioFifo available for writing.
+ * 获取 AVAudioFifo 中当前可供写入的样本数。
  *
- * @param af  the AVAudioFifo to query
- * @return    number of samples available for writing
+ * @param af 要查询的 AVAudioFifo
+ * @return   可供写入的样本数
  */
 int av_audio_fifo_space(AVAudioFifo *af);
 

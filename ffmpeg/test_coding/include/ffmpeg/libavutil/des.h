@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DES encryption/decryption
  * Copyright (c) 2007 Reimar Doeffinger
  *
@@ -36,41 +36,40 @@ typedef struct AVDES {
 } AVDES;
 
 /**
- * Allocate an AVDES context.
+ * 分配 AVDES 上下文。
  */
 AVDES *av_des_alloc(void);
 
 /**
- * @brief Initializes an AVDES context.
+ * @brief 初始化 AVDES 上下文。
  *
- * @param d pointer to a AVDES structure to initialize
- * @param key pointer to the key to use
- * @param key_bits must be 64 or 192
- * @param decrypt 0 for encryption/CBC-MAC, 1 for decryption
- * @return zero on success, negative value otherwise
+ * @param d 指向要初始化的 AVDES 结构的指针
+ * @param key 指向所用密钥的指针
+ * @param key_bits 必须为 64 或 192
+ * @param decrypt 0 表示加密/CBC-MAC，1 表示解密
+ * @return 成功时返回 0，否则返回负值
  */
 int av_des_init(struct AVDES *d, const uint8_t *key, int key_bits, int decrypt);
 
 /**
- * @brief Encrypts / decrypts using the DES algorithm.
+ * @brief 使用 DES 算法加密/解密。
  *
- * @param d pointer to the AVDES structure
- * @param dst destination array, can be equal to src, must be 8-byte aligned
- * @param src source array, can be equal to dst, must be 8-byte aligned, may be NULL
- * @param count number of 8 byte blocks
- * @param iv initialization vector for CBC mode, if NULL then ECB will be used,
- *           must be 8-byte aligned
- * @param decrypt 0 for encryption, 1 for decryption
+ * @param d 指向 AVDES 结构的指针
+ * @param dst 目标数组，可以与 src 相同，必须按 8 字节对齐
+ * @param src 源数组，可以与 dst 相同，必须按 8 字节对齐，可以为 NULL
+ * @param count 8 字节块的数量
+ * @param iv CBC 模式的初始化向量；为 NULL 时使用 ECB，必须按 8 字节对齐
+ * @param decrypt 0 表示加密，1 表示解密
  */
 void av_des_crypt(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count, uint8_t *iv, int decrypt);
 
 /**
- * @brief Calculates CBC-MAC using the DES algorithm.
+ * @brief 使用 DES 算法计算 CBC-MAC。
  *
- * @param d pointer to the AVDES structure
- * @param dst destination array, can be equal to src, must be 8-byte aligned
- * @param src source array, can be equal to dst, must be 8-byte aligned, may be NULL
- * @param count number of 8 byte blocks
+ * @param d 指向 AVDES 结构的指针
+ * @param dst 目标数组，可以与 src 相同，必须按 8 字节对齐
+ * @param src 源数组，可以与 dst 相同，必须按 8 字节对齐，可以为 NULL
+ * @param count 8 字节块的数量
  */
 void av_des_mac(struct AVDES *d, uint8_t *dst, const uint8_t *src, int count);
 

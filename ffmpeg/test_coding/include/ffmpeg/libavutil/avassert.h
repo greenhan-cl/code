@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2010 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -20,7 +20,7 @@
 
 /**
  * @file
- * simple assert() macros that are a bit more flexible than ISO C assert().
+ * 比 ISO C assert() 更灵活一些的简单断言宏。
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
@@ -37,7 +37,7 @@
 #include "version.h"
 
 /**
- * assert() equivalent, that is always enabled.
+ * 始终启用的 assert() 等效项。
  */
 #define av_assert0(cond) do {                                           \
     if (!(cond)) {                                                      \
@@ -49,8 +49,8 @@
 
 
 /**
- * assert() equivalent, that does not lie in speed critical code.
- * These asserts() thus can be enabled without fearing speed loss.
+ * 不位于性能关键代码中的 assert() 等效项。因此可启用这些 assert()，
+ * 而不必担心性能损失。
  */
 #if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 0
 #define av_assert1(cond) av_assert0(cond)
@@ -60,7 +60,7 @@
 
 
 /**
- * assert() equivalent, that does lie in speed critical code.
+ * 位于性能关键代码中的 assert() 等效项。
  */
 #if defined(ASSERT_LEVEL) && ASSERT_LEVEL > 1
 #define av_assert2(cond) av_assert0(cond)
@@ -75,25 +75,22 @@
 #define av_assert2_fpu() ((void)0)
 #endif
 /**
- * Assert that floating point operations can be executed.
+ * 断言可以执行浮点运算。
  *
- * This will av_assert0() that the cpu is not in MMX state on X86
- * @deprecated without replacement
+ * 在 X86 上，这会使用 av_assert0() 断言 CPU 不处于 MMX 状态。
+ * @deprecated 无替代项
  */
 attribute_deprecated
 void av_assert0_fpu(void);
 #endif
 
 /**
- * Asserts that are used as compiler optimization hints depending
- * upon ASSERT_LEVEL and NBDEBUG.
+ * 根据 ASSERT_LEVEL 和 NBDEBUG 用作编译器优化提示的断言。
  *
- * Undefined behaviour occurs if execution reaches a point marked
- * with av_unreachable() or if a condition used with av_assume()
- * is false.
+ * 如果执行到达 av_unreachable() 标记的位置，或 av_assume() 使用的条件为假，
+ * 则会发生未定义行为。
  *
- * The condition used with av_assume() should not have side-effects
- * and should be visible to the compiler.
+ * av_assume() 使用的条件不应有副作用，并且应对编译器可见。
  */
 #if defined(ASSERT_LEVEL) ? ASSERT_LEVEL > 0 : !defined(HAVE_AV_CONFIG_H) && !defined(NDEBUG)
 #define av_unreachable(msg)                                             \

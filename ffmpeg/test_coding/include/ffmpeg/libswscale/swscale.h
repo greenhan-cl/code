@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2024 Niklas Haas
  * Copyright (C) 2001-2011 Michael Niedermayer <michaelni@gmx.at>
  *
@@ -25,7 +25,7 @@
 /**
  * @file
  * @ingroup libsws
- * external API header
+ * 外部 API 头文件
  */
 
 #include <stdint.h>
@@ -36,88 +36,87 @@
 #include "libavutil/pixfmt.h"
 #include "version_major.h"
 #ifndef HAVE_AV_CONFIG_H
-/* When included as part of the ffmpeg build, only include the major version
- * to avoid unnecessary rebuilds. When included externally, keep including
- * the full version information. */
+/* 作为 ffmpeg 构建的一部分被包含时，仅包含主版本号，
+ * 以避免不必要的重新构建。从外部包含时，仍包含完整的版本信息。 */
 #include "version.h"
 #endif
 
 /**
  * @defgroup libsws libswscale
- * Color conversion and scaling library.
+ * 颜色转换和缩放库。
  *
  * @{
  *
- * Return the LIBSWSCALE_VERSION_INT constant.
+ * 返回 LIBSWSCALE_VERSION_INT 常量。
  */
 unsigned swscale_version(void);
 
 /**
- * Return the libswscale build-time configuration.
+ * 返回 libswscale 的构建时配置。
  */
 const char *swscale_configuration(void);
 
 /**
- * Return the libswscale license.
+ * 返回 libswscale 的许可证文本。
  */
 const char *swscale_license(void);
 
 /**
- * Get the AVClass for SwsContext. It can be used in combination with
- * AV_OPT_SEARCH_FAKE_OBJ for examining options.
+ * 获取 SwsContext 的 AVClass。它可以与 AV_OPT_SEARCH_FAKE_OBJ 结合使用，
+ * 以检查选项。
  *
  * @see av_opt_find().
  */
 const AVClass *sws_get_class(void);
 
 /******************************
- * Flags and quality settings *
+ * 标志和质量设置           *
  ******************************/
 
 typedef enum SwsDither {
-    SWS_DITHER_NONE = 0, /* disable dithering */
-    SWS_DITHER_AUTO,     /* auto-select from preset */
-    SWS_DITHER_BAYER,    /* ordered dither matrix */
-    SWS_DITHER_ED,       /* error diffusion */
-    SWS_DITHER_A_DITHER, /* arithmetic addition */
-    SWS_DITHER_X_DITHER, /* arithmetic xor */
-    SWS_DITHER_NB,       /* not part of the ABI */
-    SWS_DITHER_MAX_ENUM = 0x7FFFFFFF, /* force size to 32 bits, not a valid dither type */
+    SWS_DITHER_NONE = 0, /* 禁用抖动 */
+    SWS_DITHER_AUTO,     /* 从预设中自动选择 */
+    SWS_DITHER_BAYER,    /* 有序抖动矩阵 */
+    SWS_DITHER_ED,       /* 误差扩散 */
+    SWS_DITHER_A_DITHER, /* 算术加法 */
+    SWS_DITHER_X_DITHER, /* 算术异或 */
+    SWS_DITHER_NB,       /* 不属于 ABI */
+    SWS_DITHER_MAX_ENUM = 0x7FFFFFFF, /* 强制大小为 32 位，不是有效的抖动类型 */
 } SwsDither;
 
 typedef enum SwsAlphaBlend {
     SWS_ALPHA_BLEND_NONE = 0,
     SWS_ALPHA_BLEND_UNIFORM,
     SWS_ALPHA_BLEND_CHECKERBOARD,
-    SWS_ALPHA_BLEND_NB,  /* not part of the ABI */
-    SWS_ALPHA_BLEND_MAX_ENUM = 0x7FFFFFFF, /* force size to 32 bits, not a valid blend mode */
+    SWS_ALPHA_BLEND_NB,  /* 不属于 ABI */
+    SWS_ALPHA_BLEND_MAX_ENUM = 0x7FFFFFFF, /* 强制大小为 32 位，不是有效的混合模式 */
 } SwsAlphaBlend;
 
 typedef enum SwsScaler {
     SWS_SCALE_AUTO = 0,
-    SWS_SCALE_BILINEAR, ///< bilinear filtering
-    SWS_SCALE_BICUBIC,  ///< 2-tap cubic BC-spline
-    SWS_SCALE_POINT,    ///< nearest neighbor (point sampling)
-    SWS_SCALE_AREA,     ///< area averaging
-    SWS_SCALE_GAUSSIAN, ///< 2-tap gaussian approximation
-    SWS_SCALE_SINC,     ///< unwindowed sinc
-    SWS_SCALE_LANCZOS,  ///< 3-tap sinc/sinc
-    SWS_SCALE_SPLINE,   ///< unwindowned natural cubic spline
-    SWS_SCALE_NB,       ///< not part of the ABI
-    SWS_SCALE_MAX_ENUM = 0x7FFFFFFF, ///< force size to 32 bits, not a valid filter type
+    SWS_SCALE_BILINEAR, ///< 双线性滤波
+    SWS_SCALE_BICUBIC,  ///< 2 抽头三次 BC 样条
+    SWS_SCALE_POINT,    ///< 最近邻（点采样）
+    SWS_SCALE_AREA,     ///< 区域平均
+    SWS_SCALE_GAUSSIAN, ///< 2 抽头高斯近似
+    SWS_SCALE_SINC,     ///< 无窗 sinc
+    SWS_SCALE_LANCZOS,  ///< 3 抽头 sinc/sinc
+    SWS_SCALE_SPLINE,   ///< 无窗自然三次样条
+    SWS_SCALE_NB,       ///< 不属于 ABI
+    SWS_SCALE_MAX_ENUM = 0x7FFFFFFF, ///< 强制大小为 32 位，不是有效的滤波器类型
 } SwsScaler;
 
 typedef enum SwsBackend {
-    /* Stable backends */
-    SWS_BACKEND_LEGACY      = (1 << 0), ///< Legacy bespoke format-specific code
+    /* 稳定后端 */
+    SWS_BACKEND_LEGACY      = (1 << 0), ///< 旧版、针对特定格式定制的代码
     SWS_BACKEND_STABLE      = SWS_BACKEND_LEGACY,
 
-    /* Unstable backends (auto-selected only if SWS_UNSTABLE is enabled) */
-    SWS_BACKEND_C           = (1 << 1), ///< Template-based C reference implementation
-    SWS_BACKEND_MEMCPY      = (1 << 2), ///< Fast path using libc memcpy() / memset()
-    SWS_BACKEND_X86         = (1 << 3), ///< Chained x86 SIMD kernels
-    SWS_BACKEND_AARCH64     = (1 << 4), ///< Chained AArch64 NEON kernels
-    SWS_BACKEND_SPIRV       = (1 << 5), ///< Vulkan SPIR-V backend
+    /* 不稳定后端（仅在启用 SWS_UNSTABLE 时自动选择） */
+    SWS_BACKEND_C           = (1 << 1), ///< 基于模板的 C 参考实现
+    SWS_BACKEND_MEMCPY      = (1 << 2), ///< 使用 libc memcpy() / memset() 的快速路径
+    SWS_BACKEND_X86         = (1 << 3), ///< 串联的 x86 SIMD 内核
+    SWS_BACKEND_AARCH64     = (1 << 4), ///< 串联的 AArch64 NEON 内核
+    SWS_BACKEND_SPIRV       = (1 << 5), ///< Vulkan SPIR-V 后端
     SWS_BACKEND_UNSTABLE    = SWS_BACKEND_C |
                               SWS_BACKEND_MEMCPY |
                               SWS_BACKEND_X86 |
@@ -125,329 +124,303 @@ typedef enum SwsBackend {
                               SWS_BACKEND_SPIRV,
 
     SWS_BACKEND_ALL = SWS_BACKEND_STABLE | SWS_BACKEND_UNSTABLE,
-    SWS_BACKEND_MAX_ENUM = 0x7FFFFFFF, ///< force size to 32 bits, not a valid backend
+    SWS_BACKEND_MAX_ENUM = 0x7FFFFFFF, ///< 强制大小为 32 位，不是有效的后端
 } SwsBackend;
 
 typedef enum SwsFlags {
     /**
-     * Return an error on underspecified conversions. Without this flag,
-     * unspecified fields are defaulted to sensible values.
+     * 对参数指定不完整的转换返回错误。不设置此标志时，未指定字段会使用合理的默认值。
      */
     SWS_STRICT        = 1 << 11,
 
     /**
-     * Emit verbose log of scaling parameters.
+     * 输出缩放参数的详细日志。
      */
     SWS_PRINT_INFO    = 1 << 12,
 
     /**
-     * Perform full chroma upsampling when upscaling to RGB.
+     * 放大为 RGB 时执行完整色度上采样。
      *
-     * For example, when converting 50x50 yuv420p to 100x100 rgba, setting this flag
-     * will scale the chroma plane from 25x25 to 100x100 (4:4:4), and then convert
-     * the 100x100 yuv444p image to rgba in the final output step.
+     * 例如，将 50x50 yuv420p 转换为 100x100 rgba 时，设置此标志会把色度平面
+     * 从 25x25 缩放为 100x100（4:4:4），然后在最终输出步骤中将 100x100
+     * yuv444p 图像转换为 rgba。
      *
-     * Without this flag, the chroma plane is instead scaled to 50x100 (4:2:2),
-     * with a single chroma sample being reused for both of the horizontally
-     * adjacent RGBA output pixels.
+     * 不设置此标志时，色度平面会改为缩放到 50x100（4:2:2），水平方向相邻的
+     * 两个 RGBA 输出像素会复用同一个色度样本。
      */
     SWS_FULL_CHR_H_INT = 1 << 13,
 
     /**
-     * Perform full chroma interpolation when downscaling RGB sources.
+     * 缩小 RGB 源时执行完整色度插值。
      *
-     * For example, when converting a 100x100 rgba source to 50x50 yuv444p, setting
-     * this flag will generate a 100x100 (4:4:4) chroma plane, which is then
-     * downscaled to the required 50x50.
+     * 例如，将 100x100 rgba 源转换为 50x50 yuv444p 时，设置此标志会生成
+     * 100x100（4:4:4）色度平面，然后将其缩小到所需的 50x50。
      *
-     * Without this flag, the chroma plane is instead generated at 50x100 (dropping
-     * every other pixel), before then being downscaled to the required 50x50
-     * resolution.
+     * 不设置此标志时，色度平面会以 50x100 生成（每隔一个像素丢弃一个），
+     * 然后再缩小到所需的 50x50 分辨率。
      */
     SWS_FULL_CHR_H_INP = 1 << 14,
 
     /**
-     * Force bit-exact output. This will prevent the use of platform-specific
-     * optimizations that may lead to slight difference in rounding, in favor
-     * of always maintaining exact bit output compatibility with the reference
-     * C code.
+     * 强制位精确输出。这会禁止使用可能导致细微舍入差异的平台特定优化，
+     * 以始终保持输出与参考 C 代码逐位完全兼容。
      *
-     * Note: It is recommended to set both of these flags simultaneously.
+     * 注意：建议同时设置这两个标志。
      */
     SWS_ACCURATE_RND   = 1 << 18,
     SWS_BITEXACT       = 1 << 19,
 
     /**
-     * Allow/prefer using experimental new code paths. This may be faster,
-     * slower, or produce different output, with semantics subject to change
-     * at any point in time. For testing and debugging purposes only.
+     * 允许/优先使用实验性的新代码路径。它可能更快、更慢，或者产生不同的输出，
+     * 其语义也可能随时变化。仅用于测试和调试。
      */
     SWS_UNSTABLE = 1 << 20,
 
     /**
-     * Deprecated flags.
+     * 已弃用的标志。
      */
-    SWS_DIRECT_BGR      = 1 << 15, ///< This flag has no effect
-    SWS_ERROR_DIFFUSION = 1 << 23, ///< Set `SwsContext.dither` instead
+    SWS_DIRECT_BGR      = 1 << 15, ///< 此标志不起作用
+    SWS_ERROR_DIFFUSION = 1 << 23, ///< 请改为设置 `SwsContext.dither`
 
     /**
-     * Scaler selection options. Only one may be active at a time.
-     * Deprecated in favor of `SwsContext.scaler`.
+     * 缩放器选择选项。同一时间只能启用一个。
+     * 已弃用，请改用 `SwsContext.scaler`。
      */
-    SWS_FAST_BILINEAR = 1 <<  0, ///< fast bilinear filtering
-    SWS_BILINEAR      = 1 <<  1, ///< bilinear filtering
-    SWS_BICUBIC       = 1 <<  2, ///< 2-tap cubic B-spline
-    SWS_X             = 1 <<  3, ///< experimental
-    SWS_POINT         = 1 <<  4, ///< nearest neighbor
-    SWS_AREA          = 1 <<  5, ///< area averaging
-    SWS_BICUBLIN      = 1 <<  6, ///< bicubic luma, bilinear chroma
-    SWS_GAUSS         = 1 <<  7, ///< gaussian approximation
-    SWS_SINC          = 1 <<  8, ///< unwindowed sinc
-    SWS_LANCZOS       = 1 <<  9, ///< 3-tap sinc/sinc
-    SWS_SPLINE        = 1 << 10, ///< unwindowed natural cubic spline
+    SWS_FAST_BILINEAR = 1 <<  0, ///< 快速双线性滤波
+    SWS_BILINEAR      = 1 <<  1, ///< 双线性滤波
+    SWS_BICUBIC       = 1 <<  2, ///< 2 抽头三次 B 样条
+    SWS_X             = 1 <<  3, ///< 实验性
+    SWS_POINT         = 1 <<  4, ///< 最近邻
+    SWS_AREA          = 1 <<  5, ///< 区域平均
+    SWS_BICUBLIN      = 1 <<  6, ///< 亮度使用双三次，色度使用双线性
+    SWS_GAUSS         = 1 <<  7, ///< 高斯近似
+    SWS_SINC          = 1 <<  8, ///< 无窗 sinc
+    SWS_LANCZOS       = 1 <<  9, ///< 3 抽头 sinc/sinc
+    SWS_SPLINE        = 1 << 10, ///< 无窗自然三次样条
 } SwsFlags;
 
 typedef enum SwsIntent {
-    SWS_INTENT_PERCEPTUAL = 0,            ///< Perceptual tone mapping
-    SWS_INTENT_RELATIVE_COLORIMETRIC = 1, ///< Relative colorimetric clipping
-    SWS_INTENT_SATURATION = 2,            ///< Saturation mapping
-    SWS_INTENT_ABSOLUTE_COLORIMETRIC = 3, ///< Absolute colorimetric clipping
-    SWS_INTENT_NB, ///< not part of the ABI
+    SWS_INTENT_PERCEPTUAL = 0,            ///< 感知色调映射
+    SWS_INTENT_RELATIVE_COLORIMETRIC = 1, ///< 相对比色裁剪
+    SWS_INTENT_SATURATION = 2,            ///< 饱和度映射
+    SWS_INTENT_ABSOLUTE_COLORIMETRIC = 3, ///< 绝对比色裁剪
+    SWS_INTENT_NB, ///< 不属于 ABI
 } SwsIntent;
 
 /***********************************
- * Context creation and management *
+ * 上下文创建和管理           *
  ***********************************/
 
 /**
- * Main external API structure. New fields can be added to the end with
- * minor version bumps. Removal, reordering and changes to existing fields
- * require a major version bump. sizeof(SwsContext) is not part of the ABI.
+ * 主要的外部 API 结构。次版本升级时可以在末尾添加新字段。删除、重新排序或
+ * 更改现有字段需要升级主版本。sizeof(SwsContext) 不属于 ABI。
  */
 typedef struct SwsContext {
     const AVClass *av_class;
 
     /**
-     * Private data of the user, can be used to carry app specific stuff.
+     * 用户的私有数据，可用于携带应用程序特定内容。
      */
     void *opaque;
 
     /**
-     * Bitmask of SWS_*. See `SwsFlags` for details.
+     * SWS_* 的位掩码。详情参见 `SwsFlags`。
      */
     unsigned flags;
 
     /**
-     * Extra parameters for fine-tuning certain scalers.
+     * 用于微调某些缩放器的额外参数。
      */
 #define SWS_NUM_SCALER_PARAMS 2
     double scaler_params[SWS_NUM_SCALER_PARAMS];
 
     /**
-     * How many threads to use for processing, or 0 for automatic selection.
+     * 用于处理的线程数；设为 0 表示自动选择。
      */
     int threads;
 
     /**
-     * Dither mode.
+     * 抖动模式。
      */
     SwsDither dither;
 
     /**
-     * Alpha blending mode. See `SwsAlphaBlend` for details.
+     * Alpha 混合模式。详情参见 `SwsAlphaBlend`。
      */
     SwsAlphaBlend alpha_blend;
 
     /**
-     * Use gamma correct scaling.
+     * 使用伽马校正缩放。
      */
     int gamma_flag;
 
     /**
-     * Deprecated frame property overrides, for the legacy API only.
+     * 已弃用的帧属性覆盖，仅用于旧版 API。
      *
-     * Ignored by sws_scale_frame() when used in dynamic mode, in which
-     * case all properties are instead taken from the frame directly.
+     * 在动态模式下使用 sws_scale_frame() 时会忽略这些字段；此时所有属性都
+     * 直接从帧中获取。
      */
-    int src_w, src_h;  ///< Width and height of the source frame
-    int dst_w, dst_h;  ///< Width and height of the destination frame
-    int src_format;    ///< Source pixel format
-    int dst_format;    ///< Destination pixel format
-    int src_range;     ///< Source is full range
-    int dst_range;     ///< Destination is full range
-    int src_v_chr_pos; ///< Source vertical chroma position in luma grid / 256
-    int src_h_chr_pos; ///< Source horizontal chroma position
-    int dst_v_chr_pos; ///< Destination vertical chroma position
-    int dst_h_chr_pos; ///< Destination horizontal chroma position
+    int src_w, src_h;  ///< 源帧的宽度和高度
+    int dst_w, dst_h;  ///< 目标帧的宽度和高度
+    int src_format;    ///< 源像素格式
+    int dst_format;    ///< 目标像素格式
+    int src_range;     ///< 源使用全范围
+    int dst_range;     ///< 目标使用全范围
+    int src_v_chr_pos; ///< 源色度在亮度网格中的垂直位置 / 256
+    int src_h_chr_pos; ///< 源色度的水平位置
+    int dst_v_chr_pos; ///< 目标色度的垂直位置
+    int dst_h_chr_pos; ///< 目标色度的水平位置
 
     /**
-     * Desired ICC intent for color space conversions.
+     * 颜色空间转换所需的 ICC 渲染意图。
      */
     int intent;
 
     /**
-     * Scaling filter. If set to something other than SWS_SCALE_AUTO, this will
-     * override the filter implied by `SwsContext.flags`.
+     * 缩放滤波器。如果设置为 SWS_SCALE_AUTO 以外的值，它将覆盖
+     * `SwsContext.flags` 隐含的滤波器。
      *
-     * Note: Does not affect the legacy (stateful) API.
+     * 注意：不影响旧版（有状态）API。
      */
     SwsScaler scaler;
 
     /**
-     * Scaler used specifically for up/downsampling subsampled (chroma) planes.
-     * If set to something other than SWS_SCALE_AUTO, this will override the
-     * filter implied by `SwsContext.scaler`. Otherwise, the same filter
-     * will be used for both main scaling and chroma subsampling.
+     * 专门用于对经过子采样的（色度）平面进行上/下采样的缩放器。如果设置为
+     * SWS_SCALE_AUTO 以外的值，它将覆盖 `SwsContext.scaler` 隐含的滤波器。
+     * 否则，主缩放和色度子采样将使用同一个滤波器。
      */
     SwsScaler scaler_sub;
 
     /**
-     * Bitmask of SWS_BACKEND_*. If non-zero, this will restrict the available
-     * backends to the specified set. If left as zero, a default set of
-     * backends will be selected automatically (based on SWS_UNSTABLE).
+     * SWS_BACKEND_* 的位掩码。非零时，将可用后端限制为指定集合。保持为零时，
+     * 会根据 SWS_UNSTABLE 自动选择默认后端集合。
      *
-     * Note: This is only relevant for the new API (sws_scale_frame()). The
-     * stateful legacy API always implies SWS_BACKEND_LEGACY.
+     * 注意：这只与新 API（sws_scale_frame()）有关。有状态的旧版 API 始终隐含
+     * SWS_BACKEND_LEGACY。
      */
     SwsBackend backends;
 
-    /* Remember to add new fields to graph.c:opts_equal() */
+    /* 记得将新字段添加到 graph.c:opts_equal() */
 } SwsContext;
 
 /**
- * Allocate an empty SwsContext and set its fields to default values.
+ * 分配一个空的 SwsContext，并将其字段设为默认值。
  */
 SwsContext *sws_alloc_context(void);
 
 /**
- * Free the context and everything associated with it, and write NULL
- * to the provided pointer.
+ * 释放上下文及其关联的所有内容，并向提供的指针写入 NULL。
  */
 void sws_free_context(SwsContext **ctx);
 
 /***************************
- * Supported frame formats *
+ * 支持的帧格式           *
  ***************************/
 
 /**
- * Test if a given (software) pixel format is supported by any backend,
- * excluding unstable backends.
+ * 测试是否有任何后端支持给定的（软件）像素格式，不包括不稳定后端。
  *
- * @param output  If 0, test if compatible with the source/input frame;
- *                otherwise, with the destination/output frame.
- * @param format  The format to check.
+ * @param output  为 0 时，测试是否与源/输入帧兼容；否则测试是否与目标/输出帧兼容。
+ * @param format  要检查的格式。
  *
- * @return A positive integer if supported, 0 otherwise.
+ * @return 支持时返回正整数，否则返回 0。
  */
 int sws_test_format(enum AVPixelFormat format, int output);
 
 /**
- * Test if a given hardware pixel format is supported by any backend,
- * excluding unstable backends.
+ * 测试是否有任何后端支持给定的硬件像素格式，不包括不稳定后端。
  *
- * @param format  The hardware format to check, or AV_PIX_FMT_NONE.
+ * @param format  要检查的硬件格式，或 AV_PIX_FMT_NONE。
  *
- * @return A positive integer if supported or AV_PIX_FMT_NONE, 0 otherwise.
+ * @return 支持给定格式或 AV_PIX_FMT_NONE 时返回正整数，否则返回 0。
  */
 int sws_test_hw_format(enum AVPixelFormat format);
 
 /**
- * Test if a given color space is supported.
+ * 测试是否支持给定的颜色空间。
  *
- * @param output  If 0, test if compatible with the source/input frame;
- *                otherwise, with the destination/output frame.
- * @param colorspace The colorspace to check.
+ * @param output  为 0 时，测试是否与源/输入帧兼容；否则测试是否与目标/输出帧兼容。
+ * @param colorspace 要检查的颜色空间。
  *
- * @return A positive integer if supported, 0 otherwise.
+ * @return 支持时返回正整数，否则返回 0。
  */
 int sws_test_colorspace(enum AVColorSpace colorspace, int output);
 
 /**
- * Test if a given set of color primaries is supported.
+ * 测试是否支持给定的一组色度原色。
  *
- * @param output  If 0, test if compatible with the source/input frame;
- *                otherwise, with the destination/output frame.
- * @param primaries The color primaries to check.
+ * @param output  为 0 时，测试是否与源/输入帧兼容；否则测试是否与目标/输出帧兼容。
+ * @param primaries 要检查的色度原色。
  *
- * @return A positive integer if supported, 0 otherwise.
+ * @return 支持时返回正整数，否则返回 0。
  */
 int sws_test_primaries(enum AVColorPrimaries primaries, int output);
 
 /**
- * Test if a given color transfer function is supported.
+ * 测试是否支持给定的颜色传递函数。
  *
- * @param output  If 0, test if compatible with the source/input frame;
- *                otherwise, with the destination/output frame.
- * @param trc     The color transfer function to check.
+ * @param output  为 0 时，测试是否与源/输入帧兼容；否则测试是否与目标/输出帧兼容。
+ * @param trc     要检查的颜色传递函数。
  *
- * @return A positive integer if supported, 0 otherwise.
+ * @return 支持时返回正整数，否则返回 0。
  */
 int sws_test_transfer(enum AVColorTransferCharacteristic trc, int output);
 
 /**
- * Helper function to run all sws_test_* against a frame, as well as testing
- * the basic frame properties for sanity. Ignores irrelevant properties - for
- * example, AVColorSpace is not checked for RGB frames.
+ * 对帧运行所有 sws_test_*，并检查基本帧属性是否合理的辅助函数。它会忽略无关
+ * 属性——例如，不会检查 RGB 帧的 AVColorSpace。
  */
 int sws_test_frame(const AVFrame *frame, int output);
 
 /**
- * Like `sws_scale_frame`, but without actually scaling. It will instead
- * merely initialize internal state that *would* be required to perform the
- * operation, as well as returning the correct error code for unsupported
- * frame combinations.
+ * 类似 `sws_scale_frame`，但不实际执行缩放。它只初始化执行该操作时所需的内部
+ * 状态，并针对不支持的帧组合返回正确的错误码。
  *
- * @param ctx   The scaling context.
- * @param dst   The destination frame to consider.
- * @param src   The source frame to consider.
- * @return 0 on success, a negative AVERROR code on failure.
+ * @param ctx   缩放上下文。
+ * @param dst   要考察的目标帧。
+ * @param src   要考察的源帧。
+ * @return 成功时返回 0，失败时返回负的 AVERROR 错误码。
  */
 int sws_frame_setup(SwsContext *ctx, const AVFrame *dst, const AVFrame *src);
 
 /********************
- * Main scaling API *
+ * 主要缩放 API     *
  ********************/
 
 /**
- * Check if a given conversion is a noop. Returns a positive integer if
- * no operation needs to be performed, 0 otherwise.
+ * 检查给定转换是否无需执行任何操作。如果不需要执行操作则返回正整数，
+ * 否则返回 0。
  */
 int sws_is_noop(const AVFrame *dst, const AVFrame *src);
 
 /**
- * Scale source data from `src` and write the output to `dst`.
+ * 缩放 `src` 中的源数据，并将输出写入 `dst`。
  *
- * This function can be used directly on an allocated context, without setting
- * up any frame properties or calling `sws_init_context()`. Such usage is fully
- * dynamic and does not require reallocation if the frame properties change.
+ * 此函数可以直接用于已分配的上下文，无需设置任何帧属性或调用
+ * `sws_init_context()`。这种用法完全是动态的，帧属性变化时无需重新分配。
  *
- * Alternatively, this function can be called on a context that has been
- * explicitly initialized. However, this is provided only for backwards
- * compatibility. In this usage mode, all frame properties must be correctly
- * set at init time, and may no longer change after initialization.
+ * 也可以在显式初始化过的上下文上调用此函数，但这仅用于向后兼容。在这种使用
+ * 模式下，必须在初始化时正确设置所有帧属性，且初始化后不能再改变。
  *
- * @param ctx   The scaling context.
- * @param dst   The destination frame. The data buffers may either be already
- *              allocated by the caller or left clear, in which case they will
- *              be allocated by the scaler. The latter may have performance
- *              advantages - e.g. in certain cases some (or all) output planes
- *              may be references to input planes, rather than copies.
- * @param src   The source frame. If the data buffers are set to NULL, then
- *              this function behaves identically to `sws_frame_setup`.
- * @return >= 0 on success, a negative AVERROR code on failure.
+ * @param ctx   缩放上下文。
+ * @param dst   目标帧。数据缓冲区可以由调用者预先分配，也可以保持为空，此时
+ *              缩放器会负责分配。后者可能具有性能优势——例如在某些情况下，
+ *              部分（或全部）输出平面可引用输入平面，而不是进行复制。
+ * @param src   源帧。如果数据缓冲区设为 NULL，则此函数的行为与
+ *              `sws_frame_setup` 完全相同。
+ * @return 成功时 >= 0，失败时返回负的 AVERROR 错误码。
  */
 int sws_scale_frame(SwsContext *c, AVFrame *dst, const AVFrame *src);
 
 /**
- * Filter kernel cut-off value. Values below this (absolute) magnitude
- * are cut off from the main filter kernel. Note that the window is
- * always adjusted to the new filter radius, so there will never be
- * any spectral leakage (for suitably windowed filters).
+ * 滤波器内核截止值。绝对值小于此值的部分会从主滤波器内核中截除。请注意，
+ * 窗函数始终会适配新的滤波器半径，因此（对于适当加窗的滤波器）不会发生
+ * 频谱泄漏。
  */
 #define SWS_MAX_REDUCE_CUTOFF 0.002
 
 /*************************
- * Legacy (stateful) API *
+ * 旧版（有状态）API    *
  *************************/
 
 #define SWS_SRC_V_CHR_DROP_MASK     0x30000
@@ -465,22 +438,20 @@ int sws_scale_frame(SwsContext *c, AVFrame *dst, const AVFrame *src);
 #define SWS_CS_BT2020         9
 
 /**
- * Return a pointer to yuv<->rgb coefficients for the given colorspace
- * suitable for sws_setColorspaceDetails().
+ * 返回适用于 sws_setColorspaceDetails() 的给定颜色空间 yuv<->rgb 系数指针。
  *
- * @param colorspace One of the SWS_CS_* macros. If invalid,
- * SWS_CS_DEFAULT is used.
+ * @param colorspace SWS_CS_* 宏之一。无效时使用 SWS_CS_DEFAULT。
  */
 const int *sws_getCoefficients(int colorspace);
 
-// when used for filters they must have an odd number of elements
-// coeffs cannot be shared between vectors
+// 用作滤波器时，它们必须包含奇数个元素
+// coeffs 不能在向量之间共享
 typedef struct SwsVector {
-    double *coeff;              ///< pointer to the list of coefficients
-    int length;                 ///< number of coefficients in the vector
+    double *coeff;              ///< 指向系数列表的指针
+    int length;                 ///< 向量中的系数数量
 } SwsVector;
 
-// vectors can be shared
+// 向量可以共享
 typedef struct SwsFilter {
     SwsVector *lumH;
     SwsVector *lumV;
@@ -489,64 +460,56 @@ typedef struct SwsFilter {
 } SwsFilter;
 
 /**
- * Return a positive value if pix_fmt is a supported input format, 0
- * otherwise.
+ * 如果 pix_fmt 是支持的输入格式，则返回正值，否则返回 0。
  */
 int sws_isSupportedInput(enum AVPixelFormat pix_fmt);
 
 /**
- * Return a positive value if pix_fmt is a supported output format, 0
- * otherwise.
+ * 如果 pix_fmt 是支持的输出格式，则返回正值，否则返回 0。
  */
 int sws_isSupportedOutput(enum AVPixelFormat pix_fmt);
 
 /**
- * @param[in]  pix_fmt the pixel format
- * @return a positive value if an endianness conversion for pix_fmt is
- * supported, 0 otherwise.
+ * @param[in]  pix_fmt 像素格式
+ * @return 如果支持对 pix_fmt 进行字节序转换，则返回正值，否则返回 0。
  */
 int sws_isSupportedEndiannessConversion(enum AVPixelFormat pix_fmt);
 
 /**
- * Initialize the swscaler context sws_context.
+ * 初始化 swscaler 上下文 sws_context。
  *
- * This function is considered deprecated, and provided only for backwards
- * compatibility with sws_scale() and sws_frame_start(). The preferred way to
- * use libswscale is to set all frame properties correctly and call
- * sws_scale_frame() directly, without explicitly initializing the context.
+ * 此函数已弃用，仅为兼容 sws_scale() 和 sws_frame_start() 而保留。使用
+ * libswscale 的首选方式是正确设置所有帧属性，然后直接调用 sws_scale_frame()，
+ * 无需显式初始化上下文。
  *
- * @return zero or positive value on success, a negative value on
- * error
+ * @return 成功时返回零或正值，出错时返回负值
  */
 av_warn_unused_result
 int sws_init_context(SwsContext *sws_context, SwsFilter *srcFilter, SwsFilter *dstFilter);
 
 /**
- * Free the swscaler context swsContext.
- * If swsContext is NULL, then does nothing.
+ * 释放 swscaler 上下文 swsContext。
+ * 如果 swsContext 为 NULL，则不执行任何操作。
  */
 void sws_freeContext(SwsContext *swsContext);
 
 /**
- * Allocate and return an SwsContext. You need it to perform
- * scaling/conversion operations using sws_scale().
+ * 分配并返回 SwsContext。使用 sws_scale() 执行缩放/转换操作时需要它。
  *
- * @param srcW the width of the source image
- * @param srcH the height of the source image
- * @param srcFormat the source image format
- * @param dstW the width of the destination image
- * @param dstH the height of the destination image
- * @param dstFormat the destination image format
- * @param flags specify which algorithm and options to use for rescaling
- * @param param extra parameters to tune the used scaler
- *              For SWS_BICUBIC param[0] and [1] tune the shape of the basis
- *              function, param[0] tunes f(1) and param[1] f´(1)
- *              For SWS_GAUSS param[0] tunes the exponent and thus cutoff
- *              frequency
- *              For SWS_LANCZOS param[0] tunes the width of the window function
- * @return a pointer to an allocated context, or NULL in case of error
- * @note this function is to be removed after a saner alternative is
- *       written
+ * @param srcW 源图像的宽度
+ * @param srcH 源图像的高度
+ * @param srcFormat 源图像格式
+ * @param dstW 目标图像的宽度
+ * @param dstH 目标图像的高度
+ * @param dstFormat 目标图像格式
+ * @param flags 指定重新缩放时使用的算法和选项
+ * @param param 用于调整所用缩放器的额外参数
+ *              对于 SWS_BICUBIC，param[0] 和 param[1] 调整基函数的形状，
+ *              param[0] 调整 f(1)，param[1] 调整 f´(1)
+ *              对于 SWS_GAUSS，param[0] 调整指数，从而调整截止频率
+ *              对于 SWS_LANCZOS，param[0] 调整窗函数的宽度
+ * @return 指向已分配上下文的指针；出错时返回 NULL
+ * @note 编写出更合理的替代方案后，将移除此函数
  */
 SwsContext *sws_getContext(int srcW, int srcH, enum AVPixelFormat srcFormat,
                            int dstW, int dstH, enum AVPixelFormat dstFormat,
@@ -554,163 +517,141 @@ SwsContext *sws_getContext(int srcW, int srcH, enum AVPixelFormat srcFormat,
                            SwsFilter *dstFilter, const double *param);
 
 /**
- * Scale the image slice in srcSlice and put the resulting scaled
- * slice in the image in dst. A slice is a sequence of consecutive
- * rows in an image. Requires a context that has previously been
- * initialized with sws_init_context().
+ * 缩放 srcSlice 中的图像切片，并将缩放后的切片放入 dst 图像中。切片是图像中
+ * 一系列连续的行。要求上下文事先已使用 sws_init_context() 初始化。
  *
- * Slices have to be provided in sequential order, either in
- * top-bottom or bottom-top order. If slices are provided in
- * non-sequential order the behavior of the function is undefined.
+ * 切片必须按顺序提供，可以从上到下，也可以从下到上。如果以非连续顺序提供
+ * 切片，此函数的行为未定义。
  *
- * @param c         the scaling context previously created with
- *                  sws_getContext()
- * @param srcSlice  the array containing the pointers to the planes of
- *                  the source slice
- * @param srcStride the array containing the strides for each plane of
- *                  the source image
- * @param srcSliceY the position in the source image of the slice to
- *                  process, that is the number (counted starting from
- *                  zero) in the image of the first row of the slice
- * @param srcSliceH the height of the source slice, that is the number
- *                  of rows in the slice
- * @param dst       the array containing the pointers to the planes of
- *                  the destination image
- * @param dstStride the array containing the strides for each plane of
- *                  the destination image
- * @return          the height of the output slice
+ * @param c         之前使用 sws_getContext() 创建的缩放上下文
+ * @param srcSlice  包含源切片各平面指针的数组
+ * @param srcStride 包含源图像各平面步长的数组
+ * @param srcSliceY 要处理的切片在源图像中的位置，即切片第一行在图像中的编号
+ *                  （从零开始计数）
+ * @param srcSliceH 源切片的高度，即切片中的行数
+ * @param dst       包含目标图像各平面指针的数组
+ * @param dstStride 包含目标图像各平面步长的数组
+ * @return          输出切片的高度
  */
 int sws_scale(SwsContext *c, const uint8_t *const srcSlice[],
               const int srcStride[], int srcSliceY, int srcSliceH,
               uint8_t *const dst[], const int dstStride[]);
 
 /**
- * Initialize the scaling process for a given pair of source/destination frames.
- * Must be called before any calls to sws_send_slice() and sws_receive_slice().
- * Requires a context that has previously been initialized with sws_init_context().
+ * 为给定的一对源帧/目标帧初始化缩放过程。必须在调用 sws_send_slice() 和
+ * sws_receive_slice() 之前调用。要求上下文事先已使用 sws_init_context()
+ * 初始化。
  *
- * This function will retain references to src and dst, so they must both use
- * refcounted buffers (if allocated by the caller, in case of dst).
+ * 此函数会保留对 src 和 dst 的引用，因此二者都必须使用引用计数缓冲区
+ * （对于 dst，是指由调用者分配时）。
  *
- * @param c   The scaling context
- * @param dst The destination frame.
+ * @param c   缩放上下文
+ * @param dst 目标帧。
  *
- *            The data buffers may either be already allocated by the caller or
- *            left clear, in which case they will be allocated by the scaler.
- *            The latter may have performance advantages - e.g. in certain cases
- *            some output planes may be references to input planes, rather than
- *            copies.
+ *            数据缓冲区可以由调用者预先分配，也可以保持为空，此时缩放器会负责
+ *            分配。后者可能具有性能优势——例如在某些情况下，某些输出平面可以
+ *            引用输入平面，而不是进行复制。
  *
- *            Output data will be written into this frame in successful
- *            sws_receive_slice() calls.
- * @param src The source frame. The data buffers must be allocated, but the
- *            frame data does not have to be ready at this point. Data
- *            availability is then signalled by sws_send_slice().
- * @return 0 on success, a negative AVERROR code on failure
+ *            sws_receive_slice() 调用成功时，输出数据会写入此帧。
+ * @param src 源帧。必须分配数据缓冲区，但此时帧数据不必已经准备好。
+ *            随后由 sws_send_slice() 通知数据可用。
+ * @return 成功时返回 0，失败时返回负的 AVERROR 错误码
  *
  * @see sws_frame_end()
  */
 int sws_frame_start(SwsContext *c, AVFrame *dst, const AVFrame *src);
 
 /**
- * Finish the scaling process for a pair of source/destination frames previously
- * submitted with sws_frame_start(). Must be called after all sws_send_slice()
- * and sws_receive_slice() calls are done, before any new sws_frame_start()
- * calls.
+ * 结束此前通过 sws_frame_start() 提交的一对源帧/目标帧的缩放过程。必须在所有
+ * sws_send_slice() 和 sws_receive_slice() 调用完成后、再次调用
+ * sws_frame_start() 之前调用。
  *
- * @param c   The scaling context
+ * @param c   缩放上下文
  */
 void sws_frame_end(SwsContext *c);
 
 /**
- * Indicate that a horizontal slice of input data is available in the source
- * frame previously provided to sws_frame_start(). The slices may be provided in
- * any order, but may not overlap. For vertically subsampled pixel formats, the
- * slices must be aligned according to subsampling.
+ * 表明此前提供给 sws_frame_start() 的源帧中，某个输入数据水平切片已经可用。
+ * 切片可以按任意顺序提供，但不能重叠。对于垂直子采样像素格式，切片必须按照
+ * 子采样方式对齐。
  *
- * @param c   The scaling context
- * @param slice_start first row of the slice
- * @param slice_height number of rows in the slice
+ * @param c   缩放上下文
+ * @param slice_start 切片的第一行
+ * @param slice_height 切片中的行数
  *
- * @return a non-negative number on success, a negative AVERROR code on failure.
+ * @return 成功时返回非负数，失败时返回负的 AVERROR 错误码。
  */
 int sws_send_slice(SwsContext *c, unsigned int slice_start,
                    unsigned int slice_height);
 
 /**
- * Request a horizontal slice of the output data to be written into the frame
- * previously provided to sws_frame_start().
+ * 请求将输出数据的水平切片写入此前提供给 sws_frame_start() 的帧中。
  *
- * @param c   The scaling context
- * @param slice_start first row of the slice; must be a multiple of
- *                    sws_receive_slice_alignment()
- * @param slice_height number of rows in the slice; must be a multiple of
- *                     sws_receive_slice_alignment(), except for the last slice
- *                     (i.e. when slice_start+slice_height is equal to output
- *                     frame height)
+ * @param c   缩放上下文
+ * @param slice_start 切片的第一行；必须是 sws_receive_slice_alignment() 的倍数
+ * @param slice_height 切片中的行数；除最后一个切片外，必须是
+ *                     sws_receive_slice_alignment() 的倍数（最后一个切片是指
+ *                     slice_start+slice_height 等于输出帧高度的情况）
  *
- * @return a non-negative number if the data was successfully written into the output
- *         AVERROR(EAGAIN) if more input data needs to be provided before the
- *                         output can be produced
- *         another negative AVERROR code on other kinds of scaling failure
+ * @return 数据成功写入输出时返回非负数
+ *         如果生成输出之前还需要更多输入数据，则返回 AVERROR(EAGAIN)
+ *         发生其他类型的缩放失败时返回其他负的 AVERROR 错误码
  */
 int sws_receive_slice(SwsContext *c, unsigned int slice_start,
                       unsigned int slice_height);
 
 /**
- * Get the alignment required for slices. Requires a context that has
- * previously been initialized with sws_init_context().
+ * 获取切片所需的对齐值。要求上下文事先已使用 sws_init_context() 初始化。
  *
- * @param c   The scaling context
- * @return alignment required for output slices requested with sws_receive_slice().
- *         Slice offsets and sizes passed to sws_receive_slice() must be
- *         multiples of the value returned from this function.
+ * @param c   缩放上下文
+ * @return 使用 sws_receive_slice() 请求输出切片时所需的对齐值。传给
+ *         sws_receive_slice() 的切片偏移量和大小必须是此函数返回值的倍数。
  */
 unsigned int sws_receive_slice_alignment(const SwsContext *c);
 
 /**
- * @param c the scaling context
- * @param dstRange flag indicating the white-black range of the output (1=jpeg / 0=mpeg)
- * @param srcRange flag indicating the white-black range of the input (1=jpeg / 0=mpeg)
- * @param table the yuv2rgb coefficients describing the output yuv space, normally ff_yuv2rgb_coeffs[x]
- * @param inv_table the yuv2rgb coefficients describing the input yuv space, normally ff_yuv2rgb_coeffs[x]
- * @param brightness 16.16 fixed point brightness correction
- * @param contrast 16.16 fixed point contrast correction
- * @param saturation 16.16 fixed point saturation correction
+ * @param c 缩放上下文
+ * @param dstRange 表示输出黑白范围的标志（1=jpeg / 0=mpeg）
+ * @param srcRange 表示输入黑白范围的标志（1=jpeg / 0=mpeg）
+ * @param table 描述输出 yuv 空间的 yuv2rgb 系数，通常为 ff_yuv2rgb_coeffs[x]
+ * @param inv_table 描述输入 yuv 空间的 yuv2rgb 系数，通常为 ff_yuv2rgb_coeffs[x]
+ * @param brightness 16.16 定点亮度校正值
+ * @param contrast 16.16 定点对比度校正值
+ * @param saturation 16.16 定点饱和度校正值
  *
- * @return A negative error code on error, non negative otherwise.
- *         If `LIBSWSCALE_VERSION_MAJOR < 7`, returns -1 if not supported.
+ * @return 出错时返回负错误码，否则返回非负值。
+ *         如果 `LIBSWSCALE_VERSION_MAJOR < 7`，不支持时返回 -1。
  */
 int sws_setColorspaceDetails(SwsContext *c, const int inv_table[4],
                              int srcRange, const int table[4], int dstRange,
                              int brightness, int contrast, int saturation);
 
 /**
- * @return A negative error code on error, non negative otherwise.
- *         If `LIBSWSCALE_VERSION_MAJOR < 7`, returns -1 if not supported.
+ * @return 出错时返回负错误码，否则返回非负值。
+ *         如果 `LIBSWSCALE_VERSION_MAJOR < 7`，不支持时返回 -1。
  */
 int sws_getColorspaceDetails(SwsContext *c, int **inv_table,
                              int *srcRange, int **table, int *dstRange,
                              int *brightness, int *contrast, int *saturation);
 
 /**
- * Allocate and return an uninitialized vector with length coefficients.
+ * 分配并返回一个包含 length 个系数、尚未初始化的向量。
  */
 SwsVector *sws_allocVec(int length);
 
 /**
- * Return a normalized Gaussian curve used to filter stuff
- * quality = 3 is high quality, lower is lower quality.
+ * 返回用于滤波的归一化高斯曲线。
+ * quality = 3 表示高质量，值越低质量越低。
  */
 SwsVector *sws_getGaussianVec(double variance, double quality);
 
 /**
- * Scale all the coefficients of a by the scalar value.
+ * 将 a 的所有系数乘以标量值 scalar。
  */
 void sws_scaleVec(SwsVector *a, double scalar);
 
 /**
- * Scale all the coefficients of a so that their sum equals height.
+ * 缩放 a 的所有系数，使其总和等于 height。
  */
 void sws_normalizeVec(SwsVector *a, double height);
 
@@ -723,16 +664,13 @@ SwsFilter *sws_getDefaultFilter(float lumaGBlur, float chromaGBlur,
 void sws_freeFilter(SwsFilter *filter);
 
 /**
- * Check if context can be reused, otherwise reallocate a new one.
+ * 检查上下文能否复用；否则重新分配一个新上下文。
  *
- * If context is NULL, just calls sws_getContext() to get a new
- * context. Otherwise, checks if the parameters are the ones already
- * saved in context. If that is the case, returns the current
- * context. Otherwise, frees context and gets a new context with
- * the new parameters.
+ * 如果 context 为 NULL，则直接调用 sws_getContext() 获取新上下文。否则检查
+ * 参数是否与 context 中已保存的参数相同。如果相同，则返回当前上下文；
+ * 否则释放 context，并使用新参数获取新上下文。
  *
- * Be warned that srcFilter and dstFilter are not checked, they
- * are assumed to remain the same.
+ * 请注意，不会检查 srcFilter 和 dstFilter，而是假定它们保持不变。
  */
 SwsContext *sws_getCachedContext(SwsContext *context, int srcW, int srcH,
                                  enum AVPixelFormat srcFormat, int dstW, int dstH,
@@ -741,26 +679,26 @@ SwsContext *sws_getCachedContext(SwsContext *context, int srcW, int srcH,
                                  const double *param);
 
 /**
- * Convert an 8-bit paletted frame into a frame with a color depth of 32 bits.
+ * 将 8 位调色板帧转换为颜色深度为 32 位的帧。
  *
- * The output frame will have the same packed format as the palette.
+ * 输出帧将采用与调色板相同的打包格式。
  *
- * @param src        source frame buffer
- * @param dst        destination frame buffer
- * @param num_pixels number of pixels to convert
- * @param palette    array with [256] entries, which must match color arrangement (RGB or BGR) of src
+ * @param src        源帧缓冲区
+ * @param dst        目标帧缓冲区
+ * @param num_pixels 要转换的像素数
+ * @param palette    包含 [256] 个条目的数组，必须与 src 的颜色排列（RGB 或 BGR）匹配
  */
 void sws_convertPalette8ToPacked32(const uint8_t *src, uint8_t *dst, int num_pixels, const uint8_t *palette);
 
 /**
- * Convert an 8-bit paletted frame into a frame with a color depth of 24 bits.
+ * 将 8 位调色板帧转换为颜色深度为 24 位的帧。
  *
- * With the palette format "ABCD", the destination frame ends up with the format "ABC".
+ * 当调色板格式为 "ABCD" 时，目标帧最终采用 "ABC" 格式。
  *
- * @param src        source frame buffer
- * @param dst        destination frame buffer
- * @param num_pixels number of pixels to convert
- * @param palette    array with [256] entries, which must match color arrangement (RGB or BGR) of src
+ * @param src        源帧缓冲区
+ * @param dst        目标帧缓冲区
+ * @param num_pixels 要转换的像素数
+ * @param palette    包含 [256] 个条目的数组，必须与 src 的颜色排列（RGB 或 BGR）匹配
  */
 void sws_convertPalette8ToPacked24(const uint8_t *src, uint8_t *dst, int num_pixels, const uint8_t *palette);
 

@@ -1,27 +1,27 @@
-/*
- * Copyright (c) 2013 Vittorio Giovara <vittorio.giovara@gmail.com>
+﻿/*
+ * 复制right (c) 2013 Vittorio Giovara <vittorio.giovara@gmail.com>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 /**
  * @file
- * @ingroup lavu_video_stereo3d
- * Stereoscopic video
+ * @ingroup lavu_视频_stereo3d
+ * Stereoscopic 视频
  */
 
 #ifndef AVUTIL_STEREO3D_H
@@ -32,29 +32,29 @@
 #include "frame.h"
 
 /**
- * @defgroup lavu_video_stereo3d Stereo3D types and functions
- * @ingroup lavu_video
+ * @defgroup lavu_视频_stereo3d Stereo3D types 和 functions
+ * @ingroup lavu_视频
  *
- * A stereoscopic video file consists in multiple views embedded in a single
- * frame, usually describing two views of a scene. This file describes all
+ * stereoscopic 视频 file consists 中 multiple views embedded 中 a single
+ * 帧, usually describing two views 的 a scene. This file describes all
  * possible codec-independent view arrangements.
  *
  * @{
  */
 
 /**
- * List of possible 3D Types
+ * 列表 的 possible 3D Types
  */
 enum AVStereo3DType {
     /**
-     * Video is not stereoscopic (and metadata has to be there).
+     * 视频 is not stereoscopic (and 元数据 has 到 be there).
      */
     AV_STEREO3D_2D,
 
     /**
-     * Views are next to each other.
+     * Views are next 到 each other.
      *
-     * @code{.unparsed}
+     * @code{.un解析d}
      *    LLLLRRRR
      *    LLLLRRRR
      *    LLLLRRRR
@@ -64,9 +64,9 @@ enum AVStereo3DType {
     AV_STEREO3D_SIDEBYSIDE,
 
     /**
-     * Views are on top of each other.
+     * Views are 上 top 的 each other.
      *
-     * @code{.unparsed}
+     * @code{.un解析d}
      *    LLLLLLLL
      *    LLLLLLLL
      *    RRRRRRRR
@@ -78,8 +78,8 @@ enum AVStereo3DType {
     /**
      * Views are alternated temporally.
      *
-     * @code{.unparsed}
-     *     frame0   frame1   frame2   ...
+     * @code{.un解析d}
+     *     帧0   帧1   帧2   ...
      *    LLLLLLLL RRRRRRRR LLLLLLLL
      *    LLLLLLLL RRRRRRRR LLLLLLLL
      *    LLLLLLLL RRRRRRRR LLLLLLLL
@@ -89,9 +89,9 @@ enum AVStereo3DType {
     AV_STEREO3D_FRAMESEQUENCE,
 
     /**
-     * Views are packed in a checkerboard-like structure per pixel.
+     * Views are packed 中 a 检查erboard-like 结构体 per 像素.
      *
-     * @code{.unparsed}
+     * @code{.un解析d}
      *    LRLRLRLR
      *    RLRLRLRL
      *    LRLRLRLR
@@ -101,10 +101,10 @@ enum AVStereo3DType {
     AV_STEREO3D_CHECKERBOARD,
 
     /**
-     * Views are next to each other, but when upscaling
-     * apply a checkerboard pattern.
+     * Views are next 到 each other, but 当 upscaling
+     * apply a 检查erboard pattern.
      *
-     * @code{.unparsed}
+     * @code{.un解析d}
      *     LLLLRRRR          L L L L    R R R R
      *     LLLLRRRR    =>     L L L L  R R R R
      *     LLLLRRRR          L L L L    R R R R
@@ -114,9 +114,9 @@ enum AVStereo3DType {
     AV_STEREO3D_SIDEBYSIDE_QUINCUNX,
 
     /**
-     * Views are packed per line, as if interlaced.
+     * Views are packed per line, as 如果 interlaced.
      *
-     * @code{.unparsed}
+     * @code{.un解析d}
      *    LLLLLLLL
      *    RRRRRRRR
      *    LLLLLLLL
@@ -128,7 +128,7 @@ enum AVStereo3DType {
     /**
      * Views are packed per column.
      *
-     * @code{.unparsed}
+     * @code{.un解析d}
      *    LRLRLRLR
      *    LRLRLRLR
      *    LRLRLRLR
@@ -138,38 +138,38 @@ enum AVStereo3DType {
     AV_STEREO3D_COLUMNS,
 
     /**
-     * Video is stereoscopic but the packing is unspecified.
+     * 视频 is stereoscopic but the packing is unspec如果ied.
      */
     AV_STEREO3D_UNSPEC,
 };
 
 /**
- * List of possible view types.
+ * 列表 的 possible view types.
  */
 enum AVStereo3DView {
     /**
-     * Frame contains two packed views.
+     * 帧 包含 two packed views.
      */
     AV_STEREO3D_VIEW_PACKED,
 
     /**
-     * Frame contains only the left view.
+     * 帧 包含 only the left view.
      */
     AV_STEREO3D_VIEW_LEFT,
 
     /**
-     * Frame contains only the right view.
+     * 帧 包含 only the right view.
      */
     AV_STEREO3D_VIEW_RIGHT,
 
     /**
-     * Content is unspecified.
+     * Content is unspec如果ied.
      */
     AV_STEREO3D_VIEW_UNSPEC,
 };
 
 /**
- * List of possible primary eyes.
+ * 列表 的 possible primary eyes.
  */
 enum AVStereo3DPrimaryEye {
     /**
@@ -194,20 +194,20 @@ enum AVStereo3DPrimaryEye {
 #define AV_STEREO3D_FLAG_INVERT     (1 << 0)
 
 /**
- * Stereo 3D type: this structure describes how two videos are packed
- * within a single video surface, with additional information as needed.
+ * Stereo 3D type: this 结构体 describes how two 视频s are packed
+ * within a single 视频 surface,，使用 additional in格式ion as needed.
  *
- * @note The struct must be allocated with av_stereo3d_alloc() and
- *       its size is not a part of the public ABI.
+ * @note struct must be 分配d，使用 av_stereo3d_alloc() and
+ *       its 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVStereo3D {
     /**
-     * How views are packed within the video.
+     * How views are packed within the 视频.
      */
     enum AVStereo3DType type;
 
     /**
-     * Additional information about the frame packing.
+     * Additional in格式ion about the 帧 packing.
      */
     int flags;
 
@@ -217,104 +217,104 @@ typedef struct AVStereo3D {
     enum AVStereo3DView view;
 
     /**
-     * Which eye is the primary eye when rendering in 2D.
+     * Which eye is the primary eye 当 rendering 中 2D.
      */
     enum AVStereo3DPrimaryEye primary_eye;
 
     /**
-     * The distance between the centres of the lenses of the camera system,
-     * in micrometers. Zero if unset.
+     * distance between the centres 的 the lenses 的 the camera system,
+     * 中 micrometers. Zero 如果 un设置.
      */
     uint32_t baseline;
 
     /**
-     * Relative shift of the left and right images, which changes the zero parallax plane.
-     * Range is -1.0 to 1.0. Zero if unset.
+     * Relative sh如果t 的 the left 和 right images, which changes the zero parallax plane.
+     * Range is -1.0 到 1.0. Zero 如果 un设置.
      */
     AVRational horizontal_disparity_adjustment;
 
     /**
-     * Horizontal field of view, in degrees. Zero if unset.
+     * Horizontal field 的 view, 中 degrees. Zero 如果 un设置.
      */
     AVRational horizontal_field_of_view;
 } AVStereo3D;
 
 /**
- * Allocate an AVStereo3D structure and set its fields to default values.
- * The resulting struct can be freed using av_freep().
+ * 分配 an AVStereo3D 结构体 和 设置 its fields 到 默认 值.
+ * resulting struct can be 释放d using av_释放p().
  *
- * @return An AVStereo3D filled with default values or NULL on failure.
+ * @返回 AVStereo3D filled，使用 默认 值 或 NULL 上 failure.
  */
 AVStereo3D *av_stereo3d_alloc(void);
 
 /**
- * Allocate an AVStereo3D structure and set its fields to default values.
- * The resulting struct can be freed using av_freep().
+ * 分配 an AVStereo3D 结构体 和 设置 its fields 到 默认 值.
+ * resulting struct can be 释放d using av_释放p().
  *
- * @return An AVStereo3D filled with default values or NULL on failure.
+ * @返回 AVStereo3D filled，使用 默认 值 或 NULL 上 failure.
  */
 AVStereo3D *av_stereo3d_alloc_size(size_t *size);
 
 /**
- * Allocate a complete AVFrameSideData and add it to the frame.
+ * 分配 a complete AV帧SideData 和 add it 到 the 帧.
  *
- * @param frame The frame which side data is added to.
+ * @param 帧 帧 which side data is added to.
  *
- * @return The AVStereo3D structure to be filled by caller.
+ * @返回 AVStereo3D 结构体 到 be filled by caller.
  */
 AVStereo3D *av_stereo3d_create_side_data(AVFrame *frame);
 
 /**
- * Provide a human-readable name of a given stereo3d type.
+ * Provide a human-readable name 的 a given stereo3d type.
  *
- * @param type The input stereo3d type value.
+ * @param type 输入 stereo3d type 值.
  *
- * @return The name of the stereo3d value, or "unknown".
+ * @返回 name 的 the stereo3d 值, 或 "unknown".
  */
 const char *av_stereo3d_type_name(unsigned int type);
 
 /**
- * Get the AVStereo3DType form a human-readable name.
+ * 获取 the AVStereo3DType form a human-readable name.
  *
- * @param name The input string.
+ * @param name 输入 string.
  *
- * @return The AVStereo3DType value, or -1 if not found.
+ * @返回 AVStereo3DType 值, 或 -1 如果 not found.
  */
 int av_stereo3d_from_name(const char *name);
 
 /**
- * Provide a human-readable name of a given stereo3d view.
+ * Provide a human-readable name 的 a given stereo3d view.
  *
- * @param type The input stereo3d view value.
+ * @param type 输入 stereo3d view 值.
  *
- * @return The name of the stereo3d view value, or "unknown".
+ * @返回 name 的 the stereo3d view 值, 或 "unknown".
  */
 const char *av_stereo3d_view_name(unsigned int view);
 
 /**
- * Get the AVStereo3DView form a human-readable name.
+ * 获取 the AVStereo3DView form a human-readable name.
  *
- * @param name The input string.
+ * @param name 输入 string.
  *
- * @return The AVStereo3DView value, or -1 if not found.
+ * @返回 AVStereo3DView 值, 或 -1 如果 not found.
  */
 int av_stereo3d_view_from_name(const char *name);
 
 /**
- * Provide a human-readable name of a given stereo3d primary eye.
+ * Provide a human-readable name 的 a given stereo3d primary eye.
  *
- * @param type The input stereo3d primary eye value.
+ * @param type 输入 stereo3d primary eye 值.
  *
- * @return The name of the stereo3d primary eye value, or "unknown".
+ * @返回 name 的 the stereo3d primary eye 值, 或 "unknown".
  */
 const char *av_stereo3d_primary_eye_name(unsigned int eye);
 
 /**
- * Get the AVStereo3DPrimaryEye form a human-readable name.
+ * 获取 the AVStereo3DPrimaryEye form a human-readable name.
  *
- * @param name The input string.
+ * @param name 输入 string.
  *
- * @return The AVStereo3DPrimaryEye value, or -1 if not found.
+ * @返回 AVStereo3DPrimaryEye 值, 或 -1 如果 not found.
  */
 int av_stereo3d_primary_eye_from_name(const char *name);
 

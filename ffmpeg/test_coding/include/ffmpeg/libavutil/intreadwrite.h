@@ -1,19 +1,19 @@
-/*
- * This file is part of FFmpeg.
+﻿/*
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 #ifndef AVUTIL_INTREADWRITE_H
@@ -46,18 +46,18 @@ typedef union {
 } av_alias av_alias16;
 
 /*
- * Arch-specific headers can provide any combination of
- * AV_[RW][BLN](16|24|32|48|64) and AV_(COPY|SWAP|ZERO)(64|128) macros.
- * Preprocessor symbols must be defined, even if these are implemented
+ * Arch-spec如果ic headers can provide any combination of
+ * AV_[RW][BLN](16|24|32|48|64) 和 AV_(复制|SWAP|ZERO)(64|128) macros.
+ * Preprocessor symbols must be defined, even 如果 these are implemented
  * as inline functions.
  *
  * R/W means read/write, B/L/N means big/little/native endianness.
- * The following macros require aligned access, compared to their
- * unaligned variants: AV_(COPY|SWAP|ZERO)(64|128), AV_[RW]N[8-64]A.
- * Incorrect usage may range from abysmal performance to crash
- * depending on the platform.
+ * following macros require aligned access, compared 到 their
+ * unaligned variants: AV_(复制|SWAP|ZERO)(64|128), AV_[RW]N[8-64]A.
+ * Incorrect usage may range，来自 abysmal performance 到 crash
+ * depending 上 the platform.
  *
- * The unaligned variants are AV_[RW][BLN][8-64] and AV_COPY*U.
+ * unaligned variants are AV_[RW][BLN][8-64] 和 AV_复制*U.
  */
 
 #ifdef HAVE_AV_CONFIG_H
@@ -77,7 +77,7 @@ typedef union {
 #endif /* HAVE_AV_CONFIG_H */
 
 /*
- * Map AV_RNXX <-> AV_R[BL]XX for all variants provided by per-arch headers.
+ * Map AV_RNXX <-> AV_R[BL]XX 用于 all variants provided by per-arch headers.
  */
 
 #if AV_HAVE_BIGENDIAN
@@ -207,7 +207,7 @@ typedef union {
 #endif /* !AV_HAVE_BIGENDIAN */
 
 /*
- * Define AV_[RW]N helper macros to simplify definitions not provided
+ * Define AV_[RW]N helper macros 到 simpl如果y definitions not provided
  * by per-arch headers.
  */
 
@@ -507,8 +507,8 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 #endif
 
 /*
- * The AV_[RW]NA macros access naturally aligned data
- * in a type-safe way.
+ * AV_[RW]Nmacros access naturally aligned data
+ * 中 a type-safe way.
  */
 
 #define AV_RNA(s, p)    (((const av_alias##s*)(p))->u##s)
@@ -593,8 +593,8 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
 #endif
 
 /*
- * The AV_COPYxxU macros are suitable for copying data to/from unaligned
- * memory locations.
+ * AV_复制xxU macros are suitable 用于 复制ing data to/from unaligned
+ * 内存 locations.
  */
 
 #define AV_COPYU(n, d, s) AV_WN##n(d, AV_RN##n(s));
@@ -619,7 +619,7 @@ union unaligned_16 { uint16_t l; } __attribute__((packed)) av_alias;
     } while(0)
 #endif
 
-/* Parameters for AV_COPY*, AV_SWAP*, AV_ZERO* must be
+/* Parameters 用于 AV_复制*, AV_SWAP*, AV_ZERO* must be
  * naturally aligned.
  */
 

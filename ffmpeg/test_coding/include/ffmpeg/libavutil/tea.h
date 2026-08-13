@@ -1,4 +1,4 @@
-/*
+﻿/*
  * A 32-bit implementation of the TEA algorithm
  * Copyright (c) 2015 Vesselin Bontchev
  *
@@ -26,7 +26,7 @@
 
 /**
  * @file
- * @brief Public header for libavutil TEA algorithm
+ * @brief libavutil TEA 算法的公共头文件
  * @defgroup lavu_tea TEA
  * @ingroup lavu_crypto
  * @{
@@ -37,29 +37,28 @@ extern const int av_tea_size;
 struct AVTEA;
 
 /**
-  * Allocate an AVTEA context
-  * To free the struct: av_free(ptr)
+  * 分配 AVTEA 上下文。使用 av_free(ptr) 释放结构体。
   */
 struct AVTEA *av_tea_alloc(void);
 
 /**
- * Initialize an AVTEA context.
+ * 初始化 AVTEA 上下文。
  *
- * @param ctx an AVTEA context
- * @param key a key of 16 bytes used for encryption/decryption
- * @param rounds the number of rounds in TEA (64 is the "standard")
+ * @param ctx AVTEA 上下文
+ * @param key 用于加密/解密的 16 字节密钥
+ * @param rounds TEA 轮数（64 为“标准”值）
  */
 void av_tea_init(struct AVTEA *ctx, const uint8_t key[16], int rounds);
 
 /**
- * Encrypt or decrypt a buffer using a previously initialized context.
+ * 使用之前初始化的上下文加密或解密缓冲区。
  *
- * @param ctx an AVTEA context
- * @param dst destination array, can be equal to src
- * @param src source array, can be equal to dst
- * @param count number of 8 byte blocks
- * @param iv initialization vector for CBC mode, if NULL then ECB will be used
- * @param decrypt 0 for encryption, 1 for decryption
+ * @param ctx AVTEA 上下文
+ * @param dst 目标数组，可以等于 src
+ * @param src 源数组，可以等于 dst
+ * @param count 8 字节块的数量
+ * @param iv CBC 模式的初始化向量；为 NULL 时使用 ECB
+ * @param decrypt 0 表示加密，1 表示解密
  */
 void av_tea_crypt(struct AVTEA *ctx, uint8_t *dst, const uint8_t *src,
                   int count, uint8_t *iv, int decrypt);

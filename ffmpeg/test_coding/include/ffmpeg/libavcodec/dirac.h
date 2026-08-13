@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2007 Marco Gerards <marco@gnu.org>
  * Copyright (C) 2009 David Conrad
  * Copyright (C) 2011 Jordi Ortiz
@@ -25,7 +25,7 @@
 
 /**
  * @file
- * Interface to Dirac Decoder/Encoder
+ * Dirac 解码器/编码器接口
  * @author Marco Gerards <marco@gnu.org>
  * @author David Conrad
  * @author Jordi Ortiz
@@ -38,18 +38,17 @@
 #include "libavutil/rational.h"
 
 /**
- * The spec limits the number of wavelet decompositions to 4 for both
- * level 1 (VC-2) and 128 (long-gop default).
- * 5 decompositions is the maximum before >16-bit buffers are needed.
- * Schroedinger allows this for DD 9,7 and 13,7 wavelets only, limiting
- * the others to 4 decompositions (or 3 for the fidelity filter).
+ * 规范将 level 1（VC-2）和 128（长 GOP 默认值）的小波分解次数均限制为 4。
+ * 在需要大于 16 位的缓冲区之前，最多可分解 5 次。
+ * Schroedinger 仅允许 DD 9,7 和 13,7 小波采用此设置，其他小波限制为
+ * 4 次分解（保真滤波器为 3 次）。
  *
- * We use this instead of MAX_DECOMPOSITIONS to save some memory.
+ * 为节省内存，这里使用该值而不是 MAX_DECOMPOSITIONS。
  */
 #define MAX_DWT_LEVELS 5
 
 /**
- * Parse code values:
+ * 解析码值：
  *
  * Dirac Specification ->
  * 9.6.1  Table 9.1
@@ -90,16 +89,16 @@ typedef struct AVDiracSeqHeader {
     uint8_t interlaced;
     uint8_t top_field_first;
 
-    uint8_t frame_rate_index;       ///< index into dirac_frame_rate[]
-    uint8_t aspect_ratio_index;     ///< index into dirac_aspect_ratio[]
+    uint8_t frame_rate_index;       ///< dirac_frame_rate[] 的索引
+    uint8_t aspect_ratio_index;     ///< dirac_aspect_ratio[] 的索引
 
     uint16_t clean_width;
     uint16_t clean_height;
     uint16_t clean_left_offset;
     uint16_t clean_right_offset;
 
-    uint8_t pixel_range_index;      ///< index into dirac_pixel_range_presets[]
-    uint8_t color_spec_index;       ///< index into dirac_color_spec_presets[]
+    uint8_t pixel_range_index;      ///< dirac_pixel_range_presets[] 的索引
+    uint8_t color_spec_index;       ///< dirac_color_spec_presets[] 的索引
 
     int profile;
     int level;
@@ -118,15 +117,14 @@ typedef struct AVDiracSeqHeader {
 } AVDiracSeqHeader;
 
 /**
- * Parse a Dirac sequence header.
+ * 解析 Dirac 序列头。
  *
- * @param dsh this function will allocate and fill an AVDiracSeqHeader struct
- *            and write it into this pointer. The caller must free it with
- *            av_free().
- * @param buf the data buffer
- * @param buf_size the size of the data buffer in bytes
- * @param log_ctx if non-NULL, this function will log errors here
- * @return 0 on success, a negative AVERROR code on failure
+ * @param dsh 此函数将分配并填充 AVDiracSeqHeader 结构体，然后写入此指针。
+ *            调用方必须使用 av_free() 将其释放。
+ * @param buf 数据缓冲区
+ * @param buf_size 数据缓冲区大小，单位为字节
+ * @param log_ctx 非 NULL 时，函数会在此处记录错误
+ * @return 成功返回 0，失败返回负的 AVERROR 错误码
  */
 int av_dirac_parse_sequence_header(AVDiracSeqHeader **dsh,
                                    const uint8_t *buf, size_t buf_size,

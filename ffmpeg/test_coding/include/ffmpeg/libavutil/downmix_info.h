@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2014 Tim Walker <tdskywalker@gmail.com>
  *
  * This file is part of FFmpeg.
@@ -26,7 +26,7 @@
 
 /**
  * @file
- * audio downmix medatata
+ * 音频下混元数据
  */
 
 /**
@@ -35,120 +35,109 @@
  */
 
 /**
- * @defgroup downmix_info Audio downmix metadata
+ * @defgroup downmix_info 音频下混元数据
  * @{
  */
 
 /**
- * Possible downmix types.
+ * 可用的下混类型。
  */
 enum AVDownmixType {
-    AV_DOWNMIX_TYPE_UNKNOWN, /**< Not indicated. */
-    AV_DOWNMIX_TYPE_LORO,    /**< Lo/Ro 2-channel downmix (Stereo). */
-    AV_DOWNMIX_TYPE_LTRT,    /**< Lt/Rt 2-channel downmix, Dolby Surround compatible. */
-    AV_DOWNMIX_TYPE_DPLII,   /**< Lt/Rt 2-channel downmix, Dolby Pro Logic II compatible. */
-    AV_DOWNMIX_TYPE_NB       /**< Number of downmix types. Not part of ABI. */
+    AV_DOWNMIX_TYPE_UNKNOWN, /**< 未指明。 */
+    AV_DOWNMIX_TYPE_LORO,    /**< Lo/Ro 双声道下混（立体声）。 */
+    AV_DOWNMIX_TYPE_LTRT,    /**< Lt/Rt 双声道下混，兼容 Dolby Surround。 */
+    AV_DOWNMIX_TYPE_DPLII,   /**< Lt/Rt 双声道下混，兼容 Dolby Pro Logic II。 */
+    AV_DOWNMIX_TYPE_NB       /**< 下混类型数量。不属于 ABI。 */
 };
 
 /**
- * This structure describes optional metadata relevant to a downmix procedure.
+ * 此结构描述与下混过程有关的可选元数据。
  *
- * All fields are set by the decoder to the value indicated in the audio
- * bitstream (if present), or to a "sane" default otherwise.
+ * 解码器会将所有字段设置为音频比特流中指示的值（如果存在），否则设置为
+ * “合理”的默认值。
  */
 typedef struct AVDownmixInfo {
     /**
-     * Type of downmix preferred by the mastering engineer.
+     * 母带工程师首选的下混类型。
      */
     enum AVDownmixType preferred_downmix_type;
 
     /**
-     * Absolute scale factor representing the nominal level of the center
-     * channel during a regular downmix.
+     * 表示常规下混期间中置声道标称电平的绝对缩放因子。
      */
     double center_mix_level;
 
     /**
-     * Absolute scale factor representing the nominal level of the center
-     * channel during an Lt/Rt compatible downmix.
+     * 表示 Lt/Rt 兼容下混期间中置声道标称电平的绝对缩放因子。
      */
     double center_mix_level_ltrt;
 
     /**
-     * Absolute scale factor representing the nominal level of the surround
-     * channels during a regular downmix.
+     * 表示常规下混期间环绕声道标称电平的绝对缩放因子。
      */
     double surround_mix_level;
 
     /**
-     * Absolute scale factor representing the nominal level of the surround
-     * channels during an Lt/Rt compatible downmix.
+     * 表示 Lt/Rt 兼容下混期间环绕声道标称电平的绝对缩放因子。
      */
     double surround_mix_level_ltrt;
 
     /**
-     * Absolute scale factor representing the level at which the LFE data is
-     * mixed into L/R channels during downmixing.
+     * 表示下混期间将 LFE 数据混入 L/R 声道时所用电平的绝对缩放因子。
      */
     double lfe_mix_level;
 } AVDownmixInfo;
 
 /**
- * Get a frame's AV_FRAME_DATA_DOWNMIX_INFO side data for editing.
+ * 获取帧的 AV_FRAME_DATA_DOWNMIX_INFO 侧数据以供编辑。
  *
- * If the side data is absent, it is created and added to the frame.
+ * 如果侧数据不存在，则创建并添加到帧中。
  *
- * @param frame the frame for which the side data is to be obtained or created
+ * @param frame 要获取或创建侧数据的帧
  *
- * @return the AVDownmixInfo structure to be edited by the caller, or NULL if
- *         the structure cannot be allocated.
+ * @return 供调用者编辑的 AVDownmixInfo 结构；无法分配该结构时返回 NULL。
  */
 AVDownmixInfo *av_downmix_info_update_side_data(AVFrame *frame);
 
 /**
- * This structure describes optional metadata relevant to a downmix procedure
- * in the form of a remixing matrix allocated as an array of AVDownmixCoeff.
- * Must be allocated with @ref av_downmix_matrix_alloc.
+ * 此结构以重混矩阵的形式描述与下混过程有关的可选元数据；矩阵被分配为
+ * AVDownmixCoeff 数组。必须使用 @ref av_downmix_matrix_alloc 分配。
  *
- * sizeof(AVDownmixMatrix) is not a part of the ABI and new fields may be
- * added to it.
+ * sizeof(AVDownmixMatrix) 不属于 ABI，可以向其中添加新字段。
  */
 typedef struct AVDownmixMatrix {
     /**
-     * Type of downmix the coeffs will produce.
-     * Output channel count is derived from this value.
+     * 系数将产生的下混类型。输出声道数量由此值推导。
      */
     enum AVDownmixType downmix_type;
 
     /**
-     * Input channel count.
+     * 输入声道数量。
      */
     int in_ch_count;
 
     /**
-     * Amount of coefficients in the matrix.
+     * 矩阵中的系数数量。
      */
     unsigned int nb_coeffs;
 
     /**
-     * Offset in bytes from the beginning of this structure at which the array
-     * of coefficients starts.
+     * 系数数组起始处相对于此结构开头的字节偏移量。
      */
     size_t coeffs_offset;
 } AVDownmixMatrix;
 
 /**
- * Data type for storing coefficients, which are allocated as a part of
- * AVDownmixMatrix and should be retrieved with @ref av_downmix_matrix_coeff.
+ * 用于存储系数的数据类型。系数作为 AVDownmixMatrix 的一部分分配，应使用
+ * @ref av_downmix_matrix_coeff 获取。
  */
 typedef double AVDownmixCoeff;
 
 /**
- * Get a pointer to the coeff that represents the weight of input channel
- * {@code in} in output channel {@code out}.
- * in must be between 0 and @ref AVDownmixMatrix.in_ch_count "in_ch_count" - 1.
- * out must be between 0 and the implicit output channel count from
- * @ref AVDownmixMatrix.downmix_type "downmix_type" - 1.
+ * 获取表示输入声道 {@code in} 在输出声道 {@code out} 中权重的系数指针。
+ * in 必须介于 0 和 @ref AVDownmixMatrix.in_ch_count "in_ch_count" - 1 之间。
+ * out 必须介于 0 和由 @ref AVDownmixMatrix.downmix_type "downmix_type"
+ * 隐含的输出声道数量 - 1 之间。
  */
 static av_always_inline AVDownmixCoeff*
 av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
@@ -158,13 +147,11 @@ av_downmix_matrix_coeff(AVDownmixMatrix *dm, unsigned int out, unsigned int in)
 }
 
 /**
- * Allocates memory for AVDownmixMatrix of the given type, plus an array of
- * {@code in_ch_count} times the implicit output channel count from {@code type}
- * of AVDownmixCoeff and initializes the variables. Can be freed with a normal
- * av_free() call.
+ * 为给定类型的 AVDownmixMatrix，以及包含 {@code in_ch_count} 乘以
+ * {@code type} 隐含输出声道数量个 AVDownmixCoeff 的数组分配内存，并初始化
+ * 变量。可以使用普通的 av_free() 调用释放。
  *
- * @param out_size if non-NULL, the size in bytes of the resulting data array is
- * written here.
+ * @param out_size 非 NULL 时，会在这里写入结果数据数组的字节大小。
  */
 AVDownmixMatrix *av_downmix_matrix_alloc(enum AVDownmixType type,
                                          int in_ch_count, size_t *out_size);

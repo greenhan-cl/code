@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2001 Fabrice Bellard
  *
  * This file is part of FFmpeg.
@@ -23,85 +23,38 @@
 
 /**
  * @file
- * @ingroup libavf
- * Main libavformat public API header
+ * @ingroup libavf 主要 libavformat 公共 API 标头
  */
 
 /**
- * @defgroup libavf libavformat
- * I/O and Muxing/Demuxing Library
+ * @defgroup libavf libavformat I/O 和复用/解复用库
  *
- * Libavformat (lavf) is a library for dealing with various media container
- * formats. Its main two purposes are demuxing - i.e. splitting a media file
- * into component streams, and the reverse process of muxing - writing supplied
- * data in a specified container format. It also has an @ref lavf_io
- * "I/O module" which supports a number of protocols for accessing the data (e.g.
- * file, tcp, http and others).
- * Unless you are absolutely sure you won't use libavformat's network
- * capabilities, you should also call avformat_network_init().
+ * Libavformat (lavf) 是一个用于处理各种媒体容器格式的库。它的主要两个目的是解复用——即将媒体文件分割成组件流，以及复用的逆过程——以指定的容器格式写入提供的数据。它还具有一个 @ref lavf_io“I/O 模块”，支持多种访问数据的协议（例如文件、tcp、http 等）。除非您绝对确定不会使用 libavformat 的网络功能，否则您还应该调用 avformat_network_init()。
  *
- * A supported input format is described by an AVInputFormat struct, conversely
- * an output format is described by AVOutputFormat. You can iterate over all
- * input/output formats using the  av_demuxer_iterate / av_muxer_iterate() functions.
- * The protocols layer is not part of the public API, so you can only get the names
- * of supported protocols with the avio_enum_protocols() function.
+ * 支持的输入格式由 AVInputFormat 结构描述，相反，输出格式由 AVOutputFormat 描述。您可以使用 av_demuxer_iterate / av_muxer_iterate() 函数迭代所有输入/输出格式。协议层不是公共 API 的一部分，因此您只能使用 avio_enum_protocols() 函数获取支持的协议的名称。
  *
- * Main lavf structure used for both muxing and demuxing is AVFormatContext,
- * which exports all information about the file being read or written. As with
- * most Libavformat structures, its size is not part of public ABI, so it cannot be
- * allocated on stack or directly with av_malloc(). To create an
- * AVFormatContext, use avformat_alloc_context() (some functions, like
- * avformat_open_input() might do that for you).
+ * 用于复用和解复用的主要 lavf 结构是 AVFormatContext，它导出有关正在读取或写入的文件的所有信息。与大多数 Libavformat 结构一样，它的大小不是公共 ABI 的一部分，因此不能在堆栈上分配或直接使用 av_malloc() 分配。要创建 AVFormatContext，请使用 avformat_alloc_context() （某些函数，如 avformat_open_input() 可能会为您执行此操作）。
  *
- * Most importantly an AVFormatContext contains:
- * @li the @ref AVFormatContext.iformat "input" or @ref AVFormatContext.oformat
- * "output" format. It is either autodetected or set by user for input;
- * always set by user for output.
- * @li an @ref AVFormatContext.streams "array" of AVStreams, which describe all
- * elementary streams stored in the file. AVStreams are typically referred to
- * using their index in this array.
- * @li an @ref AVFormatContext.pb "I/O context". It is either opened by lavf or
- * set by user for input, always set by user for output (unless you are dealing
- * with an AVFMT_NOFILE format).
+ * 最重要的是 AVFormatContext 包含：
+ * @li @ref AVFormatContext.iformat“输入”或@ref AVFormatContext.oformat“输出”格式。它可以自动检测或由用户设置输入；始终由用户设置输出。
+ * @li AVStreams 的 @ref AVFormatContext.streams“数组”，它描述了存储在文件中的所有基本流。通常使用该数组中的索引来引用 AVStream。
+ * @li 一个 @ref AVFormatContext.pb“I/O 上下文”。它要么由 lavf 打开，要么由用户设置用于输入，始终由用户设置用于输出（除非您正在处理 AVFMT_NOFILE 格式）。
  *
- * @section lavf_options Passing options to (de)muxers
- * It is possible to configure lavf muxers and demuxers using the @ref avoptions
- * mechanism. Generic (format-independent) libavformat options are provided by
- * AVFormatContext, they can be examined from a user program by calling
- * av_opt_next() / av_opt_find() on an allocated AVFormatContext (or its AVClass
- * from avformat_get_class()). Private (format-specific) options are provided by
- * AVFormatContext.priv_data if and only if AVInputFormat.priv_class /
- * AVOutputFormat.priv_class of the corresponding format struct is non-NULL.
- * Further options may be provided by the @ref AVFormatContext.pb "I/O context",
- * if its AVClass is non-NULL, and the protocols layer. See the discussion on
- * nesting in @ref avoptions documentation to learn how to access those.
+ * @section lavf_options 将选项传递给（解）复用器 可以使用 @ref avoptions 机制配置 lavf 复用器和解复用器。通用（与格式无关）libavformat 选项由 AVFormatContext 提供，可以通过在分配的 AVFormatContext（或其来自 avformat_get_class() 的 AVClass）上调用 av_opt_next() / av_opt_find() 从用户程序中检查它们。当且仅当相应格式结构的 AVInputFormat.priv_class / AVOutputFormat.priv_class 为非 NULL 时，AVFormatContext.priv_data 才提供私有（特定于格式）选项。如果 AVClass 为非 NULL，则 @ref AVFormatContext.pb“I/O 上下文”和协议层可以提供更多选项。请参阅 @ref avoptions 文档中有关嵌套的讨论，了解如何访问它们。
  *
- * @section urls
- * URL strings in libavformat are made of a scheme/protocol, a ':', and a
- * scheme specific string. URLs without a scheme and ':' used for local files
- * are supported but deprecated. "file:" should be used for local files.
+ * @section urls libavformat 中的 URL 字符串由方案/协议、“:”和方案特定字符串组成。支持不带方案的 URL 以及用于本地文件的“:”，但已弃用。 “file:”应用于本地文件。
  *
- * It is important that the scheme string is not taken from untrusted
- * sources without checks.
+ * 重要的是，未经检查不得从不受信任的来源获取方案字符串。
  *
- * Note that some schemes/protocols are quite powerful, allowing access to
- * both local and remote files, parts of them, concatenations of them, local
- * audio and video devices and so on.
+ * 请注意，某些方案/协议非常强大，允许访问本地和远程文件、文件的一部分、文件的串联、本地音频和视频设备等。
  *
  * @{
  *
- * @defgroup lavf_decoding Demuxing
+ * @defgroup lavf_decoding 解复用器
  * @{
- * Demuxers read a media file and split it into chunks of data (@em packets). A
- * @ref AVPacket "packet" contains one or more encoded frames which belongs to a
- * single elementary stream. In the lavf API this process is represented by the
- * avformat_open_input() function for opening a file, av_read_frame() for
- * reading a single packet and finally avformat_close_input(), which does the
- * cleanup.
+ * 解复用器读取媒体文件并将其拆分为数据块（@em 数据包）。 @ref AVPacket“数据包”包含属于单个基本流的一个或多个编码帧。在 lavf API 中，此过程由用于打开文件的 avformat_open_input() 函数、用于读取单个数据包的 av_read_frame() 以及最后进行清理的 avformat_close_input() 函数来表示。
  *
- * @section lavf_decoding_open Opening a media file
- * The minimum information required to open a file is its URL, which
- * is passed to avformat_open_input(), as in the following code:
+ * @section lavf_decoding_open 打开媒体文件 打开文件所需的最少信息是其 URL，该 URL 被传递给 avformat_open_input()，如以下代码所示：
  * @code
  * const char    *url = "file:in.mp3";
  * AVFormatContext *s = NULL;
@@ -109,25 +62,11 @@
  * if (ret < 0)
  *     abort();
  * @endcode
- * The above code attempts to allocate an AVFormatContext, open the
- * specified file (autodetecting the format) and read the header, exporting the
- * information stored there into s. Some formats do not have a header or do not
- * store enough information there, so it is recommended that you call the
- * avformat_find_stream_info() function which tries to read and decode a few
- * frames to find missing information.
+ * 上面的代码尝试分配一个 AVFormatContext，打开指定的文件（自动检测格式）并读取标头，将其中存储的信息导出到 s 中。某些格式没有标头或没有存储足够的信息，因此建议您调用 avformat_find_stream_info() 函数，该函数尝试读取和解码一些帧以查找丢失的信息。
  *
- * In some cases you might want to preallocate an AVFormatContext yourself with
- * avformat_alloc_context() and do some tweaking on it before passing it to
- * avformat_open_input(). One such case is when you want to use custom functions
- * for reading input data instead of lavf internal I/O layer.
- * To do that, create your own AVIOContext with avio_alloc_context(), passing
- * your reading callbacks to it. Then set the @em pb field of your
- * AVFormatContext to newly created AVIOContext.
+ * 在某些情况下，您可能希望自己使用 avformat_alloc_context() 预先分配 AVFormatContext，并在将其传递给 avformat_open_input() 之前对其进行一些调整。其中一种情况是当您想要使用自定义函数而不是 lavf 内部 I/O 层来读取输入数据时。为此，请使用 avio_alloc_context() 创建您自己的 AVIOContext，并将您的读取回调传递给它。然后将 AVFormatContext 的 @em pb 字段设置为新创建的 AVIOContext。
  *
- * Since the format of the opened file is in general not known until after
- * avformat_open_input() has returned, it is not possible to set demuxer private
- * options on a preallocated context. Instead, the options should be passed to
- * avformat_open_input() wrapped in an AVDictionary:
+ * 由于打开文件的格式通常在 avformat_open_input() 返回后才知道，因此不可能在预分配的上下文上设置分路器私有选项。相反，这些选项应该传递给包含在 AVDictionary 中的 avformat_open_input()：
  * @code
  * AVDictionary *options = NULL;
  * av_dict_set(&options, "video_size", "640x480", 0);
@@ -137,14 +76,7 @@
  *     abort();
  * av_dict_free(&options);
  * @endcode
- * This code passes the private options 'video_size' and 'pixel_format' to the
- * demuxer. They would be necessary for e.g. the rawvideo demuxer, since it
- * cannot know how to interpret raw video data otherwise. If the format turns
- * out to be something different than raw video, those options will not be
- * recognized by the demuxer and therefore will not be applied. Such unrecognized
- * options are then returned in the options dictionary (recognized options are
- * consumed). The calling program can handle such unrecognized options as it
- * wishes, e.g.
+ * 此代码将私有选项“video_size”和“pixel_format”传递给解复用器。例如，它们是必要的。原始视频解复用器，因为它不知道如何解释原始视频数据。如果格式与原始视频不同，则解复用器将无法识别这些选项，因此不会应用。然后，此类无法识别的选项将返回到选项字典中（已识别的选项将被消耗）。调用程序可以根据需要处理此类无法识别的选项，例如
  * @code
  * const AVDictionaryEntry *e;
  * if ((e = av_dict_iterate(options, NULL))) {
@@ -153,106 +85,41 @@
  * }
  * @endcode
  *
- * After you have finished reading the file, you must close it with
- * avformat_close_input(). It will free everything associated with the file.
+ * 读取完文件后，必须使用 avformat_close_input() 关闭它。它将释放与该文件关联的所有内容。
  *
- * @section lavf_decoding_read Reading from an opened file
- * Reading data from an opened AVFormatContext is done by repeatedly calling
- * av_read_frame() on it. Each call, if successful, will return an AVPacket
- * containing encoded data for one AVStream, identified by
- * AVPacket.stream_index. This packet may be passed straight into the libavcodec
- * decoding functions avcodec_send_packet() or avcodec_decode_subtitle2() if the
- * caller wishes to decode the data.
+ * @section lavf_decoding_read 从打开的文件中读取 从打开的 AVFormatContext 中读取数据是通过重复调用 av_read_frame() 来完成的。每次调用如果成功，将返回一个 AVPacket，其中包含一个 AVStream 的编码数据，由 AVPacket.stream_index 标识。如果调用者希望解码数据，则可以将该数据包直接传递到 libavcodec 解码函数 avcodec_send_packet() 或 avcodec_decode_subtitle2() 中。
  *
- * AVPacket.pts, AVPacket.dts and AVPacket.duration timing information will be
- * set if known. They may also be unset (i.e. AV_NOPTS_VALUE for
- * pts/dts, 0 for duration) if the stream does not provide them. The timing
- * information will be in AVStream.time_base units, i.e. it has to be
- * multiplied by the timebase to convert them to seconds.
+ * AVPacket.pts、AVPacket.dts 和 AVPacket.duration 计时信息（如果已知）将被设置。如果流不提供它们，它们也可能被取消设置（即 pts/dts 为 AV_NOPTS_VALUE，持续时间为 0）。计时信息将以 AVStream.time_base 为单位，即必须乘以时基才能将其转换为秒。
  *
- * A packet returned by av_read_frame() is always reference-counted,
- * i.e. AVPacket.buf is set and the user may keep it indefinitely.
- * The packet must be freed with av_packet_unref() when it is no
- * longer needed.
+ * av_read_frame() 返回的数据包始终是引用计数的，即 AVPacket.buf 已设置并且用户可以无限期地保留它。当不再需要数据包时，必须使用 av_packet_unref() 释放该数据包。
  *
- * @section lavf_decoding_seek Seeking
+ * @section lavf_decoding_seek 寻求
  * @}
  *
- * @defgroup lavf_encoding Muxing
+ * @defgroup lavf_encoding 复用
  * @{
- * Muxers take encoded data in the form of @ref AVPacket "AVPackets" and write
- * it into files or other output bytestreams in the specified container format.
+ * 复用器以@ref AVPacket“AVPackets”的形式获取编码数据，并将其写入指定容器格式的文件或其他输出字节流中。
  *
- * The main API functions for muxing are avformat_write_header() for writing the
- * file header, av_write_frame() / av_interleaved_write_frame() for writing the
- * packets and av_write_trailer() for finalizing the file.
+ * 用于复用的主要 API 函数是用于写入文件头的 avformat_write_header()、用于写入数据包的 av_write_frame() / av_interleaved_write_frame() 以及用于最终确定文件的 av_write_trailer()。
  *
- * At the beginning of the muxing process, the caller must first call
- * avformat_alloc_context() to create a muxing context. The caller then sets up
- * the muxer by filling the various fields in this context:
+ * 在多路复用过程开始时，调用者必须首先调用 avformat_alloc_context() 创建多路复用上下文。然后，调用者通过填写此上下文中的各个字段来设置复用器：
  *
- * - The @ref AVFormatContext.oformat "oformat" field must be set to select the
- *   muxer that will be used.
- * - Unless the format is of the AVFMT_NOFILE type, the @ref AVFormatContext.pb
- *   "pb" field must be set to an opened IO context, either returned from
- *   avio_open2() or a custom one.
- * - Unless the format is of the AVFMT_NOSTREAMS type, at least one stream must
- *   be created with the avformat_new_stream() function. The caller should fill
- *   the @ref AVStream.codecpar "stream codec parameters" information, such as the
- *   codec @ref AVCodecParameters.codec_type "type", @ref AVCodecParameters.codec_id
- *   "id" and other parameters (e.g. width / height, the pixel or sample format,
- *   etc.) as known. The @ref AVStream.time_base "stream timebase" should
- *   be set to the timebase that the caller desires to use for this stream (note
- *   that the timebase actually used by the muxer can be different, as will be
- *   described later).
- * - It is advised to manually initialize only the relevant fields in
- *   AVCodecParameters, rather than using @ref avcodec_parameters_copy() during
- *   remuxing: there is no guarantee that the codec context values remain valid
- *   for both input and output format contexts.
- * - The caller may fill in additional information, such as @ref
- *   AVFormatContext.metadata "global" or @ref AVStream.metadata "per-stream"
- *   metadata, @ref AVFormatContext.chapters "chapters", @ref
- *   AVFormatContext.programs "programs", etc. as described in the
- *   AVFormatContext documentation. Whether such information will actually be
- *   stored in the output depends on what the container format and the muxer
- *   support.
+ * - 必须设置@ref AVFormatContext.oformat“oformat”字段以选择将使用的复用器。 - 除非格式是 AVFMT_NOFILE 类型，否则@ref AVFormatContext.pb“pb”字段必须设置为打开的 IO 上下文，可以从 avio_open2() 返回，也可以是自定义的。 - 除非格式是 AVFMT_NOSTREAMS 类型，否则必须使用 avformat_new_stream() 函数创建至少一个流。调用者应填写@ref AVStream.codecpar“流编解码器参数”信息，例如编解码器@ref AVCodecParameters.codec_type“类型”、@ref AVCodecParameters.codec_id“id”以及已知的其他参数（例如宽度/高度、像素或样本格式等）。 @ref AVStream.time_base“流时基”应设置为调用者希望用于该流的时基（请注意，复用器实际使用的时基可能不同，稍后将进行描述）。 - 建议仅手动初始化 AVCodecParameters 中的相关字段，而不是在重新混合期间使用 @ref avcodec_parameters_copy()：不能保证编解码器上下文值对于输入和输出格式上下文都保持有效。 - 调用者可以填写附加信息，例如@ref AVFormatContext.metadata“全局”或@ref AVStream.metadata“每个流”元数据、@ref AVFormatContext.chapters“章节”、@ref AVFormatContext.programs“程序”等，如 AVFormatContext 文档中所述。这些信息是否实际存储在输出中取决于容器格式和复用器支持的内容。
  *
- * When the muxing context is fully set up, the caller must call
- * avformat_write_header() to initialize the muxer internals and write the file
- * header. Whether anything actually is written to the IO context at this step
- * depends on the muxer, but this function must always be called. Any muxer
- * private options must be passed in the options parameter to this function.
+ * 当复用上下文完全设置后，调用者必须调用 avformat_write_header() 来初始化复用器内部并写入文件头。在此步骤中是否实际将任何内容写入 IO 上下文取决于复用器，但必须始终调用此函数。任何复用器私有选项都必须通过 options 参数传递给此函数。
  *
- * The data is then sent to the muxer by repeatedly calling av_write_frame() or
- * av_interleaved_write_frame() (consult those functions' documentation for
- * discussion on the difference between them; only one of them may be used with
- * a single muxing context, they should not be mixed). Do note that the timing
- * information on the packets sent to the muxer must be in the corresponding
- * AVStream's timebase. That timebase is set by the muxer (in the
- * avformat_write_header() step) and may be different from the timebase
- * requested by the caller.
+ * 然后通过重复调用 av_write_frame() 或 av_interleaved_write_frame() 将数据发送到复用器（请参阅这些函数的文档以讨论它们之间的差异；只有其中一个可以与单个复用上下文一起使用，它们不应混合）。请注意，发送到复用器的数据包的计时信息必须位于相应 AVStream 的时基中。该时基由复用器设置（在 avformat_write_header() 步骤中），并且可能与调用者请求的时基不同。
  *
- * Once all the data has been written, the caller must call av_write_trailer()
- * to flush any buffered packets and finalize the output file, then close the IO
- * context (if any) and finally free the muxing context with
- * avformat_free_context().
+ * 一旦所有数据都被写入，调用者必须调用 av_write_trailer() 来刷新所有缓冲的数据包并最终确定输出文件，然后关闭 IO 上下文（如果有），最后使用 avformat_free_context() 释放多路复用上下文。
  * @}
  *
- * @defgroup lavf_io I/O Read/Write
+ * @defgroup lavf_io I/O 读/写
  * @{
- * @section lavf_io_dirlist Directory listing
- * The directory listing API makes it possible to list files on remote servers.
+ * @section lavf_io_dirlist 目录列表 目录列表 API 可以列出远程服务器上的文件。
  *
- * Some of possible use cases:
- * - an "open file" dialog to choose files from a remote location,
- * - a recursive media finder providing a player with an ability to play all
- * files from a given directory.
+ * 一些可能的用例： - 用于从远程位置选择文件的“打开文件”对话框， - 递归媒体查找器，为播放器提供播放给定目录中所有文件的能力。
  *
- * @subsection lavf_io_dirlist_open Opening a directory
- * At first, a directory needs to be opened by calling avio_open_dir()
- * supplied with a URL and, optionally, ::AVDictionary containing
- * protocol-specific parameters. The function returns zero or positive
- * integer and allocates AVIODirContext on success.
+ * @subsection lavf_io_dirlist_open 打开目录 首先，需要通过调用 avio_open_dir() 打开目录，并提供 URL 和可选的包含协议特定参数的 ::AVDictionary。该函数返回零或正整数并在成功时分配 AVIODirContext。
  *
  * @code
  * AVIODirContext *ctx = NULL;
@@ -262,18 +129,9 @@
  * }
  * @endcode
  *
- * This code tries to open a sample directory using smb protocol without
- * any additional parameters.
+ * 此代码尝试使用 smb 协议打开示例目录，无需任何其他参数。
  *
- * @subsection lavf_io_dirlist_read Reading entries
- * Each directory's entry (i.e. file, another directory, anything else
- * within ::AVIODirEntryType) is represented by AVIODirEntry.
- * Reading consecutive entries from an opened AVIODirContext is done by
- * repeatedly calling avio_read_dir() on it. Each call returns zero or
- * positive integer if successful. Reading can be stopped right after the
- * NULL entry has been read -- it means there are no entries left to be
- * read. The following code reads all entries from a directory associated
- * with ctx and prints their names to standard output.
+ * @subsection lavf_io_dirlist_read 读取条目 每个目录的条目（即文件、另一个目录、::AVIODirEntryType 中的任何其他内容）都由 AVIODirEntry 表示。从打开的 AVIODirContext 中读取连续条目是通过重复调用 avio_read_dir() 来完成的。如果成功，每次调用都会返回零或正整数。读取 NULL 条目后可以立即停止读取——这意味着没有剩余条目可供读取。以下代码从与 ctx 关联的目录中读取所有条目并将其名称打印到标准输出。
  * @code
  * AVIODirEntry *entry = NULL;
  * for (;;) {
@@ -289,25 +147,25 @@
  * @endcode
  * @}
  *
- * @defgroup lavf_codec Demuxers
+ * @defgroup lavf_codec 解复用器
  * @{
- * @defgroup lavf_codec_native Native Demuxers
- * @{
- * @}
- * @defgroup lavf_codec_wrappers External library wrappers
+ * @defgroup lavf_codec_native 本机解复用器
  * @{
  * @}
- * @}
- * @defgroup lavf_protos I/O Protocols
+ * @defgroup lavf_codec_wrappers 外部库包装器
  * @{
  * @}
- * @defgroup lavf_internal Internal
+ * @}
+ * @defgroup lavf_protos I/O 协议
+ * @{
+ * @}
+ * @defgroup lavf_internal 内部
  * @{
  * @}
  * @}
  */
 
-#include <stdio.h>  /* FILE */
+#include <stdio.h>  /* 文件 */
 
 #include "libavcodec/codec_par.h"
 #include "libavcodec/defs.h"
@@ -319,9 +177,9 @@
 #include "avio.h"
 #include "libavformat/version_major.h"
 #ifndef HAVE_AV_CONFIG_H
-/* When included as part of the ffmpeg build, only include the major version
- * to avoid unnecessary rebuilds. When included externally, keep including
- * the full version information. */
+/*
+ * 当包含在 ffmpeg 构建中时，仅包含主要版本以避免不必要的重建。当外部包含时，请保留完整的版本信息。
+ */
 #include "libavformat/version.h"
 
 #include "libavutil/frame.h"
@@ -335,28 +193,27 @@ struct AVFrame;
  * @defgroup metadata_api Public Metadata API
  * @{
  * @ingroup libavf
- * The metadata API allows libavformat to export metadata tags to a client
- * application when demuxing. Conversely it allows a client application to
- * set metadata when muxing.
+ * 元数据 API 允许 libavformat 在解复用时将元数据标签导出到客户端应用程序。
+ * 反过来，客户端应用程序也可以在复用时设置元数据。
  *
  * Metadata is exported or set as pairs of key/value strings in the 'metadata'
  * fields of the AVFormatContext, AVStream, AVChapter and AVProgram structs
  * using the @ref lavu_dict "AVDictionary" API. Like all strings in FFmpeg,
  * metadata is assumed to be UTF-8 encoded Unicode. Note that metadata
- * exported by demuxers isn't checked to be valid UTF-8 in most cases.
+ * 解复用器导出的元数据在大多数情况下不会检查其是否为有效的 UTF-8。
  *
  * Important concepts to keep in mind:
  * -  Keys are unique; there can never be 2 tags with the same key. This is
  *    also meant semantically, i.e., a demuxer should not knowingly produce
- *    several keys that are literally different but semantically identical.
+ *    不应存在多个字面不同但语义相同的键。
  *    E.g., key=Author5, key=Author6. In this example, all authors must be
  *    placed in the same tag.
  * -  Metadata is flat, not hierarchical; there are no subtags. If you
- *    want to store, e.g., the email address of the child of producer Alice
+ *    例如，如果需要存储制片人 Alice 的孩子的电子邮件地址
  *    and actor Bob, that could have key=alice_and_bobs_childs_email_address.
  * -  Several modifiers can be applied to the tag name. This is done by
- *    appending a dash character ('-') and the modifier name in the order
- *    they appear in the list below -- e.g. foo-eng-sort, not foo-sort-eng.
+ *    则应按照下面列表中的顺序，在键后追加连字符（'-'）和修饰符名称，
+ *    例如 foo-eng-sort，而不是 foo-sort-eng。
  *    -  descriptor -- some formats (e.g. ID3v2 COMM and USLT frames) attach
  *       a free-form descriptor to a tag to distinguish multiple instances.
  *       The full key format is "<tag>-<descriptor>-<lang>", but either
@@ -367,7 +224,7 @@ struct AVFrame;
  *       "comment-MusicMatch_Bio-eng" (descriptor + lang),
  *       "comment-foobar" (descriptor only, foobar is not a valid lang code).
  *    -  language -- a tag whose value is localized for a particular language
- *       is appended with the ISO 639-2/B 3-letter language code.
+ *       键后会追加 ISO 639-2/B 三字母语言代码。
  *       For example: Author-ger=Michael, Author-eng=Mike
  *       The original/default language is in the unqualified "Author" tag.
  *       A demuxer should set a default if it sets any translated tag.
@@ -381,7 +238,7 @@ struct AVFrame;
  *   call to av_read_frame(), AVFormatContext.event_flags or AVStream.event_flags
  *   will be updated to indicate if metadata changed. In order to detect metadata
  *   changes on a stream, you need to loop through all streams in the AVFormatContext
- *   and check their individual event_flags.
+ *   并检查每一路流各自的 event_flags。
  *
  * -  Demuxers attempt to export metadata in a generic format, however tags
  *    with no generic equivalents are left as they are stored in the container.
@@ -429,95 +286,83 @@ struct AVFrame;
  * @}
  */
 
-/* packet functions */
+/* 数据包功能 */
 
 
 /**
- * Allocate and read the payload of a packet and initialize its
- * fields with default values.
+ * 分配和读取数据包的有效负载，并使用默认值初始化其字段。
  *
- * @param s    associated IO context
- * @param pkt packet
- * @param size desired payload size
- * @return >0 (read size) if OK, AVERROR_xxx otherwise
+ * @param s 关联的 IO 上下文
+ * @param pkt 数据包
+ * @param size 所需的有效负载大小
+ * @return >0（读取大小）如果 OK，则 AVERROR_xxx 否则
  */
 int av_get_packet(AVIOContext *s, AVPacket *pkt, int size);
 
 
 /**
- * Read data and append it to the current content of the AVPacket.
- * If pkt->size is 0 this is identical to av_get_packet.
- * Note that this uses av_grow_packet and thus involves a realloc
- * which is inefficient. Thus this function should only be used
- * when there is no reasonable way to know (an upper bound of)
- * the final size.
+ * 读取数据并将其附加到 AVPacket 的当前内容中。如果 pkt->size 为 0，这与 av_get_packet 相同。请注意，这使用了 av_grow_packet，因此涉及低效的重新分配。因此，仅当没有合理的方法来知道最终大小（的上限）时才应使用此函数。
  *
- * @param s    associated IO context
- * @param pkt packet
- * @param size amount of data to read
- * @return >0 (read size) if OK, AVERROR_xxx otherwise, previous data
- *         will not be lost even if an error occurs.
+ * @param s 关联的 IO 上下文
+ * @param pkt 数据包
+ * @param size 要读取的数据量
+ * @return >0 (读取大小) 如果 OK，否则 AVERROR_xxx，即使发生错误，以前的数据也不会丢失。
  */
 int av_append_packet(AVIOContext *s, AVPacket *pkt, int size);
 
 /*************************************************/
-/* input/output formats */
+/* 输入/输出格式 */
 
 struct AVCodecTag;
 
 /**
- * This structure contains the data a format has to probe a file.
+ * 此结构包含格式必须探测文件的数据。
  */
 typedef struct AVProbeData {
     const char *filename;
-    unsigned char *buf; /**< Buffer must have AVPROBE_PADDING_SIZE of extra allocated bytes filled with zero. */
-    int buf_size;       /**< Size of buf except extra allocated bytes */
-    const char *mime_type; /**< mime_type, when known. */
+    unsigned char *buf; /**< 缓冲区必须具有 AVPROBE_PADDING_SIZE 的额外分配字节，并用零填充。 */
+    int buf_size;       /**< buf 的大小（额外分配的字节除外） */
+    const char *mime_type; /**< mime_type（如果已知）。 */
 } AVProbeData;
 
 #define AVPROBE_SCORE_RETRY (AVPROBE_SCORE_MAX/4)
 #define AVPROBE_SCORE_STREAM_RETRY (AVPROBE_SCORE_MAX/4-1)
 
-#define AVPROBE_SCORE_EXTENSION  50 ///< score for file extension
-#define AVPROBE_SCORE_MIME_BONUS 30 ///< score added for matching mime type
-#define AVPROBE_SCORE_MAX       100 ///< maximum score
+#define AVPROBE_SCORE_EXTENSION  50 ///< 文件扩展名
+#define AVPROBE_SCORE_MIME_BONUS 30 ///< 为匹配 mime 类型添加的分数
+#define AVPROBE_SCORE_MAX       100 ///< 最大分数
 
-#define AVPROBE_PADDING_SIZE 32             ///< extra allocated bytes at the end of the probe buffer
+#define AVPROBE_PADDING_SIZE 32             ///< 探测缓冲区末尾额外分配的字节
 
-/// Demuxer will use avio_open, no opened file should be provided by the caller.
+/// Demuxer 将使用 avio_open，调用者不应提供打开的文件。
 #define AVFMT_NOFILE        0x0001
-#define AVFMT_NEEDNUMBER    0x0002 /**< Needs '%d' in filename. */
+#define AVFMT_NEEDNUMBER    0x0002 /**< 文件名中需要“%d”。 */
 /**
- * The muxer/demuxer is experimental and should be used with caution.
+ * 复用器/解复用器是实验性的，应谨慎使用。
  *
- * It will not be selected automatically, and must be specified explicitly.
+ * 不会自动选择，必须明确指定。
  */
 #define AVFMT_EXPERIMENTAL  0x0004
-#define AVFMT_SHOW_IDS      0x0008 /**< Show format stream IDs numbers. */
-#define AVFMT_GLOBALHEADER  0x0040 /**< Format wants global header. */
-#define AVFMT_NOTIMESTAMPS  0x0080 /**< Format does not need / have any timestamps. */
-#define AVFMT_GENERIC_INDEX 0x0100 /**< Use generic index building code. */
-#define AVFMT_TS_DISCONT    0x0200 /**< Format allows timestamp discontinuities. Note, muxers always require valid (monotone) timestamps */
-#define AVFMT_VARIABLE_FPS  0x0400 /**< Format allows variable fps. */
-#define AVFMT_NODIMENSIONS  0x0800 /**< Format does not need width/height */
-#define AVFMT_NOSTREAMS     0x1000 /**< Format does not require any streams */
-#define AVFMT_NOBINSEARCH   0x2000 /**< Format does not allow to fall back on binary search via read_timestamp */
-#define AVFMT_NOGENSEARCH   0x4000 /**< Format does not allow to fall back on generic search */
-#define AVFMT_NO_BYTE_SEEK  0x8000 /**< Format does not allow seeking by bytes */
-#define AVFMT_TS_NONSTRICT 0x20000 /**< Format does not require strictly
-                                        increasing timestamps, but they must
-                                        still be monotonic */
-#define AVFMT_TS_NEGATIVE  0x40000 /**< Format allows muxing negative
-                                        timestamps. If not set the timestamp
-                                        will be shifted in av_write_frame and
-                                        av_interleaved_write_frame so they
-                                        start from 0.
-                                        The user or muxer can override this through
-                                        AVFormatContext.avoid_negative_ts
-                                        */
-#define AVFMT_FIXED_FRAMESIZE 0x80000 /**< Format wants @ref AVCodecParameters.frame_size "fixed size audio frames." */
+#define AVFMT_SHOW_IDS      0x0008 /**< 显示格式流 ID 编号。 */
+#define AVFMT_GLOBALHEADER  0x0040 /**< 格式需要全局标头。 */
+#define AVFMT_NOTIMESTAMPS  0x0080 /**< 格式不需要/有任何时间戳。 */
+#define AVFMT_GENERIC_INDEX 0x0100 /**< 使用通用索引构建代码。 */
+#define AVFMT_TS_DISCONT    0x0200 /**< 格式允许时间戳不连续。请注意，复用器始终需要有效（单调）时间戳 */
+#define AVFMT_VARIABLE_FPS  0x0400 /**< 格式允许可变 fps。 */
+#define AVFMT_NODIMENSIONS  0x0800 /**< 格式不需要宽度/高度 */
+#define AVFMT_NOSTREAMS     0x1000 /**< 格式不需要任何流 */
+#define AVFMT_NOBINSEARCH   0x2000 /**< 格式不允许通过 read_timestamp 回退到二分搜索 */
+#define AVFMT_NOGENSEARCH   0x4000 /**< 格式不允许回退到通用搜索 */
+#define AVFMT_NO_BYTE_SEEK  0x8000 /**< 格式不允许按字节查找 */
+#define AVFMT_TS_NONSTRICT 0x20000 /**
+ * < 格式不需要严格增加时间戳，但它们仍然必须是单调的
+ */
+#define AVFMT_TS_NEGATIVE  0x40000 /**
+ * < 格式允许混合负时间戳。如果未设置，时间戳将在 av_write_frame 和 av_interleaved_write_frame 中移动，因此它们从 0 开始。用户或复用器可以通过 AVFormatContext.avoid_negative_ts
+ */
+#define AVFMT_FIXED_FRAMESIZE 0x80000 /**覆盖此设置<格式需要@ref AVCodecParameters.frame_size“固定大小的音频帧”。 */
 
-#define AVFMT_SEEK_TO_PTS   0x4000000 /**< Seeking is based on PTS */
+#define AVFMT_SEEK_TO_PTS   0x4000000 /**< 搜索基于 PTS */
 
 /**
  * @addtogroup lavf_encoding
@@ -526,33 +371,27 @@ typedef struct AVProbeData {
 typedef struct AVOutputFormat {
     const char *name;
     /**
-     * Descriptive name for the format, meant to be more human-readable
-     * than name. You should use the NULL_IF_CONFIG_SMALL() macro
-     * to define it.
-     */
+ * 格式的描述性名称，意味着比名称更易于理解。您应该使用 NULL_IF_CONFIG_SMALL() 宏来定义它。
+ */
     const char *long_name;
     const char *mime_type;
-    const char *extensions; /**< comma-separated filename extensions */
-    /* output support */
-    enum AVCodecID audio_codec;    /**< default audio codec */
-    enum AVCodecID video_codec;    /**< default video codec */
-    enum AVCodecID subtitle_codec; /**< default subtitle codec */
+    const char *extensions; /**< 逗号分隔的文件扩展名 */
+    /* 输出支持 */
+    enum AVCodecID audio_codec;    /**< 默认音频编解码器 */
+    enum AVCodecID video_codec;    /**< 默认视频编解码器 */
+    enum AVCodecID subtitle_codec; /**< 默认字幕编解码器 */
     /**
-     * can use flags: AVFMT_NOFILE, AVFMT_NEEDNUMBER, AVFMT_EXPERIMENTAL,
-     * AVFMT_GLOBALHEADER, AVFMT_NOTIMESTAMPS, AVFMT_VARIABLE_FPS,
-     * AVFMT_NODIMENSIONS, AVFMT_NOSTREAMS,
-     * AVFMT_TS_NONSTRICT, AVFMT_TS_NEGATIVE, AVFMT_FIXED_FRAMESIZE
-     */
+ * 可以使用标志：AVFMT_NOFILE、AVFMT_NEEDNUMBER、AVFMT_EXPERIMENTAL、AVFMT_GLOBALHEADER、AVFMT_NOTIMESTAMPS、AVFMT_VARIABLE_FPS、AVFMT_NODIMENSIONS、AVFMT_NOSTREAMS、AVFMT_TS_NONSTRICT、AVFMT_TS_NEGATIVE、 AVFMT_FIXED_FRAMESIZE
+ */
     int flags;
 
     /**
-     * List of supported codec_id-codec_tag pairs, ordered by "better
-     * choice first". The arrays are all terminated by AV_CODEC_ID_NONE.
-     */
+ * 支持的 codec_id-codec_tag 对列表，按“更好的选择优先”排序。数组均以 AV_CODEC_ID_NONE 终止。
+ */
     const struct AVCodecTag * const *codec_tag;
 
 
-    const AVClass *priv_class; ///< AVClass for the private context
+    const AVClass *priv_class; ///< 私有上下文的 AVClass
 } AVOutputFormat;
 /**
  * @}
@@ -564,42 +403,33 @@ typedef struct AVOutputFormat {
  */
 typedef struct AVInputFormat {
     /**
-     * A comma separated list of short names for the format. New names
-     * may be appended with a minor bump.
-     */
+ * 格式的短名称的逗号分隔列表。新名称可能会附加一个小凸起。
+ */
     const char *name;
 
     /**
-     * Descriptive name for the format, meant to be more human-readable
-     * than name. You should use the NULL_IF_CONFIG_SMALL() macro
-     * to define it.
-     */
+ * 格式的描述性名称，比名称更易于理解。您应该使用 NULL_IF_CONFIG_SMALL() 宏来定义它。
+ */
     const char *long_name;
 
     /**
-     * Can use flags: AVFMT_NOFILE, AVFMT_NEEDNUMBER, AVFMT_EXPERIMENTAL,
-     * AVFMT_SHOW_IDS, AVFMT_NOTIMESTAMPS, AVFMT_GENERIC_INDEX,
-     * AVFMT_TS_DISCONT, AVFMT_NOBINSEARCH, AVFMT_NOGENSEARCH,
-     * AVFMT_NO_BYTE_SEEK, AVFMT_SEEK_TO_PTS.
-     */
+ * 可以使用标志：AVFMT_NOFILE、AVFMT_NEEDNUMBER、AVFMT_EXPERIMENTAL、AVFMT_SHOW_IDS、AVFMT_NOTIMESTAMPS、AVFMT_GENERIC_INDEX、AVFMT_TS_DISCONT、AVFMT_NOBINSEARCH、 AVFMT_NOGENSEARCH、AVFMT_NO_BYTE_SEEK、AVFMT_SEEK_TO_PTS。
+ */
     int flags;
 
     /**
-     * If extensions are defined, then no probe is done. You should
-     * usually not use extension format guessing because it is not
-     * reliable enough
-     */
+ * 如果定义了扩展，则不会进行任何探测。您通常不应该使用扩展格式猜测，因为它不够可靠
+ */
     const char *extensions;
 
     const struct AVCodecTag * const *codec_tag;
 
-    const AVClass *priv_class; ///< AVClass for the private context
+    const AVClass *priv_class; ///< AVClass 对于私有上下文
 
     /**
-     * Comma-separated list of mime types.
-     * It is used check for matching mime types while probing.
-     * @see av_probe_input_format2
-     */
+ * 以逗号分隔的 MIME 类型列表。它用于在探测时检查匹配的 mime 类型。
+ * @see av_probe_input_format2
+ */
     const char *mime_type;
 } AVInputFormat;
 /**
@@ -608,326 +438,241 @@ typedef struct AVInputFormat {
 
 enum AVStreamParseType {
     AVSTREAM_PARSE_NONE,
-    AVSTREAM_PARSE_FULL,       /**< full parsing and repack */
-    AVSTREAM_PARSE_HEADERS,    /**< Only parse headers, do not repack. */
-    AVSTREAM_PARSE_TIMESTAMPS, /**< full parsing and interpolation of timestamps for frames not starting on a packet boundary */
-    AVSTREAM_PARSE_FULL_ONCE,  /**< full parsing and repack of the first frame only, only implemented for H.264 currently */
-    AVSTREAM_PARSE_FULL_RAW,   /**< full parsing and repack with timestamp and position generation by parser for raw
-                                    this assumes that each packet in the file contains no demuxer level headers and
-                                    just codec level data, otherwise position generation would fail */
+    AVSTREAM_PARSE_FULL,       /**< 完全解析和重新打包 */
+    AVSTREAM_PARSE_HEADERS,    /**< 仅解析标头，不重新打包。 */
+    AVSTREAM_PARSE_TIMESTAMPS, /**< 对不在数据包边界上开始的帧进行时间戳的完全解析和插值 */
+    AVSTREAM_PARSE_FULL_ONCE,  /**< 仅对第一帧进行完全解析和重新打包，当前仅针对 H.264 实现 */
+    AVSTREAM_PARSE_FULL_RAW,   /**
+ * < 完全解析和重新打包，并由解析器生成原始的时间戳和位置假设文件中的每个数据包不包含解复用器级别标头，而仅包含编解码器级别数据，否则位置生成将失败
+ */
 };
 
 typedef struct AVIndexEntry {
     int64_t pos;
-    int64_t timestamp;        /**<
-                               * Timestamp in AVStream.time_base units, preferably the time from which on correctly decoded frames are available
-                               * when seeking to this entry. That means preferable PTS on keyframe based formats.
-                               * But demuxers can choose to store a different timestamp, if it is more convenient for the implementation or nothing better
-                               * is known
-                               */
+    int64_t timestamp;        /**
+ * <
+ * AVStream.time_base 单位中的时间戳，最好是在查找此条目时正确解码的帧可用的时间。这意味着基于关键帧的格式更适合 PTS。但解复用器可以选择存储不同的时间戳，如果这样更方便实现或者没有更好的已知的话
+ */
 #define AVINDEX_KEYFRAME 0x0001
 #define AVINDEX_DISCARD_FRAME  0x0002    /**
-                                          * Flag is used to indicate which frame should be discarded after decoding.
-                                          */
+ * 标志用于指示解码后应丢弃哪个帧。
+ */
     int flags:2;
-    int size:30; //Yeah, trying to keep the size of this small to reduce memory requirements (it is 24 vs. 32 bytes due to possible 8-byte alignment).
-    int min_distance;         /**< Minimum distance between this and the previous keyframe, used to avoid unneeded searching. */
+    int size:30; //是的，尝试保持较小的大小以减少内存需求（由于可能的 8 字节对齐，它是 24 与 32 字节）。
+    int min_distance;         /**< 此关键帧与上一个关键帧之间的最小距离，用于避免不必要的搜索。 */
 } AVIndexEntry;
 
 /**
- * The stream should be chosen by default among other streams of the same type,
- * unless the user has explicitly specified otherwise.
+ * 除非用户明确指定，否则应在同一类型的其他流中默认选择该流。
  */
 #define AV_DISPOSITION_DEFAULT              (1 << 0)
 /**
- * The stream is not in original language.
+ * 该流不是原始语言。
  *
- * @note AV_DISPOSITION_ORIGINAL is the inverse of this disposition. At most
- *       one of them should be set in properly tagged streams.
- * @note This disposition may apply to any stream type, not just audio.
+ * @note AV_DISPOSITION_ORIGINAL 是此配置的逆过程。最多应将其中之一设置在正确标记的流中。
+ * @note 此配置可以适用于任何流类型，而不仅仅是音频。
  */
 #define AV_DISPOSITION_DUB                  (1 << 1)
 /**
- * The stream is in original language.
+ * 该直播为原始语言。
  *
- * @see the notes for AV_DISPOSITION_DUB
+ * @see AV_DISPOSITION_DUB 的注释
  */
 #define AV_DISPOSITION_ORIGINAL             (1 << 2)
 /**
- * The stream is a commentary track.
+ * 该流是评论曲目。
  */
 #define AV_DISPOSITION_COMMENT              (1 << 3)
 /**
- * The stream contains song lyrics.
+ * 该流包含歌词。
  */
 #define AV_DISPOSITION_LYRICS               (1 << 4)
 /**
- * The stream contains karaoke audio.
+ * 该流包含卡拉 OK 音频。默认情况下，播放期间应使用
  */
 #define AV_DISPOSITION_KARAOKE              (1 << 5)
 
 /**
- * Track should be used during playback by default.
- * Useful for subtitle track that should be displayed
- * even when user did not explicitly ask for subtitles.
+ * 轨道。对于即使用户没有明确要求字幕也应该显示的字幕轨道很有用。
  */
 #define AV_DISPOSITION_FORCED               (1 << 6)
 /**
- * The stream is intended for hearing impaired audiences.
+ * 该直播面向听力受损的观众。
  */
 #define AV_DISPOSITION_HEARING_IMPAIRED     (1 << 7)
 /**
- * The stream is intended for visually impaired audiences.
+ * 该直播面向视障观众。
  */
 #define AV_DISPOSITION_VISUAL_IMPAIRED      (1 << 8)
 /**
- * The audio stream contains music and sound effects without voice.
+ * 音频流包含音乐和音效，但不含语音。
  */
 #define AV_DISPOSITION_CLEAN_EFFECTS        (1 << 9)
 /**
- * The stream is stored in the file as an attached picture/"cover art" (e.g.
- * APIC frame in ID3v2). The first (usually only) packet associated with it
- * will be returned among the first few packets read from the file unless
- * seeking takes place. It can also be accessed at any time in
- * AVStream.attached_pic.
+ * 该流作为附加图片/“封面艺术”存储在文件中（例如 ID3v2 中的 APIC 帧）。除非发生查找，否则与其关联的第一个（通常是唯一）数据包将在从文件读取的前几个数据包中返回。也可以随时在AVStream.attached_pic中访问。
  */
 #define AV_DISPOSITION_ATTACHED_PIC         (1 << 10)
 /**
- * The stream is sparse, and contains thumbnail images, often corresponding
- * to chapter markers. Only ever used with AV_DISPOSITION_ATTACHED_PIC.
+ * 该流是稀疏的，并且包含缩略图，通常对应于章节标记。仅与 AV_DISPOSITION_ATTACHED_PIC 一起使用。
  */
 #define AV_DISPOSITION_TIMED_THUMBNAILS     (1 << 11)
 
 /**
- * The stream is intended to be mixed with a spatial audio track. For example,
- * it could be used for narration or stereo music, and may remain unchanged by
- * listener head rotation.
+ * 该流旨在与空间音轨混合。例如，它可以用于旁白或立体声音乐，并且可以通过听众头部旋转而保持不变。
  */
 #define AV_DISPOSITION_NON_DIEGETIC         (1 << 12)
 
 /**
- * The subtitle stream contains captions, providing a transcription and possibly
- * a translation of audio. Typically intended for hearing-impaired audiences.
+ * 字幕流包含字幕，提供转录并可能提供音频翻译。通常面向有听力障碍的观众。
  */
 #define AV_DISPOSITION_CAPTIONS             (1 << 16)
 /**
- * The subtitle stream contains a textual description of the video content.
- * Typically intended for visually-impaired audiences or for the cases where the
- * video cannot be seen.
+ * 字幕流包含视频内容的文本描述。通常适用于视障观众或无法观看视频的情况。
  */
 #define AV_DISPOSITION_DESCRIPTIONS         (1 << 17)
 /**
- * The subtitle stream contains time-aligned metadata that is not intended to be
- * directly presented to the user.
+ * 字幕流包含不打算直接呈现给用户的时间对齐元数据。
  */
 #define AV_DISPOSITION_METADATA             (1 << 18)
 /**
- * The stream is intended to be mixed with another stream before presentation.
- * Used for example to signal the stream contains an image part of a HEIF grid,
- * or for mix_type=0 in mpegts.
+ * 该流旨在在呈现之前与另一个流混合。例如，用于指示流包含 HEIF 网格的图像部分，或用于 mpegts 中的 mix_type=0。
  */
 #define AV_DISPOSITION_DEPENDENT            (1 << 19)
 /**
- * The video stream contains still images.
+ * 视频流包含静止图像。
  */
 #define AV_DISPOSITION_STILL_IMAGE          (1 << 20)
 /**
- * The video stream contains multiple layers, e.g. stereoscopic views (cf. H.264
- * Annex G/H, or HEVC Annex F).
+ * 视频流包含多个层，例如立体视图（参见 H.264 附件 G/H 或 HEVC 附件 F）。
  */
 #define AV_DISPOSITION_MULTILAYER           (1 << 21)
 
 /**
- * @return The AV_DISPOSITION_* flag corresponding to disp or a negative error
- *         code if disp does not correspond to a known stream disposition.
+ * @return AV_DISPOSITION_* 标志对应于 disp 或负错误代码（如果 disp 不对应于已知的流配置）。
  */
 int av_disposition_from_string(const char *disp);
 
 /**
- * @param disposition a combination of AV_DISPOSITION_* values
- * @return The string description corresponding to the lowest set bit in
- *         disposition. NULL when the lowest set bit does not correspond
- *         to a known disposition or when disposition is 0.
+ * @param disposition AV_DISPOSITION_* 值的组合
+ * @return 对应于处置中最低设置位的字符串描述。当最低设置位不对应于已知配置或当配置为 0 时，为 NULL。
  */
 const char *av_disposition_to_string(int disposition);
 
 /**
- * Options for behavior on timestamp wrap detection.
+ * 时间戳回绕检测的行为选项。
  */
-#define AV_PTS_WRAP_IGNORE      0   ///< ignore the wrap
-#define AV_PTS_WRAP_ADD_OFFSET  1   ///< add the format specific offset on wrap detection
-#define AV_PTS_WRAP_SUB_OFFSET  -1  ///< subtract the format specific offset on wrap detection
+#define AV_PTS_WRAP_IGNORE      0   ///< 忽略换行
+#define AV_PTS_WRAP_ADD_OFFSET  1   ///< 添加换行检测时的​​格式特定偏移
+#define AV_PTS_WRAP_SUB_OFFSET  -1  ///< 减去换行检测时的​​格式特定偏移
 
 /**
- * Stream structure.
- * New fields can be added to the end with minor version bumps.
- * Removal, reordering and changes to existing fields require a major
- * version bump.
- * sizeof(AVStream) must not be used outside libav*.
+ * 流结构。新字段可以添加到末尾并进行较小的版本更新。对现有字段的删除、重新排序和更改需要主要版本更新。 sizeof(AVStream) 不得在 libav* 之外使用。
  */
 typedef struct AVStream {
     /**
-     * A class for @ref avoptions. Set on stream creation.
-     */
+ * @ref avoptions 的类。设置流创建。
+ */
     const AVClass *av_class;
 
-    int index;    /**< stream index in AVFormatContext */
+    int index;    /**< AVFormatContext 中的流索引 */
     /**
-     * Format-specific stream ID.
-     * decoding: set by libavformat
-     * encoding: set by the user, replaced by libavformat if left unset
-     */
+ * 格式特定的流 ID。解码：由 libavformat 设置 编码：由用户设置，如果未设置，则替换为 libavformat
+ */
     int id;
 
     /**
-     * Codec parameters associated with this stream. Allocated and freed by
-     * libavformat in avformat_new_stream() and avformat_free_context()
-     * respectively.
-     *
-     * - demuxing: filled by libavformat on stream creation or in
-     *             avformat_find_stream_info()
-     * - muxing: filled by the caller before avformat_write_header()
-     */
+ * 与此流关联的编解码器参数。由 libavformat 分别在 avformat_new_stream() 和 avformat_free_context() 中分配和释放。
+ *
+ * - 解复用：在流创建时或在 avformat_find_stream_info() 中由 libavformat 填充 - 复用：在 avformat_write_header() 之前由调用者填充
+ */
     AVCodecParameters *codecpar;
 
     void *priv_data;
 
     /**
-     * This is the fundamental unit of time (in seconds) in terms
-     * of which frame timestamps are represented.
-     *
-     * decoding: set by libavformat
-     * encoding: May be set by the caller before avformat_write_header() to
-     *           provide a hint to the muxer about the desired timebase. In
-     *           avformat_write_header(), the muxer will overwrite this field
-     *           with the timebase that will actually be used for the timestamps
-     *           written into the file (which may or may not be related to the
-     *           user-provided one, depending on the format).
-     */
+ * 这是表示帧时间戳的基本时间单位（以秒为单位）。
+ *
+ * 解码：由 libavformat 设置 编码：可以由调用者在 avformat_write_header() 之前设置，以向复用器提供有关所需时基的提示。在 avformat_write_header() 中，复用器将使用实际用于写入文件的时间戳的时基覆盖此字段（该时基可能与用户提供的时间戳相关，也可能无关，具体取决于格式）。
+ */
     AVRational time_base;
 
     /**
-     * Decoding: pts of the first frame of the stream in presentation order, in stream time base.
-     * Only set this if you are absolutely 100% sure that the value you set
-     * it to really is the pts of the first frame.
-     * This may be undefined (AV_NOPTS_VALUE).
-     * @note The ASF header does NOT contain a correct start_time the ASF
-     * demuxer must NOT set this.
-     */
+ * 解码：流时基中按呈现顺序排列的流第一帧的点。仅当您绝对 100% sure 确定您设置的值确实是第一帧的 pts 时才设置此值。这可能是未定义的（AV_NOPTS_VALUE）。
+ * @note ASF 标头不包含正确的 start_time，ASF 解复用器不得设置此值。
+ */
     int64_t start_time;
 
     /**
-     * Decoding: duration of the stream, in stream time base.
-     * If a source file does not specify a duration, but does specify
-     * a bitrate, this value will be estimated from bitrate and file size.
-     *
-     * Encoding: May be set by the caller before avformat_write_header() to
-     * provide a hint to the muxer about the estimated duration.
-     */
+ * 解码：流的持续时间，以流时基为单位。如果源文件未指定持续时间，但指定了比特率，则将根据比特率和文件大小估计该值。
+ *
+ * 编码：可以由调用者在 avformat_write_header() 之前设置，以向复用器提供有关估计持续时间的提示。
+ */
     int64_t duration;
 
-    int64_t nb_frames;                 ///< number of frames in this stream if known or 0
+    int64_t nb_frames;                 ///< 此流中的帧数（如果已知）或 0
 
     /**
-     * Stream disposition - a combination of AV_DISPOSITION_* flags.
-     * - demuxing: set by libavformat when creating the stream or in
-     *             avformat_find_stream_info().
-     * - muxing: may be set by the caller before avformat_write_header().
-     */
+ * 流配置 - AV_DISPOSITION_* 标志的组合。 - 解复用：在创建流时或在 avformat_find_stream_info() 中由 libavformat 设置。 - 多路复用：可以由调用者在 avformat_write_header() 之前设置。
+ */
     int disposition;
 
-    enum AVDiscard discard; ///< Selects which packets can be discarded at will and do not need to be demuxed.
+    enum AVDiscard discard; ///< 选择哪些数据包可以随意丢弃，不需要解复用。
 
     /**
-     * sample aspect ratio (0 if unknown)
-     * - encoding: Set by user.
-     * - decoding: Set by libavformat.
-     */
+ * 样本宽高比（如果未知则为 0） - 编码：由用户设置。 - 解码：由 libavformat 设置。
+ */
     AVRational sample_aspect_ratio;
 
     AVDictionary *metadata;
 
     /**
-     * Average framerate
-     *
-     * - demuxing: May be set by libavformat when creating the stream or in
-     *             avformat_find_stream_info().
-     * - muxing: May be set by the caller before avformat_write_header().
-     */
+ * 平均帧速率
+ *
+ * - 解复用：可以在创建流时或在 avformat_find_stream_info() 中由 libavformat 设置。 - 多路复用：可以由调用者在 avformat_write_header() 之前设置。
+ */
     AVRational avg_frame_rate;
 
     /**
-     * For streams with AV_DISPOSITION_ATTACHED_PIC disposition, this packet
-     * will contain the attached picture.
-     *
-     * decoding: set by libavformat, must not be modified by the caller.
-     * encoding: unused
-     */
+ * 对于具有 AV_DISPOSITION_ATTACHED_PIC 配置的流，此数据包将包含附加图片。
+ *
+ * 解码：由 libavformat 设置，调用者不得修改。编码：未使用
+ */
     AVPacket attached_pic;
 
     /**
-     * Flags indicating events happening on the stream, a combination of
-     * AVSTREAM_EVENT_FLAG_*.
-     *
-     * - demuxing: may be set by the demuxer in avformat_open_input(),
-     *   avformat_find_stream_info() and av_read_frame(). Flags must be cleared
-     *   by the user once the event has been handled.
-     * - muxing: may be set by the user after avformat_write_header(). to
-     *   indicate a user-triggered event.  The muxer will clear the flags for
-     *   events it has handled in av_[interleaved]_write_frame().
-     */
+ * 指示流上发生的事件的标志，AVSTREAM_EVENT_FLAG_* 的组合。
+ *
+ * - 解复用：可以由解复用器在 avformat_open_input()、avformat_find_stream_info() 和 av_read_frame() 中设置。处理事件后，用户必须清除标志。 - 多路复用：可以由用户在 avformat_write_header() 之后设置。指示用户触发的事件。  复用器将清除它在 av_[interleaved]_write_frame() 中处理的事件的标志。
+ */
     int event_flags;
 /**
- * - demuxing: the demuxer read new metadata from the file and updated
- *     AVStream.metadata accordingly
- * - muxing: the user updated AVStream.metadata and wishes the muxer to write
- *     it into the file
+ * - 解复用：解复用器从文件中读取新的元数据并相应地更新 AVStream.metadata - 复用：用户更新了 AVStream.metadata 并希望复用器将其写入文件
  */
 #define AVSTREAM_EVENT_FLAG_METADATA_UPDATED 0x0001
 /**
- * - demuxing: new packets for this stream were read from the file. This
- *   event is informational only and does not guarantee that new packets
- *   for this stream will necessarily be returned from av_read_frame().
+ * - 解复用：从文件中读取该流的新数据包。此事件仅供参考，并不保证该流的新数据包一定会从 av_read_frame() 返回。
  */
 #define AVSTREAM_EVENT_FLAG_NEW_PACKETS (1 << 1)
 
     /**
-     * Real base framerate of the stream.
-     * This is the lowest framerate with which all timestamps can be
-     * represented accurately (it is the least common multiple of all
-     * framerates in the stream). Note, this value is just a guess!
-     * For example, if the time base is 1/90000 and all frames have either
-     * approximately 3600 or 1800 timer ticks, then r_frame_rate will be 50/1.
-     */
+ * 流的实际基本帧速率。这是可以准确表示所有时间戳的最低帧速率（它是流中所有帧速率的最小公倍数）。请注意，该值只是一个猜测！例如，如果时基为 1/90000，并且所有帧都有大约 3600 或 1800 个计时器滴答，则 r_frame_rate 将为 50/1。
+ */
     AVRational r_frame_rate;
 
     /**
-     * Number of bits in timestamps. Used for wrapping control.
-     *
-     * - demuxing: set by libavformat
-     * - muxing: set by libavformat
-     *
-     */
+ * 时间戳中的位数。用于包裹控制。
+ *
+ * - 解复用：由 libavformat 设置 - 复用：由 libavformat 设置
+ */
     int pts_wrap_bits;
 } AVStream;
 
 /**
- * AVStreamGroupTileGrid holds information on how to combine several
- * independent images on a single canvas for presentation.
+ * AVStreamGroupTileGrid 保存有关如何在单个画布上组合多个独立图像以进行演示的信息。
  *
- * The output should be a @ref AVStreamGroupTileGrid.background "background"
- * colored @ref AVStreamGroupTileGrid.coded_width "coded_width" x
- * @ref AVStreamGroupTileGrid.coded_height "coded_height" canvas where a
- * @ref AVStreamGroupTileGrid.nb_tiles "nb_tiles" amount of tiles are placed in
- * the order they appear in the @ref AVStreamGroupTileGrid.offsets "offsets"
- * array, at the exact offset described for them. In particular, if two or more
- * tiles overlap, the image with higher index in the
- * @ref AVStreamGroupTileGrid.offsets "offsets" array takes priority.
- * Note that a single image may be used multiple times, i.e. multiple entries
- * in @ref AVStreamGroupTileGrid.offsets "offsets" may have the same value of
- * idx.
+ * 输出应该是@ref AVStreamGroupTileGrid.background“背景”彩色@ref AVStreamGroupTileGrid.coded_width“coded_width”x @ref AVStreamGroupTileGrid.coded_height“coded_height”画布，其中@ref AVStreamGroupTileGrid.nb_tiles“nb_tiles”数量的图块按照它们在@ref AVStreamGroupTileGrid.offsets中出现的顺序放置“offsets”数组，位于为它们描述的确切偏移量处。特别是，如果两个或多个图块重叠，则 @ref AVStreamGroupTileGrid.offsets“offsets”数组中索引较高的图像优先。请注意，单个图像可以多次使用，即@ref AVStreamGroupTileGrid.offsets“offsets”中的多个条目可能具有相同的 idx 值。
  *
- * The following is an example of a simple grid with 3 rows and 4 columns:
+ * 以下是一个 3 行 4 列的简单网格示例：
  *
  * +---+---+---+---+
  * | 0 | 1 | 2 | 3 |
@@ -937,211 +682,165 @@ typedef struct AVStream {
  * | 8 | 9 |10 |11 |
  * +---+---+---+---+
  *
- * Assuming all tiles have a dimension of 512x512, the
- * @ref AVStreamGroupTileGrid.offsets "offset" of the topleft pixel of
- * the first @ref AVStreamGroup.streams "stream" in the group is "0,0", the
- * @ref AVStreamGroupTileGrid.offsets "offset" of the topleft pixel of
- * the second @ref AVStreamGroup.streams "stream" in the group is "512,0", the
- * @ref AVStreamGroupTileGrid.offsets "offset" of the topleft pixel of
- * the fifth @ref AVStreamGroup.streams "stream" in the group is "0,512", the
- * @ref AVStreamGroupTileGrid.offsets "offset", of the topleft pixel of
- * the sixth @ref AVStreamGroup.streams "stream" in the group is "512,512",
- * etc.
+ * 假设所有图块的尺寸为 512x512，则组中第一个 @ref AVStreamGroup.streams“流”的左上角像素的 @ref AVStreamGroupTileGrid.offsets“偏移量”为“0,0”，组中第二个@ref AVStreamGroup.streams“流”的左上角像素的@ref AVStreamGroupTileGrid.offsets“偏移”是“512,0”，组中第五个@ref AVStreamGroup.streams“流”的@ref AVStreamGroupTileGrid.offsets“偏移”是“0,512”，@ref AVStreamGroupTileGrid.offsets 组中第六个@ref AVStreamGroup.streams“流”的左上角像素的“偏移量”为“512,512”等。
  *
- * The following is an example of a canvas with overlapping tiles:
+ * 以下是具有重叠图块的画布的示例：
  *
  * +-----------+
- * |   %%%%%   |
- * |***%%3%%@@@|
- * |**0%%%%%2@@|
- * |***##1@@@@@|
- * |   #####   |
+ * |   %%%%%   | |***%%3%%@@@| |**0%%%%%2@@| |***##1@@@@@| |   #####   |
  * +-----------+
  *
- * Assuming a canvas with size 1024x1024 and all tiles with a dimension of
- * 512x512, a possible @ref AVStreamGroupTileGrid.offsets "offset" for the
- * topleft pixel of the first @ref AVStreamGroup.streams "stream" in the group
- * would be 0x256, the @ref AVStreamGroupTileGrid.offsets "offset" for the
- * topleft pixel of the second @ref AVStreamGroup.streams "stream" in the group
- * would be 256x512, the @ref AVStreamGroupTileGrid.offsets "offset" for the
- * topleft pixel of the third @ref AVStreamGroup.streams "stream" in the group
- * would be 512x256, and the @ref AVStreamGroupTileGrid.offsets "offset" for
- * the topleft pixel of the fourth @ref AVStreamGroup.streams "stream" in the
- * group would be 256x0.
+ * 假设画布尺寸为 1024x1024，所有图块尺寸为 512x512，组中第一个 @ref AVStreamGroup.streams“流”的左上角像素的可能 @ref AVStreamGroupTileGrid.offsets“偏移”为 0x256，第二个 @ref 左上角像素的 @ref AVStreamGroupTileGrid.offsets“偏移”组中的 AVStreamGroup.streams“流”将为 256x512，组中第三个 @ref AVStreamGroup.streams“流”的左上角像素的 @ref AVStreamGroupTileGrid.offsets“偏移”将为 512x256，组中第四个 @ref AVStreamGroup.streams“流”的左上角像素的 @ref AVStreamGroupTileGrid.offsets“偏移”将是 256x0。
  *
- * sizeof(AVStreamGroupTileGrid) is not a part of the ABI and may only be
- * allocated by avformat_stream_group_create().
+ * sizeof(AVStreamGroupTileGrid) 不是 ABI 的一部分，只能由 avformat_stream_group_create() 分配。
  */
 typedef struct AVStreamGroupTileGrid {
     const AVClass *av_class;
 
     /**
-     * Amount of tiles in the grid.
-     *
-     * Must be > 0.
-     */
+ * 网格中的图块数量。
+ *
+ * 必须 > 0。
+ */
     unsigned int nb_tiles;
 
     /**
-     * Width of the canvas.
-     *
-     * Must be > 0.
-     */
+ * 画布的宽度。
+ *
+ * 必须 > 0。
+ */
     int coded_width;
     /**
-     * Width of the canvas.
-     *
-     * Must be > 0.
-     */
+ * 画布的宽度。
+ *
+ * 必须 > 0。
+ */
     int coded_height;
 
     /**
-     * An @ref nb_tiles sized array of offsets in pixels from the topleft edge
-     * of the canvas, indicating where each stream should be placed.
-     * It must be allocated with the av_malloc() family of functions.
-     *
-     * - demuxing: set by libavformat, must not be modified by the caller.
-     * - muxing: set by the caller before avformat_write_header().
-     *
-     * Freed by libavformat in avformat_free_context().
-     */
+ * @ref nb_tiles 大小的数组，以像素为单位距画布左上角边缘的偏移量，指示每个流应放置的位置。它必须使用 av_malloc() 系列函数进行分配。
+ *
+ * - 解复用：由 libavformat 设置，调用者不得修改。 - 混合：由调用者在 avformat_write_header() 之前设置。
+ *
+ * 由 libavformat 在 avformat_free_context() 中释放。
+ */
     struct {
         /**
-         * Index of the stream in the group this tile references.
-         *
-         * Must be < @ref AVStreamGroup.nb_streams "nb_streams".
-         */
+ * 此图块引用的组中流的索引。
+ *
+ * 必须是 < @ref AVStreamGroup.nb_streams "nb_streams"。
+ */
         unsigned int idx;
         /**
-         * Offset in pixels from the left edge of the canvas where the tile
-         * should be placed.
-         */
+ * 距应放置图块的画布左边缘的偏移量（以像素为单位）。
+ */
         int horizontal;
         /**
-         * Offset in pixels from the top edge of the canvas where the tile
-         * should be placed.
-         */
+ * 距应放置图块的画布上边缘的偏移量（以像素为单位）。
+ */
         int vertical;
     } *offsets;
 
     /**
-     * The pixel value per channel in RGBA format used if no pixel of any tile
-     * is located at a particular pixel location.
-     *
-     * @see av_image_fill_color().
-     * @see av_parse_color().
-     */
+ * 如果任何图块的像素均不位于特定像素位置，则使用 RGBA 格式的每个通道的像素值。
+ *
+ * @see av_image_fill_color()。
+ * @see av_parse_color()。
+ */
     uint8_t background[4];
 
     /**
-     * Offset in pixels from the left edge of the canvas where the actual image
-     * meant for presentation starts.
-     *
-     * This field must be >= 0 and < @ref coded_width.
-     */
+ * 距画布左边缘（用于演示的实际图像开始处）的偏移量（以像素为单位）。
+ *
+ * 该字段必须 >= 0 且 < @ref coded_width。
+ */
     int horizontal_offset;
     /**
-     * Offset in pixels from the top edge of the canvas where the actual image
-     * meant for presentation starts.
-     *
-     * This field must be >= 0 and < @ref coded_height.
-     */
+ * 距画布上边缘（用于演示的实际图像开始处）的偏移量（以像素为单位）。
+ *
+ * 该字段必须 >= 0 且 < @ref coded_height。
+ */
     int vertical_offset;
 
     /**
-     * Width of the final image for presentation.
-     *
-     * Must be > 0 and <= (@ref coded_width - @ref horizontal_offset).
-     * When it's not equal to (@ref coded_width - @ref horizontal_offset), the
-     * result of (@ref coded_width - width - @ref horizontal_offset) is the
-     * amount amount of pixels to be cropped from the right edge of the
-     * final image before presentation.
-     */
+ * 用于演示的最终图像的宽度。
+ *
+ * 必须 > 0 且 <= (@ref coded_width - @ref Horizo​​ntal_offset)。当它不等于（@ref coded_width - @refhorizo​​ntal_offset）时，（@ref coded_width - width - @refhorizo​​ntal_offset）的结果是在呈现之前从最终图像的右边缘裁剪的像素量。
+ */
     int width;
     /**
-     * Height of the final image for presentation.
-     *
-     * Must be > 0 and <= (@ref coded_height - @ref vertical_offset).
-     * When it's not equal to (@ref coded_height - @ref vertical_offset), the
-     * result of (@ref coded_height - height - @ref vertical_offset) is the
-     * amount amount of pixels to be cropped from the bottom edge of the
-     * final image before presentation.
-     */
+ * 用于演示的最终图像的高度。
+ *
+ * 必须 > 0 且 <= (@ref coded_height - @ref Vertical_offset)。当它不等于（@ref coded_height - @ref Vertical_offset）时，（@ref coded_height - height - @ref Vertical_offset）的结果是在呈现之前从最终图像的底部边缘裁剪的像素量。
+ */
     int height;
 
     /**
-     * Additional data associated with the grid.
-     *
-     * Should be allocated with av_packet_side_data_new() or
-     * av_packet_side_data_add(), and will be freed by avformat_free_context().
-     */
+ * 与网格关联的附加数据。
+ *
+ * 应使用 av_packet_side_data_new() 或 av_packet_side_data_add() 分配，并将由 avformat_free_context() 释放。
+ */
     AVPacketSideData *coded_side_data;
 
     /**
-     * Amount of entries in @ref coded_side_data.
-     */
+ * @ref coded_side_data 中的条目数量。
+ */
     int nb_coded_side_data;
 } AVStreamGroupTileGrid;
 
 /**
- * AVStreamGroupLayeredVideo is meant to define the relation between a base
- * layer video stream and a separate enhancement layer stream that together
- * form a single layered video presentation (for example a video stream and a
- * data stream containing LCEVC enhancement layer NALUs, or Dolby Vision
- * Profile 7 dual-layer encoding).
+ * AVStreamGroupLayeredVideo 旨在定义共同形成单层视频呈现的基础层视频流和单独的增强层流之间的关系（例如，包含 LCEVC 增强层 NALU 或 Dolby Vision Profile 7 双层编码的视频流和数据流）。
  *
- * The enhancement layer stream is identified by @ref el_index.
+ * 增强层流由@ref el_index标识。
  */
 typedef struct AVStreamGroupLayeredVideo {
     const AVClass *av_class;
 
     /**
-     * Index of the enhancement layer stream in AVStreamGroup.
-     */
+ * AVStreamGroup 中增强层流的索引。
+ */
 #if FF_API_LCEVC_STRUCT
     union {
 #endif
         unsigned int el_index;
 #if FF_API_LCEVC_STRUCT
         /**
-         * Alias for @ref el_index, kept for backward compatibility.
-         */
+ * @ref el_index 的别名，保留是为了向后兼容。
+ */
         attribute_deprecated
         unsigned int lcevc_index;
     };
 #endif
     /**
-     * Width of the final stream for presentation.
-     */
+ * 用于演示的最终流的宽度。
+ */
     int width;
     /**
-     * Height of the final image for presentation.
-     */
+ * 用于演示的最终图像的高度。
+ */
     int height;
 } AVStreamGroupLayeredVideo;
 
 #if FF_API_LCEVC_STRUCT
 /**
- * Alias kept for backward compatibility.
+ * 保留别名以实现向后兼容性。
  *
- * AVStreamGroupLCEVC was renamed to @ref AVStreamGroupLayeredVideo.
+ * AVStreamGroupLCEVC 已重命名为@ref AVStreamGroupLayeredVideo。
  */
 #define AVStreamGroupLCEVC AVStreamGroupLayeredVideo
 #endif
 
 /**
- * AVStreamGroupTREF is meant to define the relation between video, audio,
- * or subtitle streams, and a data stream containing metadata.
+ * AVStreamGroupTREF 旨在定义视频、音频或字幕流与包含元数据的数据流之间的关系。
  *
- * No more than one stream of @ref AVCodecParameters.codec_type "codec_type"
- * AVMEDIA_TYPE_DATA shall be present.
+ * 不得存在超过一个 @ref AVCodecParameters.codec_type "codec_type" AVMEDIA_TYPE_DATA 的流。
  */
 typedef struct AVStreamGroupTREF {
     const AVClass *av_class;
 
     /**
-     * Index of the metadata stream in the AVStreamGroup.
-     */
+ * AVStreamGroup 中元数据流的索引。
+ */
     unsigned int metadata_index;
 } AVStreamGroupTREF;
 
@@ -1160,36 +859,34 @@ struct AVIAMFMixPresentation;
 
 typedef struct AVStreamGroup {
     /**
-     * A class for @ref avoptions. Set by avformat_stream_group_create().
-     */
+ * @ref avoptions 的类。由avformat_stream_group_create()设置。
+ */
     const AVClass *av_class;
 
     void *priv_data;
 
     /**
-     * Group index in AVFormatContext.
-     */
+ * AVFormatContext 中的组索引。
+ */
     unsigned int index;
 
     /**
-     * Group type-specific group ID.
-     *
-     * decoding: set by libavformat
-     * encoding: may set by the user
-     */
+ * 组类型特定的组 ID。
+ *
+ * 解码：由 libavformat 设置 编码：可由用户设置
+ */
     int64_t id;
 
     /**
-     * Group type
-     *
-     * decoding: set by libavformat on group creation
-     * encoding: set by avformat_stream_group_create()
-     */
+ * 组类型
+ *
+ * 解码：由 libavformat 在组创建时设置 编码：由 avformat_stream_group_create() 设置
+ */
     enum AVStreamGroupParamsType type;
 
     /**
-     * Group type-specific parameters
-     */
+ * 特定于组类型参数
+ */
     union {
         struct AVIAMFAudioElement *iamf_audio_element;
         struct AVIAMFMixPresentation *iamf_mix_presentation;
@@ -1197,8 +894,8 @@ typedef struct AVStreamGroup {
         struct AVStreamGroupLayeredVideo *layered_video;
 #if FF_API_LCEVC_STRUCT
         /**
-         * deprecated, use layered_video.
-         */
+ * 已弃用，使用 Layered_video。
+ */
         attribute_deprecated
         struct AVStreamGroupLCEVC *lcevc;
 #endif
@@ -1206,43 +903,35 @@ typedef struct AVStreamGroup {
     } params;
 
     /**
-     * Metadata that applies to the whole group.
-     *
-     * - demuxing: set by libavformat on group creation
-     * - muxing: may be set by the caller before avformat_write_header()
-     *
-     * Freed by libavformat in avformat_free_context().
-     */
+ * 适用于整个组的元数据。
+ *
+ * - 解复用：在创建组时由 libavformat 设置 - 复用：可以由调用者在 avformat_write_header() 之前设置
+ *
+ * 由 libavformat 在 avformat_free_context() 中释放。
+ */
     AVDictionary *metadata;
 
     /**
-     * Number of elements in AVStreamGroup.streams.
-     *
-     * Set by avformat_stream_group_add_stream() must not be modified by any other code.
-     */
+ * AVStreamGroup.streams 中的元素数量。
+ *
+ * 由 avformat_stream_group_add_stream() 设置的值不得被任何其他代码修改。
+ */
     unsigned int nb_streams;
 
     /**
-     * A list of streams in the group. New entries are created with
-     * avformat_stream_group_add_stream().
-     *
-     * - demuxing: entries are created by libavformat on group creation.
-     *             If AVFMTCTX_NOHEADER is set in ctx_flags, then new entries may also
-     *             appear in av_read_frame().
-     * - muxing: entries are created by the user before avformat_write_header().
-     *
-     * Freed by libavformat in avformat_free_context().
-     */
+ * 组中的流列表。使用 avformat_stream_group_add_stream() 创建新条目。
+ *
+ * - 解复用：条目由 libavformat 在创建组时创建。如果 ctx_flags 中设置了 AVFMTCTX_NOHEADER，则新条目也可能出现在 av_read_frame() 中。 - 混合：条目由用户在 avformat_write_header() 之前创建。
+ *
+ * 由 libavformat 在 avformat_free_context() 中释放。
+ */
     AVStream **streams;
 
     /**
-     * Stream group disposition - a combination of AV_DISPOSITION_* flags.
-     * This field currently applies to all defined AVStreamGroupParamsType.
-     *
-     * - demuxing: set by libavformat when creating the group or in
-     *             avformat_find_stream_info().
-     * - muxing: may be set by the caller before avformat_write_header().
-     */
+ * 流组处置 - AV_DISPOSITION_* 标志的组合。该字段当前适用于所有定义的 AVStreamGroupParamsType。
+ *
+ * - 解复用：在创建组时或在 avformat_find_stream_info() 中由 libavformat 设置。 - 多路复用：可以由调用者在 avformat_write_header() 之前设置。
+ */
     int disposition;
 } AVStreamGroup;
 
@@ -1251,15 +940,12 @@ struct AVCodecParserContext *av_stream_get_parser(const AVStream *s);
 #define AV_PROGRAM_RUNNING 1
 
 /**
- * New fields can be added to the end with minor version bumps.
- * Removal, reordering and changes to existing fields require a major
- * version bump.
- * sizeof(AVProgram) must not be used outside libav*.
+ * 可以将新字段添加到末尾，并进行较小的版本更新。对现有字段的删除、重新排序和更改需要主要版本更新。 sizeof(AVProgram) 不得在 libav* 之外使用。
  */
 typedef struct AVProgram {
     int            id;
     int            flags;
-    enum AVDiscard discard;        ///< selects which program to discard and which to feed to the caller
+    enum AVDiscard discard;        ///< 选择要丢弃哪个程序以及将哪个程序提供给调用者
     unsigned int   *stream_index;
     unsigned int   nb_stream_indexes;
     AVDictionary *metadata;
@@ -1269,38 +955,35 @@ typedef struct AVProgram {
     int pcr_pid;
     int pmt_version;
 
-    /*****************************************************************
-     * All fields below this line are not part of the public API. They
-     * may not be used outside of libavformat and can be changed and
-     * removed at will.
-     * New public fields should be added right above.
-     *****************************************************************
-     */
+    /**
+ * **************************************************************
+ * 此行下面的所有字段都不是公共 API 的一部分。它们不能在 libavformat 之外使用，并且可以随意更改和删除。新的公共字段应添加到正上方。
+ * ****************************************************************
+ */
     int64_t start_time;
     int64_t end_time;
 
-    int64_t pts_wrap_reference;    ///< reference dts for wrap detection
-    int pts_wrap_behavior;         ///< behavior on wrap detection
+    int64_t pts_wrap_reference;    ///< 用于回绕检测的参考 dts
+    int pts_wrap_behavior;         ///< 回绕检测的行为
 } AVProgram;
 
-#define AVFMTCTX_NOHEADER      0x0001 /**< signal that no header is present
-                                         (streams are added dynamically) */
-#define AVFMTCTX_UNSEEKABLE    0x0002 /**< signal that the stream is definitely
-                                         not seekable, and attempts to call the
-                                         seek function will fail. For some
-                                         network protocols (e.g. HLS), this can
-                                         change dynamically at runtime. */
+#define AVFMTCTX_NOHEADER      0x0001 /**
+ * < 表示不存在标头的信号（动态添加流）
+ */
+#define AVFMTCTX_UNSEEKABLE    0x0002 /**
+ * < 表明该流绝对不可查找，并且尝试调用查找函数将失败。对于某些网络协议（例如 HLS），这可以在运行时动态更改。
+ */
 
 typedef struct AVChapter {
-    int64_t id;             ///< unique ID to identify the chapter
-    AVRational time_base;   ///< time base in which the start/end timestamps are specified
-    int64_t start, end;     ///< chapter start/end time in time_base units
+    int64_t id;             ///< 用于标识章节的唯一 ID
+    AVRational time_base;   ///< 指定开始/结束时间戳的时基
+    int64_t start, end;     ///< 以 time_base 为单位的章节开始/结束时间
     AVDictionary *metadata;
 } AVChapter;
 
 
 /**
- * Callback used by devices to communicate with application.
+ * 设备用于与应用程序通信的回调。
  */
 typedef int (*av_format_control_message)(struct AVFormatContext *s, int type,
                                          void *data, size_t data_size);
@@ -1309,221 +992,165 @@ typedef int (*AVOpenCallback)(struct AVFormatContext *s, AVIOContext **pb, const
                               const AVIOInterruptCB *int_cb, AVDictionary **options);
 
 /**
- * The duration of a video can be estimated through various ways, and this enum can be used
- * to know how the duration was estimated.
+ * 视频的持续时间可以通过多种方式估计，并且可以使用此枚举来了解如何估计持续时间。
  */
 enum AVDurationEstimationMethod {
-    AVFMT_DURATION_FROM_PTS,    ///< Duration accurately estimated from PTSes
-    AVFMT_DURATION_FROM_STREAM, ///< Duration estimated from a stream with a known duration
-    AVFMT_DURATION_FROM_BITRATE ///< Duration estimated from bitrate (less accurate)
+    AVFMT_DURATION_FROM_PTS,    ///< 根据 PTS 准确估计的持续时间
+    AVFMT_DURATION_FROM_STREAM, ///< 根据已知持续时间的流估计的持续时间
+    AVFMT_DURATION_FROM_BITRATE ///< 根据比特率估计的持续时间（不太准确）
 };
 
 /**
- * Format I/O context.
- * New fields can be added to the end with minor version bumps.
- * Removal, reordering and changes to existing fields require a major
- * version bump.
- * sizeof(AVFormatContext) must not be used outside libav*, use
- * avformat_alloc_context() to create an AVFormatContext.
+ * 格式 I/O 上下文。新字段可以添加到末尾并进行较小的版本更新。对现有字段的删除、重新排序和更改需要主要版本更新。 sizeof(AVFormatContext) 不得在 libav* 之外使用，请使用 avformat_alloc_context() 创建 AVFormatContext。
  *
- * Fields can be accessed through AVOptions (av_opt*),
- * the name string used matches the associated command line parameter name and
- * can be found in libavformat/options_table.h.
- * The AVOption/command line parameter names differ in some cases from the C
- * structure field names for historic reasons or brevity.
+ * 字段可以通过 AVOptions (av_opt*) 访问，使用的名称字符串与关联的命令行参数名称匹配，可以在 libavformat/options_table.h 中找到。由于历史原因或简洁性，AVOption/命令行参数名称在某些情况下与 C 结构字段名称不同。
  */
 typedef struct AVFormatContext {
     /**
-     * A class for logging and @ref avoptions. Set by avformat_alloc_context().
-     * Exports (de)muxer private options if they exist.
-     */
+ * 用于日志记录和@ref avoptions 的类。由avformat_alloc_context()设置。导出（解）复用器私有选项（如果存在）。
+ */
     const AVClass *av_class;
 
     /**
-     * The input container format.
-     *
-     * Demuxing only, set by avformat_open_input().
-     */
+ * 输入容器格式。
+ *
+ * 仅解复用，由 avformat_open_input() 设置。
+ */
     const struct AVInputFormat *iformat;
 
     /**
-     * The output container format.
-     *
-     * Muxing only, must be set by the caller before avformat_write_header().
-     */
+ * 输出容器格式。
+ *
+ * 仅复用，必须由调用者在 avformat_write_header() 之前设置。
+ */
     const struct AVOutputFormat *oformat;
 
     /**
-     * Format private data. This is an AVOptions-enabled struct
-     * if and only if iformat/oformat.priv_class is not NULL.
-     *
-     * - muxing: set by avformat_write_header()
-     * - demuxing: set by avformat_open_input()
-     */
+ * 格式化私有数据。当且仅当 iformat/oformat.priv_class 不为 NULL 时，这是一个启用 AVOptions 的结构。
+ *
+ * - 多路复用：由 avformat_write_header() 设置 - 多路分解：由 avformat_open_input() 设置
+ */
     void *priv_data;
 
     /**
-     * I/O context.
-     *
-     * - demuxing: either set by the user before avformat_open_input() (then
-     *             the user must close it manually) or set by avformat_open_input().
-     * - muxing: set by the user before avformat_write_header(). The caller must
-     *           take care of closing / freeing the IO context.
-     *
-     * Do NOT set this field if AVFMT_NOFILE flag is set in
-     * iformat/oformat.flags. In such a case, the (de)muxer will handle
-     * I/O in some other way and this field will be NULL.
-     */
+ * I/O 上下文。
+ *
+ * - 解复用：由用户在 avformat_open_input() 之前设置（然后用户必须手动关闭它）或由 avformat_open_input() 设置。 - 混合：由用户在 avformat_write_header() 之前设置。调用者必须负责关闭/释放 IO 上下文。
+ *
+ * 如果在 iformat/oformat.flags 中设置了 AVFMT_NOFILE 标志，请勿设置此字段。在这种情况下，（解）复用器将以其他方式处理 I/O，并且该字段将为 NULL。
+ */
     AVIOContext *pb;
 
-    /* stream info */
+    /* 流信息 */
     /**
-     * Flags signalling stream properties. A combination of AVFMTCTX_*.
-     * Set by libavformat.
-     */
+ * 标志信令流属性。 AVFMTCTX_* 的组合。由 libavformat 设置。
+ */
     int ctx_flags;
 
     /**
-     * Number of elements in AVFormatContext.streams.
-     *
-     * Set by avformat_new_stream(), must not be modified by any other code.
-     */
+ * AVFormatContext.streams 中的元素数量。
+ *
+ * 由 avformat_new_stream() 设置，不得由任何其他代码修改。
+ */
     unsigned int nb_streams;
     /**
-     * A list of all streams in the file. New streams are created with
-     * avformat_new_stream().
-     *
-     * - demuxing: streams are created by libavformat in avformat_open_input().
-     *             If AVFMTCTX_NOHEADER is set in ctx_flags, then new streams may also
-     *             appear in av_read_frame().
-     * - muxing: streams are created by the user before avformat_write_header().
-     *
-     * Freed by libavformat in avformat_free_context().
-     */
+ * 文件中所有流的列表。使用 avformat_new_stream() 创建新流。
+ *
+ * - 解复用：流由 libavformat 在 avformat_open_input() 中创建。如果 ctx_flags 中设置了 AVFMTCTX_NOHEADER，那么新的流也可能出现在 av_read_frame() 中。 - 混合：流由用户在 avformat_write_header() 之前创建。
+ *
+ * 由 libavformat 在 avformat_free_context() 中释放。
+ */
     AVStream **streams;
 
     /**
-     * Number of elements in AVFormatContext.stream_groups.
-     *
-     * Set by avformat_stream_group_create(), must not be modified by any other code.
-     */
+ * AVFormatContext.stream_groups 中的元素数量。
+ *
+ * 由 avformat_stream_group_create() 设置，不得由任何其他代码修改。
+ */
     unsigned int nb_stream_groups;
     /**
-     * A list of all stream groups in the file. New groups are created with
-     * avformat_stream_group_create(), and filled with avformat_stream_group_add_stream().
-     *
-     * - demuxing: groups may be created by libavformat in avformat_open_input().
-     *             If AVFMTCTX_NOHEADER is set in ctx_flags, then new groups may also
-     *             appear in av_read_frame().
-     * - muxing: groups may be created by the user before avformat_write_header().
-     *
-     * Freed by libavformat in avformat_free_context().
-     */
+ * 文件中所有流组的列表。新组使用 avformat_stream_group_create() 创建，并使用 avformat_stream_group_add_stream() 填充。
+ *
+ * - 多路分解：组可以由 libavformat 在 avformat_open_input() 中创建。如果 ctx_flags 中设置了 AVFMTCTX_NOHEADER，那么新的组也可能出现在 av_read_frame() 中。 - 混合：用户可以在 avformat_write_header() 之前创建组。
+ *
+ * 由 libavformat 在 avformat_free_context() 中释放。
+ */
     AVStreamGroup **stream_groups;
 
     /**
-     * Number of chapters in AVChapter array.
-     * When muxing, chapters are normally written in the file header,
-     * so nb_chapters should normally be initialized before write_header
-     * is called. Some muxers (e.g. mov and mkv) can also write chapters
-     * in the trailer.  To write chapters in the trailer, nb_chapters
-     * must be zero when write_header is called and non-zero when
-     * write_trailer is called.
-     * - muxing: set by user
-     * - demuxing: set by libavformat
-     */
+ * AVChapter 数组中的章节数。混合时，章节通常写入文件头中，因此 nb_chapters 通常应在调用 write_header 之前初始化。一些混合器（例如 mov 和 mkv）也可以在预告片中编写章节。  要在预告片中写入章节，调用 write_header 时 nb_chapters 必须为零，调用 write_trailer 时 nb_chapters 必须非零。 - 复用：由用户设置 - 解复用：由 libavformat
+ */
     unsigned int nb_chapters;
     AVChapter **chapters;
 
     /**
-     * input or output URL. Unlike the old filename field, this field has no
-     * length restriction.
-     *
-     * - demuxing: set by avformat_open_input(), initialized to an empty
-     *             string if url parameter was NULL in avformat_open_input().
-     * - muxing: may be set by the caller before calling avformat_write_header()
-     *           (or avformat_init_output() if that is called first) to a string
-     *           which is freeable by av_free(). Set to an empty string if it
-     *           was NULL in avformat_init_output().
-     *
-     * Freed by libavformat in avformat_free_context().
-     */
+ * 输入或输出 URL 设置。与旧的文件名字段不同，该字段没有长度限制。
+ *
+ * - 解复用：由 avformat_open_input() 设置，如果 avformat_open_input() 中 url 参数为 NULL，则初始化为空字符串。 - 混合：可以由调用者在调用 avformat_write_header()（或 avformat_init_output()，如果先调用的话）之前设置为可由 av_free() 释放的字符串。如果 avformat_init_output() 中为 NULL，则设置为空字符串。
+ *
+ * 由 libavformat 在 avformat_free_context() 中释放。
+ */
     char *url;
 
     /**
-     * Position of the first frame of the component, in
-     * AV_TIME_BASE fractional seconds. NEVER set this value directly:
-     * It is deduced from the AVStream values.
-     *
-     * Demuxing only, set by libavformat.
-     */
+ * 组件第一帧的位置，以 AV_TIME_BASE 小数秒为单位。切勿直接设置该值：它是从 AVStream 值推导出来的。
+ *
+ * 仅解复用，由 libavformat 设置。
+ */
     int64_t start_time;
 
     /**
-     * Duration of the stream, in AV_TIME_BASE fractional
-     * seconds. Only set this value if you know none of the individual stream
-     * durations and also do not set any of them. This is deduced from the
-     * AVStream values if not set.
-     *
-     * Demuxing only, set by libavformat.
-     */
+ * 流的持续时间，以 AV_TIME_BASE 小数秒为单位。仅当您不知道任何单个流持续时间并且也不设置任何一个时才设置此值。如果未设置，则从 AVStream 值推导出来。
+ *
+ * 仅解复用，由 libavformat 设置。
+ */
     int64_t duration;
 
     /**
-     * Total stream bitrate in bit/s, 0 if not
-     * available. Never set it directly if the file_size and the
-     * duration are known as FFmpeg can compute it automatically.
-     */
+ * 总流比特率（以位/秒为单位），如果不可用则为 0。如果 file_size 和持续时间已知，FFmpeg 可以自动计算，切勿直接设置它。
+ */
     int64_t bit_rate;
 
     unsigned int packet_size;
     int max_delay;
 
     /**
-     * Flags modifying the (de)muxer behaviour. A combination of AVFMT_FLAG_*.
-     * Set by the user before avformat_open_input() / avformat_write_header().
-     */
+ * 修改（解）复用器行为的标志。 AVFMT_FLAG_* 的组合。由用户在 avformat_open_input() / avformat_write_header() 之前设置。
+ */
     int flags;
-#define AVFMT_FLAG_GENPTS       0x0001 ///< Generate missing pts even if it requires parsing future frames.
-#define AVFMT_FLAG_IGNIDX       0x0002 ///< Ignore index.
-#define AVFMT_FLAG_NONBLOCK     0x0004 ///< Do not block when reading packets from input.
-#define AVFMT_FLAG_IGNDTS       0x0008 ///< Ignore DTS on frames that contain both DTS & PTS
-#define AVFMT_FLAG_NOFILLIN     0x0010 ///< Do not infer any values from other values, just return what is stored in the container
-#define AVFMT_FLAG_NOPARSE      0x0020 ///< Do not use AVParsers, you also must set AVFMT_FLAG_NOFILLIN as the filling code works on frames and no parsing -> no frames. Also seeking to frames can not work if parsing to find frame boundaries has been disabled
-#define AVFMT_FLAG_NOBUFFER     0x0040 ///< Do not buffer frames when possible
-#define AVFMT_FLAG_CUSTOM_IO    0x0080 ///< The caller has supplied a custom AVIOContext, don't avio_close() it.
-#define AVFMT_FLAG_DISCARD_CORRUPT  0x0100 ///< Discard frames marked corrupted
-#define AVFMT_FLAG_FLUSH_PACKETS    0x0200 ///< Flush the AVIOContext every packet.
+#define AVFMT_FLAG_GENPTS       0x0001 ///< 生成缺失的点，即使它需要解析未来的帧。
+#define AVFMT_FLAG_IGNIDX       0x0002 ///< 忽略索引。
+#define AVFMT_FLAG_NONBLOCK     0x0004 ///< 从输入读取数据包时不阻塞。
+#define AVFMT_FLAG_IGNDTS       0x0008 ///< 忽略包含 DTS 和 PTS 的帧上的 DTS
+#define AVFMT_FLAG_NOFILLIN     0x0010 ///< 不要从其他值推断任何值，仅返回容器中存储的内容
+#define AVFMT_FLAG_NOPARSE      0x0020 ///< 不要使用 AVParsers，您还必须设置AVFMT_FLAG_NOFILLIN 因为填充代码适用于帧并且没有解析 -> 无帧。如果解析查找帧边界已被禁用，则查找帧也无法工作
+#define AVFMT_FLAG_NOBUFFER     0x0040 ///< 尽可能不要缓冲帧
+#define AVFMT_FLAG_CUSTOM_IO    0x0080 ///< 调用者提供了自定义 AVIOContext，不要 avio_close() 它。
+#define AVFMT_FLAG_DISCARD_CORRUPT  0x0100 ///< 丢弃标记为损坏的帧
+#define AVFMT_FLAG_FLUSH_PACKETS    0x0200 ///< 每个数据包刷新 AVIOContext。
 /**
- * When muxing, try to avoid writing any random/volatile data to the output.
- * This includes any random IDs, real-time timestamps/dates, muxer version, etc.
+ * 复用时，尽量避免将任何随机/易失性数据写入输出。这包括任何随机 ID、实时时间戳/日期、复用器版本等。
  *
- * This flag is mainly intended for testing.
+ * 该标志主要用于测试。
  */
 #define AVFMT_FLAG_BITEXACT         0x0400
-#define AVFMT_FLAG_SORT_DTS    0x10000 ///< try to interleave outputted packets by dts (using this flag can slow demuxing down)
-#define AVFMT_FLAG_FAST_SEEK   0x80000 ///< Enable fast, but inaccurate seeks for some formats
-#define AVFMT_FLAG_AUTO_BSF   0x200000 ///< Add bitstream filters as requested by the muxer
+#define AVFMT_FLAG_SORT_DTS    0x10000 ///< 尝试通过 dts 交错输出数据包（使用此标志会减慢解复用速度）
+#define AVFMT_FLAG_FAST_SEEK   0x80000 ///< 对某些格式启用快速但不准确的搜索
+#define AVFMT_FLAG_AUTO_BSF   0x200000 ///< 根据复用器的请求添加比特流过滤器
 
     /**
-     * Maximum number of bytes read from input in order to determine stream
-     * properties. Used when reading the global header and in
-     * avformat_find_stream_info().
-     *
-     * Demuxing only, set by the caller before avformat_open_input().
-     *
-     * @note this is \e not  used for determining the \ref AVInputFormat
-     *       "input format"
-     * @see format_probesize
-     */
+ * 为了确定流属性而从输入读取的最大字节数。在读取全局标头和 avformat_find_stream_info() 时使用。
+ *
+ * 仅解复用，由调用者在 avformat_open_input() 之前设置。
+ *
+ * @note 不用于确定 AVInputFormat“输入格式”
+ * @see format_probesize
+ */
     int64_t probesize;
 
     /**
-     * Maximum duration (in AV_TIME_BASE units) of the data read
-     * from input in avformat_find_stream_info().
-     * Demuxing only, set by the caller before avformat_find_stream_info().
-     * Can be set to 0 to let avformat choose using a heuristic.
-     */
+ * 从 avformat_find_stream_info() 中的输入读取的数据的最大持续时间（以 AV_TIME_BASE 为单位）。仅解复用，由调用者在 avformat_find_stream_info() 之前设置。可以设置为 0 让 avformat 使用启发式进行选择。
+ */
     int64_t max_analyze_duration;
 
     const uint8_t *key;
@@ -1533,80 +1160,59 @@ typedef struct AVFormatContext {
     AVProgram **programs;
 
     /**
-     * Forced video codec_id.
-     * Demuxing: Set by user.
-     */
+ * 强制视频编解码器_id。解复用：由用户设置。
+ */
     enum AVCodecID video_codec_id;
 
     /**
-     * Forced audio codec_id.
-     * Demuxing: Set by user.
-     */
+ * 强制音频编解码器_id。解复用：由用户设置。
+ */
     enum AVCodecID audio_codec_id;
 
     /**
-     * Forced subtitle codec_id.
-     * Demuxing: Set by user.
-     */
+ * 强制字幕codec_id。解复用：由用户设置。
+ */
     enum AVCodecID subtitle_codec_id;
 
     /**
-     * Forced Data codec_id.
-     * Demuxing: Set by user.
-     */
+ * 强制数据编解码器_id。解复用：由用户设置。
+ */
     enum AVCodecID data_codec_id;
 
     /**
-     * Metadata that applies to the whole file.
-     *
-     * - demuxing: set by libavformat in avformat_open_input()
-     * - muxing: may be set by the caller before avformat_write_header()
-     *
-     * Freed by libavformat in avformat_free_context().
-     */
+ * 适用于整个文件的元数据。
+ *
+ * - 解复用：由 libavformat 在 avformat_open_input() 中设置 - 复用：可以由调用者在 avformat_write_header() 之前设置
+ *
+ * 由 libavformat 在 avformat_free_context() 中释放。
+ */
     AVDictionary *metadata;
 
     /**
-     * Start time of the stream in real world time, in microseconds
-     * since the Unix epoch (00:00 1st January 1970). That is, pts=0 in the
-     * stream was captured at this real world time.
-     * - muxing: Set by the caller before avformat_write_header(). If set to
-     *           either 0 or AV_NOPTS_VALUE, then the current wall-time will
-     *           be used.
-     * - demuxing: Set by libavformat. AV_NOPTS_VALUE if unknown. Note that
-     *             the value may become known after some number of frames
-     *             have been received.
-     */
+ * 现实世界时间中的流开始时间，以 Unix 纪元（1970 年 1 月 1 日 00:00）以来的微秒为单位。也就是说，流中的 pts=0 是在这个真实世界时间捕获的。 - 混合：由调用者在 avformat_write_header() 之前设置。如果设置为 0 或 AV_NOPTS_VALUE，则将使用当前的挂墙时间。 - 解复用：由 libavformat 设置。 AV_NOPTS_VALUE（如果未知）。请注意，在接收到一定数量的帧后，该值可能会变为已知。
+ */
     int64_t start_time_realtime;
 
     /**
-     * The number of frames used for determining the framerate in
-     * avformat_find_stream_info().
-     * Demuxing only, set by the caller before avformat_find_stream_info().
-     */
+ * 用于确定 avformat_find_stream_info() 中帧速率的帧数。仅解复用，由调用者在 avformat_find_stream_info() 之前设置。
+ */
     int fps_probe_size;
 
     /**
-     * Error recognition; higher values will detect more errors but may
-     * misdetect some more or less valid parts as errors.
-     * Demuxing only, set by the caller before avformat_open_input().
-     */
+ * 错误识别；较高的值将检测到更多错误，但可能会将一些或多或少有效的部分误检测为错误。仅解复用，由调用者在 avformat_open_input() 之前设置。
+ */
     int error_recognition;
 
     /**
-     * Custom interrupt callbacks for the I/O layer.
-     *
-     * demuxing: set by the user before avformat_open_input().
-     * muxing: set by the user before avformat_write_header()
-     * (mainly useful for AVFMT_NOFILE formats). The callback
-     * should also be passed to avio_open2() if it's used to
-     * open the file.
-     */
+ * I/O 层的自定义中断回调。
+ *
+ * 解复用：由用户在 avformat_open_input() 之前设置。 muxing：由用户在 avformat_write_header() 之前设置（主要对 AVFMT_NOFILE 格式有用）。如果用于打开文件，回调也应该传递给 avio_open2()。
+ */
     AVIOInterruptCB interrupt_callback;
 
     /**
-     * Flags to enable debugging.
-     */
+ * 用于启用调试的标志。
+ */
     int debug;
 #define AV_FDEBUG_TS        0x0001
 #define AV_FDEBUG_ID3V2     0x0002
@@ -1616,571 +1222,425 @@ typedef struct AVFormatContext {
 #endif
 
     /**
-     * The maximum number of streams.
-     * - encoding: unused
-     * - decoding: set by user
-     */
+ * 最大流数。 - 编码：未使用 - 解码：由用户设置
+ */
     int max_streams;
 
     /**
-     * Maximum amount of memory in bytes to use for the index of each stream.
-     * If the index exceeds this size, entries will be discarded as
-     * needed to maintain a smaller size. This can lead to slower or less
-     * accurate seeking (depends on demuxer).
-     * Demuxers for which a full in-memory index is mandatory will ignore
-     * this.
-     * - muxing: unused
-     * - demuxing: set by user
-     */
+ * 用于每个流索引的最大内存量（以字节为单位）。如果索引超过此大小，则将根据需要丢弃条目以保持较小的大小。这可能会导致查找速度变慢或不太准确（取决于解复用器）。强制使用完整内存索引的解复用器将忽略这一点。 - 复用：未使用 - 解复用：由用户设置
+ */
     unsigned int max_index_size;
 
     /**
-     * Maximum amount of memory in bytes to use for buffering frames
-     * obtained from realtime capture devices.
-     */
+ * 用于缓冲从实时捕获设备获取的帧的最大内存量（以字节为单位）。
+ */
     unsigned int max_picture_buffer;
 
     /**
-     * Maximum buffering duration for interleaving.
-     *
-     * To ensure all the streams are interleaved correctly,
-     * av_interleaved_write_frame() will wait until it has at least one packet
-     * for each stream before actually writing any packets to the output file.
-     * When some streams are "sparse" (i.e. there are large gaps between
-     * successive packets), this can result in excessive buffering.
-     *
-     * This field specifies the maximum difference between the timestamps of the
-     * first and the last packet in the muxing queue, above which libavformat
-     * will output a packet regardless of whether it has queued a packet for all
-     * the streams.
-     *
-     * Muxing only, set by the caller before avformat_write_header().
-     */
+ * 交错的最大缓冲持续时间。
+ *
+ * 为了确保所有流正确交错，av_interleaved_write_frame() 将等待，直到每个流至少有一个数据包，然后才将任何数据包实际写入输出文件。当某些流“稀疏”时（即连续数据包之间存在较大间隙），这可能会导致过度缓冲。
+ *
+ * 该字段指定多路复用队列中第一个数据包和最后一个数据包的时间戳之间的最大差异，高于此值的 libavformat 将输出一个数据包，无论它是否已将所有流的数据包排队。
+ *
+ * 仅复用，由调用者在 avformat_write_header() 之前设置。
+ */
     int64_t max_interleave_delta;
 
     /**
-     * Maximum number of packets to read while waiting for the first timestamp.
-     * Decoding only.
-     */
+ * 等待第一个时间戳时读取的最大数据包数。仅解码。
+ */
     int max_ts_probe;
 
     /**
-     * Max chunk time in microseconds.
-     * Note, not all formats support this and unpredictable things may happen if it is used when not supported.
-     * - encoding: Set by user
-     * - decoding: unused
-     */
+ * 最大块时间（以微秒为单位）。请注意，并非所有格式都支持此功能，如果在不支持的情况下使用它，可能会发生不可预测的事情。 - 编码：由用户设置 - 解码：未使用
+ */
     int max_chunk_duration;
 
     /**
-     * Max chunk size in bytes
-     * Note, not all formats support this and unpredictable things may happen if it is used when not supported.
-     * - encoding: Set by user
-     * - decoding: unused
-     */
+ * 最大块大小（以字节为单位） 注意，并非所有格式都支持此功能，如果在不支持的情况下使用它，可能会发生不可预测的事情。 - 编码：由用户设置 - 解码：未使用
+ */
     int max_chunk_size;
 
     /**
-     * Maximum number of packets that can be probed
-     * - encoding: unused
-     * - decoding: set by user
-     */
+ * 可探测的最大数据包数 - 编码：未使用 - 解码：由用户设置
+ */
     int max_probe_packets;
 
     /**
-     * Allow non-standard and experimental extension
-     * @see AVCodecContext.strict_std_compliance
-     */
+ * 允许非标准和实验性扩展
+ * @see AVCodecContext.strict_std_compliance
+ */
     int strict_std_compliance;
 
     /**
-     * Flags indicating events happening on the file, a combination of
-     * AVFMT_EVENT_FLAG_*.
-     *
-     * - demuxing: may be set by the demuxer in avformat_open_input(),
-     *   avformat_find_stream_info() and av_read_frame(). Flags must be cleared
-     *   by the user once the event has been handled.
-     * - muxing: may be set by the user after avformat_write_header() to
-     *   indicate a user-triggered event.  The muxer will clear the flags for
-     *   events it has handled in av_[interleaved]_write_frame().
-     */
+ * 指示文件上发生的事件的标志，AVFMT_EVENT_FLAG_* 的组合。
+ *
+ * - 解复用：可以由解复用器在 avformat_open_input()、avformat_find_stream_info() 和 av_read_frame() 中设置。处理事件后，用户必须清除标志。 - 多路复用：可以由用户在 avformat_write_header() 之后设置，以指示用户触发的事件。  复用器将清除它在 av_[interleaved]_write_frame() 中处理的事件的标志。
+ */
     int event_flags;
 /**
- * - demuxing: the demuxer read new metadata from the file and updated
- *   AVFormatContext.metadata accordingly
- * - muxing: the user updated AVFormatContext.metadata and wishes the muxer to
- *   write it into the file
+ * - 解复用器：解复用器从文件中读取新元数据并相应地更新 AVFormatContext.metadata - 复用器：用户更新了 AVFormatContext.metadata 并希望复用器将其写入文件
  */
 #define AVFMT_EVENT_FLAG_METADATA_UPDATED 0x0001
 
 
     /**
-     * Avoid negative timestamps during muxing.
-     * Any value of the AVFMT_AVOID_NEG_TS_* constants.
-     * Note, this works better when using av_interleaved_write_frame().
-     * - muxing: Set by user
-     * - demuxing: unused
-     */
+ * 在复用期间避免出现负时间戳。 AVFMT_AVOID_NEG_TS_* 常量的任何值。请注意，使用 av_interleaved_write_frame() 时效果更好。 - 复用：由用户设置 - 解复用：未使用
+ */
     int avoid_negative_ts;
-#define AVFMT_AVOID_NEG_TS_AUTO             -1 ///< Enabled when required by target format
-#define AVFMT_AVOID_NEG_TS_DISABLED          0 ///< Do not shift timestamps even when they are negative.
-#define AVFMT_AVOID_NEG_TS_MAKE_NON_NEGATIVE 1 ///< Shift timestamps so they are non negative
-#define AVFMT_AVOID_NEG_TS_MAKE_ZERO         2 ///< Shift timestamps so that they start at 0
+#define AVFMT_AVOID_NEG_TS_AUTO             -1 ///< 当目标格式需要时启用
+#define AVFMT_AVOID_NEG_TS_DISABLED          0 ///< 即使时间戳为负数，也不移动时间戳。
+#define AVFMT_AVOID_NEG_TS_MAKE_NON_NEGATIVE 1 ///< 移位时间戳，使其为非负
+#define AVFMT_AVOID_NEG_TS_MAKE_ZERO         2 ///< 移位时间戳，使其从 0 开始
 
     /**
-     * Audio preload in microseconds.
-     * Note, not all formats support this and unpredictable things may happen if it is used when not supported.
-     * - encoding: Set by user
-     * - decoding: unused
-     */
+ * 音频预加载（以微秒为单位）。请注意，并非所有格式都支持此功能，如果在不支持的情况下使用它，可能会发生不可预测的事情。 - 编码：由用户设置 - 解码：未使用
+ */
     int audio_preload;
 
     /**
-     * forces the use of wallclock timestamps as pts/dts of packets
-     * This has undefined results in the presence of B frames.
-     * - encoding: unused
-     * - decoding: Set by user
-     */
+ * 强制使用挂钟时间戳作为数据包的 pts/dts 这在存在 B 帧的情况下会产生未定义的结果。 - 编码：未使用 - 解码：由用户设置
+ */
     int use_wallclock_as_timestamps;
 
     /**
-     * Skip duration calculation in estimate_timings_from_pts.
-     * - encoding: unused
-     * - decoding: set by user
-     *
-     * @see duration_probesize
-     */
+ * 跳过estimate_timings_from_pts中的持续时间计算。 - 编码：未使用 - 解码：由用户设置
+ *
+ * @see uration_probesize
+ */
     int skip_estimate_duration_from_pts;
 
     /**
-     * avio flags, used to force AVIO_FLAG_DIRECT.
-     * - encoding: unused
-     * - decoding: Set by user
-     */
+ * avio 标志，用于强制 AVIO_FLAG_DIRECT。 - 编码：未使用 - 解码：由用户设置
+ */
     int avio_flags;
 
     /**
-     * The duration field can be estimated through various ways, and this field can be used
-     * to know how the duration was estimated.
-     * - encoding: unused
-     * - decoding: Read by user
-     */
+ * 持续时间字段可以通过多种方式估计，并且可以使用该字段来了解持续时间是如何估计的。 - 编码：未使用 - 解码：由用户读取
+ */
     enum AVDurationEstimationMethod duration_estimation_method;
 
     /**
-     * Skip initial bytes when opening stream
-     * - encoding: unused
-     * - decoding: Set by user
-     */
+ * 打开流时跳过初始字节 - 编码：未使用 - 解码：由用户设置
+ */
     int64_t skip_initial_bytes;
 
     /**
-     * Correct single timestamp overflows
-     * - encoding: unused
-     * - decoding: Set by user
-     */
+ * 纠正单个时间戳溢出 - 编码：未使用 - 解码：由用户设置
+ */
     unsigned int correct_ts_overflow;
 
     /**
-     * Force seeking to any (also non key) frames.
-     * - encoding: unused
-     * - decoding: Set by user
-     */
+ * 强制寻找任何（也非关键）帧。 - 编码：未使用 - 解码：由用户设置
+ */
     int seek2any;
 
     /**
-     * Flush the I/O context after each packet.
-     * - encoding: Set by user
-     * - decoding: unused
-     */
+ * 在每个数据包后刷新 I/O 上下文。 - 编码：由用户设置 - 解码：未使用的
+ */
     int flush_packets;
 
     /**
-     * format probing score.
-     * The maximal score is AVPROBE_SCORE_MAX, its set when the demuxer probes
-     * the format.
-     * - encoding: unused
-     * - decoding: set by avformat, read by user
-     */
+ * 格式探测分数。最大分数是 AVPROBE_SCORE_MAX，它是在解复用器探测格式时设置的。 - 编码：未使用 - 解码：由 avformat 设置，由用户读取
+ */
     int probe_score;
 
     /**
-     * Maximum number of bytes read from input in order to identify the
-     * \ref AVInputFormat "input format". Only used when the format is not set
-     * explicitly by the caller.
-     *
-     * Demuxing only, set by the caller before avformat_open_input().
-     *
-     * @see probesize
-     */
+ * 从输入读取的最大字节数，以识别\ref AVInputFormat“输入格式”。仅当调用者未明确设置格式时使用。
+ *
+ * 仅解复用，由调用者在 avformat_open_input() 之前设置。
+ *
+ * @see 探测
+ */
     int format_probesize;
 
     /**
-     * ',' separated list of allowed decoders.
-     * If NULL then all are allowed
-     * - encoding: unused
-     * - decoding: set by user
-     */
+ * ',' 分隔的允许解码器列表。如果为 NULL，则允许全部 - 编码：未使用 - 解码：由用户设置
+ */
     char *codec_whitelist;
 
     /**
-     * ',' separated list of allowed demuxers.
-     * If NULL then all are allowed
-     * - encoding: unused
-     * - decoding: set by user
-     */
+ * ',' 分隔的允许分路器列表。如果为 NULL，则允许所有协议 - 编码：未使用 - 解码：由用户设置
+ */
     char *format_whitelist;
 
     /**
-     * ',' separated list of allowed protocols.
-     * - encoding: unused
-     * - decoding: set by user
-     */
+ * ',' 分隔的允许协议列表。 - 编码：未使用 - 解码：由用户设置
+ */
     char *protocol_whitelist;
 
     /**
-     * ',' separated list of disallowed protocols.
-     * - encoding: unused
-     * - decoding: set by user
-     */
+ * ',' 分隔的不允许的协议列表。 - 编码：未使用 - 解码：由用户设置
+ */
     char *protocol_blacklist;
 
     /**
-     * IO repositioned flag.
-     * This is set by avformat when the underlying IO context read pointer
-     * is repositioned, for example when doing byte based seeking.
-     * Demuxers can use the flag to detect such changes.
-     */
+ * IO 重新定位标志。当底层 IO 上下文读取指针重新定位时（例如，进行基于字节的查找时），该值由 avformat 设置。多路分配器可以使用该标志来检测此类更改。
+ */
     int io_repositioned;
 
     /**
-     * Forced video codec.
-     * This allows forcing a specific decoder, even when there are multiple with
-     * the same codec_id.
-     * Demuxing: Set by user
-     */
+ * 强制视频编解码器。这允许强制使用特定的解码器，即使有多个具有相同的 codec_id 也是如此。解复用：由用户设置
+ */
     const struct AVCodec *video_codec;
 
     /**
-     * Forced audio codec.
-     * This allows forcing a specific decoder, even when there are multiple with
-     * the same codec_id.
-     * Demuxing: Set by user
-     */
+ * 强制音频编解码器。这允许强制使用特定的解码器，即使有多个具有相同的 codec_id 也是如此。解复用：由用户
+ */
     const struct AVCodec *audio_codec;
 
     /**
-     * Forced subtitle codec.
-     * This allows forcing a specific decoder, even when there are multiple with
-     * the same codec_id.
-     * Demuxing: Set by user
-     */
+ * 强制字幕编解码器设置。这允许强制使用特定的解码器，即使有多个具有相同的 codec_id 也是如此。解复用：由用户设置
+ */
     const struct AVCodec *subtitle_codec;
 
     /**
-     * Forced data codec.
-     * This allows forcing a specific decoder, even when there are multiple with
-     * the same codec_id.
-     * Demuxing: Set by user
-     */
+ * 强制数据编解码器。这允许强制使用特定的解码器，即使有多个具有相同的 codec_id 也是如此。解复用：由用户设置
+ */
     const struct AVCodec *data_codec;
 
     /**
-     * Number of bytes to be written as padding in a metadata header.
-     * Demuxing: Unused.
-     * Muxing: Set by user.
-     */
+ * 要写入元数据标头中作为填充的字节数。解复用：未使用。复用：由用户设置。
+ */
     int metadata_header_padding;
 
     /**
-     * User data.
-     * This is a place for some private data of the user.
-     */
+ * 用户数据。这是用户的一些私人数据的地方。
+ */
     void *opaque;
 
     /**
-     * Callback used by devices to communicate with application.
-     */
+ * 设备用于与应用程序通信的回调。
+ */
     av_format_control_message control_message_cb;
 
     /**
-     * Output timestamp offset, in microseconds.
-     * Muxing: set by user
-     */
+ * 输出时间戳偏移量，以微秒为单位。复用：由用户设置
+ */
     int64_t output_ts_offset;
 
     /**
-     * dump format separator.
-     * can be ", " or "\n      " or anything else
-     * - muxing: Set by user.
-     * - demuxing: Set by user.
-     */
+ * 转储格式分隔符。可以是“、”或“\n”或其他任何内容 - 混合：由用户设置。 - 解复用：由用户设置。
+ */
     uint8_t *dump_separator;
 
     /**
-     * A callback for opening new IO streams.
-     *
-     * Whenever a muxer or a demuxer needs to open an IO stream (typically from
-     * avformat_open_input() for demuxers, but for certain formats can happen at
-     * other times as well), it will call this callback to obtain an IO context.
-     *
-     * @param s the format context
-     * @param pb on success, the newly opened IO context should be returned here
-     * @param url the url to open
-     * @param flags a combination of AVIO_FLAG_*
-     * @param options a dictionary of additional options, with the same
-     *                semantics as in avio_open2()
-     * @return 0 on success, a negative AVERROR code on failure
-     *
-     * @note Certain muxers and demuxers do nesting, i.e. they open one or more
-     * additional internal format contexts. Thus the AVFormatContext pointer
-     * passed to this callback may be different from the one facing the caller.
-     * It will, however, have the same 'opaque' field.
-     */
+ * 打开新 IO 流的回调。
+ *
+ * 每当复用器或解复用器需要打开 IO 流（通常来自解复用器的 avformat_open_input() ，但对于某些格式也可能在其他时间发生），它将调用此回调来获取 IO 上下文。
+ *
+ * @param s 格式上下文
+ * @param pb 成功时，应在此处返回新打开的 IO 上下文
+ * @param url 打开
+ * @param flags AVIO_FLAG_* 组合的 url
+ * @param options 附加选项的字典，与 avio_open2() 中的语义相同
+ * @return 成功时为 0，失败时为负 AVERROR 代码
+ *
+ * @note 某些复用器和解复用器进行嵌套，即它们打开一个或多个附加内部格式上下文。因此，传递给此回调的 AVFormatContext 指针可能与面向调用者的指针不同。然而，它将具有相同的“不透明”字段。
+ */
     int (*io_open)(struct AVFormatContext *s, AVIOContext **pb, const char *url,
                    int flags, AVDictionary **options);
 
     /**
-     * A callback for closing the streams opened with AVFormatContext.io_open().
-     *
-     * @param s the format context
-     * @param pb IO context to be closed and freed
-     * @return 0 on success, a negative AVERROR code on failure
-     */
+ * 用于关闭使用 AVFormatContext.io_open() 打开的流的回调。
+ *
+ * @param s 格式上下文
+ * @param pb 要关闭和释放的 IO 上下文
+ * @return 成功时为 0，失败时为负 AVERROR 代码
+ */
     int (*io_close2)(struct AVFormatContext *s, AVIOContext *pb);
 
     /**
-     * Maximum number of bytes read from input in order to determine stream durations
-     * when using estimate_timings_from_pts in avformat_find_stream_info().
-     * Demuxing only, set by the caller before avformat_find_stream_info().
-     * Can be set to 0 to let avformat choose using a heuristic.
-     *
-     * @see skip_estimate_duration_from_pts
-     */
+ * 从输入读取的最大字节数，以便在使用时确定流持续时间avformat_find_stream_info() 中的estimate_timings_from_pts。仅解复用，由调用者在 avformat_find_stream_info() 之前设置。可以设置为 0 让 avformat 使用启发式进行选择。
+ *
+ * @see skip_estimate_duration_from_pts
+ */
     int64_t duration_probesize;
 
     /**
-     * Name of this format context, only used for logging purposes.
-     */
+ * 此格式上下文的名称，仅用于记录目的。
+ */
     char *name;
 
     /**
-     * Depth recursion limit,
-     *
-     * The maximum recursion depth that a Demuxer can open a Demuxer within itself.
-     *
-     * - demuxing: Set by user
-     */
+ * 深度递归限制，
+ *
+ * 解复用器可以在其内部打开解复用器的最大递归深度。
+ *
+ * - 解复用：由用户设置
+ */
     int recursion_limit;
 } AVFormatContext;
 
 /**
- * @defgroup lavf_core Core functions
+ * @defgroup lavf_core 核心函数
  * @ingroup libavf
  *
- * Functions for querying libavformat capabilities, allocating core structures,
- * etc.
+ * 用于查询 libavformat 功能、分配核心结构等的函数。
  * @{
  */
 
 /**
- * Return the LIBAVFORMAT_VERSION_INT constant.
+ * 返回 LIBAVFORMAT_VERSION_INT 常量。
  */
 unsigned avformat_version(void);
 
 /**
- * Return the libavformat build-time configuration.
+ * 返回 libavformat 的构建时配置。
  */
 const char *avformat_configuration(void);
 
 /**
- * Return the libavformat license.
+ * 返回 libavformat 的许可证信息。
  */
 const char *avformat_license(void);
 
 /**
- * Do global initialization of network libraries. This is optional,
- * and not recommended anymore.
+ * 进行网络库的全局初始化。这是可选的，不再推荐。
  *
- * This functions only exists to work around thread-safety issues
- * with older GnuTLS or OpenSSL libraries. If libavformat is linked
- * to newer versions of those libraries, or if you do not use them,
- * calling this function is unnecessary. Otherwise, you need to call
- * this function before any other threads using them are started.
+ * 此函数仅用于解决旧版 GnuTLS 或 OpenSSL 库的线程安全问题。如果 libavformat 链接到这些库的较新版本，或者如果您不使用它们，则无需调用此函数。否则，您需要在使用它们的任何其他线程启动之前调用此函数。
  *
- * This function will be deprecated once support for older GnuTLS and
- * OpenSSL libraries is removed, and this function has no purpose
- * anymore.
+ * 一旦删除对旧版 GnuTLS 和 OpenSSL 库的支持，此函数将被弃用，并且此函数不再有任何用途。
  */
 int avformat_network_init(void);
 
 /**
- * Undo the initialization done by avformat_network_init. Call it only
- * once for each time you called avformat_network_init.
+ * 撤消 avformat_network_init 完成的初始化。每次调用 avformat_network_init 时仅调用一次。
  */
 int avformat_network_deinit(void);
 
 /**
- * Iterate over all registered muxers.
+ * 迭代所有已注册的复用器。
  *
- * @param opaque a pointer where libavformat will store the iteration state. Must
- *               point to NULL to start the iteration.
+ * @param opaque 一个指针，libavformat 将在其中存储迭代状态。必须指向 NULL 才能开始迭代。
  *
- * @return the next registered muxer or NULL when the iteration is
- *         finished
+ * @return 下一个注册的复用器或迭代完成时为 NULL
  */
 const AVOutputFormat *av_muxer_iterate(void **opaque);
 
 /**
- * Iterate over all registered demuxers.
+ * 迭代所有注册的复用器。
  *
- * @param opaque a pointer where libavformat will store the iteration state.
- *               Must point to NULL to start the iteration.
+ * @param opaque 一个指针，libavformat 将在其中存储迭代状态。必须指向 NULL 才能开始迭代。
  *
- * @return the next registered demuxer or NULL when the iteration is
- *         finished
+ * @return 迭代完成时下一个注册的分路器或 NULL
  */
 const AVInputFormat *av_demuxer_iterate(void **opaque);
 
 /**
- * Allocate an AVFormatContext.
- * avformat_free_context() can be used to free the context and everything
- * allocated by the framework within it.
+ * 分配 AVFormatContext。 avformat_free_context() 可用于释放上下文以及框架在其中分配的所有内容。
  */
 AVFormatContext *avformat_alloc_context(void);
 
 /**
- * Free an AVFormatContext and all its streams.
- * @param s context to free
+ * 释放 AVFormatContext 及其所有流。
+ * @param s 上下文到免费
  */
 void avformat_free_context(AVFormatContext *s);
 
 /**
- * Get the AVClass for AVFormatContext. It can be used in combination with
- * AV_OPT_SEARCH_FAKE_OBJ for examining options.
+ * 获取 AVFormatContext 的 AVClass。它可以与 AV_OPT_SEARCH_FAKE_OBJ 结合使用来检查选项。
  *
- * @see av_opt_find().
+ * @see av_opt_find()。
  */
 const AVClass *avformat_get_class(void);
 
 /**
- * Get the AVClass for AVStream. It can be used in combination with
- * AV_OPT_SEARCH_FAKE_OBJ for examining options.
+ * 获取 AVStream 的 AVClass。它可以与 AV_OPT_SEARCH_FAKE_OBJ 结合使用来检查选项。
  *
- * @see av_opt_find().
+ * @see av_opt_find()。
  */
 const AVClass *av_stream_get_class(void);
 
 /**
- * Get the AVClass for AVStreamGroup. It can be used in combination with
- * AV_OPT_SEARCH_FAKE_OBJ for examining options.
+ * 获取 AVStreamGroup 的 AVClass。它可以与 AV_OPT_SEARCH_FAKE_OBJ 结合使用来检查选项。
  *
- * @see av_opt_find().
+ * @see av_opt_find()。
  */
 const AVClass *av_stream_group_get_class(void);
 
 /**
- * @return a string identifying the stream group type, or NULL if unknown
+ * @return 标识流组类型的字符串，如果未知则为 NULL
  */
 const char *avformat_stream_group_name(enum AVStreamGroupParamsType type);
 
 /**
- * Add a new empty stream group to a media file.
+ * 将新的空流组添加到媒体文件。
  *
- * When demuxing, it may be called by the demuxer in read_header(). If the
- * flag AVFMTCTX_NOHEADER is set in s.ctx_flags, then it may also
- * be called in read_packet().
+ * 解复用时，可能会被解复用器在 read_header() 中调用。如果在 s.ctx_flags 中设置了标志 AVFMTCTX_NOHEADER，那么也可以在 read_packet() 中调用它。
  *
- * When muxing, may be called by the user before avformat_write_header().
+ * 当复用时，用户可以在 avformat_write_header() 之前调用。
  *
- * User is required to call avformat_free_context() to clean up the allocation
- * by avformat_stream_group_create().
+ * 用户需要调用 avformat_free_context() 来清理 avformat_stream_group_create() 的分配。
  *
- * New streams can be added to the group with avformat_stream_group_add_stream().
+ * 可以使用 avformat_stream_group_add_stream() 将新流添加到组中。
  *
- * @param s media file handle
+ * @param s 媒体文件句柄
  *
- * @return newly created group or NULL on error.
- * @see avformat_new_stream, avformat_stream_group_add_stream.
+ * @return 新创建的组或错误时为 NULL。
+ * @see avformat_new_stream、avformat_stream_group_add_stream。
  */
 AVStreamGroup *avformat_stream_group_create(AVFormatContext *s,
                                             enum AVStreamGroupParamsType type,
                                             AVDictionary **options);
 
 /**
- * Add a new stream to a media file.
+ * 将新流添加到媒体文件。
  *
- * When demuxing, it is called by the demuxer in read_header(). If the
- * flag AVFMTCTX_NOHEADER is set in s.ctx_flags, then it may also
- * be called in read_packet().
+ * 解复用时，由解复用器在 read_header() 中调用。如果在 s.ctx_flags 中设置了标志 AVFMTCTX_NOHEADER，那么也可以在 read_packet() 中调用它。
  *
- * When muxing, should be called by the user before avformat_write_header().
+ * 复用时，用户应在 avformat_write_header() 之前调用。
  *
- * User is required to call avformat_free_context() to clean up the allocation
- * by avformat_new_stream().
+ * 用户需要调用avformat_free_context()来清理avformat_new_stream()分配的空间。
  *
- * @param s media file handle
- * @param c unused, does nothing
+ * @param s 媒体文件句柄
+ * @param c 未使用，不执行任何操作
  *
- * @return newly created stream or NULL on error.
+ * @return 新创建的流或错误时为 NULL。
  */
 AVStream *avformat_new_stream(AVFormatContext *s, const struct AVCodec *c);
 
 /**
- * Add an already allocated stream to a stream group.
+ * 将已分配的流添加到流组。
  *
- * When demuxing, it may be called by the demuxer in read_header(). If the
- * flag AVFMTCTX_NOHEADER is set in s.ctx_flags, then it may also
- * be called in read_packet().
+ * 解复用时，可能会被解复用器在 read_header() 中调用。如果在 s.ctx_flags 中设置了标志 AVFMTCTX_NOHEADER，那么也可以在 read_packet() 中调用它。
  *
- * When muxing, may be called by the user before avformat_write_header() after
- * having allocated a new group with avformat_stream_group_create() and stream with
- * avformat_new_stream().
+ * 复用时，用户可以在使用 avformat_stream_group_create() 分配新组并使用 avformat_new_stream() 分配流之后，在 avformat_write_header() 之前调用。
  *
- * User is required to call avformat_free_context() to clean up the allocation
- * by avformat_stream_group_add_stream().
+ * 用户需要调用avformat_free_context()来清理avformat_stream_group_add_stream()的分配。
  *
- * @param stg stream group belonging to a media file.
- * @param st  stream in the media file to add to the group.
+ * @param stg 属于媒体文件的流组。
+ * @param st 要添加到组中的媒体文件中的流。
  *
- * @retval 0                 success
- * @retval AVERROR(EEXIST)   the stream was already in the group
- * @retval "another negative error code" legitimate errors
+ * @retval 0 成功
+ * @retval AVERROR(EEXIST) 流已在组中
+ * @retval "another 负错误代码“合法错误
  *
- * @see avformat_new_stream, avformat_stream_group_create.
+ * @see avformat_new_stream、avformat_stream_group_create。
  */
 int avformat_stream_group_add_stream(AVStreamGroup *stg, AVStream *st);
 
 AVProgram *av_new_program(AVFormatContext *s, int id);
 
 
-#define AVFMT_PROGCOPY_MATCH_BY_ID          (1 << 0) ///< match streams using stream id
-#define AVFMT_PROGCOPY_MATCH_BY_INDEX       (1 << 1) ///< match streams using stream index
-#define AVFMT_PROGCOPY_OVERWRITE            (1 << 8) ///< overwrite pre-existing program having same ID
+#define AVFMT_PROGCOPY_MATCH_BY_ID          (1 << 0) ///< 使用流 ID 匹配流
+#define AVFMT_PROGCOPY_MATCH_BY_INDEX       (1 << 1) ///< 使用流索引匹配流
+#define AVFMT_PROGCOPY_OVERWRITE            (1 << 8) ///< 覆盖具有相同 ID 的预先存在的节目
 
 /**
- * Copy an AVProgram from one AVFormatContext to another.
+ * 将 AVProgram 从一个 AVFormatContext 复制到另一个 AVFormatContext。
  *
- * Streams in the destination context whose designated attribute match the attribute of
- * the streams in the source AVProgram index are added to the stream index of the copied
- * AVProgram. The attribute is designated using AVFMT_PROGCOPY_MATCH_ flags.
+ * 目标上下文中指定属性与源 AVProgram 索引中流的属性匹配的流将添加到复制的 AVProgram 的流索引中。该属性使用 AVFMT_PROGCOPY_MATCH_ 标志指定。
  *
- * If a new program has to be added, the function expects and requires any existing buffer
- * holding the array of pointers to AVPrograms in the destination context to have its size
- * be a power-of-two value. This should be the case if all earlier programs were created
- * using av_new_program or this function.
+ * 如果必须添加新程序，则该函数期望并要求任何保存目标上下文中指向 AVPrograms 的指针数组的现有缓冲区的大小为 2 的幂值。如果所有早期程序都是使用 av_new_program 或此函数创建的，则应该是这种情况。
  *
- * @param dst           pointer to the target muxer context
- * @param src           pointer to the source muxer context
- * @param progid        ID of the program to be copied
- * @param flags         combination of flags which determine how streams are matched and
- *                      whether pre-existing AVProgram in target is overwritten.
- *                      If no match condition is set, streams will be matched by ids if
- *                      all source stream ids are non-zero and unique, else by index.
+ * @param dst 指向目标复用器上下文的指针
+ * @param src 指向源复用器上下文的指针
+ * @param progid 要复制的节目的 ID
+ * @param flags 确定流如何匹配以及目标中是否预先存在 AVProgram 的标志组合被覆盖。如果未设置匹配条件，如果所有源流 id 均非零且唯一，则流将按 id 匹配，否则按索引匹配。
  *
- * @return  >= 0 in case of success, Error EEXIST if target already has program with same ID
- *          and overwrite flag isn't set, else a negative AVERROR code in case of other
- *          failures.
+ * @return >= 0 如果成功，则错误 EEXIST 如果目标已有具有相同 ID 的程序并且未设置覆盖标志，否则如果出现其他失败，则为负 AVERROR 代码。
  */
 int av_program_copy(AVFormatContext *dst, const AVFormatContext *src, int progid, int flags);
 
@@ -2190,21 +1650,14 @@ int av_program_copy(AVFormatContext *dst, const AVFormatContext *src, int progid
 
 
 /**
- * Allocate an AVFormatContext for an output format.
- * avformat_free_context() can be used to free the context and
- * everything allocated by the framework within it.
+ * 为输出格式分配 AVFormatContext。 avformat_free_context() 可用于释放上下文以及框架在其中分配的所有内容。
  *
- * @param ctx           pointee is set to the created format context,
- *                      or to NULL in case of failure
- * @param oformat       format to use for allocating the context, if NULL
- *                      format_name and filename are used instead
- * @param format_name   the name of output format to use for allocating the
- *                      context, if NULL filename is used instead
- * @param filename      the name of the filename to use for allocating the
- *                      context, may be NULL
+ * @param ctx 指针对象设置为创建的格式上下文，或者在失败的情况下设置为 NULL
+ * @param oformat 用于分配上下文的格式（如果使用 NULL format_name 和文件名）
+ * @param format_name 用于分配上下文的输出格式的名称（如果使用 NULL 文件名）
+ * @param filename 用于分配上下文的文件名的名称，如果成功，可能为 NULL
  *
- * @return  >= 0 in case of success, a negative AVERROR code in case of
- *          failure
+ * @return >= 0；如果失败，则为负 AVERROR 代码
  */
 int avformat_alloc_output_context2(AVFormatContext **ctx, const AVOutputFormat *oformat,
                                    const char *format_name, const char *filename);
@@ -2215,174 +1668,125 @@ int avformat_alloc_output_context2(AVFormatContext **ctx, const AVOutputFormat *
  */
 
 /**
- * Find AVInputFormat based on the short name of the input format.
+ * 根据输入格式的短名称查找 AVInputFormat。
  */
 const AVInputFormat *av_find_input_format(const char *short_name);
 
 /**
- * Guess the file format.
+ * 猜测文件格式。
  *
- * @param pd        data to be probed
- * @param is_opened Whether the file is already opened; determines whether
- *                  demuxers with or without AVFMT_NOFILE are probed.
+ * @param pd 待探测数据
+ * @param is_opened 文件是否已打开；确定是否探测带有或不带有 AVFMT_NOFILE 的解复用器。
  */
 const AVInputFormat *av_probe_input_format(const AVProbeData *pd, int is_opened);
 
 /**
- * Guess the file format.
+ * 猜测文件格式。
  *
- * @param pd        data to be probed
- * @param is_opened Whether the file is already opened; determines whether
- *                  demuxers with or without AVFMT_NOFILE are probed.
- * @param score_max A probe score larger that this is required to accept a
- *                  detection, the variable is set to the actual detection
- *                  score afterwards.
- *                  If the score is <= AVPROBE_SCORE_MAX / 4 it is recommended
- *                  to retry with a larger probe buffer.
+ * @param pd 待探测数据
+ * @param is_opened 文件是否已经打开；确定是否探测带有或不带有 AVFMT_NOFILE 的解复用器。
+ * @param score_max 大于接受检测所需的探测分数，之后将该变量设置为实际检测分数。如果分数 <= AVPROBE_SCORE_MAX / 4，建议使用更大的探测缓冲区重试。
  */
 const AVInputFormat *av_probe_input_format2(const AVProbeData *pd,
                                             int is_opened, int *score_max);
 
 /**
- * Guess the file format.
+ * 猜测文件格式。
  *
- * @param is_opened Whether the file is already opened; determines whether
- *                  demuxers with or without AVFMT_NOFILE are probed.
- * @param score_ret The score of the best detection.
+ * @param is_opened 文件是否已经打开；确定是否探测带有或不带有 AVFMT_NOFILE 的解复用器。
+ * @param score_ret 最佳检测的分数。
  */
 const AVInputFormat *av_probe_input_format3(const AVProbeData *pd,
                                             int is_opened, int *score_ret);
 
 /**
- * Probe a bytestream to determine the input format. Each time a probe returns
- * with a score that is too low, the probe buffer size is increased and another
- * attempt is made. When the maximum probe size is reached, the input format
- * with the highest score is returned.
+ * 探测字节流以确定输入格式。每次探测返回的分数太低时，都会增加探测缓冲区大小并进行另一次尝试。当达到最大探针大小时，返回得分最高的输入格式。
  *
- * @param pb             the bytestream to probe
- * @param fmt            the input format is put here
- * @param url            the url of the stream
- * @param logctx         the log context
- * @param offset         the offset within the bytestream to probe from
- * @param max_probe_size the maximum probe buffer size (zero for default)
+ * @param pb 要探测的字节流
+ * @param fmt 输入格式放在这里
+ * @param url 流的 url
+ * @param logctx 日志上下文
+ * @param offset 字节流内的偏移量来自
+ * @param max_probe_size 的探测 最大探测缓冲区大小（默认为零）
  *
- * @return the score in case of success, a negative value corresponding to an
- *         the maximal score is AVPROBE_SCORE_MAX
- *         AVERROR code otherwise
+ * @return 成功情况下的分数，对应于最大分数的负值是 AVPROBE_SCORE_MAX AVERROR 代码，否则
  */
 int av_probe_input_buffer2(AVIOContext *pb, const AVInputFormat **fmt,
                            const char *url, void *logctx,
                            unsigned int offset, unsigned int max_probe_size);
 
 /**
- * Like av_probe_input_buffer2() but returns 0 on success
+ * 与 av_probe_input_buffer2() 类似，但返回 0成功
  */
 int av_probe_input_buffer(AVIOContext *pb, const AVInputFormat **fmt,
                           const char *url, void *logctx,
                           unsigned int offset, unsigned int max_probe_size);
 
 /**
- * Open an input stream and read the header. The codecs are not opened.
- * The stream must be closed with avformat_close_input().
+ * 打开输入流并读取标头。编解码器未打开。必须使用 avformat_close_input() 关闭流。
  *
- * @param ps       Pointer to user-supplied AVFormatContext (allocated by
- *                 avformat_alloc_context). May be a pointer to NULL, in
- *                 which case an AVFormatContext is allocated by this
- *                 function and written into ps.
- *                 Note that a user-supplied AVFormatContext will be freed
- *                 on failure and its pointer set to NULL.
- * @param url      URL of the stream to open.
- * @param fmt      If non-NULL, this parameter forces a specific input format.
- *                 Otherwise the format is autodetected.
- * @param options  A dictionary filled with AVFormatContext and demuxer-private
- *                 options.
- *                 On return this parameter will be destroyed and replaced with
- *                 a dict containing options that were not found. May be NULL.
+ * @param ps 指向用户提供的 AVFormatContext 的指针（由 avformat_alloc_context 分配）。可能是指向 NULL 的指针，在这种情况下，该函数会分配 AVFormatContext 并将其写入 ps 中。请注意，用户提供的 AVFormatContext 将在失败时释放，并将其指针设置为 NULL。
+ * @param url 要打开的流的 URL。
+ * @param fmt 如果非 NULL，则此参数强制使用特定的输入格式。否则会自动检测格式。
+ * @param options 一个充满 AVFormatContext 和 demuxer-private 选项的字典。返回时，此参数将被销毁并替换为包含未找​​到的选项的字典。可能为 NULL。
  *
- * @return 0 on success; on failure: frees ps, sets its pointer to NULL,
- *         and returns a negative AVERROR.
+ * @return 成功时为 0；失败时：释放 ps，将其指针设置为 NULL，并返回负值 AVERROR。
  *
- * @note If you want to use custom IO, preallocate the format context and set its pb field.
+ * @note 如果要使用自定义 IO，请预先分配格式上下文并设置其 pb 字段。
  */
 int avformat_open_input(AVFormatContext **ps, const char *url,
                         const AVInputFormat *fmt, AVDictionary **options);
 
 /**
- * Read packets of a media file to get stream information. This
- * is useful for file formats with no headers such as MPEG. This
- * function also computes the real framerate in case of MPEG-2 repeat
- * frame mode.
- * The logical file position is not changed by this function;
- * examined packets may be buffered for later processing.
+ * 读取媒体文件的数据包以获取流信息。这对于没有标头的文件格式（例如 MPEG）非常有用。该函数还计算 MPEG-2 重复帧模式下的实际帧速率。该函数不会改变逻辑文件位置；检查过的数据包可能会被缓冲以供以后处理。
  *
- * @param ic media file handle
- * @param options  If non-NULL, an ic.nb_streams long array of pointers to
- *                 dictionaries, where i-th member contains options for
- *                 codec corresponding to i-th stream.
- *                 On return each dictionary will be filled with options that were not found.
- * @return >=0 if OK, AVERROR_xxx on error
+ * @param ic 媒体文件句柄
+ * @param options 如果非 NULL，则为指向字典的 ic.nb_streams 长指针数组，其中第 i 个成员包含对应于第 i 个流的编解码器的选项。返回时，每个字典将填充未找到的选项。
+ * @return >=0 如果 OK，AVERROR_xxx 错误
  *
- * @note this function isn't guaranteed to open all the codecs, so
- *       options being non-empty at return is a perfectly normal behavior.
+ * @note 此函数不能保证打开所有编解码器，因此返回时选项非空是完全正常的行为。
  *
- * @todo Let the user decide somehow what information is needed so that
- *       we do not waste time getting stuff the user does not need.
+ * @todo 让用户以某种方式决定需要什么信息，这样我们就不会浪费时间获取用户不需要的信息。
  */
 int avformat_find_stream_info(AVFormatContext *ic, AVDictionary **options);
 
 /**
- * Find the programs which belong to a given stream.
+ * 查找属于给定流的节目。
  *
- * @param ic    media file handle
- * @param last  the last found program, the search will start after this
- *              program, or from the beginning if it is NULL
- * @param s     stream index
+ * @param ic 媒体文件句柄
+ * @param last 最后找到的节目，搜索将从该节目之后开始，如果为 NULL，则从头开始
+ * @param s 流索引
  *
- * @return the next program which belongs to s, NULL if no program is found or
- *         the last program is not among the programs of ic.
+ * @return 属于 s 的下一个节目，如果未找到节目则为 NULL 或最后一个程序不在ic的程序中。
  */
 AVProgram *av_find_program_from_stream(AVFormatContext *ic, AVProgram *last, int s);
 
 void av_program_add_stream_index(AVFormatContext *ac, int progid, unsigned int idx);
 
 /**
- * Add the supplied index of a stream to the AVProgram with matching id.
+ * 将提供的流索引添加到具有匹配 id 的 AVProgram 中。
  *
- * @param ac      the format context which contains the target AVProgram
- * @param progid  the ID of the AVProgram whose stream index is to be updated
- * @param idx     the index of the stream to be added
+ * @param ac 包含目标 AVProgram 的格式上下文
+ * @param progid 其流索引要更新的 AVProgram 的 ID
+ * @param idx 要添加的流的索引
  *
- * @return >=0 upon successful addition or if index was already present,
- *         AVERROR if no matching program is found or stream index is invalid or
- *         the stream index array reallocation failed.
+ * @return 在成功添加或索引已经存在时 >=0，如果未找到匹配的程序或流索引无效或流索引数组重新分配失败，则 AVERROR。
  */
 int av_program_add_stream_index2(AVFormatContext *ac, int progid, unsigned int idx);
 
 /**
- * Find the "best" stream in the file.
- * The best stream is determined according to various heuristics as the most
- * likely to be what the user expects.
- * If the decoder parameter is non-NULL, av_find_best_stream will find the
- * default decoder for the stream's codec; streams for which no decoder can
- * be found are ignored.
+ * 在文件中查找“最佳”流。最佳流是​​根据各种启发法确定为最有可能是用户期望的流。如果解码器参数非NULL，av_find_best_stream将为流的编解码器查找默认解码器；无法找到解码器的流将被忽略。
  *
- * @param ic                media file handle
- * @param type              stream type: video, audio, subtitles, etc.
- * @param wanted_stream_nb  user-requested stream number,
- *                          or -1 for automatic selection
- * @param related_stream    try to find a stream related (eg. in the same
- *                          program) to this one, or -1 if none
- * @param decoder_ret       if non-NULL, returns the decoder for the
- *                          selected stream
- * @param flags             flags; none are currently defined
+ * @param ic 媒体文件句柄
+ * @param type 流类型：视频、音频、字幕等
+ * @param wanted_stream_nb 用户请求的流编号，或 -1 表示自动选择
+ * @param related_stream 尝试查找与此相关的流（例如在同一节目中），或 -1（如果没有）
+ * @param decoder_ret 如果非 NULL，则返回所选流的解码器
+ * @param flags 标志；当前未定义
  *
- * @return  the non-negative stream number in case of success,
- *          AVERROR_STREAM_NOT_FOUND if no stream with the requested type
- *          could be found,
- *          AVERROR_DECODER_NOT_FOUND if streams were found but no decoder
+ * @return 如果成功，则为非负流编号；如果找不到具有请求类型的流，则为 AVERROR_STREAM_NOT_FOUND；如果找到流，但没有解码器，则为 AVERROR_DECODER_NOT_FOUND
  *
- * @note  If av_find_best_stream returns successfully and decoder_ret is not
- *        NULL, then *decoder_ret is guaranteed to be set to a valid AVCodec.
+ * @note 如果 av_find_best_stream 成功返回，但解码器_ret 未返回NULL，则 *decoder_ret 保证设置为有效的 AVCodec。
  */
 int av_find_best_stream(AVFormatContext *ic,
                         enum AVMediaType type,
@@ -2392,452 +1796,300 @@ int av_find_best_stream(AVFormatContext *ic,
                         int flags);
 
 /**
- * Return the next frame of a stream.
- * This function returns what is stored in the file, and does not validate
- * that what is there are valid frames for the decoder. It will split what is
- * stored in the file into frames and return one for each call. It will not
- * omit invalid data between valid frames so as to give the decoder the maximum
- * information possible for decoding.
+ * 返回流中的下一帧。此函数返回文件中存储的内容，不会验证其中的内容是否是解码器可用的有效帧。
+ * 它会将文件中的内容拆分为帧，每次调用返回一帧。为了向解码器提供尽可能多的解码信息，
+ * 它不会省略有效帧之间的无效数据。
  *
- * On success, the returned packet is reference-counted (pkt->buf is set) and
- * valid indefinitely. The packet must be freed with av_packet_unref() when
- * it is no longer needed. For video, the packet contains exactly one frame.
- * For audio, it contains an integer number of frames if each frame has
- * a known fixed size (e.g. PCM or ADPCM data). If the audio frames have
- * a variable size (e.g. MPEG audio), then it contains one frame.
+ * 成功时，返回的数据包将进行引用计数（设置了 pkt->buf）并且无限期有效。当不再需要数据包时，必须使用 av_packet_unref() 释放该数据包。对于视频，数据包仅包含一帧。对于音频，如果每个帧具有已知的固定大小（例如 PCM 或 ADPCM 数据），则它包含整数个帧。如果音频帧的大小可变（例如 MPEG 音频），则它包含一帧。
  *
- * pkt->pts, pkt->dts and pkt->duration are always set to correct
- * values in AVStream.time_base units (and guessed if the format cannot
- * provide them). pkt->pts can be AV_NOPTS_VALUE if the video format
- * has B-frames, so it is better to rely on pkt->dts if you do not
- * decompress the payload.
+ * pkt->pts、pkt->dts 和 pkt->duration 始终设置为 AVStream.time_base 单位中的正确值（并猜测格式是否无法提供它们）。如果视频格式有 B 帧，pkt->pts 可以是 AV_NOPTS_VALUE，因此如果不解压缩有效负载，最好依赖 pkt->dts。
  *
- * @return 0 if OK, < 0 on error or end of file. On error, pkt will be blank
- *         (as if it came from av_packet_alloc()).
+ * @return 如果正常则为 0，如果发生错误或文件结尾则为 < 0。出错时，pkt 将为空（就好像它来自 av_packet_alloc()）。
  *
- * @note pkt will be initialized, so it may be uninitialized, but it must not
- *       contain data that needs to be freed.
+ * @note pkt将被初始化，因此它可能未初始化，但它不能包含需要释放的数据。
  */
 int av_read_frame(AVFormatContext *s, AVPacket *pkt);
 
 /**
- * Seek to the keyframe at timestamp.
- * 'timestamp' in 'stream_index'.
+ * 查找时间戳处的关键帧。 “stream_index”中的“时间戳”。
  *
- * @param s            media file handle
- * @param stream_index If stream_index is (-1), a default stream is selected,
- *                     and timestamp is automatically converted from
- *                     AV_TIME_BASE units to the stream specific time_base.
- * @param timestamp    Timestamp in AVStream.time_base units or, if no stream
- *                     is specified, in AV_TIME_BASE units.
- * @param flags        flags which select direction and seeking mode
+ * @param s 媒体文件句柄
+ * @param stream_index 如果stream_index 为(-1)，则选择默认流，并且时间戳会自动从AV_TIME_BASE 单位转换为流特定的time_base。
+ * @param timestamp 以 AVStream.time_base 为单位的时间戳，或者如果未指定流，则以 AV_TIME_BASE 为单位。
+ * @param flags 选择方向和搜索模式的标志
  *
- * @return >= 0 on success
+ * @return >= 0 表示成功
  */
 int av_seek_frame(AVFormatContext *s, int stream_index, int64_t timestamp,
                   int flags);
 
 /**
- * Seek to timestamp ts.
- * Seeking will be done so that the point from which all active streams
- * can be presented successfully will be closest to ts and within min/max_ts.
- * Active streams are all streams that have AVStream.discard < AVDISCARD_ALL.
+ * 寻求时间戳 ts。将进行查找，以便可以成功呈现所有活动流的点将最接近 ts 并在 min/max_ts 之内。活动流是 AVStream.discard < AVDISCARD_ALL 的所有流。
  *
- * If flags contain AVSEEK_FLAG_BYTE, then all timestamps are in bytes and
- * are the file position (this may not be supported by all demuxers).
- * If flags contain AVSEEK_FLAG_FRAME, then all timestamps are in frames
- * in the stream with stream_index (this may not be supported by all demuxers).
- * Otherwise all timestamps are in units of the stream selected by stream_index
- * or if stream_index is -1, in AV_TIME_BASE units.
- * If flags contain AVSEEK_FLAG_ANY, then non-keyframes are treated as
- * keyframes (this may not be supported by all demuxers).
- * If flags contain AVSEEK_FLAG_BACKWARD, it is ignored.
+ * 如果标志包含 AVSEEK_FLAG_BYTE，则所有时间戳均以字节为单位，并且是文件位置（可能并非所有解复用器都支持）。如果标志包含 AVSEEK_FLAG_FRAME，则所有时间戳都位于具有stream_index 的流中的帧中（这可能不受所有解复用器支持）。否则，所有时间戳均以stream_index选择的流为单位，或者如果stream_index为-1，则以AV_TIME_BASE为单位。如果标志包含 AVSEEK_FLAG_ANY，则非关键帧将被视为关键帧（这可能不受所有解复用器支持）。如果标志包含 AVSEEK_FLAG_BACKWARD，则会被忽略。
  *
- * @param s            media file handle
- * @param stream_index index of the stream which is used as time base reference
- * @param min_ts       smallest acceptable timestamp
- * @param ts           target timestamp
- * @param max_ts       largest acceptable timestamp
- * @param flags        flags
- * @return >=0 on success, error code otherwise
+ * @param s 媒体文件句柄
+ * @param stream_index 用作时基参考的流索引
+ * @param min_ts 最小可接受时间戳
+ * @param ts 目标时间戳
+ * @param max_ts 最大可接受时间戳
+ * @param flags 成功时标记
+ * @return >=0，否则错误代码
  *
- * @note This is part of the new seek API which is still under construction.
+ * @note 这是仍在构建中的新搜索 API 的一部分。
  */
 int avformat_seek_file(AVFormatContext *s, int stream_index, int64_t min_ts, int64_t ts, int64_t max_ts, int flags);
 
 /**
- * Discard all internally buffered data. This can be useful when dealing with
- * discontinuities in the byte stream. Generally works only with formats that
- * can resync. This includes headerless formats like MPEG-TS/TS but should also
- * work with NUT, Ogg and in a limited way AVI for example.
+ * 丢弃所有内部缓冲的数据。这在处理字节流中的不连续性时非常有用。通常仅适用于可以重新同步的格式。这包括 MPEG-TS/TS 等无标头格式，但也应与 NUT、Ogg 以及有限的 AVI 等一起使用。
  *
- * The set of streams, the detected duration, stream parameters and codecs do
- * not change when calling this function. If you want a complete reset, it's
- * better to open a new AVFormatContext.
+ * 调用此函数时，流集、检测到的持续时间、流参数和编解码器不会更改。如果您想要完全重置，最好打开一个新的 AVFormatContext。
  *
- * This does not flush the AVIOContext (s->pb). If necessary, call
- * avio_flush(s->pb) before calling this function.
+ * 这不会刷新 AVIOContext (s->pb)。如有必要，请在调用此函数之前调用 avio_flush(s->pb)。
  *
- * @param s media file handle
- * @return >=0 on success, error code otherwise
+ * @param s 媒体文件句柄
+ * @return >=0 成功，否则错误代码
  */
 int avformat_flush(AVFormatContext *s);
 
 /**
- * Start playing a network-based stream (e.g. RTSP stream) at the
- * current position.
+ * 在当前位置开始播放基于网络的流（例如 RTSP 流）。
  */
 int av_read_play(AVFormatContext *s);
 
 /**
- * Pause a network-based stream (e.g. RTSP stream).
+ * 暂停基于网络的流（例如 RTSP 流）。
  *
- * Use av_read_play() to resume it.
+ * 使用 av_read_play() 恢复它。
  */
 int av_read_pause(AVFormatContext *s);
 
 /**
- * Command IDs that can be sent to the demuxer
+ * 可以发送到解复用器的命令 ID
  *
- * The following commands can be sent to a demuxer
- * using ::avformat_send_command.
+ * 可以使用 ::avformat_send_command 将以下命令发送到解复用器。
  */
 enum AVFormatCommandID {
     /**
-     * Send a RTSP `SET_PARAMETER` request to the server
-     *
-     * Sends an SET_PARAMETER RTSP command to the server,
-     * with a data payload of type ::AVRTSPCommandRequest,
-     * ownership of it and its data remains with the caller.
-     *
-     * A reply retrieved is of type ::AVRTSPResponse and it
-     * and its contents must be freed by the caller.
-     */
+ * 向服务器发送 RTSP `SET_PARAMETER` 请求
+ *
+ * 将 SET_PARAMETER RTSP 命令发送到服务器，其数据负载类型为 ::AVRTSPCommandRequest，其所有权及其数据仍属于调用者。
+ *
+ * 检索到的回复的类型为::AVRTSPResponse，并且它及其内容必须由调用者释放。
+ */
     AVFORMAT_COMMAND_RTSP_SET_PARAMETER,
 };
 
 typedef struct AVRTSPCommandRequest {
     /**
-     * Headers sent in the request to the server
-     */
+ * 在请求中发送到服务器的标头
+ */
     AVDictionary *headers;
 
     /**
-     * Body payload size
-     */
+ * 主体有效负载大小
+ */
     size_t body_len;
 
     /**
-     * Body payload
-     */
+ * 主体有效负载
+ */
     char *body;
 } AVRTSPCommandRequest;
 
 typedef struct AVRTSPResponse {
     /**
-     * Response status code from server
-     */
+ * 来自服务器的响应状态代码
+ */
     int status_code;
 
     /**
-     * Reason phrase from the server, describing the
-     * status in a human-readable way.
-     */
+ * 来自服务器的原因短语，描述以人类可读的方式显示状态。
+ */
     char *reason;
 
     /**
-     * Body payload size
-     */
+ * 主体有效负载大小
+ */
     size_t body_len;
 
     /**
-     * Body payload
-     */
+ * 主体有效负载
+ */
     unsigned char *body;
 } AVRTSPResponse;
 
 /**
- * Send a command to the demuxer
+ * 向解复用器发送命令
  *
- * Sends the specified command and (depending on the command)
- * optionally a command-specific payload to the demuxer to handle.
+ * 发送指定的命令和（取决于命令）可选的命令特定有效负载到解复用器进行处理。
  *
- * @param s     Format context, must be allocated with
- *              ::avformat_alloc_context.
- * @param id    Identifier of type ::AVFormatCommandID,
- *              indicating the command to send.
- * @param data  Command-specific data, allocated by the caller
- *              and ownership remains with the caller.
- *              For details what is expected here, consult the
- *              documentation of the respective ::AVFormatCommandID.
+ * @param s 格式上下文，必须使用 ::avformat_alloc_context 分配。
+ * @param id ::AVFormatCommandID 类型的标识符，指示要发送的命令。
+ * @param data 命令特定数据，由调用者分配，所有权仍属于调用者。有关此处期望的详细信息，请参阅相应 ::AVFormatCommandID 的文档。
  */
 int avformat_send_command(AVFormatContext *s, enum AVFormatCommandID id, void *data);
 
 /**
- * Receive a command reply from the demuxer
+ * 从多路分配器接收命令回复
  *
- * Retrieves a reply for a previously sent command from the muxer.
+ * 从多路复用器检索先前发送的命令的回复。
  *
- * @param s         Format context, must be allocated with
- *                  ::avformat_alloc_context.
- * @param id        Identifier of type ::AVFormatCommandID,
- *                  indicating the command for which to retrieve
- *                  the reply.
- * @param data_out  Pointee is set to the command reply, the actual
- *                  type depends on the command. This is allocated by
- *                  the muxer and must be freed with ::av_free.
- *                  For details on the actual data set here, consult the
- *                  documentation of the respective ::AVFormatCommandID.
+ * @param s 格式上下文，必须使用 ::avformat_alloc_context 分配。
+ * @param id ::AVFormatCommandID 类型的标识符，指示要检索其回复的命令。
+ * @param data_out Pointee设置为命令回复，实际类型取决于命令。这是由复用器分配的，必须使用 ::av_free 释放。有关此处实际数据集的详细信息，请参阅相应 ::AVFormatCommandID 的文档。
  */
 int avformat_receive_command_reply(AVFormatContext *s, enum AVFormatCommandID id, void **data_out);
 
 /**
- * Close an opened input AVFormatContext. Free it and all its contents
- * and set *s to NULL.
+ * 关闭打开的输入 AVFormatContext。释放它及其所有内容并将 *s 设置为 NULL。
  */
 void avformat_close_input(AVFormatContext **s);
 /**
  * @}
  */
 
-#define AVSEEK_FLAG_BACKWARD 1 ///< seek backward
-#define AVSEEK_FLAG_BYTE     2 ///< seeking based on position in bytes
-#define AVSEEK_FLAG_ANY      4 ///< seek to any frame, even non-keyframes
-#define AVSEEK_FLAG_FRAME    8 ///< seeking based on frame number
+#define AVSEEK_FLAG_BACKWARD 1 ///< 向后查找
+#define AVSEEK_FLAG_BYTE     2 ///< 基于字节位置查找
+#define AVSEEK_FLAG_ANY      4 ///< 查找任何帧，甚至非关键帧
+#define AVSEEK_FLAG_FRAME    8 ///< 基于帧编号查找
 
 /**
  * @addtogroup lavf_encoding
  * @{
  */
 
-#define AVSTREAM_INIT_IN_WRITE_HEADER 0 ///< stream parameters initialized in avformat_write_header
-#define AVSTREAM_INIT_IN_INIT_OUTPUT  1 ///< stream parameters initialized in avformat_init_output
+#define AVSTREAM_INIT_IN_WRITE_HEADER 0 ///< avformat_write_header 中初始化的流参数
+#define AVSTREAM_INIT_IN_INIT_OUTPUT  1 ///< avformat_init_output 中初始化的流参数
 
 /**
- * Allocate the stream private data and write the stream header to
- * an output media file.
+ * 分配流私有数据并将流标头写入输出媒体文件。
  *
- * @param s        Media file handle, must be allocated with
- *                 avformat_alloc_context().
- *                 Its \ref AVFormatContext.oformat "oformat" field must be set
- *                 to the desired output format;
- *                 Its \ref AVFormatContext.pb "pb" field must be set to an
- *                 already opened ::AVIOContext.
- * @param options  An ::AVDictionary filled with AVFormatContext and
- *                 muxer-private options.
- *                 On return this parameter will be destroyed and replaced with
- *                 a dict containing options that were not found. May be NULL.
+ * @param s 媒体文件句柄，必须使用 avformat_alloc_context() 分配。其\ref AVFormatContext.oformat“oformat”字段必须设置为所需的输出格式；其\ref AVFormatContext.pb“pb”字段必须设置为已打开的::AVIOContext。
+ * @param options 一个 ::AVDictionary，其中包含 AVFormatContext 和 muxer-private 选项。返回时，此参数将被销毁并替换为包含未找​​到的选项的字典。可能为 NULL。
  *
- * @retval AVSTREAM_INIT_IN_WRITE_HEADER On success, if the codec had not already been
- *                                       fully initialized in avformat_init_output().
- * @retval AVSTREAM_INIT_IN_INIT_OUTPUT  On success, if the codec had already been fully
- *                                       initialized in avformat_init_output().
- * @retval AVERROR                       A negative AVERROR on failure.
+ * @retval AVSTREAM_INIT_IN_WRITE_HEADER 如果编解码器尚未在 avformat_init_output() 中完全初始化，则成功。
+ * @retval AVSTREAM_INIT_IN_INIT_OUTPUT 如果编解码器已在 avformat_init_output() 中完全初始化，则成功。
+ * @retval AVERROR 失败时为负 AVERROR。
  *
- * @see av_opt_find, av_dict_set, avio_open, av_oformat_next, avformat_init_output.
+ * @see av_opt_find、av_dict_set、avio_open、av_oformat_next、avformat_init_output。
  */
 av_warn_unused_result
 int avformat_write_header(AVFormatContext *s, AVDictionary **options);
 
 /**
- * Allocate the stream private data and initialize the codec, but do not write the header.
- * May optionally be used before avformat_write_header() to initialize stream parameters
- * before actually writing the header.
- * If using this function, do not pass the same options to avformat_write_header().
+ * 分配流私有数据并初始化编解码器，但不写入标头。可以选择在 avformat_write_header() 之前使用，以在实际写入标头之前初始化流参数。如果使用此函数，请勿将相同的选项传递给 avformat_write_header()。
  *
- * @param s        Media file handle, must be allocated with
- *                 avformat_alloc_context().
- *                 Its \ref AVFormatContext.oformat "oformat" field must be set
- *                 to the desired output format;
- *                 Its \ref AVFormatContext.pb "pb" field must be set to an
- *                 already opened ::AVIOContext.
- * @param options  An ::AVDictionary filled with AVFormatContext and
- *                 muxer-private options.
- *                 On return this parameter will be destroyed and replaced with
- *                 a dict containing options that were not found. May be NULL.
+ * @param s 媒体文件句柄，必须使用 avformat_alloc_context() 分配。其\ref AVFormatContext.oformat“oformat”字段必须设置为所需的输出格式；其\ref AVFormatContext.pb“pb”字段必须设置为已打开的::AVIOContext。
+ * @param options 一个 ::AVDictionary，其中包含 AVFormatContext 和 muxer-private 选项。返回时，此参数将被销毁并替换为包含未找​​到的选项的字典。可能为 NULL。
  *
- * @retval AVSTREAM_INIT_IN_WRITE_HEADER On success, if the codec requires
- *                                       avformat_write_header to fully initialize.
- * @retval AVSTREAM_INIT_IN_INIT_OUTPUT  On success, if the codec has been fully
- *                                       initialized.
- * @retval AVERROR                       Anegative AVERROR on failure.
+ * @retval AVSTREAM_INIT_IN_WRITE_HEADER 成功时，如果编解码器需要 avformat_write_header 来完全初始化。
+ * @retval AVSTREAM_INIT_IN_INIT_OUTPUT 如果编解码器已完全初始化，则成功。
+ * @retval AVERROR 失败时为负 AVERROR。
  *
- * @see av_opt_find, av_dict_set, avio_open, av_oformat_next, avformat_write_header.
+ * @see av_opt_find、av_dict_set、avio_open、av_oformat_next、avformat_write_header。
  */
 av_warn_unused_result
 int avformat_init_output(AVFormatContext *s, AVDictionary **options);
 
 /**
- * Write a packet to an output media file.
+ * 将数据包写入输出媒体文件。
  *
- * This function passes the packet directly to the muxer, without any buffering
- * or reordering. The caller is responsible for correctly interleaving the
- * packets if the format requires it. Callers that want libavformat to handle
- * the interleaving should call av_interleaved_write_frame() instead of this
- * function.
+ * 此函数将数据包直接传递到复用器，无需任何缓冲或重新排序。如果格式需要，调用者负责正确交错数据包。希望 libavformat 处理交错的调用者应该调用 av_interleaved_write_frame() 而不是此函数。
  *
- * @param s media file handle
- * @param pkt The packet containing the data to be written. Note that unlike
- *            av_interleaved_write_frame(), this function does not take
- *            ownership of the packet passed to it (though some muxers may make
- *            an internal reference to the input packet).
- *            <br>
- *            This parameter can be NULL (at any time, not just at the end), in
- *            order to immediately flush data buffered within the muxer, for
- *            muxers that buffer up data internally before writing it to the
- *            output.
- *            <br>
- *            Packet's @ref AVPacket.stream_index "stream_index" field must be
- *            set to the index of the corresponding stream in @ref
- *            AVFormatContext.streams "s->streams".
- *            <br>
- *            The timestamps (@ref AVPacket.pts "pts", @ref AVPacket.dts "dts")
- *            must be set to correct values in the stream's timebase (unless the
- *            output format is flagged with the AVFMT_NOTIMESTAMPS flag, then
- *            they can be set to AV_NOPTS_VALUE).
- *            The dts for subsequent packets passed to this function must be strictly
- *            increasing when compared in their respective timebases (unless the
- *            output format is flagged with the AVFMT_TS_NONSTRICT, then they
- *            merely have to be nondecreasing).  @ref AVPacket.duration
- *            "duration") should also be set if known.
- * @return < 0 on error, = 0 if OK, 1 if flushed and there is no more data to flush
+ * @param s 媒体文件句柄
+ * @param pkt 包含要写入的数据的数据包。请注意，与 av_interleaved_write_frame() 不同，此函数不获取传递给它的数据包的所有权（尽管某些复用器可能会对输入数据包进行内部引用）。 <br> 对于在将数据写入输出之前在内部缓冲数据的复用器，此参数可以为 NULL（任何时候，而不仅仅是在最后），以便立即刷新复用器内缓冲的数据。 <br> 数据包的@ref AVPacket.stream_index“stream_index”字段必须设置为@ref AVFormatContext.streams“s->streams”中相应流的索引。 <br> 时间戳（@ref AVPacket.pts“pts”、@ref AVPacket.dts“dts”）必须设置为流时基中的正确值（除非输出格式标记有 AVFMT_NOTIMESTAMPS 标志，则可以将它们设置为 AV_NOPTS_VALUE）。与各自的时基相比，传递到此函数的后续数据包的 dts 必须严格递增（除非输出格式标记有 AVFMT_TS_NONSTRICT，则它们只需非递减）。  如果已知的话，还应该设置@ref AVPacket.duration“duration”）。
+ * @return < 0 错误，= 0 如果正常，1 如果刷新并且没有更多数据要刷新
  *
  * @see av_interleaved_write_frame()
  */
 int av_write_frame(AVFormatContext *s, AVPacket *pkt);
 
 /**
- * Write a packet to an output media file ensuring correct interleaving.
+ * 将数据包写入输出媒体文件，确保正确交错。
  *
- * This function will buffer the packets internally as needed to make sure the
- * packets in the output file are properly interleaved, usually ordered by
- * increasing dts. Callers doing their own interleaving should call
- * av_write_frame() instead of this function.
+ * 该函数将根据需要在内部缓冲数据包，以确保输出文件中的数据包正确交错，通常通过增加 dts 进行排序。进行自己的交错的调用者应该调用 av_write_frame() 而不是此函数。
  *
- * Using this function instead of av_write_frame() can give muxers advance
- * knowledge of future packets, improving e.g. the behaviour of the mp4
- * muxer for VFR content in fragmenting mode.
+ * 使用此函数代替 av_write_frame() 可以让复用器预先了解未来的数据包，从而改进例如分段模式下 VFR 内容的 mp4 复用器的行为。
  *
- * @param s media file handle
- * @param pkt The packet containing the data to be written.
- *            <br>
- *            If the packet is reference-counted, this function will take
- *            ownership of this reference and unreference it later when it sees
- *            fit. If the packet is not reference-counted, libavformat will
- *            make a copy.
- *            The returned packet will be blank (as if returned from
- *            av_packet_alloc()), even on error.
- *            <br>
- *            This parameter can be NULL (at any time, not just at the end), to
- *            flush the interleaving queues.
- *            <br>
- *            Packet's @ref AVPacket.stream_index "stream_index" field must be
- *            set to the index of the corresponding stream in @ref
- *            AVFormatContext.streams "s->streams".
- *            <br>
- *            The timestamps (@ref AVPacket.pts "pts", @ref AVPacket.dts "dts")
- *            must be set to correct values in the stream's timebase (unless the
- *            output format is flagged with the AVFMT_NOTIMESTAMPS flag, then
- *            they can be set to AV_NOPTS_VALUE).
- *            The dts for subsequent packets in one stream must be strictly
- *            increasing (unless the output format is flagged with the
- *            AVFMT_TS_NONSTRICT, then they merely have to be nondecreasing).
- *            @ref AVPacket.duration "duration" should also be set if known.
+ * @param s 媒体文件句柄
+ * @param pkt 包含要写入的数据的数据包。 <br> 如果数据包是引用计数的，则该函数将取得该引用的所有权，并在以后认为合适时取消引用它。如果数据包不是引用计数的，libavformat 将制作一个副本。即使出现错误，返回的数据包也将为空白（就像从 av_packet_alloc() 返回一样）。 <br> 该参数可以为 NULL（任何时候，而不仅仅是在最后），以刷新交错队列。 <br> 数据包的@ref AVPacket.stream_index“stream_index”字段必须设置为@ref AVFormatContext.streams“s->streams”中相应流的索引。 <br> 时间戳（@ref AVPacket.pts“pts”、@ref AVPacket.dts“dts”）必须设置为流时基中的正确值（除非输出格式标记有 AVFMT_NOTIMESTAMPS 标志，则可以将它们设置为 AV_NOPTS_VALUE）。一个流中后续数据包的 dts 必须严格递增（除非输出格式标记有 AVFMT_TS_NONSTRICT，则它们只需非递减）。 @ref AVPacket.duration 如果已知，还应设置“持续时间”。
  *
- * @return 0 on success, a negative AVERROR on error.
+ * @return 成功时为 0，错误时为负 AVERROR。
  *
  * @see av_write_frame(), AVFormatContext.max_interleave_delta
  */
 int av_interleaved_write_frame(AVFormatContext *s, AVPacket *pkt);
 
 /**
- * Write an uncoded frame to an output media file.
+ * 将未编码的帧写入输出媒体文件。
  *
- * The frame must be correctly interleaved according to the container
- * specification; if not, av_interleaved_write_uncoded_frame() must be used.
+ * 框架必须按照集装箱规格正确交错；如果不是，则必须使用 av_interleaved_write_uncoded_frame()。
  *
- * See av_interleaved_write_uncoded_frame() for details.
+ * 有关详细信息，请参阅 av_interleaved_write_uncoded_frame()。
  */
 int av_write_uncoded_frame(AVFormatContext *s, int stream_index,
                            struct AVFrame *frame);
 
 /**
- * Write an uncoded frame to an output media file.
+ * 将未编码的帧写入输出媒体文件。
  *
- * If the muxer supports it, this function makes it possible to write an AVFrame
- * structure directly, without encoding it into a packet.
- * It is mostly useful for devices and similar special muxers that use raw
- * video or PCM data and will not serialize it into a byte stream.
+ * 如果复用器支持，此函数可以直接编写 AVFrame 结构，而无需将其编码到数据包中。它对于使用原始视频或 PCM 数据并且不会将其序列化为字节流的设备和类似的特殊复用器最有用。
  *
- * To test whether it is possible to use it with a given muxer and stream,
- * use av_write_uncoded_frame_query().
+ * 要测试是否可以将其与给定的复用器和流一起使用，请使用 av_write_uncoded_frame_query()。
  *
- * The caller gives up ownership of the frame and must not access it
- * afterwards.
+ * 调用者放弃帧的所有权，并且之后不得访问它。
  *
- * @return  >=0 for success, a negative code on error
+ * @return >=0 表示成功，负代码表示错误
  */
 int av_interleaved_write_uncoded_frame(AVFormatContext *s, int stream_index,
                                        struct AVFrame *frame);
 
 /**
- * Test whether a muxer supports uncoded frame.
+ * 测试复用器是否支持未编码帧。如果可以将未编码帧写入该复用器和流，则
  *
- * @return  >=0 if an uncoded frame can be written to that muxer and stream,
- *          <0 if not
+ * @return >=0；如果不能，则 <0
  */
 int av_write_uncoded_frame_query(AVFormatContext *s, int stream_index);
 
 /**
- * Write the stream trailer to an output media file and free the
- * file private data.
+ * 将流预告片写入输出媒体文件并释放文件私有数据。
  *
- * May only be called after a successful call to avformat_write_header.
+ * 只能在成功调用 avformat_write_header 后调用。
  *
- * @param s media file handle
- * @return 0 if OK, AVERROR_xxx on error
+ * @param s 媒体文件句柄
+ * @return 如果正常则为 0，如果出错则为 AVERROR_xxx
  */
 int av_write_trailer(AVFormatContext *s);
 
 /**
- * Return the output format in the list of registered output formats
- * which best matches the provided parameters, or return NULL if
- * there is no match.
+ * 返回已注册输出格式列表中与给定参数最匹配的输出格式；如果没有匹配项则返回 NULL。
  *
- * @param short_name if non-NULL checks if short_name matches with the
- *                   names of the registered formats
- * @param filename   if non-NULL checks if filename terminates with the
- *                   extensions of the registered formats
- * @param mime_type  if non-NULL checks if mime_type matches with the
- *                   MIME type of the registered formats
+ * @param short_name 如果为非 NULL，则检查 Short_name 是否与注册格式的名称匹配
+ * @param filename 如果为非 NULL，则检查文件名是否以注册格式的扩展名
+ * @param mime_type 如果非 NULL 检查 mime_type 是否与注册格式的 MIME 类型匹配
  */
 const AVOutputFormat *av_guess_format(const char *short_name,
                                       const char *filename,
                                       const char *mime_type);
 
 /**
- * Guess the codec ID based upon muxer and filename.
+ * 根据复用器和文件名猜测编解码器 ID。
  */
 enum AVCodecID av_guess_codec(const AVOutputFormat *fmt, const char *short_name,
                               const char *filename, const char *mime_type,
                               enum AVMediaType type);
 
 /**
- * Get timing information for the data currently output.
- * The exact meaning of "currently output" depends on the format.
- * It is mostly relevant for devices that have an internal buffer and/or
- * work in real time.
- * @param s          media file handle
- * @param stream     stream in the media file
- * @param[out] dts   DTS of the last packet output for the stream, in stream
- *                   time_base units
- * @param[out] wall  absolute time when that packet whas output,
- *                   in microsecond
- * @retval  0               Success
- * @retval  AVERROR(ENOSYS) The format does not support it
+ * 获取当前输出数据的时序信息。 “当前输出”的确切含义取决于格式。它主要与具有内部缓冲区和/或实时工作的设备相关。
+ * @param s 媒体文件句柄
+ * @param stream 媒体文件中的流
+ * @param[out] dts 流的最后一个数据包输出的 DTS（以流 time_base 为单位）
+ * @param[out] wall 该数据包输出时的绝对时间（以微秒为单位）
+ * @retval  0 成功
+ * @retval  AVERROR(ENOSYS) 该格式不支持
  *
- * @note Some formats or devices may not allow to measure dts and wall
- *       atomically.
+ * @note 某些格式或设备可能不允许自动测量 dts 和 wall。
  */
 int av_get_output_timestamp(struct AVFormatContext *s, int stream,
                             int64_t *dts, int64_t *wall);
@@ -2849,92 +2101,82 @@ int av_get_output_timestamp(struct AVFormatContext *s, int stream,
 
 
 /**
- * @defgroup lavf_misc Utility functions
+ * @defgroup lavf_misc 实用函数
  * @ingroup libavf
  * @{
  *
- * Miscellaneous utility functions related to both muxing and demuxing
- * (or neither).
+ * 与复用和解复用（或两者都不相关）相关的其他实用函数。
  */
 
 /**
- * Send a nice hexadecimal dump of a buffer to the specified file stream.
+ * 将缓冲区的十六进制转储发送到指定的文件流。
  *
- * @param f The file stream pointer where the dump should be sent to.
+ * @param f 转储应发送到的文件流指针。
  * @param buf buffer
- * @param size buffer size
+ * @param size 缓冲区大小
  *
- * @see av_hex_dump_log, av_pkt_dump2, av_pkt_dump_log2
+ * @see av_hex_dump_log、av_pkt_dump2、av_pkt_dump_log2
  */
 void av_hex_dump(FILE *f, const uint8_t *buf, int size);
 
 /**
- * Send a nice hexadecimal dump of a buffer to the log.
+ * 将缓冲区的十六进制转储发送到日志。
  *
- * @param avcl A pointer to an arbitrary struct of which the first field is a
- * pointer to an AVClass struct.
- * @param level The importance level of the message, lower values signifying
- * higher importance.
- * @param buf buffer
- * @param size buffer size
+ * @param avcl 指向任意结构的指针，其中第一个字段是指向 AVClass 结构的指针。
+ * @param level 消息的重要性级别，值越低表示重要性越高。
+ * @param buf 缓冲区
+ * @param size 缓冲区大小
  *
- * @see av_hex_dump, av_pkt_dump2, av_pkt_dump_log2
+ * @see av_hex_dump、av_pkt_dump2、av_pkt_dump_log2
  */
 void av_hex_dump_log(void *avcl, int level, const uint8_t *buf, int size);
 
 /**
- * Send a nice dump of a packet to the specified file stream.
+ * 将数据包的良好转储发送到指定的文件流。
  *
- * @param f The file stream pointer where the dump should be sent to.
- * @param pkt packet to dump
- * @param dump_payload True if the payload must be displayed, too.
- * @param st AVStream that the packet belongs to
+ * @param f 转储应发送到的文件流指针。
+ * @param pkt 用于转储的数据包
+ * @param dump_payload 如果还必须显示有效负载，则为 true。
+ * @param st 数据包所属的 AVStream
  */
 void av_pkt_dump2(FILE *f, const AVPacket *pkt, int dump_payload, const AVStream *st);
 
 
 /**
- * Send a nice dump of a packet to the log.
+ * 将数据包的良好转储发送到日志。
  *
- * @param avcl A pointer to an arbitrary struct of which the first field is a
- * pointer to an AVClass struct.
- * @param level The importance level of the message, lower values signifying
- * higher importance.
- * @param pkt packet to dump
- * @param dump_payload True if the payload must be displayed, too.
- * @param st AVStream that the packet belongs to
+ * @param avcl 指向任意结构的指针，其中第一个字段是指向 AVClass 结构的指针。
+ * @param level 消息的重要性级别，值越低表示重要性越高。
+ * @param pkt 用于转储的数据包
+ * @param dump_payload 如果还必须显示有效负载，则为 true。
+ * @param st 数据包所属的 AVStream
  */
 void av_pkt_dump_log2(void *avcl, int level, const AVPacket *pkt, int dump_payload,
                       const AVStream *st);
 
 /**
- * Get the AVCodecID for the given codec tag tag.
- * If no codec id is found returns AV_CODEC_ID_NONE.
+ * 获取给定编解码器标签的 AVCodecID。如果未找到编解码器 ID，则返回 AV_CODEC_ID_NONE。
  *
- * @param tags list of supported codec_id-codec_tag pairs, as stored
- * in AVInputFormat.codec_tag and AVOutputFormat.codec_tag
- * @param tag  codec tag to match to a codec ID
+ * @param tags 支持的 codec_id-codec_tag 对列表，存储在 AVInputFormat.codec_tag 和 AVOutputFormat.codec_tag 中
+ * @param tag 与编解码器 ID 匹配的编解码器标签
  */
 enum AVCodecID av_codec_get_id(const struct AVCodecTag * const *tags, unsigned int tag);
 
 /**
- * Get the codec tag for the given codec id id.
- * If no codec tag is found returns 0.
+ * 获取给定编解码器 ID 的编解码器标签。如果未找到编解码器标签，则返回 0。
  *
- * @param tags list of supported codec_id-codec_tag pairs, as stored
- * in AVInputFormat.codec_tag and AVOutputFormat.codec_tag
- * @param id   codec ID to match to a codec tag
+ * @param tags 支持的 codec_id-codec_tag 对列表，存储在 AVInputFormat.codec_tag 和 AVOutputFormat.codec_tag 中
+ * @param id 与编解码器标签匹配的编解码器 ID
  */
 unsigned int av_codec_get_tag(const struct AVCodecTag * const *tags, enum AVCodecID id);
 
 /**
- * Get the codec tag for the given codec id.
+ * 获取给定编解码器 ID 的编解码器标签。
  *
- * @param tags list of supported codec_id - codec_tag pairs, as stored
- * in AVInputFormat.codec_tag and AVOutputFormat.codec_tag
- * @param id codec id that should be searched for in the list
- * @param tag A pointer to the found tag
- * @return 0 if id was not found in tags, > 0 if it was found
+ * @param tags 支持的 codec_id - codec_tag 对的列表，存储在 AVInputFormat.codec_tag 和 AVOutputFormat.codec_tag 中
+ * @param id 应在列表中搜索的编解码器 ID
+ * @param tag 指向找到的标记的指针
+ * @return 如果在标签中未找到 id，则为 0；如果找到，则 > 0
  */
 int av_codec_get_tag2(const struct AVCodecTag * const *tags, enum AVCodecID id,
                       unsigned int *tag);
@@ -2942,85 +2184,71 @@ int av_codec_get_tag2(const struct AVCodecTag * const *tags, enum AVCodecID id,
 int av_find_default_stream_index(AVFormatContext *s);
 
 /**
- * Get the index for a specific timestamp.
+ * 获取特定时间戳的索引。
  *
- * @param st        stream that the timestamp belongs to
- * @param timestamp timestamp to retrieve the index for
- * @param flags if AVSEEK_FLAG_BACKWARD then the returned index will correspond
- *                 to the timestamp which is <= the requested one, if backward
- *                 is 0, then it will be >=
- *              if AVSEEK_FLAG_ANY seek to any frame, only keyframes otherwise
- * @return < 0 if no such timestamp could be found
+ * @param st 时间戳所属的流
+ * @param timestamp 时间戳检索
+ * @param flags 的索引 如果 AVSEEK_FLAG_BACKWARD 那么返回的索引将对应于 <= 请求的时间戳，如果向后为 0，则它将 >= 如果AVSEEK_FLAG_ANY 查找任何帧，仅查找关键帧，否则
+ * @return < 0（如果找不到此类时间戳）
  */
 int av_index_search_timestamp(AVStream *st, int64_t timestamp, int flags);
 
 /**
- * Get the index entry count for the given AVStream.
+ * 获取给定 AVStream 的索引条目计数。
  *
- * @param st stream
- * @return the number of index entries in the stream
+ * @param st 流
+ * @return 流中索引条目的数量
  */
 int avformat_index_get_entries_count(const AVStream *st);
 
 /**
- * Get the AVIndexEntry corresponding to the given index.
+ * 获取与给定索引对应的 AVIndexEntry。
  *
- * @param st          Stream containing the requested AVIndexEntry.
- * @param idx         The desired index.
- * @return A pointer to the requested AVIndexEntry if it exists, NULL otherwise.
+ * @param st 包含所请求的 AVIndexEntry 的流。
+ * @param idx 所需的索引。
+ * @return 指向所请求的 AVIndexEntry 的指针（如果存在），否则为 NULL。
  *
- * @note The pointer returned by this function is only guaranteed to be valid
- *       until any function that takes the stream or the parent AVFormatContext
- *       as input argument is called.
+ * @note 仅保证此函数返回的指针有效，直到调用任何将流或父级 AVFormatContext 作为输入参数的函数为止。
  */
 const AVIndexEntry *avformat_index_get_entry(AVStream *st, int idx);
 
 /**
- * Get the AVIndexEntry corresponding to the given timestamp.
+ * 获取给定时间戳对应的AVIndexEntry。
  *
- * @param st          Stream containing the requested AVIndexEntry.
- * @param wanted_timestamp   Timestamp to retrieve the index entry for.
- * @param flags       If AVSEEK_FLAG_BACKWARD then the returned entry will correspond
- *                    to the timestamp which is <= the requested one, if backward
- *                    is 0, then it will be >=
- *                    if AVSEEK_FLAG_ANY seek to any frame, only keyframes otherwise.
- * @return A pointer to the requested AVIndexEntry if it exists, NULL otherwise.
+ * @param st 包含所请求的 AVIndexEntry 的流。
+ * @param wanted_timestamp 用于检索索引条目的时间戳。
+ * @param flags 如果 AVSEEK_FLAG_BACKWARD 那么返回的条目将对应于 <= 请求的时间戳，如果向后为 0，那么如果 AVSEEK_FLAG_ANY 寻找任何帧，则它将>=，否则仅寻找关键帧。
+ * @return 指向所请求的 AVIndexEntry 的指针（如果存在），否则为 NULL。
  *
- * @note The pointer returned by this function is only guaranteed to be valid
- *       until any function that takes the stream or the parent AVFormatContext
- *       as input argument is called.
+ * @note 仅保证此函数返回的指针有效，直到调用任何将流或父级 AVFormatContext 作为输入参数的函数为止。
  */
 const AVIndexEntry *avformat_index_get_entry_from_timestamp(AVStream *st,
                                                             int64_t wanted_timestamp,
                                                             int flags);
 /**
- * Add an index entry into a sorted list. Update the entry if the list
- * already contains it.
+ * 将索引条目添加到排序列表中。如果列表已包含该条目，则更新该条目。
  *
- * @param timestamp timestamp in the time base of the given stream
+ * @param timestamp 给定流的时基中的时间戳
  */
 int av_add_index_entry(AVStream *st, int64_t pos, int64_t timestamp,
                        int size, int distance, int flags);
 
 
 /**
- * Split a URL string into components.
+ * 将 URL 字符串拆分为多个组件。
  *
- * The pointers to buffers for storing individual components may be null,
- * in order to ignore that component. Buffers for components not found are
- * set to empty strings. If the port is not found, it is set to a negative
- * value.
+ * 指向用于存储各个组件的缓冲区的指针可以为空，以便忽略该组件。未找到的组件的缓冲区设置为空字符串。如果未找到该端口，则将其设置为负值。
  *
- * @param proto the buffer for the protocol
- * @param proto_size the size of the proto buffer
- * @param authorization the buffer for the authorization
- * @param authorization_size the size of the authorization buffer
- * @param hostname the buffer for the host name
- * @param hostname_size the size of the hostname buffer
- * @param port_ptr a pointer to store the port number in
- * @param path the buffer for the path
- * @param path_size the size of the path buffer
- * @param url the URL to split
+ * @param proto 协议缓冲区
+ * @param proto_size proto 缓冲区的大小
+ * @param authorization 授权缓冲区
+ * @param authorization_size 授权缓冲区的大小
+ * @param hostname 主机名
+ * @param hostname_size 主机名缓冲区的大小
+ * @param port_ptr 用于在
+ * @param path 中存储端口号的指针 路径缓冲区
+ * @param path_size 路径缓冲区的大小
+ * @param url 要分割的 URL
  */
 void av_url_split(char *proto,         int proto_size,
                   char *authorization, int authorization_size,
@@ -3031,14 +2259,12 @@ void av_url_split(char *proto,         int proto_size,
 
 
 /**
- * Print detailed information about the input or output format, such as
- * duration, bitrate, streams, container, programs, metadata, side data,
- * codec and time base.
+ * 打印有关输入或输出格式的详细信息，例如持续时间、比特率、流、容器、程序、元数据、辅助数据、编解码器和时基。
  *
- * @param ic        the context to analyze
- * @param index     index of the stream to dump information about
- * @param url       the URL to print, such as source or destination file
- * @param is_output Select whether the specified context is an input(0) or output(1)
+ * @param ic 要分析的上下文
+ * @param index 用于转储有关信息的流的索引
+ * @param url 要打印的 URL，例如源文件或目标文件
+ * @param is_output 选择指定的上下文是输入 (0) 还是输出 (1)
  */
 void av_dump_format(AVFormatContext *ic,
                     int index,
@@ -3046,21 +2272,20 @@ void av_dump_format(AVFormatContext *ic,
                     int is_output);
 
 
-#define AV_FRAME_FILENAME_FLAGS_MULTIPLE          1  ///< Allow multiple %d
-#define AV_FRAME_FILENAME_FLAGS_IGNORE_TRUNCATION 2  ///< Ignore truncated output instead of returning an error
+#define AV_FRAME_FILENAME_FLAGS_MULTIPLE          1  ///< 允许多个 %d
+#define AV_FRAME_FILENAME_FLAGS_IGNORE_TRUNCATION 2  ///< 忽略截断的输出而不是返回错误
 
 /**
- * Return in 'buf' the path with '%d' replaced by a number.
+ * 将用数字替换 '%d' 后得到的路径写入 'buf'。
  *
- * Also handles the '%0nd' format where 'n' is the total number
- * of digits and '%%'.
+ * 还处理“%0nd”格式，其中“n”是位数，“%%”。
  *
- * @param buf destination buffer
- * @param buf_size destination buffer size
- * @param path numbered sequence string
- * @param number frame number
+ * @param buf 目标缓冲区
+ * @param buf_size 目标缓冲区大小
+ * @param path 编号序列字符串
+ * @param number 帧编号
  * @param flags AV_FRAME_FILENAME_FLAGS_*
- * @return 0 if OK, -1 on format error
+ * @return 如果正常则为 0，如果格式错误则为 -1
  */
 int av_get_frame_filename2(char *buf, int buf_size,
                           const char *path, int number, int flags);
@@ -3069,64 +2294,54 @@ int av_get_frame_filename(char *buf, int buf_size,
                           const char *path, int number);
 
 /**
- * Check whether filename actually is a numbered sequence generator.
+ * 检查 filename 是否实际上是编号序列生成器。
  *
- * @param filename possible numbered sequence string
- * @return 1 if a valid numbered sequence string, 0 otherwise
+ * @param filename 可能的编号序列字符串
+ * @return 如果是有效的编号序列字符串则为 1，否则为 0
  */
 int av_filename_number_test(const char *filename);
 
 /**
- * Generate an SDP for an RTP session.
+ * 为 RTP 会话生成 SDP。
  *
- * Note, this overwrites the id values of AVStreams in the muxer contexts
- * for getting unique dynamic payload types.
+ * 请注意，这会覆盖复用器上下文中 AVStreams 的 id 值，以获取唯一的动态负载类型。
  *
- * @param ac array of AVFormatContexts describing the RTP streams. If the
- *           array is composed by only one context, such context can contain
- *           multiple AVStreams (one AVStream per RTP stream). Otherwise,
- *           all the contexts in the array (an AVCodecContext per RTP stream)
- *           must contain only one AVStream.
- * @param n_files number of AVCodecContexts contained in ac
- * @param buf buffer where the SDP will be stored (must be allocated by
- *            the caller)
- * @param size the size of the buffer
- * @return 0 if OK, AVERROR_xxx on error
+ * @param ac 描述 RTP 流的 AVFormatContext 数组。如果该数组仅由一个上下文组成，则该上下文可以包含多个 AVStream（每个 RTP 流一个 AVStream）。否则，数组中的所有上下文（每个 RTP 流一个 AVCodecContext）必须仅包含一个 AVStream。
+ * @param n_files ac 中包含的 AVCodecContext 数量
+ * @param buf 将存储 SDP 的缓冲区（必须由调用者分配）
+ * @param size 缓冲区的大小
+ * @return 如果正常则为 0，AVERROR_xxx出现错误
  */
 int av_sdp_create(AVFormatContext *ac[], int n_files, char *buf, int size);
 
 /**
- * Return a positive value if the given filename has one of the given
- * extensions, 0 otherwise.
+ * 如果给定文件名具有给定扩展名之一，则返回正值，否则返回 0。
  *
- * @param filename   file name to check against the given extensions
- * @param extensions a comma-separated list of filename extensions
+ * @param filename 要根据给定扩展名进行检查的文件名
+ * @param extensions 以逗号分隔的文件扩展名列表
  */
 int av_match_ext(const char *filename, const char *extensions);
 
 /**
- * Test if the given container can store a codec.
+ * 测试给定容器是否可以存储编解码器。
  *
- * @param ofmt           container to check for compatibility
- * @param codec_id       codec to potentially store in container
- * @param std_compliance standards compliance level, one of FF_COMPLIANCE_*
+ * @param ofmt 用于检查兼容性的容器
+ * @param codec_id 编解码器可能存储在容器中
+ * @param std_compliance 标准合规级别，FF_COMPLIANCE_* 之一
  *
- * @return 1 if codec with ID codec_id can be stored in ofmt, 0 if it cannot.
- *         A negative number if this information is not available.
+ * @return 1（如果具有 ID codec_id 的编解码器可以存储在） ofmt，如果不能则为 0。如果此信息不可用，则为负数。
  */
 int avformat_query_codec(const AVOutputFormat *ofmt, enum AVCodecID codec_id,
                          int std_compliance);
 
 struct AVBPrint;
 /**
- * Make a RFC 4281/6381 like string describing a codec for MIME types.
+ * 创建类似于 RFC 4281/6381 的字符串，描述 MIME 类型的编解码器。
  *
- * @param par pointer to an AVCodecParameters struct describing the codec
- * @param frame_rate an AVRational for the frame rate, for deciding the
- *                   right profile for video codecs. Pass an invalid
- *                   AVRational (1/0) to indicate that it is unknown.
- * @param out the AVBPrint to write the output to
- * @return <0 on error
+ * @param par 指向描述编解码器的 AVCodecParameters 结构的指针
+ * @param frame_rate 帧速率的 AVRational，用于确定视频编解码器的正确配置文件。传递无效的 AVRational (1/0) 以指示它未知。
+ * @param out AVBPrint 将输出写入
+ * @return <0 错误
  */
 int av_mime_codec_str(const AVCodecParameters *par,
                       AVRational frame_rate, struct AVBPrint *out);
@@ -3134,9 +2349,7 @@ int av_mime_codec_str(const AVCodecParameters *par,
 /**
  * @defgroup riff_fourcc RIFF FourCCs
  * @{
- * Get the tables mapping RIFF FourCCs to libavcodec AVCodecIDs. The tables are
- * meant to be passed to av_codec_get_id()/av_codec_get_tag() as in the
- * following code:
+ * 获取将 RIFF FourCCs 映射到 libavcodec AVCodecID 的表。这些表旨在传递到 av_codec_get_id()/av_codec_get_tag()，如以下代码所示：
  * @code
  * uint32_t tag = MKTAG('H', '2', '6', '4');
  * const struct AVCodecTag *table[] = { avformat_get_riff_video_tags(), 0 };
@@ -3144,19 +2357,19 @@ int av_mime_codec_str(const AVCodecParameters *par,
  * @endcode
  */
 /**
- * @return the table mapping RIFF FourCCs for video to libavcodec AVCodecID.
+ * @return 将视频的 RIFF FourCC 映射到 libavcodec AVCodecID 的表。
  */
 const struct AVCodecTag *avformat_get_riff_video_tags(void);
 /**
- * @return the table mapping RIFF FourCCs for audio to AVCodecID.
+ * @return 将音频的 RIFF FourCC 映射到 AVCodecID 的表。
  */
 const struct AVCodecTag *avformat_get_riff_audio_tags(void);
 /**
- * @return the table mapping MOV FourCCs for video to libavcodec AVCodecID.
+ * @return 将视频的 MOV FourCC 映射到 libavcodec AVCodecID 的表。
  */
 const struct AVCodecTag *avformat_get_mov_video_tags(void);
 /**
- * @return the table mapping MOV FourCCs for audio to AVCodecID.
+ * @return 将音频的 MOV FourCC 映射到 AVCodecID 的表。
  */
 const struct AVCodecTag *avformat_get_mov_audio_tags(void);
 
@@ -3165,48 +2378,39 @@ const struct AVCodecTag *avformat_get_mov_audio_tags(void);
  */
 
 /**
- * Guess the sample aspect ratio of a frame, based on both the stream and the
- * frame aspect ratio.
+ * 根据流和帧长宽比猜测帧的样本长宽比。
  *
- * Since the frame aspect ratio is set by the codec but the stream aspect ratio
- * is set by the demuxer, these two may not be equal. This function tries to
- * return the value that you should use if you would like to display the frame.
+ * 由于帧宽高比由编解码器设置，而流宽高比由解复用器设置，因此这两者可能不相等。如果您想显示框架，此函数会尝试返回您应该使用的值。
  *
- * Basic logic is to use the stream aspect ratio if it is set to something sane
- * otherwise use the frame aspect ratio. This way a container setting, which is
- * usually easy to modify can override the coded value in the frames.
+ * 基本逻辑是使用流宽高比（如果设置为合理），否则使用帧宽高比。这样，通常很容易修改的容器设置可以覆盖帧中的编码值。
  *
- * @param format the format context which the stream is part of
- * @param stream the stream which the frame is part of
- * @param frame the frame with the aspect ratio to be determined
- * @return the guessed (valid) sample_aspect_ratio, 0/1 if no idea
+ * @param format 流是其一部分的格式上下文
+ * @param stream 帧是其一部分的流
+ * @param frame 长宽比待确定的帧
+ * @return 猜测的（有效）sample_aspect_ratio，0/1如果不知道
  */
 AVRational av_guess_sample_aspect_ratio(AVFormatContext *format, AVStream *stream,
                                         struct AVFrame *frame);
 
 /**
- * Guess the frame rate, based on both the container and codec information.
+ * 根据容器和编解码器信息猜测帧速率。
  *
- * @param ctx the format context which the stream is part of
- * @param stream the stream which the frame is part of
- * @param frame the frame for which the frame rate should be determined, may be NULL
- * @return the guessed (valid) frame rate, 0/1 if no idea
+ * @param ctx 流是其一部分的格式上下文
+ * @param stream 帧是其一部分的流
+ * @param frame 应确定帧速率的帧，可能为 NULL
+ * @return 猜测的（有效）帧速率，如果不知道则为 0/1
  */
 AVRational av_guess_frame_rate(AVFormatContext *ctx, AVStream *stream,
                                struct AVFrame *frame);
 
 /**
- * Check if the stream st contained in s is matched by the stream specifier
- * spec.
+ * 检查 s 中包含的流 st 是否与流说明符规范匹配。
  *
- * See the "stream specifiers" chapter in the documentation for the syntax
- * of spec.
+ * 有关spec 语法的信息，请参阅文档中的“流说明符”一章。
  *
- * @return  >0 if st is matched by spec;
- *          0  if st is not matched by spec;
- *          AVERROR code if spec is invalid
+ * @return >0 如果 st 与规格匹配；如果 st 与 spec 不匹配，则为 0；如果规范无效，则为 AVERROR 代码
  *
- * @note  A stream specifier can match several streams in the format.
+ * @note 流说明符可以匹配格式中的多个流。
  */
 int avformat_match_stream_specifier(AVFormatContext *s, AVStream *st,
                                     const char *spec);

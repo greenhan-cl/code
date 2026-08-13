@@ -1,27 +1,27 @@
-/*
- * Copyright (c) 2016 Vittorio Giovara <vittorio.giovara@gmail.com>
+﻿/*
+ * 复制right (c) 2016 Vittorio Giovara <vittorio.giovara@gmail.com>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 /**
  * @file
- * @ingroup lavu_video_spherical
- * Spherical video
+ * @ingroup lavu_视频_spherical
+ * Spherical 视频
  */
 
 #ifndef AVUTIL_SPHERICAL_H
@@ -31,49 +31,49 @@
 #include <stdint.h>
 
 /**
- * @defgroup lavu_video_spherical Spherical video mapping
- * @ingroup lavu_video
+ * @defgroup lavu_视频_spherical Spherical 视频 mapping
+ * @ingroup lavu_视频
  *
- * A spherical video file contains surfaces that need to be mapped onto a
- * sphere. Depending on how the frame was converted, a different distortion
- * transformation or surface recomposition function needs to be applied before
- * the video should be mapped and displayed.
+ * spherical 视频 file 包含 surfaces that need 到 be mapped onto a
+ * sphere. Depending 上 how the 帧 was 转换ed, a d如果ferent distortion
+ * trans格式ion 或 surface recomposition function needs 到 be applied before
+ * the 视频 should be mapped 和 displayed.
  * @{
  */
 
 /**
- * Projection of the video surface(s) on a sphere.
+ * Projection 的 the 视频 surface(s) 上 a sphere.
  */
 enum AVSphericalProjection {
     /**
-     * Video represents a sphere mapped on a flat surface using
+     * 视频 represents a sphere mapped 上 a flat surface using
      * equirectangular projection.
      */
     AV_SPHERICAL_EQUIRECTANGULAR,
 
     /**
-     * Video frame is split into 6 faces of a cube, and arranged on a
-     * 3x2 layout. Faces are oriented upwards for the front, left, right,
-     * and back faces. The up face is oriented so the top of the face is
-     * forwards and the down face is oriented so the top of the face is
-     * to the back.
+     * 视频 帧 is split into 6 faces 的 a cube, 和 arranged 上 a
+     * 3x2 layout. Faces are oriented upwards 用于 the front, left, right,
+     * 和 back faces. up face is oriented so the top 的 the face is
+     * forwards 和 the down face is oriented so the top 的 the face is
+     * 到 the back.
      */
     AV_SPHERICAL_CUBEMAP,
 
     /**
-     * Video represents a portion of a sphere mapped on a flat surface
-     * using equirectangular projection. The @ref bounding fields indicate
-     * the position of the current video in a larger surface.
+     * 视频 represents a portion 的 a sphere mapped 上 a flat surface
+     * using equirectangular projection. @ref bounding fields indicate
+     * the position 的 the current 视频 中 a larger surface.
      */
     AV_SPHERICAL_EQUIRECTANGULAR_TILE,
 
     /**
-     * Video frame displays as a 180 degree equirectangular projection.
+     * 视频 帧 displays as a 180 degree equirectangular projection.
      */
     AV_SPHERICAL_HALF_EQUIRECTANGULAR,
 
     /**
-     * Video frame displays on a flat, rectangular 2D surface.
+     * 视频 帧 displays 上 a flat, rectangular 2D surface.
      */
     AV_SPHERICAL_RECTILINEAR,
 
@@ -91,11 +91,11 @@ enum AVSphericalProjection {
 };
 
 /**
- * This structure describes how to handle spherical videos, outlining
- * information about projection, initial layout, and any other view modifier.
+ * 此结构体 describes how 到 handle spherical 视频s, outlining
+ * in格式ion about projection, initial layout, 和 any other view mod如果ier.
  *
- * @note The struct must be allocated with av_spherical_alloc() and
- *       its size is not a part of the public ABI.
+ * @note struct must be 分配d，使用 av_spherical_alloc() and
+ *       its 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVSphericalMapping {
     /**
@@ -106,25 +106,25 @@ typedef struct AVSphericalMapping {
     /**
      * @name Initial orientation
      * @{
-     * There fields describe additional rotations applied to the sphere after
-     * the video frame is mapped onto it. The sphere is rotated around the
-     * viewer, who remains stationary. The order of transformation is always
-     * yaw, followed by pitch, and finally by roll.
+     * There fields describe additional rotations applied 到 the sphere after
+     * the 视频 帧 is mapped onto it. sphere is rotated around the
+     * viewer, who remains stationary. order 的 trans格式ion is always
+     * yaw, followed by pitch, 和 finally by roll.
      *
-     * The coordinate system matches the one defined in OpenGL, where the
-     * forward vector (z) is coming out of screen, and it is equivalent to
-     * a rotation matrix of R = r_y(yaw) * r_x(pitch) * r_z(roll).
+     * coordinate system matches the one defined 中 OpenGL, where the
+     * forward vector (z) is coming out 的 screen, 和 it is equivalent to
+     * a rotation matrix 的 R = r_y(yaw) * r_x(pitch) * r_z(roll).
      *
-     * A positive yaw rotates the portion of the sphere in front of the viewer
-     * toward their right. A positive pitch rotates the portion of the sphere
-     * in front of the viewer upwards. A positive roll tilts the portion of
-     * the sphere in front of the viewer to the viewer's right.
+     * positive yaw rotates the portion 的 the sphere 中 front 的 the viewer
+     * toward their right. positive pitch rotates the portion 的 the sphere
+     * 中 front 的 the viewer upwards. positive roll tilts the portion of
+     * the sphere 中 front 的 the viewer 到 the viewer's right.
      *
-     * These values are exported as 16.16 fixed point.
+     * These 值 are exported as 16.16 fixed point.
      *
-     * See this equirectangular projection as example:
+     * 参见 this equirectangular projection as example:
      *
-     * @code{.unparsed}
+     * @code{.un解析d}
      *                   Yaw
      *     -180           0           180
      *   90 +-------------+-------------+  180
@@ -137,8 +137,8 @@ typedef struct AVSphericalMapping {
      *      |             |             |                        x
      *  -90 +-------------+-------------+ -180
      *
-     * X - the default camera center
-     * ^ - the default up vector
+     * X - the 默认 camera center
+     * ^ - the 默认 up vector
      * @endcode
      */
     int32_t yaw;   ///< Rotation around the up vector [-180, 180].
@@ -152,12 +152,12 @@ typedef struct AVSphericalMapping {
      * @name Bounding rectangle
      * @anchor bounding
      * @{
-     * These fields indicate the location of the current tile, and where
-     * it should be mapped relative to the original surface. They are
-     * exported as 0.32 fixed point, and can be converted to classic
-     * pixel values with av_spherical_bounds().
+     * These fields indicate the location 的 the current tile, 和 where
+     * it should be mapped relative 到 the original surface. They are
+     * exported as 0.32 fixed point, 和 can be 转换ed 到 classic
+     * 像素 值，使用 av_spherical_bounds().
      *
-     * @code{.unparsed}
+     * @code{.un解析d}
      *      +----------------+----------+
      *      |                |bound_top |
      *      |            +--------+     |
@@ -169,18 +169,18 @@ typedef struct AVSphericalMapping {
      *      +----------------+----------+
      * @endcode
      *
-     * If needed, the original video surface dimensions can be derived
-     * by adding the current stream or frame size to the related bounds,
-     * like in the following example:
+     * 如果 needed, the original 视频 surface dimensions can be derived
+     * by adding the current stream 或 帧 大小 到 the related bounds,
+     * like 中 the following example:
      *
      * @code{c}
-     *     original_width  = tile->width  + bound_left + bound_right;
-     *     original_height = tile->height + bound_top  + bound_bottom;
+     *     original_宽度  = tile->宽度  + bound_left + bound_right;
+     *     original_高度 = tile->高度 + bound_top  + bound_bottom;
      * @endcode
      *
-     * @note These values are valid only for the tiled equirectangular
+     * @note These 值 are valid only 用于 the tiled equirectangular
      *       projection type (@ref AV_SPHERICAL_EQUIRECTANGULAR_TILE),
-     *       and should be ignored in all other cases.
+     *       和 should be ignored 中 all other cases.
      */
     uint32_t bound_left;   ///< Distance from the left edge
     uint32_t bound_top;    ///< Distance from the top edge
@@ -191,34 +191,34 @@ typedef struct AVSphericalMapping {
      */
 
     /**
-     * Number of pixels to pad from the edge of each cube face.
+     * 数量 的 像素s 到 pad，来自 the edge 的 each cube face.
      *
-     * @note This value is valid for only for the cubemap projection type
-     *       (@ref AV_SPHERICAL_CUBEMAP), and should be ignored in all other
+     * @note This 值 is valid 用于 only 用于 the cubemap projection type
+     *       (@ref AV_SPHERICAL_CUBEMAP), 和 should be ignored 中 all other
      *       cases.
      */
     uint32_t padding;
 } AVSphericalMapping;
 
 /**
- * Allocate a AVSphericalVideo structure and initialize its fields to default
- * values.
+ * 分配 a AVSpherical视频 结构体 和 初始化 its fields 到 默认
+ * 值.
  *
- * @return the newly allocated struct or NULL on failure
+ * @返回 the newly 分配d struct 或 NULL 上 failure
  */
 AVSphericalMapping *av_spherical_alloc(size_t *size);
 
 /**
- * Convert the @ref bounding fields from an AVSphericalVideo
- * from 0.32 fixed point to pixels.
+ * 转换 the @ref bounding fields，来自 an AVSpherical视频
+ *，来自 0.32 fixed point 到 像素s.
  *
- * @param map    The AVSphericalVideo map to read bound values from.
- * @param width  Width of the current frame or stream.
- * @param height Height of the current frame or stream.
- * @param left   Pixels from the left edge.
- * @param top    Pixels from the top edge.
- * @param right  Pixels from the right edge.
- * @param bottom Pixels from the bottom edge.
+ * @param map    AVSpherical视频 map 到 read bound 值 from.
+ * @param 宽度  宽度 的 the current 帧 或 stream.
+ * @param 高度 高度 的 the current 帧 或 stream.
+ * @param left   像素s，来自 the left edge.
+ * @param top    像素s，来自 the top edge.
+ * @param right  像素s，来自 the right edge.
+ * @param bottom 像素s，来自 the bottom edge.
  */
 void av_spherical_tile_bounds(const AVSphericalMapping *map,
                               size_t width, size_t height,
@@ -226,20 +226,20 @@ void av_spherical_tile_bounds(const AVSphericalMapping *map,
                               size_t *right, size_t *bottom);
 
 /**
- * Provide a human-readable name of a given AVSphericalProjection.
+ * Provide a human-readable name 的 a given AVSphericalProjection.
  *
- * @param projection The input AVSphericalProjection.
+ * @param projection 输入 AVSphericalProjection.
  *
- * @return The name of the AVSphericalProjection, or "unknown".
+ * @返回 name 的 the AVSphericalProjection, 或 "unknown".
  */
 const char *av_spherical_projection_name(enum AVSphericalProjection projection);
 
 /**
- * Get the AVSphericalProjection form a human-readable name.
+ * 获取 the AVSphericalProjection form a human-readable name.
  *
- * @param name The input string.
+ * @param name 输入 string.
  *
- * @return The AVSphericalProjection value, or -1 if not found.
+ * @返回 AVSphericalProjection 值, 或 -1 如果 not found.
  */
 int av_spherical_from_name(const char *name);
 /**

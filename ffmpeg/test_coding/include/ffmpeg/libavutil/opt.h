@@ -1,22 +1,22 @@
-/*
- * AVOptions
- * copyright (c) 2005 Michael Niedermayer <michaelni@gmx.at>
+﻿/*
+ * AV选项
+ * 复制right (c) 2005 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 #ifndef AVUTIL_OPT_H
@@ -24,7 +24,7 @@
 
 /**
  * @file
- * AVOptions
+ * AV选项
  */
 
 #include "rational.h"
@@ -35,46 +35,46 @@
 #include "samplefmt.h"
 
 /**
- * @defgroup avoptions AVOptions
+ * @defgroup av选项 AV选项
  * @ingroup lavu_data
  * @{
- * AVOptions provide a generic system to declare options on arbitrary structs
- * ("objects"). An option can have a help text, a type and a range of possible
- * values. Options may then be enumerated, read and written to.
+ * AV选项 provide a generic system 到 declare 选项 上 arbitrary structs
+ * ("objects"). 选项 can have a help text, a type 和 a range 的 possible
+ * 值. 选项 may then be enumerated, read 和 written to.
  *
- * There are two modes of access to members of AVOption and its child structs.
- * One is called 'native access', and refers to access from the code that
- * declares the AVOption in question.  The other is 'foreign access', and refers
- * to access from other code.
+ * There are two modes 的 access 到 members 的 AV选项 和 its child structs.
+ * One is called 'native access', 和 refers 到 access，来自 the code that
+ * declares the AV选项 中 question.  other is 'foreign access', 和 refers
+ * 到 access，来自 other code.
  *
- * Certain struct members in this header are documented as 'native access only'
- * or similar - it means that only the code that declared the AVOption in
- * question is allowed to access the field. This allows us to extend the
- * semantics of those fields without breaking API compatibility.
+ * Certain struct members 中 this header are documented as 'native access only'
+ * 或 similar - it means that only the code that declared the AV选项 in
+ * question is allowed 到 access the field. This allows us 到 extend the
+ * semantics 的 those fields without breaking API compatibility.
  *
- * @section avoptions_scope Scope of AVOptions
+ * @section av选项_scope Scope 的 AV选项
  *
- * AVOptions is designed to support any set of multimedia configuration options
- * that can be defined at compile-time.  Although it is mainly used to expose
- * FFmpeg options, you are welcome to adapt it to your own use case.
+ * AV选项 is designed 到 support any 设置 的 multimedia configuration 选项
+ * that can be defined at compile-time.  Although it is mainly 用于 expose
+ * FFmpeg 选项, you are welcome 到 adapt it 到 your own use case.
  *
- * No single approach can ever fully solve the problem of configuration,
- * but please submit a patch if you believe you have found a problem
- * that is best solved by extending AVOptions.
+ * No single approach can ever fully solve the problem 的 configuration,
+ * but please submit a patch 如果 you believe you have found a problem
+ * that is best solved by extending AV选项.
  *
- * @section avoptions_implement Implementing AVOptions
- * This section describes how to add AVOptions capabilities to a struct.
+ * @section av选项_implement Implementing AV选项
+ * This section describes how 到 add AV选项 capabilities 到 a struct.
  *
- * All AVOptions-related information is stored in an AVClass. Therefore
- * the first member of the struct should be a pointer to an AVClass describing it.
- * The option field of the AVClass must be set to a NULL-terminated static array
- * of AVOptions. Each AVOption must have a non-empty name, a type, a default
- * value and for number-type AVOptions also a range of allowed values. It must
- * also declare an offset in bytes from the start of the struct, where the field
- * associated with this AVOption is located. Other fields in the AVOption struct
- * should also be set when applicable, but are not required.
+ * All AV选项-related in格式ion is stored 中 an AVClass. Therefore
+ * the first member 的 the struct should be a 指针 到 an AVClass describing it.
+ * 选项 field 的 the AVClass must be 设置 到 a NULL-terminated static 数组
+ * 的 AV选项. Each AV选项 must have a non-empty name, a type, a 默认
+ * 值 和 用于 数量-type AV选项 also a range 的 allowed 值. It must
+ * also declare an off设置 中 bytes，来自 the start 的 the struct, where the field
+ * associated，使用 this AV选项 is located. Other fields 中 the AV选项 struct
+ * should also be 设置 当 applicable, but are not required.
  *
- * The following example illustrates an AVOptions-enabled struct:
+ * following example illustrates an AV选项-enabled struct:
  * @code
  * typedef struct test_struct {
  *     const AVClass *class;
@@ -84,168 +84,168 @@
  *     int      bin_len;
  * } test_struct;
  *
- * static const AVOption test_options[] = {
- *   { "test_int", "This is a test option of int type.", offsetof(test_struct, int_opt),
+ * static const AV选项 test_选项[] = {
+ *   { "test_int", "This is a test 选项 的 int type.", off设置of(test_struct, int_opt),
  *     AV_OPT_TYPE_INT, { .i64 = -1 }, INT_MIN, INT_MAX },
- *   { "test_str", "This is a test option of string type.", offsetof(test_struct, str_opt),
+ *   { "test_str", "This is a test 选项 的 string type.", off设置of(test_struct, str_opt),
  *     AV_OPT_TYPE_STRING },
- *   { "test_bin", "This is a test option of binary type.", offsetof(test_struct, bin_opt),
+ *   { "test_bin", "This is a test 选项 的 binary type.", off设置of(test_struct, bin_opt),
  *     AV_OPT_TYPE_BINARY },
  *   { NULL },
  * };
  *
  * static const AVClass test_class = {
  *     .class_name = "test class",
- *     .item_name  = av_default_item_name,
- *     .option     = test_options,
+ *     .item_name  = av_默认_item_name,
+ *     .选项     = test_选项,
  *     .version    = LIBAVUTIL_VERSION_INT,
  * };
  * @endcode
  *
- * Next, when allocating your struct, you must ensure that the AVClass pointer
- * is set to the correct value. Then, av_opt_set_defaults() can be called to
- * initialize defaults. After that the struct is ready to be used with the
- * AVOptions API.
+ * Next, 当 allocating your struct, you must ensure that the AVClass 指针
+ * is 设置 到 the correct 值. Then, av_opt_设置_默认s() can be called to
+ * 初始化 默认s. After that the struct is ready 到 be used，使用 the
+ * AV选项 API.
  *
- * When cleaning up, you may use the av_opt_free() function to automatically
- * free all the allocated string and binary options.
+ * 当 cleaning up, you may use the av_opt_释放() function 到 automatically
+ * 释放 all the 分配d string 和 binary 选项.
  *
- * Continuing with the above example:
+ * Continuing，使用 the above example:
  *
  * @code
  * test_struct *alloc_test_struct(void)
  * {
- *     test_struct *ret = av_mallocz(sizeof(*ret));
+ *     test_struct *ret = av_mallocz(大小of(*ret));
  *     ret->class = &test_class;
- *     av_opt_set_defaults(ret);
- *     return ret;
+ *     av_opt_设置_默认s(ret);
+ *     返回 ret;
  * }
- * void free_test_struct(test_struct **foo)
+ * void 释放_test_struct(test_struct **foo)
  * {
- *     av_opt_free(*foo);
- *     av_freep(foo);
+ *     av_opt_释放(*foo);
+ *     av_释放p(foo);
  * }
  * @endcode
  *
- * @subsection avoptions_implement_nesting Nesting
- *      It may happen that an AVOptions-enabled struct contains another
- *      AVOptions-enabled struct as a member (e.g. AVCodecContext in
- *      libavcodec exports generic options, while its priv_data field exports
- *      codec-specific options). In such a case, it is possible to set up the
- *      parent struct to export a child's options. To do that, simply
- *      implement AVClass.child_next() and AVClass.child_class_iterate() in the
+ * @subsection av选项_implement_nesting Nesting
+ *      It may happen that an AV选项-enabled struct 包含 another
+ *      AV选项-enabled struct as a member (e.g. AVCodec上下文 in
+ *      libavcodec exports generic 选项, while its priv_data field exports
+ *      codec-spec如果ic 选项). In such a case, it is possible 到 设置 up the
+ *      parent struct 到 export a child's 选项. To do that, simply
+ *      implement AVClass.child_next() 和 AVClass.child_class_iterate() 中 the
  *      parent struct's AVClass.
- *      Assuming that the test_struct from above now also contains a
+ *      Assuming that the test_struct，来自 above now also 包含 a
  *      child_struct field:
  *
  *      @code
  *      typedef struct child_struct {
  *          AVClass *class;
- *          int flags_opt;
+ *          int 标志_opt;
  *      } child_struct;
- *      static const AVOption child_opts[] = {
- *          { "test_flags", "This is a test option of flags type.",
- *            offsetof(child_struct, flags_opt), AV_OPT_TYPE_FLAGS, { .i64 = 0 }, INT_MIN, INT_MAX },
+ *      static const AV选项 child_opts[] = {
+ *          { "test_标志", "This is a test 选项 的 标志 type.",
+ *            off设置of(child_struct, 标志_opt), AV_OPT_TYPE_标志, { .i64 = 0 }, INT_MIN, INT_MAX },
  *          { NULL },
  *      };
  *      static const AVClass child_class = {
  *          .class_name = "child class",
- *          .item_name  = av_default_item_name,
- *          .option     = child_opts,
+ *          .item_name  = av_默认_item_name,
+ *          .选项     = child_opts,
  *          .version    = LIBAVUTIL_VERSION_INT,
  *      };
  *
  *      void *child_next(void *obj, void *prev)
  *      {
  *          test_struct *t = obj;
- *          if (!prev && t->child_struct)
- *              return t->child_struct;
- *          return NULL
+ *          如果 (!prev && t->child_struct)
+ *              返回 t->child_struct;
+ *          返回 NULL
  *      }
  *      const AVClass child_class_iterate(void **iter)
  *      {
  *          const AVClass *c = *iter ? NULL : &child_class;
  *          *iter = (void*)(uintptr_t)c;
- *          return c;
+ *          返回 c;
  *      }
  *      @endcode
- *      Putting child_next() and child_class_iterate() as defined above into
- *      test_class will now make child_struct's options accessible through
- *      test_struct (again, proper setup as described above needs to be done on
- *      child_struct right after it is created).
+ *      Putting child_next() 和 child_class_iterate() as defined above into
+ *      test_class will now make child_struct's 选项 accessible through
+ *      test_struct (again, proper 设置up as described above needs 到 be done on
+ *      child_struct right after it is 创建d).
  *
  *      From the above example it might not be clear why both child_next()
- *      and child_class_iterate() are needed. The distinction is that child_next()
+ *      和 child_class_iterate() are needed. distinction is that child_next()
  *      iterates over actually existing objects, while child_class_iterate()
- *      iterates over all possible child classes. E.g. if an AVCodecContext
- *      was initialized to use a codec which has private options, then its
- *      child_next() will return AVCodecContext.priv_data and finish
- *      iterating. OTOH child_class_iterate() on AVCodecContext.av_class will
- *      iterate over all available codecs with private options.
+ *      iterates over all possible child classes. E.g. 如果 an AVCodec上下文
+ *      was 初始化d 到 use a codec which has 私有 选项, then its
+ *      child_next() will 返回 AVCodec上下文.priv_data 和 finish
+ *      iterating. OTOH child_class_iterate() 上 AVCodec上下文.av_class will
+ *      iterate over all available codecs，使用 私有 选项.
  *
- * @subsection avoptions_implement_named_constants Named constants
- *      It is possible to create named constants for options. Simply set the unit
- *      field of the option the constants should apply to a string and
- *      create the constants themselves as options of type AV_OPT_TYPE_CONST
- *      with their unit field set to the same string.
- *      Their default_val field should contain the value of the named
+ * @subsection av选项_implement_named_constants Named constants
+ *      It is possible 到 创建 named constants 用于 选项. Simply 设置 the unit
+ *      field 的 the 选项 the constants should apply 到 a string and
+ *      创建 the constants themselves as 选项 的 type AV_OPT_TYPE_CONST
+ *     ，使用 their unit field 设置 到 the same string.
+ *      Their 默认_val field should contain the 值 的 the named
  *      constant.
- *      For example, to add some named constants for the test_flags option
- *      above, put the following into the child_opts array:
+ *      For example, 到 add some named constants 用于 the test_标志 选项
+ *      above, put the following into the child_opts 数组:
  *      @code
- *      { "test_flags", "This is a test option of flags type.",
- *        offsetof(child_struct, flags_opt), AV_OPT_TYPE_FLAGS, { .i64 = 0 }, INT_MIN, INT_MAX, "test_unit" },
- *      { "flag1", "This is a flag with value 16", 0, AV_OPT_TYPE_CONST, { .i64 = 16 }, 0, 0, "test_unit" },
+ *      { "test_标志", "This is a test 选项 的 标志 type.",
+ *        off设置of(child_struct, 标志_opt), AV_OPT_TYPE_标志, { .i64 = 0 }, INT_MIN, INT_MAX, "test_unit" },
+ *      { "标志1", "This is a 标志，使用 值 16", 0, AV_OPT_TYPE_CONST, { .i64 = 16 }, 0, 0, "test_unit" },
  *      @endcode
  *
- * @section avoptions_use Using AVOptions
- * This section deals with accessing options in an AVOptions-enabled struct.
- * Such structs in FFmpeg are e.g. AVCodecContext in libavcodec or
- * AVFormatContext in libavformat.
+ * @section av选项_use Using AV选项
+ * This section deals，使用 accessing 选项 中 an AV选项-enabled struct.
+ * Such structs 中 FFmpeg are e.g. AVCodec上下文 中 libavcodec or
+ * AV格式上下文 中 libav格式.
  *
- * @subsection avoptions_use_examine Examining AVOptions
- * The basic functions for examining options are av_opt_next(), which iterates
- * over all options defined for one object, and av_opt_find(), which searches
- * for an option with the given name.
+ * @subsection av选项_use_examine Examining AV选项
+ * basic functions 用于 examining 选项 are av_opt_next(), which iterates
+ * over all 选项 defined 用于 one object, 和 av_opt_find(), which searches
+ * 用于 an 选项，使用 the given name.
  *
- * The situation is more complicated with nesting. An AVOptions-enabled struct
- * may have AVOptions-enabled children. Passing the AV_OPT_SEARCH_CHILDREN flag
- * to av_opt_find() will make the function search children recursively.
+ * situation is more complicated，使用 nesting. AV选项-enabled struct
+ * may have AV选项-enabled children. Passing the AV_OPT_SEARCH_CHILDREN 标志
+ * 到 av_opt_find() will make the function search children recursively.
  *
- * For enumerating there are basically two cases. The first is when you want to
- * get all options that may potentially exist on the struct and its children
- * (e.g.  when constructing documentation). In that case you should call
- * av_opt_child_class_iterate() recursively on the parent struct's AVClass.  The
- * second case is when you have an already initialized struct with all its
- * children and you want to get all options that can be actually written or read
- * from it. In that case you should call av_opt_child_next() recursively (and
- * av_opt_next() on each result).
+ * For enumerating there are basically two cases. first is 当 you want to
+ * get all 选项 that may potentially exist 上 the struct 和 its children
+ * (e.g.  当 constructing documentation). In that case you should call
+ * av_opt_child_class_iterate() recursively 上 the parent struct's AVClass.  The
+ * second case is 当 you have an already 初始化d struct，使用 all its
+ * children 和 you want 到 get all 选项 that can be actually written 或 read
+ *，来自 it. In that case you should call av_opt_child_next() recursively (and
+ * av_opt_next() 上 each result).
  *
- * @subsection avoptions_use_get_set Reading and writing AVOptions
- * When setting options, you often have a string read directly from the
- * user. In such a case, simply passing it to av_opt_set() is enough. For
- * non-string type options, av_opt_set() will parse the string according to the
- * option type.
+ * @subsection av选项_use_get_设置 Reading 和 writing AV选项
+ * 当 设置ting 选项, you often have a string read directly，来自 the
+ * user. In such a case, simply passing it 到 av_opt_设置() is enough. For
+ * non-string type 选项, av_opt_设置() will 解析 the string according 到 the
+ * 选项 type.
  *
- * Similarly av_opt_get() will read any option type and convert it to a string
- * which will be returned. Do not forget that the string is allocated, so you
- * have to free it with av_free().
+ * Similarly av_opt_get() will read any 选项 type 和 转换 it 到 a string
+ * which will be 返回ed. Do not forget that the string is 分配d, so you
+ * have 到 释放 it，使用 av_释放().
  *
- * In some cases it may be more convenient to put all options into an
- * AVDictionary and call av_opt_set_dict() on it. A specific case of this
- * are the format/codec open functions in lavf/lavc which take a dictionary
- * filled with option as a parameter. This makes it possible to set some options
- * that cannot be set otherwise, since e.g. the input file format is not known
+ * In some cases it may be more convenient 到 put all 选项 into an
+ * AVDictionary 和 call av_opt_设置_dict() 上 it. spec如果ic case 的 this
+ * are the 格式/codec open functions 中 lavf/lavc which take a dictionary
+ * filled，使用 选项 as a parameter. This makes it possible 到 设置 some 选项
+ * that cannot be 设置 otherwise, since e.g. the 输入 file 格式 is not known
  * before the file is actually opened.
  */
 
 /**
- * An option type determines:
- * - for native access, the underlying C type of the field that an AVOption
+ * 选项 type determines:
+ * - 用于 native access, the underlying C type 的 the field that an AV选项
  *   refers to;
- * - for foreign access, the semantics of accessing the option through this API,
- *   e.g. which av_opt_get_*() and av_opt_set_*() functions can be called, or
- *   what format will av_opt_get()/av_opt_set() expect/produce.
+ * - 用于 foreign access, the semantics 的 accessing the 选项 through this API,
+ *   e.g. which av_opt_get_*() 和 av_opt_设置_*() functions can be called, or
+ *   what 格式 will av_opt_get()/av_opt_设置() expect/produce.
  */
 enum AVOptionType{
     /**
@@ -269,8 +269,8 @@ enum AVOptionType{
      */
     AV_OPT_TYPE_FLOAT,
     /**
-     * Underlying C type is a uint8_t* that is either NULL or points to a C
-     * string allocated with the av_malloc() family of functions.
+     * Underlying C type is a uint8_t* that is either NULL 或 points 到 a C
+     * string 分配d，使用 the av_malloc() family 的 functions.
      */
     AV_OPT_TYPE_STRING,
     /**
@@ -278,9 +278,9 @@ enum AVOptionType{
      */
     AV_OPT_TYPE_RATIONAL,
     /**
-     * Underlying C type is a uint8_t* that is either NULL or points to an array
-     * allocated with the av_malloc() family of functions. The pointer is
-     * immediately followed by an int containing the array length in bytes.
+     * Underlying C type is a uint8_t* that is either NULL 或 points 到 an 数组
+     * 分配d，使用 the av_malloc() family 的 functions. 指针 is
+     * immediately followed by an int containing the 数组 length 中 bytes.
      */
     AV_OPT_TYPE_BINARY,
     /**
@@ -292,8 +292,8 @@ enum AVOptionType{
      */
     AV_OPT_TYPE_UINT64,
     /**
-     * Special option type for declaring named constants. Does not correspond to
-     * an actual field in the object, offset must be 0.
+     * Special 选项 type 用于 declaring named constants. Does not correspond to
+     * an actual field 中 the object, off设置 must be 0.
      */
     AV_OPT_TYPE_CONST,
     /**
@@ -301,11 +301,11 @@ enum AVOptionType{
      */
     AV_OPT_TYPE_IMAGE_SIZE,
     /**
-     * Underlying C type is enum AVPixelFormat.
+     * Underlying C type is enum AV像素格式.
      */
     AV_OPT_TYPE_PIXEL_FMT,
     /**
-     * Underlying C type is enum AVSampleFormat.
+     * Underlying C type is enum AV采样格式.
      */
     AV_OPT_TYPE_SAMPLE_FMT,
     /**
@@ -325,7 +325,7 @@ enum AVOptionType{
      */
     AV_OPT_TYPE_BOOL,
     /**
-     * Underlying C type is AVChannelLayout.
+     * Underlying C type is AV声道Layout.
      */
     AV_OPT_TYPE_CHLAYOUT,
     /**
@@ -334,96 +334,96 @@ enum AVOptionType{
     AV_OPT_TYPE_UINT,
 
     /**
-     * May be combined with another regular option type to declare an array
-     * option.
+     * May be combined，使用 another regular 选项 type 到 declare an 数组
+     * 选项.
      *
-     * For array options, @ref AVOption.offset should refer to a pointer
-     * corresponding to the option type. The pointer should be immediately
-     * followed by an unsigned int that will store the number of elements in the
-     * array.
+     * For 数组 选项, @ref AV选项.off设置 should refer 到 a 指针
+     * corresponding 到 the 选项 type. 指针 should be immediately
+     * followed by an unsigned int that will store the 数量 的 elements 中 the
+     * 数组.
      */
     AV_OPT_TYPE_FLAG_ARRAY = (1 << 16),
 };
 
 /**
- * A generic parameter which can be set by the user for muxing or encoding.
+ * generic parameter which can be 设置 by the user 用于 muxing 或 编码.
  */
 #define AV_OPT_FLAG_ENCODING_PARAM  (1 << 0)
 /**
- * A generic parameter which can be set by the user for demuxing or decoding.
+ * generic parameter which can be 设置 by the user 用于 demuxing 或 解码.
  */
 #define AV_OPT_FLAG_DECODING_PARAM  (1 << 1)
 #define AV_OPT_FLAG_AUDIO_PARAM     (1 << 3)
 #define AV_OPT_FLAG_VIDEO_PARAM     (1 << 4)
 #define AV_OPT_FLAG_SUBTITLE_PARAM  (1 << 5)
 /**
- * The option is intended for exporting values to the caller.
+ * 选项 is intended 用于 exporting 值 到 the caller.
  */
 #define AV_OPT_FLAG_EXPORT          (1 << 6)
 /**
- * The option may not be set through the AVOptions API, only read.
- * This flag only makes sense when AV_OPT_FLAG_EXPORT is also set.
+ * 选项 may not be 设置 through the AV选项 API, only read.
+ * This 标志 only makes sense 当 AV_OPT_标志_EXPORT is also 设置.
  */
 #define AV_OPT_FLAG_READONLY        (1 << 7)
 /**
- * A generic parameter which can be set by the user for bit stream filtering.
+ * generic parameter which can be 设置 by the user 用于 bit stream filtering.
  */
 #define AV_OPT_FLAG_BSF_PARAM       (1 << 8)
 
 /**
- * A generic parameter which can be set by the user at runtime.
+ * generic parameter which can be 设置 by the user at runtime.
  */
 #define AV_OPT_FLAG_RUNTIME_PARAM   (1 << 15)
 /**
- * A generic parameter which can be set by the user for filtering.
+ * generic parameter which can be 设置 by the user 用于 filtering.
  */
 #define AV_OPT_FLAG_FILTERING_PARAM (1 << 16)
 /**
- * Set if option is deprecated, users should refer to AVOption.help text for
- * more information.
+ * 设置 如果 选项 is deprecated, users should refer 到 AV选项.help text for
+ * more in格式ion.
  */
 #define AV_OPT_FLAG_DEPRECATED      (1 << 17)
 /**
- * Set if option constants can also reside in child objects.
+ * 设置 如果 选项 constants can also reside 中 child objects.
  */
 #define AV_OPT_FLAG_CHILD_CONSTS    (1 << 18)
 
 /**
- * May be set as default_val for AV_OPT_TYPE_FLAG_ARRAY options.
+ * May be 设置 as 默认_val 用于 AV_OPT_TYPE_标志_数组 选项.
  */
 typedef struct AVOptionArrayDef {
     /**
      * Native access only.
      *
-     * Default value of the option, as would be serialized by av_opt_get() (i.e.
-     * using the value of sep as the separator).
+     * 默认 值 的 the 选项, as would be serialized by av_opt_get() (i.e.
+     * using the 值 的 sep as the separator).
      */
     const char         *def;
 
     /**
-     * Minimum number of elements in the array. When this field is non-zero, def
-     * must be non-NULL and contain at least this number of elements.
+     * Minimum 数量 的 elements 中 the 数组. 当 this field is non-zero, def
+     * must be non-NULL 和 contain at least this 数量 的 elements.
      */
     unsigned            size_min;
     /**
-     * Maximum number of elements in the array, 0 when unlimited.
+     * Maximum 数量 的 elements 中 the 数组, 0 当 unlimited.
      */
     unsigned            size_max;
 
     /**
-     * Separator between array elements in string representations of this
-     * option, used by av_opt_set() and av_opt_get(). It must be a printable
-     * ASCII character, excluding alphanumeric and the backslash. A comma is
-     * used when sep=0.
+     * Separator between 数组 elements 中 string representations 的 this
+     * 选项, used by av_opt_设置() 和 av_opt_get(). It must be a printable
+     * ASCII character, excluding alphanumeric 和 the backslash. comma is
+     * used 当 sep=0.
      *
-     * The separator and the backslash must be backslash-escaped in order to
-     * appear in string representations of the option value.
+     * separator 和 the backslash must be backslash-escaped 中 order to
+     * appear 中 string representations 的 the 选项 值.
      */
     char                sep;
 } AVOptionArrayDef;
 
 /**
- * AVOption
+ * AV选项
  */
 typedef struct AVOption {
     const char *name;
@@ -437,15 +437,15 @@ typedef struct AVOption {
     /**
      * Native access only.
      *
-     * The offset relative to the context structure where the option
-     * value is stored. It should be 0 for named constants.
+     * off设置 relative 到 the 上下文 结构体 where the 选项
+     * 值 is stored. It should be 0 用于 named constants.
      */
     int offset;
     enum AVOptionType type;
 
     /**
-     * Native access only, except when documented otherwise.
-     * the default value for scalar options
+     * Native access only, except 当 documented otherwise.
+     * the 默认 值 用于 scalar 选项
      */
     union {
         int64_t i64;
@@ -455,9 +455,9 @@ typedef struct AVOption {
         AVRational q;
 
         /**
-         * Used for AV_OPT_TYPE_FLAG_ARRAY options. May be NULL.
+         * 用于 AV_OPT_TYPE_标志_数组 选项. May be NULL.
          *
-         * Foreign access to some members allowed, as noted in AVOptionArrayDef
+         * Foreign access 到 some members allowed, as noted 中 AV选项数组Def
          * documentation.
          */
         const AVOptionArrayDef *arr;
@@ -466,247 +466,247 @@ typedef struct AVOption {
     double max;                 ///< maximum valid value for the option
 
     /**
-     * A combination of AV_OPT_FLAG_*.
+     * combination 的 AV_OPT_标志_*.
      */
     int flags;
 
     /**
-     * The logical unit to which the option belongs. Non-constant
-     * options and corresponding named constants share the same
+     * logical unit 到 which the 选项 belongs. Non-constant
+     * 选项 和 corresponding named constants share the same
      * unit. May be NULL.
      */
     const char *unit;
 } AVOption;
 
 /**
- * A single allowed range of values, or a single allowed value.
+ * single allowed range 的 值, 或 a single allowed 值.
  */
 typedef struct AVOptionRange {
     const char *str;
     /**
-     * Value range.
+     * 值 range.
      * For string ranges this represents the min/max length.
-     * For dimensions this represents the min/max pixel count or width/height in multi-component case.
+     * For dimensions this represents the min/max 像素 count 或 宽度/高度 中 multi-component case.
      */
     double value_min, value_max;
     /**
-     * Value's component range.
-     * For string this represents the unicode range for chars, 0-127 limits to ASCII.
+     * 值's component range.
+     * For string this represents the unicode range 用于 chars, 0-127 limits 到 ASCII.
      */
     double component_min, component_max;
     /**
-     * Range flag.
-     * If set to 1 the struct encodes a range, if set to 0 a single value.
+     * Range 标志.
+     * 如果 设置 到 1 the struct encodes a range, 如果 设置 到 0 a single 值.
      */
     int is_range;
 } AVOptionRange;
 
 /**
- * List of AVOptionRange structs.
+ * 列表 的 AV选项Range structs.
  */
 typedef struct AVOptionRanges {
     /**
-     * Array of option ranges.
+     * 数组 的 选项 ranges.
      *
-     * Most of option types use just one component.
-     * Following describes multi-component option types:
+     * Most 的 选项 types use just one component.
+     * Following describes multi-component 选项 types:
      *
-     * AV_OPT_TYPE_IMAGE_SIZE:
-     * component index 0: range of pixel count (width * height).
-     * component index 1: range of width.
-     * component index 2: range of height.
+     * AV_OPT_TYPE_IMAGE_大小:
+     * component index 0: range 的 像素 count (宽度 * 高度).
+     * component index 1: range 的 宽度.
+     * component index 2: range 的 高度.
      *
-     * @note To obtain multi-component version of this structure, user must
-     *       provide AV_OPT_MULTI_COMPONENT_RANGE to av_opt_query_ranges or
-     *       av_opt_query_ranges_default function.
+     * @note To obtain multi-component version 的 this 结构体, user must
+     *       provide AV_OPT_MULTI_COMPONENT_RANGE 到 av_opt_query_ranges or
+     *       av_opt_query_ranges_默认 function.
      *
-     * Multi-component range can be read as in following example:
+     * Multi-component range can be read as 中 following example:
      *
      * @code
      * int range_index, component_index;
-     * AVOptionRanges *ranges;
-     * AVOptionRange *range[3]; //may require more than 3 in the future.
+     * AV选项Ranges *ranges;
+     * AV选项Range *range[3]; //may require more than 3 中 the future.
      * av_opt_query_ranges(&ranges, obj, key, AV_OPT_MULTI_COMPONENT_RANGE);
-     * for (range_index = 0; range_index < ranges->nb_ranges; range_index++) {
-     *     for (component_index = 0; component_index < ranges->nb_components; component_index++)
+     * 用于 (range_index = 0; range_index < ranges->nb_ranges; range_index++) {
+     *     用于 (component_index = 0; component_index < ranges->nb_components; component_index++)
      *         range[component_index] = ranges->range[ranges->nb_ranges * component_index + range_index];
-     *     //do something with range here.
+     *     //do something，使用 range here.
      * }
-     * av_opt_freep_ranges(&ranges);
+     * av_opt_释放p_ranges(&ranges);
      * @endcode
      */
     AVOptionRange **range;
     /**
-     * Number of ranges per component.
+     * 数量 的 ranges per component.
      */
     int nb_ranges;
     /**
-     * Number of components.
+     * 数量 的 components.
      */
     int nb_components;
 } AVOptionRanges;
 
 /**
- * @defgroup opt_mng AVOption (un)initialization and inspection.
+ * @defgroup opt_mng AV选项 (un)initialization 和 inspection.
  * @{
  */
 
 /**
- * Set the values of all AVOption fields to their default values.
+ * 设置 the 值 的 all AV选项 fields 到 their 默认 值.
  *
- * @param s an AVOption-enabled struct (its first member must be a pointer to AVClass)
+ * @param s an AV选项-enabled struct (its first member must be a 指针 到 AVClass)
  */
 void av_opt_set_defaults(void *s);
 
 /**
- * Set the values of all AVOption fields to their default values. Only these
- * AVOption fields for which (opt->flags & mask) == flags will have their
- * default applied to s.
+ * 设置 the 值 的 all AV选项 fields 到 their 默认 值. Only these
+ * AV选项 fields 用于 which (opt->标志 & mask) == 标志 will have their
+ * 默认 applied 到 s.
  *
- * @param s an AVOption-enabled struct (its first member must be a pointer to AVClass)
- * @param mask combination of AV_OPT_FLAG_*
- * @param flags combination of AV_OPT_FLAG_*
+ * @param s an AV选项-enabled struct (its first member must be a 指针 到 AVClass)
+ * @param mask combination 的 AV_OPT_标志_*
+ * @param 标志 combination 的 AV_OPT_标志_*
  */
 void av_opt_set_defaults2(void *s, int mask, int flags);
 
 /**
- * Free all allocated objects in obj.
+ * 释放 all 分配d objects 中 obj.
  */
 void av_opt_free(void *obj);
 
 /**
- * Iterate over all AVOptions belonging to obj.
+ * Iterate over all AV选项 belonging 到 obj.
  *
- * @param obj an AVOptions-enabled struct or a double pointer to an
+ * @param obj an AV选项-enabled struct 或 a double 指针 到 an
  *            AVClass describing it.
- * @param prev result of the previous call to av_opt_next() on this object
- *             or NULL
- * @return next AVOption or NULL
+ * @param prev result 的 the previous call 到 av_opt_next() 上 this object
+ *             或 NULL
+ * @返回 next AV选项 或 NULL
  */
 const AVOption *av_opt_next(const void *obj, const AVOption *prev);
 
 /**
- * Iterate over AVOptions-enabled children of obj.
+ * Iterate over AV选项-enabled children 的 obj.
  *
- * @param prev result of a previous call to this function or NULL
- * @return next AVOptions-enabled child or NULL
+ * @param prev result 的 a previous call 到 this function 或 NULL
+ * @返回 next AV选项-enabled child 或 NULL
  */
 void *av_opt_child_next(void *obj, void *prev);
 
 /**
- * Iterate over potential AVOptions-enabled children of parent.
+ * Iterate over potential AV选项-enabled children 的 parent.
  *
- * @param iter a pointer where iteration state is stored.
- * @return AVClass corresponding to next potential child or NULL
+ * @param iter a 指针 where iteration state is stored.
+ * @返回 AVClass corresponding 到 next potential child 或 NULL
  */
 const AVClass *av_opt_child_class_iterate(const AVClass *parent, void **iter);
 
 #define AV_OPT_SEARCH_CHILDREN   (1 << 0) /**< Search in possible children of the
                                                given object first. */
 /**
- *  The obj passed to av_opt_find() is fake -- only a double pointer to AVClass
- *  instead of a required pointer to a struct containing AVClass. This is
- *  useful for searching for options without needing to allocate the corresponding
+ *  obj passed 到 av_opt_find() is fake -- only a double 指针 到 AVClass
+ *  instead 的 a required 指针 到 a struct containing AVClass. This is
+ *  useful 用于 searching 用于 选项 without needing 到 分配 the corresponding
  *  object.
  */
 #define AV_OPT_SEARCH_FAKE_OBJ   (1 << 1)
 
 /**
- *  In av_opt_get, return NULL if the option has a pointer type and is set to NULL,
- *  rather than returning an empty string.
+ *  In av_opt_get, 返回 NULL 如果 the 选项 has a 指针 type 和 is 设置 到 NULL,
+ *  rather than 返回ing an empty string.
  */
 #define AV_OPT_ALLOW_NULL (1 << 2)
 
 /**
- * May be used with av_opt_set_array() to signal that new elements should
- * replace the existing ones in the indicated range.
+ * May be used，使用 av_opt_设置_数组() 到 signal that new elements should
+ * replace the existing ones 中 the indicated range.
  */
 #define AV_OPT_ARRAY_REPLACE (1 << 3)
 
 /**
- *  Allows av_opt_query_ranges and av_opt_query_ranges_default to return more than
- *  one component for certain option types.
- *  @see AVOptionRanges for details.
+ *  Allows av_opt_query_ranges 和 av_opt_query_ranges_默认 到 返回 more than
+ *  one component 用于 certain 选项 types.
+ *  @参见 AV选项Ranges 用于 details.
  */
 #define AV_OPT_MULTI_COMPONENT_RANGE (1 << 12)
 
 /**
- * Look for an option in an object. Consider only options which
- * have all the specified flags set.
+ * Look 用于 an 选项 中 an object. Consider only 选项 which
+ * have all the spec如果ied 标志 设置.
  *
- * @param[in] obj A pointer to a struct whose first element is a
- *                pointer to an AVClass.
- *                Alternatively a double pointer to an AVClass, if
- *                AV_OPT_SEARCH_FAKE_OBJ search flag is set.
- * @param[in] name The name of the option to look for.
- * @param[in] unit When searching for named constants, name of the unit
+ * @param[in] obj 指针 到 a struct whose first element is a
+ *                指针 到 an AVClass.
+ *                Alternatively a double 指针 到 an AVClass, 如果
+ *                AV_OPT_SEARCH_FAKE_OBJ search 标志 is 设置.
+ * @param[in] name name 的 the 选项 到 look for.
+ * @param[in] unit 当 searching 用于 named constants, name 的 the unit
  *                 it belongs to.
- * @param opt_flags Find only options with all the specified flags set (AV_OPT_FLAG).
- * @param search_flags A combination of AV_OPT_SEARCH_*.
+ * @param opt_标志 Find only 选项，使用 all the spec如果ied 标志 设置 (AV_OPT_标志).
+ * @param search_标志 combination 的 AV_OPT_SEARCH_*.
  *
- * @return A pointer to the option found, or NULL if no option
+ * @返回 指针 到 the 选项 found, 或 NULL 如果 no 选项
  *         was found.
  *
- * @note Options found with AV_OPT_SEARCH_CHILDREN flag may not be settable
- * directly with av_opt_set(). Use special calls which take an options
- * AVDictionary (e.g. avformat_open_input()) to set options found with this
- * flag.
+ * @note 选项 found，使用 AV_OPT_SEARCH_CHILDREN 标志 may not be 设置table
+ * directly，使用 av_opt_设置(). Use special calls which take an 选项
+ * AVDictionary (e.g. av格式_open_输入()) 到 设置 选项 found，使用 this
+ * 标志.
  */
 const AVOption *av_opt_find(void *obj, const char *name, const char *unit,
                             int opt_flags, int search_flags);
 
 /**
- * Look for an option in an object. Consider only options which
- * have all the specified flags set.
+ * Look 用于 an 选项 中 an object. Consider only 选项 which
+ * have all the spec如果ied 标志 设置.
  *
- * @param[in] obj A pointer to a struct whose first element is a
- *                pointer to an AVClass.
- *                Alternatively a double pointer to an AVClass, if
- *                AV_OPT_SEARCH_FAKE_OBJ search flag is set.
- * @param[in] name The name of the option to look for.
- * @param[in] unit When searching for named constants, name of the unit
+ * @param[in] obj 指针 到 a struct whose first element is a
+ *                指针 到 an AVClass.
+ *                Alternatively a double 指针 到 an AVClass, 如果
+ *                AV_OPT_SEARCH_FAKE_OBJ search 标志 is 设置.
+ * @param[in] name name 的 the 选项 到 look for.
+ * @param[in] unit 当 searching 用于 named constants, name 的 the unit
  *                 it belongs to.
- * @param opt_flags Find only options with all the specified flags set (AV_OPT_FLAG).
- * @param search_flags A combination of AV_OPT_SEARCH_*.
- * @param[out] target_obj if non-NULL, an object to which the option belongs will be
- * written here. It may be different from obj if AV_OPT_SEARCH_CHILDREN is present
- * in search_flags. This parameter is ignored if search_flags contain
+ * @param opt_标志 Find only 选项，使用 all the spec如果ied 标志 设置 (AV_OPT_标志).
+ * @param search_标志 combination 的 AV_OPT_SEARCH_*.
+ * @param[out] target_obj 如果 non-NULL, an object 到 which the 选项 belongs will be
+ * written here. It may be d如果ferent，来自 obj 如果 AV_OPT_SEARCH_CHILDREN is present
+ * 中 search_标志. This parameter is ignored 如果 search_标志 contain
  * AV_OPT_SEARCH_FAKE_OBJ.
  *
- * @return A pointer to the option found, or NULL if no option
+ * @返回 指针 到 the 选项 found, 或 NULL 如果 no 选项
  *         was found.
  */
 const AVOption *av_opt_find2(void *obj, const char *name, const char *unit,
                              int opt_flags, int search_flags, void **target_obj);
 
 /**
- * Show the obj options.
+ * Show the obj 选项.
  *
- * @param req_flags requested flags for the options to show. Show only the
- * options for which it is opt->flags & req_flags.
- * @param rej_flags rejected flags for the options to show. Show only the
- * options for which it is !(opt->flags & req_flags).
- * @param av_log_obj log context to use for showing the options
+ * @param req_标志 requested 标志 用于 the 选项 到 show. Show only the
+ * 选项 用于 which it is opt->标志 & req_标志.
+ * @param rej_标志 rejected 标志 用于 the 选项 到 show. Show only the
+ * 选项 用于 which it is !(opt->标志 & req_标志).
+ * @param av_log_obj log 上下文 到 use 用于 showing the 选项
  */
 int av_opt_show2(void *obj, void *av_log_obj, int req_flags, int rej_flags);
 
 /**
- * Extract a key-value pair from the beginning of a string.
+ * Extract a key-值 pair，来自 the beginning 的 a string.
  *
- * @param ropts        pointer to the options string, will be updated to
- *                     point to the rest of the string (one of the pairs_sep
- *                     or the final NUL)
- * @param key_val_sep  a 0-terminated list of characters used to separate
- *                     key from value, for example '='
- * @param pairs_sep    a 0-terminated list of characters used to separate
- *                     two pairs from each other, for example ':' or ','
- * @param flags        flags; see the AV_OPT_FLAG_* values below
- * @param rkey         parsed key; must be freed using av_free()
- * @param rval         parsed value; must be freed using av_free()
+ * @param ropts        指针 到 the 选项 string, will be updated to
+ *                     point 到 the rest 的 the string (one 的 the pairs_sep
+ *                     或 the final NUL)
+ * @param key_val_sep  a 0-terminated 列表 的 characters 用于 separate
+ *                     key，来自 值, 用于 example '='
+ * @param pairs_sep    a 0-terminated 列表 的 characters 用于 separate
+ *                     two pairs，来自 each other, 用于 example ':' 或 ','
+ * @param 标志        标志; 参见 the AV_OPT_标志_* 值 below
+ * @param rkey         解析d key; must be 释放d using av_释放()
+ * @param rval         解析d 值; must be 释放d using av_释放()
  *
- * @return  >=0 for success, or a negative value corresponding to an
- *          AVERROR code in case of error; in particular:
- *          AVERROR(EINVAL) if no key is present
+ * @返回  >=0 用于 success, 或 a negative 值 corresponding 到 an
+ *          AVERROR code 中 case 的 error; 中 particular:
+ *          AVERROR(EINVAL) 如果 no key is present
  *
  */
 int av_opt_get_key_value(const char **ropts,
@@ -717,7 +717,7 @@ int av_opt_get_key_value(const char **ropts,
 enum {
 
     /**
-     * Accept to parse a value without a key; the key will then be returned
+     * Accept 到 解析 a 值 without a key; the key will then be 返回ed
      * as NULL.
      */
     AV_OPT_FLAG_IMPLICIT_KEY = 1,
@@ -728,55 +728,55 @@ enum {
  */
 
 /**
- * @defgroup opt_write Setting and modifying option values
+ * @defgroup opt_write 设置ting 和 mod如果ying 选项 值
  * @{
  */
 
 /**
- * Parse the key/value pairs list in opts. For each key/value pair
- * found, stores the value in the field in ctx that is named like the
- * key. ctx must be an AVClass context, storing is done using
- * AVOptions.
+ * 解析 the key/值 pairs 列表 中 opts. For each key/值 pair
+ * found, stores the 值 中 the field 中 ctx that is named like the
+ * key. ctx must be an AVClass 上下文, storing is done using
+ * AV选项.
  *
- * @param opts options string to parse, may be NULL
- * @param key_val_sep a 0-terminated list of characters used to
- * separate key from value
- * @param pairs_sep a 0-terminated list of characters used to separate
- * two pairs from each other
- * @return the number of successfully set key/value pairs, or a negative
- * value corresponding to an AVERROR code in case of error:
- * AVERROR(EINVAL) if opts cannot be parsed,
- * the error code issued by av_opt_set() if a key/value pair
- * cannot be set
+ * @param opts 选项 string 到 解析, may be NULL
+ * @param key_val_sep a 0-terminated 列表 的 characters 用于
+ * separate key，来自 值
+ * @param pairs_sep a 0-terminated 列表 的 characters 用于 separate
+ * two pairs，来自 each other
+ * @返回 the 数量 的 successfully 设置 key/值 pairs, 或 a negative
+ * 值 corresponding 到 an AVERROR code 中 case 的 error:
+ * AVERROR(EINVAL) 如果 opts cannot be 解析d,
+ * the error code issued by av_opt_设置() 如果 a key/值 pair
+ * cannot be 设置
  */
 int av_set_options_string(void *ctx, const char *opts,
                           const char *key_val_sep, const char *pairs_sep);
 
 /**
- * Parse the key-value pairs list in opts. For each key=value pair found,
- * set the value of the corresponding option in ctx.
+ * 解析 the key-值 pairs 列表 中 opts. For each key=值 pair found,
+ * 设置 the 值 的 the corresponding 选项 中 ctx.
  *
- * @param ctx          the AVClass object to set options on
- * @param opts         the options string, key-value pairs separated by a
+ * @param ctx          the AVClass object 到 设置 选项 on
+ * @param opts         the 选项 string, key-值 pairs separated by a
  *                     delimiter
- * @param shorthand    a NULL-terminated array of options names for shorthand
- *                     notation: if the first field in opts has no key part,
- *                     the key is taken from the first element of shorthand;
- *                     then again for the second, etc., until either opts is
- *                     finished, shorthand is finished or a named option is
- *                     found; after that, all options must be named
- * @param key_val_sep  a 0-terminated list of characters used to separate
- *                     key from value, for example '='
- * @param pairs_sep    a 0-terminated list of characters used to separate
- *                     two pairs from each other, for example ':' or ','
- * @return  the number of successfully set key=value pairs, or a negative
- *          value corresponding to an AVERROR code in case of error:
- *          AVERROR(EINVAL) if opts cannot be parsed,
- *          the error code issued by av_set_string3() if a key/value pair
- *          cannot be set
+ * @param shorthand    a NULL-terminated 数组 的 选项 names 用于 shorthand
+ *                     notation: 如果 the first field 中 opts has no key part,
+ *                     the key is taken，来自 the first element 的 shorthand;
+ *                     then again 用于 the second, etc., until either opts is
+ *                     finished, shorthand is finished 或 a named 选项 is
+ *                     found; after that, all 选项 must be named
+ * @param key_val_sep  a 0-terminated 列表 的 characters 用于 separate
+ *                     key，来自 值, 用于 example '='
+ * @param pairs_sep    a 0-terminated 列表 的 characters 用于 separate
+ *                     two pairs，来自 each other, 用于 example ':' 或 ','
+ * @返回  the 数量 的 successfully 设置 key=值 pairs, 或 a negative
+ *          值 corresponding 到 an AVERROR code 中 case 的 error:
+ *          AVERROR(EINVAL) 如果 opts cannot be 解析d,
+ *          the error code issued by av_设置_string3() 如果 a key/值 pair
+ *          cannot be 设置
  *
- * Options names must use only the following characters: a-z A-Z 0-9 - . / _
- * Separators must use characters distinct from option names and from each
+ * 选项 names must use only the following characters: a-z A-Z 0-9 - . / _
+ * Separators must use characters distinct，来自 选项 names and，来自 each
  * other.
  */
 int av_opt_set_from_string(void *ctx, const char *opts,
@@ -784,86 +784,86 @@ int av_opt_set_from_string(void *ctx, const char *opts,
                            const char *key_val_sep, const char *pairs_sep);
 
 /**
- * Set all the options from a given dictionary on an object.
+ * 设置 all the 选项，来自 a given dictionary 上 an object.
  *
- * @param obj a struct whose first element is a pointer to AVClass
- * @param options options to process. This dictionary will be freed and replaced
- *                by a new one containing all options not found in obj.
- *                Of course this new dictionary needs to be freed by caller
- *                with av_dict_free().
+ * @param obj a struct whose first element is a 指针 到 AVClass
+ * @param 选项 选项 到 process. This dictionary will be 释放d 和 replaced
+ *                by a new one containing all 选项 not found 中 obj.
+ *                Of course this new dictionary needs 到 be 释放d by caller
+ *               ，使用 av_dict_释放().
  *
- * @return 0 on success, a negative AVERROR if some option was found in obj,
- *         but could not be set.
+ * @返回 0 上 success, a negative AVERROR 如果 some 选项 was found 中 obj,
+ *         but could not be 设置.
  *
- * @see av_dict_copy()
+ * @参见 av_dict_复制()
  */
 int av_opt_set_dict(void *obj, struct AVDictionary **options);
 
 
 /**
- * Set all the options from a given dictionary on an object.
+ * 设置 all the 选项，来自 a given dictionary 上 an object.
  *
- * @param obj a struct whose first element is a pointer to AVClass
- * @param options options to process. This dictionary will be freed and replaced
- *                by a new one containing all options not found in obj.
- *                Of course this new dictionary needs to be freed by caller
- *                with av_dict_free().
- * @param search_flags A combination of AV_OPT_SEARCH_*.
+ * @param obj a struct whose first element is a 指针 到 AVClass
+ * @param 选项 选项 到 process. This dictionary will be 释放d 和 replaced
+ *                by a new one containing all 选项 not found 中 obj.
+ *                Of course this new dictionary needs 到 be 释放d by caller
+ *               ，使用 av_dict_释放().
+ * @param search_标志 combination 的 AV_OPT_SEARCH_*.
  *
- * @return 0 on success, a negative AVERROR if some option was found in obj,
- *         but could not be set.
+ * @返回 0 上 success, a negative AVERROR 如果 some 选项 was found 中 obj,
+ *         but could not be 设置.
  *
- * @see av_dict_copy()
+ * @参见 av_dict_复制()
  */
 int av_opt_set_dict2(void *obj, struct AVDictionary **options, int search_flags);
 
 /**
- * Copy options from src object into dest object.
+ * 复制 选项，来自 src object into dest object.
  *
- * The underlying AVClass of both src and dest must coincide. The guarantee
- * below does not apply if this is not fulfilled.
+ * underlying AVClass 的 both src 和 dest must coincide. guarantee
+ * below does not apply 如果 this is not fulfilled.
  *
- * Options that require memory allocation (e.g. string or binary) are malloc'ed in dest object.
- * Original memory allocated for such options is freed unless both src and dest options points to the same memory.
+ * 选项 that require 内存 allocation (e.g. string 或 binary) are malloc'ed 中 dest object.
+ * Original 内存 分配d 用于 such 选项 is 释放d unless both src 和 dest 选项 points 到 the same 内存.
  *
- * Even on error it is guaranteed that allocated options from src and dest
- * no longer alias each other afterwards; in particular calling av_opt_free()
- * on both src and dest is safe afterwards if dest has been memdup'ed from src.
+ * Even 上 error it is guaranteed that 分配d 选项，来自 src 和 dest
+ * no longer alias each other afterwards; 中 particular calling av_opt_释放()
+ * 上 both src 和 dest is safe afterwards 如果 dest has been memdup'ed，来自 src.
  *
- * @param dest Object to copy from
- * @param src  Object to copy into
- * @return 0 on success, negative on error
+ * @param dest Object 到 复制 from
+ * @param src  Object 到 复制 into
+ * @返回 0 上 success, negative 上 error
  */
 int av_opt_copy(void *dest, const void *src);
 
 /**
- * @defgroup opt_set_funcs Option setting functions
+ * @defgroup opt_设置_funcs 选项 设置ting functions
  * @{
- * Those functions set the field of obj with the given name to value.
+ * Those functions 设置 the field 的 obj，使用 the given name 到 值.
  *
- * @param[in] obj A struct whose first element is a pointer to an AVClass.
- * @param[in] name the name of the field to set
- * @param[in] val The value to set. In case of av_opt_set() if the field is not
- * of a string type, then the given string is parsed.
- * SI postfixes and some named scalars are supported.
- * If the field is of a numeric type, it has to be a numeric or named
- * scalar. Behavior with more than one scalar and +- infix operators
+ * @param[in] obj struct whose first element is a 指针 到 an AVClass.
+ * @param[in] name the name 的 the field 到 设置
+ * @param[in] val 值 到 设置. In case 的 av_opt_设置() 如果 the field is not
+ * 的 a string type, then the given string is 解析d.
+ * SI postfixes 和 some named scalars are supported.
+ * 如果 the field is 的 a numeric type, it has 到 be a numeric 或 named
+ * scalar. Behavior，使用 more than one scalar 和 +- infix operators
  * is undefined.
- * If the field is of a flags type, it has to be a sequence of numeric
- * scalars or named flags separated by '+' or '-'. Prefixing a flag
- * with '+' causes it to be set without affecting the other flags;
- * similarly, '-' unsets a flag.
- * If the field is of a dictionary type, it has to be a ':' separated list of
- * key=value parameters. Values containing ':' special characters must be
+ * 如果 the field is 的 a 标志 type, it has 到 be a sequence 的 numeric
+ * scalars 或 named 标志 separated by '+' 或 '-'. Prefixing a 标志
+ *，使用 '+' causes it 到 be 设置 without affecting the other 标志;
+ * similarly, '-' un设置s a 标志.
+ * 如果 the field is 的 a dictionary type, it has 到 be a ':' separated 列表 of
+ * key=值 parameters. 值 containing ':' special characters must be
  * escaped.
- * @param search_flags flags passed to av_opt_find2. I.e. if AV_OPT_SEARCH_CHILDREN
- * is passed here, then the option may be set on a child of obj.
+ * @param search_标志 标志 passed 到 av_opt_find2. I.e. 如果 AV_OPT_SEARCH_CHILDREN
+ * is passed here, then the 选项 may be 设置 上 a child 的 obj.
  *
- * @return 0 if the value has been set, or an AVERROR code in case of
+ * @返回 0 如果 the 值 has been 设置, 或 an AVERROR code 中 case of
  * error:
- * AVERROR_OPTION_NOT_FOUND if no matching option exists
- * AVERROR(ERANGE) if the value is out of range
- * AVERROR(EINVAL) if the value is not valid
+ * AVERROR_选项_NOT_FOUND 如果 no matching 选项 exists
+ * AVERROR(ERANGE) 如果 the 值 is out 的 range
+ * AVERROR(EINVAL) 如果 the 值 is not valid
  */
 int av_opt_set         (void *obj, const char *name, const char *val, int search_flags);
 int av_opt_set_int     (void *obj, const char *name, int64_t     val, int search_flags);
@@ -875,61 +875,61 @@ int av_opt_set_pixel_fmt (void *obj, const char *name, enum AVPixelFormat fmt, i
 int av_opt_set_sample_fmt(void *obj, const char *name, enum AVSampleFormat fmt, int search_flags);
 int av_opt_set_video_rate(void *obj, const char *name, AVRational val, int search_flags);
 /**
- * @note Any old chlayout present is discarded and replaced with a copy of the new one. The
- * caller still owns layout and is responsible for uninitializing it.
+ * @note Any old chlayout present is discarded 和 replaced，使用 a 复制 的 the new one. The
+ * caller still owns layout 和 is responsible 用于 uninitializing it.
  */
 int av_opt_set_chlayout(void *obj, const char *name, const AVChannelLayout *layout, int search_flags);
 /**
- * @note Any old dictionary present is discarded and replaced with a copy of the new one. The
- * caller still owns val is and responsible for freeing it.
+ * @note Any old dictionary present is discarded 和 replaced，使用 a 复制 的 the new one. The
+ * caller still owns val is 和 responsible 用于 释放ing it.
  */
 int av_opt_set_dict_val(void *obj, const char *name, const AVDictionary *val, int search_flags);
 
 /**
- * Add, replace, or remove elements for an array option. Which of these
- * operations is performed depends on the values of val and search_flags.
+ * Add, replace, 或 remove elements 用于 an 数组 选项. Which 的 these
+ * operations is performed depends 上 the 值 的 val 和 search_标志.
  *
- * @param start_elem Index of the first array element to modify; must not be
- *                   larger than array size as returned by
- *                   av_opt_get_array_size().
- * @param nb_elems number of array elements to modify; when val is NULL,
- *                 start_elem+nb_elems must not be larger than array size as
- *                 returned by av_opt_get_array_size()
+ * @param start_elem Index 的 the first 数组 element 到 mod如果y; must not be
+ *                   larger than 数组 大小 as 返回ed by
+ *                   av_opt_get_数组_大小().
+ * @param nb_elems 数量 的 数组 elements 到 mod如果y; 当 val is NULL,
+ *                 start_elem+nb_elems must not be larger than 数组 大小 as
+ *                 返回ed by av_opt_get_数组_大小()
  *
- * @param val_type Option type corresponding to the type of val, ignored when val is
+ * @param val_type 选项 type corresponding 到 the type 的 val, ignored 当 val is
  *                 NULL.
  *
- *                 The effect of this function will will be as if av_opt_setX()
- *                 was called for each element, where X is specified by type.
- *                 E.g. AV_OPT_TYPE_STRING corresponds to av_opt_set().
+ *                 effect 的 this function will will be as 如果 av_opt_设置X()
+ *                 was called 用于 each element, where X is spec如果ied by type.
+ *                 E.g. AV_OPT_TYPE_STRING corresponds 到 av_opt_设置().
  *
  *                 Typically this should be the same as the scalarized type of
- *                 the AVOption being set, but certain conversions are also
+ *                 the AV选项 being 设置, but certain conversions are also
  *                 possible - the same as those done by the corresponding
- *                 av_opt_set*() function. E.g. any option type can be set from
- *                 a string, numeric types can be set from int64, double, or
+ *                 av_opt_设置*() function. E.g. any 选项 type can be 设置 from
+ *                 a string, numeric types can be 设置，来自 int64, double, or
  *                 rational, etc.
  *
- * @param val Array with nb_elems elements or NULL.
+ * @param val 数组，使用 nb_elems elements 或 NULL.
  *
- *            When NULL, nb_elems array elements starting at start_elem are
- *            removed from the array. Any array elements remaining at the end
- *            are shifted by nb_elems towards the first element in order to keep
- *            the array contiguous.
+ *            当 NULL, nb_elems 数组 elements starting at start_elem are
+ *            removed，来自 the 数组. Any 数组 elements remaining at the end
+ *            are sh如果ted by nb_elems towards the first element 中 order 到 keep
+ *            the 数组 contiguous.
  *
- *            Otherwise (val is non-NULL), the type of val must match the
- *            underlying C type as documented for val_type.
+ *            Otherwise (val is non-NULL), the type 的 val must match the
+ *            underlying C type as documented 用于 val_type.
  *
- *            When AV_OPT_ARRAY_REPLACE is not set in search_flags, the array is
- *            enlarged by nb_elems, and the contents of val are inserted at
- *            start_elem. Previously existing array elements from start_elem
- *            onwards (if present) are shifted by nb_elems away from the first
- *            element in order to make space for the new elements.
+ *            当 AV_OPT_数组_REPLACE is not 设置 中 search_标志, the 数组 is
+ *            enlarged by nb_elems, 和 the contents 的 val are inserted at
+ *            start_elem. Previously existing 数组 elements，来自 start_elem
+ *            onwards (如果 present) are sh如果ted by nb_elems away，来自 the first
+ *            element 中 order 到 make space 用于 the new elements.
  *
- *            When AV_OPT_ARRAY_REPLACE is set in search_flags, the contents
- *            of val replace existing array elements from start_elem to
- *            start_elem+nb_elems (if present). New array size is
- *            max(start_elem + nb_elems, old array size).
+ *            当 AV_OPT_数组_REPLACE is 设置 中 search_标志, the contents
+ *            的 val replace existing 数组 elements，来自 start_elem to
+ *            start_elem+nb_elems (如果 present). New 数组 大小 is
+ *            max(start_elem + nb_elems, old 数组 大小).
  */
 int av_opt_set_array(void *obj, const char *name, int search_flags,
                      unsigned int start_elem, unsigned int nb_elems,
@@ -941,28 +941,28 @@ int av_opt_set_array(void *obj, const char *name, int search_flags,
  */
 
 /**
- * @defgroup opt_read Reading option values
+ * @defgroup opt_read Reading 选项 值
  * @{
  */
 
 /**
- * @defgroup opt_get_funcs Option getting functions
+ * @defgroup opt_get_funcs 选项 getting functions
  * @{
- * Those functions get a value of the option with the given name from an object.
+ * Those functions get a 值 的 the 选项，使用 the given name，来自 an object.
  *
- * @param[in] obj a struct whose first element is a pointer to an AVClass.
- * @param[in] name name of the option to get.
- * @param[in] search_flags flags passed to av_opt_find2. I.e. if AV_OPT_SEARCH_CHILDREN
- * is passed here, then the option may be found in a child of obj.
- * @param[out] out_val value of the option will be written here
- * @return >=0 on success, a negative error code otherwise
+ * @param[in] obj a struct whose first element is a 指针 到 an AVClass.
+ * @param[in] name name 的 the 选项 到 get.
+ * @param[in] search_标志 标志 passed 到 av_opt_find2. I.e. 如果 AV_OPT_SEARCH_CHILDREN
+ * is passed here, then the 选项 may be found 中 a child 的 obj.
+ * @param[out] out_val 值 的 the 选项 will be written here
+ * @返回 >=0 上 success, a negative error code otherwise
  */
 /**
- * @note the returned string will be av_malloc()ed and must be av_free()ed by the caller
+ * @note the 返回ed string will be av_malloc()ed 和 must be av_释放()ed by the caller
  *
- * @note if AV_OPT_ALLOW_NULL is set in search_flags in av_opt_get, and the
- * option is of type AV_OPT_TYPE_STRING, AV_OPT_TYPE_BINARY or AV_OPT_TYPE_DICT
- * and is set to NULL, *out_val will be set to NULL instead of an allocated
+ * @note 如果 AV_OPT_ALLOW_NULL is 设置 中 search_标志 中 av_opt_get, 和 the
+ * 选项 is 的 type AV_OPT_TYPE_STRING, AV_OPT_TYPE_BINARY 或 AV_OPT_TYPE_DICT
+ * 和 is 设置 到 NULL, *out_val will be 设置 到 NULL instead 的 an 分配d
  * empty string.
  */
 int av_opt_get         (void *obj, const char *name, int search_flags, uint8_t   **out_val);
@@ -974,51 +974,51 @@ int av_opt_get_pixel_fmt (void *obj, const char *name, int search_flags, enum AV
 int av_opt_get_sample_fmt(void *obj, const char *name, int search_flags, enum AVSampleFormat *out_fmt);
 int av_opt_get_video_rate(void *obj, const char *name, int search_flags, AVRational *out_val);
 /**
- * @param[out] layout The returned layout is a copy of the actual value and must
- * be freed with av_channel_layout_uninit() by the caller
+ * @param[out] layout 返回ed layout is a 复制 的 the actual 值 和 must
+ * be 释放d，使用 av_声道_layout_uninit() by the caller
  */
 int av_opt_get_chlayout(void *obj, const char *name, int search_flags, AVChannelLayout *layout);
 /**
- * @param[out] out_val The returned dictionary is a copy of the actual value and must
- * be freed with av_dict_free() by the caller
+ * @param[out] out_val 返回ed dictionary is a 复制 的 the actual 值 和 must
+ * be 释放d，使用 av_dict_释放() by the caller
  */
 int av_opt_get_dict_val(void *obj, const char *name, int search_flags, AVDictionary **out_val);
 
 /**
- * For an array-type option, get the number of elements in the array.
+ * For an 数组-type 选项, get the 数量 的 elements 中 the 数组.
  */
 int av_opt_get_array_size(void *obj, const char *name, int search_flags,
                           unsigned int *out_val);
 
 /**
- * For an array-type option, retrieve the values of one or more array elements.
+ * For an 数组-type 选项, retrieve the 值 的 one 或 more 数组 elements.
  *
- * @param start_elem index of the first array element to retrieve
- * @param nb_elems number of array elements to retrieve; start_elem+nb_elems
- *                 must not be larger than array size as returned by
- *                 av_opt_get_array_size()
+ * @param start_elem index 的 the first 数组 element 到 retrieve
+ * @param nb_elems 数量 的 数组 elements 到 retrieve; start_elem+nb_elems
+ *                 must not be larger than 数组 大小 as 返回ed by
+ *                 av_opt_get_数组_大小()
  *
- * @param out_type Option type corresponding to the desired output.
+ * @param out_type 选项 type corresponding 到 the desired 输出.
  *
- *                 The array elements produced by this function will
- *                 will be as if av_opt_getX() was called for each element,
- *                 where X is specified by out_type. E.g. AV_OPT_TYPE_STRING
- *                 corresponds to av_opt_get().
+ *                 数组 elements produced by this function will
+ *                 will be as 如果 av_opt_getX() was called 用于 each element,
+ *                 where X is spec如果ied by out_type. E.g. AV_OPT_TYPE_STRING
+ *                 corresponds 到 av_opt_get().
  *
  *                 Typically this should be the same as the scalarized type of
- *                 the AVOption being retrieved, but certain conversions are
+ *                 the AV选项 being retrieved, but certain conversions are
  *                 also possible - the same as those done by the corresponding
- *                 av_opt_get*() function. E.g. any option type can be retrieved
+ *                 av_opt_get*() function. E.g. any 选项 type can be retrieved
  *                 as a string, numeric types can be retrieved as int64, double,
- *                 or rational, etc.
+ *                 或 rational, etc.
  *
- * @param out_val  Array with nb_elems members into which the output will be
- *                 written. The array type must match the underlying C type as
- *                 documented for out_type, and be zeroed on entry to this
+ * @param out_val  数组，使用 nb_elems members into which the 输出 will be
+ *                 written. 数组 type must match the underlying C type as
+ *                 documented 用于 out_type, 和 be zeroed 上 entry 到 this
  *                 function.
  *
- *                 For dynamically allocated types (strings, binary, dicts,
- *                 etc.), the result is owned and freed by the caller.
+ *                 For dynamically 分配d types (strings, binary, dicts,
+ *                 etc.), the result is owned 和 释放d by the caller.
  */
 int av_opt_get_array(void *obj, const char *name, int search_flags,
                      unsigned int start_elem, unsigned int nb_elems,
@@ -1028,18 +1028,18 @@ int av_opt_get_array(void *obj, const char *name, int search_flags,
  */
 
 /**
- * @defgroup opt_eval_funcs Evaluating option strings
+ * @defgroup opt_eval_funcs Evaluating 选项 strings
  * @{
- * This group of functions can be used to evaluate option strings
- * and get numbers out of them. They do the same thing as av_opt_set(),
- * except the result is written into the caller-supplied pointer.
+ * This group 的 functions 可用于 到 evaluate 选项 strings
+ * 和 get 数量s out 的 them. They do the same thing as av_opt_设置(),
+ * except the result is written into the caller-supplied 指针.
  *
- * @param obj a struct whose first element is a pointer to AVClass.
- * @param o an option for which the string is to be evaluated.
- * @param val string to be evaluated.
- * @param *_out value of the string will be written here.
+ * @param obj a struct whose first element is a 指针 到 AVClass.
+ * @param o an 选项 用于 which the string is 到 be evaluated.
+ * @param val string 到 be evaluated.
+ * @param *_out 值 的 the string will be written here.
  *
- * @return 0 on success, a negative number on failure.
+ * @返回 0 上 success, a negative 数量 上 failure.
  */
 int av_opt_eval_flags (void *obj, const AVOption *o, const char *val, int        *flags_out);
 int av_opt_eval_int   (void *obj, const AVOption *o, const char *val, int        *int_out);
@@ -1053,38 +1053,38 @@ int av_opt_eval_q     (void *obj, const AVOption *o, const char *val, AVRational
  */
 
 /**
- * Check if given option is set to its default value.
+ * 检查 如果 given 选项 is 设置 到 its 默认 值.
  *
- * Options o must belong to the obj. This function must not be called to check child's options state.
- * @see av_opt_is_set_to_default_by_name().
+ * 选项 o must belong 到 the obj. 此函数 must not be called 到 检查 child's 选项 state.
+ * @参见 av_opt_is_设置_to_默认_by_name().
  *
- * @param obj  AVClass object to check option on
- * @param o    option to be checked
- * @return     >0 when option is set to its default,
- *              0 when option is not set its default,
- *             <0 on error
+ * @param obj  AVClass object 到 检查 选项 on
+ * @param o    选项 到 be 检查ed
+ * @返回     >0 当 选项 is 设置 到 its 默认,
+ *              0 当 选项 is not 设置 its 默认,
+ *             <0 上 error
  */
 int av_opt_is_set_to_default(void *obj, const AVOption *o);
 
 /**
- * Check if given option is set to its default value.
+ * 检查 如果 given 选项 is 设置 到 its 默认 值.
  *
- * @param obj          AVClass object to check option on
- * @param name         option name
- * @param search_flags combination of AV_OPT_SEARCH_*
- * @return             >0 when option is set to its default,
- *                     0 when option is not set its default,
- *                     <0 on error
+ * @param obj          AVClass object 到 检查 选项 on
+ * @param name         选项 name
+ * @param search_标志 combination 的 AV_OPT_SEARCH_*
+ * @返回             >0 当 选项 is 设置 到 its 默认,
+ *                     0 当 选项 is not 设置 its 默认,
+ *                     <0 上 error
  */
 int av_opt_is_set_to_default_by_name(void *obj, const char *name, int search_flags);
 
 /**
- * Check whether a particular flag is set in a flags field.
+ * 检查 是否 a particular 标志 is 设置 中 a 标志 field.
  *
- * @param field_name the name of the flag field option
- * @param flag_name the name of the flag to check
- * @return non-zero if the flag is set, zero if the flag isn't set,
- *         isn't of the right type, or the flags field doesn't exist.
+ * @param field_name the name 的 the 标志 field 选项
+ * @param 标志_name the name 的 the 标志 到 检查
+ * @返回 non-zero 如果 the 标志 is 设置, zero 如果 the 标志 isn't 设置,
+ *         isn't 的 the right type, 或 the 标志 field doesn't exist.
  */
 int av_opt_flag_is_set(void *obj, const char *field_name, const char *flag_name);
 
@@ -1093,21 +1093,21 @@ int av_opt_flag_is_set(void *obj, const char *field_name, const char *flag_name)
 #define AV_OPT_SERIALIZE_SEARCH_CHILDREN            0x00000004  ///< Serialize options in possible children of the given object.
 
 /**
- * Serialize object's options.
+ * Serialize object's 选项.
  *
- * Create a string containing object's serialized options.
- * Such string may be passed back to av_opt_set_from_string() in order to restore option values.
- * A key/value or pairs separator occurring in the serialized value or
+ * 创建 a string containing object's serialized 选项.
+ * Such string may be passed back 到 av_opt_设置_from_string() 中 order 到 restore 选项 值.
+ * key/值 或 pairs separator occurring 中 the serialized 值 or
  * name string are escaped through the av_escape() function.
  *
- * @param[in]  obj           AVClass object to serialize
- * @param[in]  opt_flags     serialize options with all the specified flags set (AV_OPT_FLAG)
- * @param[in]  flags         combination of AV_OPT_SERIALIZE_* flags
- * @param[out] buffer        Pointer to buffer that will be allocated with string containing serialized options.
- *                           Buffer must be freed by the caller when is no longer needed.
- * @param[in]  key_val_sep   character used to separate key from value
- * @param[in]  pairs_sep     character used to separate two pairs from each other
- * @return                   >= 0 on success, negative on error
+ * @param[in]  obj           AVClass object 到 serialize
+ * @param[in]  opt_标志     serialize 选项，使用 all the spec如果ied 标志 设置 (AV_OPT_标志)
+ * @param[in]  标志         combination 的 AV_OPT_SERIALIZE_* 标志
+ * @param[out] 缓冲区        指针 到 缓冲区 that will be 分配d，使用 string containing serialized 选项.
+ *                           缓冲区 must be 释放d by the caller 当 is no longer needed.
+ * @param[in]  key_val_sep   character 用于 separate key，来自 值
+ * @param[in]  pairs_sep     character 用于 separate two pairs，来自 each other
+ * @返回                   >= 0 上 success, negative 上 error
  * @warning Separators cannot be neither '\\' nor '\0'. They also cannot be the same.
  */
 int av_opt_serialize(void *obj, int opt_flags, int flags, char **buffer,
@@ -1118,38 +1118,38 @@ int av_opt_serialize(void *obj, int opt_flags, int flags, char **buffer,
  */
 
 /**
- * Free an AVOptionRanges struct and set it to NULL.
+ * 释放 an AV选项Ranges struct 和 设置 it 到 NULL.
  */
 void av_opt_freep_ranges(AVOptionRanges **ranges);
 
 /**
- * Get a list of allowed ranges for the given option.
+ * 获取 a 列表 的 allowed ranges 用于 the given 选项.
  *
- * The returned list may depend on other fields in obj like for example profile.
+ * 返回ed 列表 may depend 上 other fields 中 obj like 用于 example profile.
  *
- * @param flags is a bitmask of flags, undefined flags should not be set and should be ignored
- *              AV_OPT_SEARCH_FAKE_OBJ indicates that the obj is a double pointer to a AVClass instead of a full instance
- *              AV_OPT_MULTI_COMPONENT_RANGE indicates that function may return more than one component, @see AVOptionRanges
+ * @param 标志 is a bitmask 的 标志, undefined 标志 should not be 设置 和 should be ignored
+ *              AV_OPT_SEARCH_FAKE_OBJ indicates that the obj is a double 指针 到 a AVClass instead 的 a full instance
+ *              AV_OPT_MULTI_COMPONENT_RANGE indicates that function may 返回 more than one component, @参见 AV选项Ranges
  *
- * The result must be freed with av_opt_freep_ranges.
+ * result must be 释放d，使用 av_opt_释放p_ranges.
  *
- * @return number of components returned on success, a negative error code otherwise
+ * @返回 数量 的 components 返回ed 上 success, a negative error code otherwise
  */
 int av_opt_query_ranges(AVOptionRanges **, void *obj, const char *key, int flags);
 
 /**
- * Get a default list of allowed ranges for the given option.
+ * 获取 a 默认 列表 的 allowed ranges 用于 the given 选项.
  *
- * This list is constructed without using the AVClass.query_ranges() callback
- * and can be used as fallback from within the callback.
+ * This 列表 is constructed without using the AVClass.query_ranges() callback
+ * 和 可用于 as fallback，来自 within the callback.
  *
- * @param flags is a bitmask of flags, undefined flags should not be set and should be ignored
- *              AV_OPT_SEARCH_FAKE_OBJ indicates that the obj is a double pointer to a AVClass instead of a full instance
- *              AV_OPT_MULTI_COMPONENT_RANGE indicates that function may return more than one component, @see AVOptionRanges
+ * @param 标志 is a bitmask 的 标志, undefined 标志 should not be 设置 和 should be ignored
+ *              AV_OPT_SEARCH_FAKE_OBJ indicates that the obj is a double 指针 到 a AVClass instead 的 a full instance
+ *              AV_OPT_MULTI_COMPONENT_RANGE indicates that function may 返回 more than one component, @参见 AV选项Ranges
  *
- * The result must be freed with av_opt_free_ranges.
+ * result must be 释放d，使用 av_opt_释放_ranges.
  *
- * @return number of components returned on success, a negative error code otherwise
+ * @返回 数量 的 components 返回ed 上 success, a negative error code otherwise
  */
 int av_opt_query_ranges_default(AVOptionRanges **, void *obj, const char *key, int flags);
 

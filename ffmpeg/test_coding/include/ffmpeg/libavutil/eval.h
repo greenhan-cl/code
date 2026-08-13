@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2002 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -20,7 +20,7 @@
 
 /**
  * @file
- * simple arithmetic expression evaluator
+ * 简单算术表达式求值器
  */
 
 #ifndef AVUTIL_EVAL_H
@@ -29,23 +29,20 @@
 typedef struct AVExpr AVExpr;
 
 /**
- * Parse and evaluate an expression.
- * Note, this is significantly slower than av_expr_eval().
+ * 解析并计算表达式。注意，这比 av_expr_eval() 慢得多。
  *
- * @param res a pointer to a double where is put the result value of
- * the expression, or NAN in case of error
- * @param s expression as a zero terminated string, for example "1+2^3+5*5+sin(2/3)"
- * @param const_names NULL terminated array of zero terminated strings of constant identifiers, for example {"PI", "E", 0}
- * @param const_values a zero terminated array of values for the identifiers from const_names
- * @param func1_names NULL terminated array of zero terminated strings of funcs1 identifiers
- * @param funcs1 NULL terminated array of function pointers for functions which take 1 argument
- * @param func2_names NULL terminated array of zero terminated strings of funcs2 identifiers
- * @param funcs2 NULL terminated array of function pointers for functions which take 2 arguments
- * @param opaque a pointer which will be passed to all functions from funcs1 and funcs2
- * @param log_offset log level offset, can be used to silence error messages
- * @param log_ctx parent logging context
- * @return >= 0 in case of success, a negative value corresponding to an
- * AVERROR code otherwise
+ * @param res 指向 double 的指针，用于存放表达式结果；出错时存放 NAN
+ * @param s 以零结尾的表达式字符串，例如 "1+2^3+5*5+sin(2/3)"
+ * @param const_names 以 NULL 结尾的常量标识符字符串数组，例如 {"PI", "E", 0}
+ * @param const_values const_names 中标识符对应的值数组
+ * @param func1_names 以 NULL 结尾的 funcs1 标识符字符串数组
+ * @param funcs1 以 NULL 结尾、指向单参数函数的函数指针数组
+ * @param func2_names 以 NULL 结尾的 funcs2 标识符字符串数组
+ * @param funcs2 以 NULL 结尾、指向双参数函数的函数指针数组
+ * @param opaque 将传给 funcs1 和 funcs2 中所有函数的指针
+ * @param log_offset 日志级别偏移量，可用于屏蔽错误消息
+ * @param log_ctx 父日志上下文
+ * @return 成功时 >= 0，否则返回与 AVERROR 错误码对应的负值
  */
 int av_expr_parse_and_eval(double *res, const char *s,
                            const char * const *const_names, const double *const_values,
@@ -54,22 +51,19 @@ int av_expr_parse_and_eval(double *res, const char *s,
                            void *opaque, int log_offset, void *log_ctx);
 
 /**
- * Parse an expression.
+ * 解析表达式。
  *
- * @param expr a pointer where is put an AVExpr containing the parsed
- * value in case of successful parsing, or NULL otherwise.
- * The pointed to AVExpr must be freed with av_expr_free() by the user
- * when it is not needed anymore.
- * @param s expression as a zero terminated string, for example "1+2^3+5*5+sin(2/3)"
- * @param const_names NULL terminated array of zero terminated strings of constant identifiers, for example {"PI", "E", 0}
- * @param func1_names NULL terminated array of zero terminated strings of funcs1 identifiers
- * @param funcs1 NULL terminated array of function pointers for functions which take 1 argument
- * @param func2_names NULL terminated array of zero terminated strings of funcs2 identifiers
- * @param funcs2 NULL terminated array of function pointers for functions which take 2 arguments
- * @param log_offset log level offset, can be used to silence error messages
- * @param log_ctx parent logging context
- * @return >= 0 in case of success, a negative value corresponding to an
- * AVERROR code otherwise
+ * @param expr 成功解析时用于存放含解析值的 AVExpr 的指针，否则存放 NULL。
+ *             不再需要时，用户必须使用 av_expr_free() 释放所指 AVExpr。
+ * @param s 以零结尾的表达式字符串，例如 "1+2^3+5*5+sin(2/3)"
+ * @param const_names 以 NULL 结尾的常量标识符字符串数组，例如 {"PI", "E", 0}
+ * @param func1_names 以 NULL 结尾的 funcs1 标识符字符串数组
+ * @param funcs1 以 NULL 结尾、指向单参数函数的函数指针数组
+ * @param func2_names 以 NULL 结尾的 funcs2 标识符字符串数组
+ * @param funcs2 以 NULL 结尾、指向双参数函数的函数指针数组
+ * @param log_offset 日志级别偏移量，可用于屏蔽错误消息
+ * @param log_ctx 父日志上下文
+ * @return 成功时 >= 0，否则返回与 AVERROR 错误码对应的负值
  */
 int av_expr_parse(AVExpr **expr, const char *s,
                   const char * const *const_names,
@@ -78,62 +72,52 @@ int av_expr_parse(AVExpr **expr, const char *s,
                   int log_offset, void *log_ctx);
 
 /**
- * Evaluate a previously parsed expression.
+ * 计算之前解析的表达式。
  *
- * @param e the AVExpr to evaluate
- * @param const_values a zero terminated array of values for the identifiers from av_expr_parse() const_names
- * @param opaque a pointer which will be passed to all functions from funcs1 and funcs2
- * @return the value of the expression
+ * @param e 要计算的 AVExpr
+ * @param const_values av_expr_parse() 的 const_names 中标识符对应的值数组
+ * @param opaque 将传给 funcs1 和 funcs2 中所有函数的指针
+ * @return 表达式的值
  */
 double av_expr_eval(AVExpr *e, const double *const_values, void *opaque);
 
 /**
- * Track the presence of variables and their number of occurrences in a parsed expression
+ * 跟踪已解析表达式中变量是否存在及其出现次数。
  *
- * @param e the AVExpr to track variables in
- * @param counter a zero-initialized array where the count of each variable will be stored
- * @param size size of array
- * @return 0 on success, a negative value indicates that no expression or array was passed
- * or size was zero
+ * @param e 要跟踪变量的 AVExpr
+ * @param counter 已清零的数组，用于存储每个变量的计数
+ * @param size 数组大小
+ * @return 成功时返回 0；负值表示未传入表达式或数组，或者 size 为零
  */
 int av_expr_count_vars(AVExpr *e, unsigned *counter, int size);
 
 /**
- * Track the presence of user provided functions and their number of occurrences
- * in a parsed expression.
+ * 跟踪已解析表达式中用户提供的函数是否存在及其出现次数。
  *
- * @param e the AVExpr to track user provided functions in
- * @param counter a zero-initialized array where the count of each function will be stored
- *                if you passed 5 functions with 2 arguments to av_expr_parse()
- *                then for arg=2 this will use up to 5 entries.
- * @param size size of array
- * @param arg number of arguments the counted functions have
- * @return 0 on success, a negative value indicates that no expression or array was passed
- * or size was zero
+ * @param e 要跟踪用户提供函数的 AVExpr
+ * @param counter 已清零的数组，用于存储每个函数的计数。如果向 av_expr_parse()
+ *                传入 5 个双参数函数，则 arg=2 时最多使用 5 个条目。
+ * @param size 数组大小
+ * @param arg 被计数函数的参数数量
+ * @return 成功时返回 0；负值表示未传入表达式或数组，或者 size 为零
  */
 int av_expr_count_func(AVExpr *e, unsigned *counter, int size, int arg);
 
 /**
- * Free a parsed expression previously created with av_expr_parse().
+ * 释放之前使用 av_expr_parse() 创建的已解析表达式。
  */
 void av_expr_free(AVExpr *e);
 
 /**
- * Parse the string in numstr and return its value as a double. If
- * the string is empty, contains only whitespaces, or does not contain
- * an initial substring that has the expected syntax for a
- * floating-point number, no conversion is performed. In this case,
- * returns a value of zero and the value returned in tail is the value
- * of numstr.
+ * 解析 numstr 中的字符串并以 double 返回其值。如果字符串为空、仅包含空白，
+ * 或开头不含符合浮点数预期语法的子串，则不执行转换。此时返回零，并在 tail
+ * 中返回 numstr 的值。
  *
- * @param numstr a string representing a number, may contain one of
- * the International System number postfixes, for example 'K', 'M',
- * 'G'. If 'i' is appended after the postfix, powers of 2 are used
- * instead of powers of 10. The 'B' postfix multiplies the value by
- * 8, and can be appended after another postfix or used alone. This
- * allows using for example 'KB', 'MiB', 'G' and 'B' as postfix.
- * @param tail if non-NULL puts here the pointer to the char next
- * after the last parsed character
+ * @param numstr 表示数值的字符串，可包含国际单位制数值后缀，例如 'K'、'M'、
+ *               'G'。后缀后加 'i' 时使用 2 的幂而非 10 的幂。'B' 后缀会将值
+ *               乘以 8，可附加在其他后缀后，也可单独使用。例如可使用 'KB'、
+ *               'MiB'、'G' 和 'B' 作为后缀。
+ * @param tail 非 NULL 时，在此放置指向最后一个已解析字符之后字符的指针
  */
 double av_strtod(const char *numstr, char **tail);
 

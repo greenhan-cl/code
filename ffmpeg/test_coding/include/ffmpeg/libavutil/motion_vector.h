@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -23,30 +23,29 @@
 
 typedef struct AVMotionVector {
     /**
-     * Where the current macroblock comes from; negative value when it comes
-     * from the past, positive value when it comes from the future.
-     * XXX: set exact relative ref frame reference instead of a +/- 1 "direction".
+     * 当前宏块来自哪里；来自过去时为负值，来自未来时为正值。
+     * XXX：设置精确的相对参考帧引用，而不是 +/- 1 的“方向”。
      */
     int32_t source;
     /**
-     * Width and height of the block.
+     * 块的宽度和高度。
      */
     uint8_t w, h;
     /**
-     * Absolute source position. Can be outside the frame area.
+     * 绝对源位置，可以位于帧区域之外。
      */
     int16_t src_x, src_y;
     /**
-     * Absolute destination position. Can be outside the frame area.
+     * 绝对目标位置，可以位于帧区域之外。
      */
     int16_t dst_x, dst_y;
     /**
-     * Extra flag information.
-     * Currently unused.
+     * 额外标志信息。
+     * 当前未使用。
      */
     uint64_t flags;
     /**
-     * Motion vector
+     * 运动矢量
      * src_x = dst_x + motion_x / motion_scale
      * src_y = dst_y + motion_y / motion_scale
      */

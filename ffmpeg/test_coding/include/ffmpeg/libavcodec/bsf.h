@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Bitstream filters public API
  *
  * This file is part of FFmpeg.
@@ -30,80 +30,69 @@
 #include "packet.h"
 
 /**
- * @defgroup lavc_bsf Bitstream filters
+ * @defgroup lavc_bsf 比特流过滤器
  * @ingroup libavc
  *
- * Bitstream filters transform encoded media data without decoding it. This
- * allows e.g. manipulating various header values. Bitstream filters operate on
- * @ref AVPacket "AVPackets".
+ * 比特流过滤器无需解码即可转换编码媒体数据，例如修改各种头字段值。
+ * 比特流过滤器对 @ref AVPacket "AVPacket" 进行操作。
  *
- * The bitstream filtering API is centered around two structures:
- * AVBitStreamFilter and AVBSFContext. The former represents a bitstream filter
- * in abstract, the latter a specific filtering process. Obtain an
- * AVBitStreamFilter using av_bsf_get_by_name() or av_bsf_iterate(), then pass
- * it to av_bsf_alloc() to create an AVBSFContext. Fill in the user-settable
- * AVBSFContext fields, as described in its documentation, then call
- * av_bsf_init() to prepare the filter context for use.
+ * 比特流过滤 API 以 AVBitStreamFilter 和 AVBSFContext 两个结构体为核心。
+ * 前者抽象表示比特流过滤器，后者表示一次具体过滤过程。使用
+ * av_bsf_get_by_name() 或 av_bsf_iterate() 获取 AVBitStreamFilter，
+ * 再传给 av_bsf_alloc() 创建 AVBSFContext。按文档填充用户可设置字段后，
+ * 调用 av_bsf_init() 准备过滤器上下文。
  *
- * Submit packets for filtering using av_bsf_send_packet(), obtain filtered
- * results with av_bsf_receive_packet(). When no more input packets will be
- * sent, submit a NULL AVPacket to signal the end of the stream to the filter.
- * av_bsf_receive_packet() will then return trailing packets, if any are
- * produced by the filter.
+ * 使用 av_bsf_send_packet() 提交待过滤数据包，通过 av_bsf_receive_packet()
+ * 获取过滤结果。不再发送输入包时，提交 NULL AVPacket 通知过滤器流已结束。
+ * 此后 av_bsf_receive_packet() 会返回过滤器产生的尾随数据包（如果有）。
  *
- * Finally, free the filter context with av_bsf_free().
+ * 最后使用 av_bsf_free() 释放过滤器上下文。
  * @{
  */
 
 /**
- * The bitstream filter state.
+ * 比特流过滤器状态。
  *
- * This struct must be allocated with av_bsf_alloc() and freed with
- * av_bsf_free().
+ * 必须使用 av_bsf_alloc() 分配此结构体，并使用 av_bsf_free() 释放。
  *
- * The fields in the struct will only be changed (by the caller or by the
- * filter) as described in their documentation, and are to be considered
- * immutable otherwise.
+ * 结构体字段只能由调用方或过滤器按照各字段文档进行更改，其他情况下应视为不可变。
  */
 typedef struct AVBSFContext {
     /**
-     * A class for logging and AVOptions
+     * 用于日志记录和 AVOptions 的类
      */
     const AVClass *av_class;
 
     /**
-     * The bitstream filter this context is an instance of.
+     * 此上下文所实例化的比特流过滤器。
      */
     const struct AVBitStreamFilter *filter;
 
     /**
-     * Opaque filter-specific private data. If filter->priv_class is non-NULL,
-     * this is an AVOptions-enabled struct.
+     * 过滤器专用的不透明私有数据。如果 filter->priv_class 非 NULL，
+     * 则这是启用了 AVOptions 的结构体。
      */
     void *priv_data;
 
     /**
-     * Parameters of the input stream. This field is allocated in
-     * av_bsf_alloc(), it needs to be filled by the caller before
-     * av_bsf_init().
+     * 输入流参数。此字段由 av_bsf_alloc() 分配，调用方需要在
+     * av_bsf_init() 之前填充。
      */
     AVCodecParameters *par_in;
 
     /**
-     * Parameters of the output stream. This field is allocated in
-     * av_bsf_alloc(), it is set by the filter in av_bsf_init().
+     * 输出流参数。此字段由 av_bsf_alloc() 分配，并由过滤器在
+     * av_bsf_init() 中设置。
      */
     AVCodecParameters *par_out;
 
     /**
-     * The timebase used for the timestamps of the input packets. Set by the
-     * caller before av_bsf_init().
+     * 输入包时间戳使用的时间基。由调用方在 av_bsf_init() 前设置。
      */
     AVRational time_base_in;
 
     /**
-     * The timebase used for the timestamps of the output packets. Set by the
-     * filter in av_bsf_init().
+     * 输出包时间戳使用的时间基。由过滤器在 av_bsf_init() 中设置。
      */
     AVRational time_base_out;
 } AVBSFContext;
@@ -112,365 +101,317 @@ typedef struct AVBitStreamFilter {
     const char *name;
 
     /**
-     * A list of codec ids supported by the filter, terminated by
-     * AV_CODEC_ID_NONE.
-     * May be NULL, in that case the bitstream filter works with any codec id.
+     * 过滤器支持的编解码器 ID 列表，以 AV_CODEC_ID_NONE 结尾。
+     * 可以为 NULL，此时比特流过滤器适用于任意编解码器 ID。
      */
     const enum AVCodecID *codec_ids;
 
     /**
-     * A class for the private data, used to declare bitstream filter private
-     * AVOptions. This field is NULL for bitstream filters that do not declare
-     * any options.
+     * 私有数据的类，用于声明比特流过滤器的私有 AVOptions。
+     * 不声明任何选项的比特流过滤器中，此字段为 NULL。
      *
-     * If this field is non-NULL, the first member of the filter private data
-     * must be a pointer to AVClass, which will be set by libavcodec generic
-     * code to this class.
+     * 如果此字段非 NULL，过滤器私有数据的第一个成员必须是 AVClass 指针，
+     * libavcodec 通用代码会将该指针设为此类。
      */
     const AVClass *priv_class;
 } AVBitStreamFilter;
 
 /**
- * @return a bitstream filter with the specified name or NULL if no such
- *         bitstream filter exists.
+ * @return 指定名称的比特流过滤器；不存在时返回 NULL。
  */
 const AVBitStreamFilter *av_bsf_get_by_name(const char *name);
 
 /**
- * Iterate over all registered bitstream filters.
+ * 遍历所有已注册的比特流过滤器。
  *
- * @param opaque a pointer where libavcodec will store the iteration state. Must
- *               point to NULL to start the iteration.
+ * @param opaque libavcodec 用于存储迭代状态的指针。开始迭代时必须指向 NULL。
  *
- * @return the next registered bitstream filter or NULL when the iteration is
- *         finished
+ * @return 下一个已注册的比特流过滤器；迭代结束时返回 NULL
  */
 const AVBitStreamFilter *av_bsf_iterate(void **opaque);
 
 /**
- * Allocate a context for a given bitstream filter. The caller must fill in the
- * context parameters as described in the documentation and then call
- * av_bsf_init() before sending any data to the filter.
+ * 为给定比特流过滤器分配上下文。调用方必须按文档填充上下文参数，
+ * 并在向过滤器发送任何数据之前调用 av_bsf_init()。
  *
- * @param filter the filter for which to allocate an instance.
- * @param[out] ctx a pointer into which the pointer to the newly-allocated context
- *                 will be written. It must be freed with av_bsf_free() after the
- *                 filtering is done.
+ * @param filter 要为其分配实例的过滤器
+ * @param[out] ctx 用于写入新分配上下文指针的位置。过滤完成后必须使用
+ *                 av_bsf_free() 释放。
  *
- * @return 0 on success, a negative AVERROR code on failure
+ * @return 成功返回 0，失败返回负的 AVERROR 错误码
  */
 int av_bsf_alloc(const AVBitStreamFilter *filter, AVBSFContext **ctx);
 
 /**
- * Prepare the filter for use, after all the parameters and options have been
- * set.
+ * 设置全部参数和选项后，准备过滤器以供使用。
  *
- * @param ctx a AVBSFContext previously allocated with av_bsf_alloc()
+ * @param ctx 之前使用 av_bsf_alloc() 分配的 AVBSFContext
  */
 int av_bsf_init(AVBSFContext *ctx);
 
 /**
- * Submit a packet for filtering.
+ * 提交数据包进行过滤。
  *
- * After sending each packet, the filter must be completely drained by calling
- * av_bsf_receive_packet() repeatedly until it returns AVERROR(EAGAIN) or
- * AVERROR_EOF.
+ * 每次发送数据包后，必须重复调用 av_bsf_receive_packet()，直到返回
+ * AVERROR(EAGAIN) 或 AVERROR_EOF，以完全取空过滤器输出。
  *
- * @param ctx an initialized AVBSFContext
- * @param pkt the packet to filter. The bitstream filter will take ownership of
- * the packet and reset the contents of pkt. pkt is not touched if an error occurs.
- * If pkt is empty (i.e. NULL, or pkt->data is NULL and pkt->side_data_elems zero),
- * it signals the end of the stream (i.e. no more non-empty packets will be sent;
- * sending more empty packets does nothing) and will cause the filter to output
- * any packets it may have buffered internally.
+ * @param ctx 已初始化的 AVBSFContext
+ * @param pkt 要过滤的数据包。比特流过滤器取得数据包所有权并重置 pkt 内容。
+ *            发生错误时不修改 pkt。如果 pkt 为空（即为 NULL，或 pkt->data 为 NULL
+ *            且 pkt->side_data_elems 为零），表示流结束，并使过滤器输出内部缓冲的包。
  *
  * @return
- *  - 0 on success.
- *  - AVERROR(EAGAIN) if packets need to be retrieved from the filter (using
- *    av_bsf_receive_packet()) before new input can be consumed.
- *  - Another negative AVERROR value if an error occurs.
+ *  - 成功时返回 0。
+ *  - 如果消费新输入前需要用 av_bsf_receive_packet() 从过滤器取包，
+ *    返回 AVERROR(EAGAIN)。
+ *  - 发生错误时返回其他负的 AVERROR 值。
  */
 int av_bsf_send_packet(AVBSFContext *ctx, AVPacket *pkt);
 
 /**
- * Retrieve a filtered packet.
+ * 获取过滤后的数据包。
  *
- * @param ctx an initialized AVBSFContext
- * @param[out] pkt this struct will be filled with the contents of the filtered
- *                 packet. It is owned by the caller and must be freed using
- *                 av_packet_unref() when it is no longer needed.
- *                 This parameter should be "clean" (i.e. freshly allocated
- *                 with av_packet_alloc() or unreffed with av_packet_unref())
- *                 when this function is called. If this function returns
- *                 successfully, the contents of pkt will be completely
- *                 overwritten by the returned data. On failure, pkt is not
- *                 touched.
+ * @param ctx 已初始化的 AVBSFContext
+ * @param[out] pkt 此结构体将填入过滤后数据包的内容。它归调用方所有，
+ *                 不再需要时必须使用 av_packet_unref() 释放。
+ *                 调用时该参数应是“干净”的（刚由 av_packet_alloc() 分配，
+ *                 或已用 av_packet_unref() 解引用）。成功时返回数据会完全覆盖 pkt；
+ *                 失败时不修改 pkt。
  *
  * @return
- *  - 0 on success.
- *  - AVERROR(EAGAIN) if more packets need to be sent to the filter (using
- *    av_bsf_send_packet()) to get more output.
- *  - AVERROR_EOF if there will be no further output from the filter.
- *  - Another negative AVERROR value if an error occurs.
+ *  - 成功时返回 0。
+ *  - 如需用 av_bsf_send_packet() 向过滤器发送更多包才能获得更多输出，
+ *    返回 AVERROR(EAGAIN)。
+ *  - 过滤器不会再有输出时返回 AVERROR_EOF。
+ *  - 发生错误时返回其他负的 AVERROR 值。
  *
- * @note one input packet may result in several output packets, so after sending
- * a packet with av_bsf_send_packet(), this function needs to be called
- * repeatedly until it stops returning 0. It is also possible for a filter to
- * output fewer packets than were sent to it, so this function may return
- * AVERROR(EAGAIN) immediately after a successful av_bsf_send_packet() call.
+ * @note 一个输入包可能产生多个输出包，因此使用 av_bsf_send_packet() 发送包后，
+ * 需要重复调用此函数，直到不再返回 0。过滤器输出的包也可能少于输入包，
+ * 因此成功调用 av_bsf_send_packet() 后，此函数可能立即返回 AVERROR(EAGAIN)。
  */
 int av_bsf_receive_packet(AVBSFContext *ctx, AVPacket *pkt);
 
 /**
- * Reset the internal bitstream filter state. Should be called e.g. when seeking.
+ * 重置比特流过滤器内部状态。例如在定位时应调用。
  */
 void av_bsf_flush(AVBSFContext *ctx);
 
 /**
- * Free a bitstream filter context and everything associated with it; write NULL
- * into the supplied pointer.
+ * 释放比特流过滤器上下文及其关联的所有内容，并向提供的指针写入 NULL。
  */
 void av_bsf_free(AVBSFContext **ctx);
 
 /**
- * Get the AVClass for AVBSFContext. It can be used in combination with
- * AV_OPT_SEARCH_FAKE_OBJ for examining options.
+ * 获取 AVBSFContext 的 AVClass。可与 AV_OPT_SEARCH_FAKE_OBJ 结合使用以检查选项。
  *
  * @see av_opt_find().
  */
 const AVClass *av_bsf_get_class(void);
 
 /**
- * Structure for chain/list of bitstream filters.
- * Empty list can be allocated by av_bsf_list_alloc().
+ * 比特流过滤器链/列表结构体。
+ * 可通过 av_bsf_list_alloc() 分配空列表。
  */
 typedef struct AVBSFList AVBSFList;
 
 /**
- * Allocate empty list of bitstream filters.
- * The list must be later freed by av_bsf_list_free()
- * or finalized by av_bsf_list_finalize().
+ * 分配空的比特流过滤器列表。
+ * 之后必须使用 av_bsf_list_free() 释放，或使用 av_bsf_list_finalize() 完成。
  *
- * @return Pointer to @ref AVBSFList on success, NULL in case of failure
+ * @return 成功返回指向 @ref AVBSFList 的指针，失败返回 NULL
  */
 AVBSFList *av_bsf_list_alloc(void);
 
 /**
- * Free list of bitstream filters.
+ * 释放比特流过滤器列表。
  *
- * @param lst Pointer to pointer returned by av_bsf_list_alloc()
+ * @param lst 指向 av_bsf_list_alloc() 返回指针的指针
  */
 void av_bsf_list_free(AVBSFList **lst);
 
 /**
- * Append bitstream filter to the list of bitstream filters.
+ * 将比特流过滤器追加到列表。
  *
- * @param lst List to append to
- * @param bsf Filter context to be appended
+ * @param lst 要追加到的列表
+ * @param bsf 要追加的过滤器上下文
  *
- * @return >=0 on success, negative AVERROR in case of failure
+ * @return 成功返回 >=0，失败返回负的 AVERROR
  */
 int av_bsf_list_append(AVBSFList *lst, AVBSFContext *bsf);
 
 /**
- * Construct new bitstream filter context given it's name and options
- * and append it to the list of bitstream filters.
+ * 根据名称和选项构造新的比特流过滤器上下文，并将其追加到过滤器列表。
  *
- * @param lst      List to append to
- * @param bsf_name Name of the bitstream filter
- * @param options  Options for the bitstream filter, can be set to NULL
+ * @param lst      要追加到的列表
+ * @param bsf_name 比特流过滤器名称
+ * @param options  比特流过滤器选项，可以设为 NULL
  *
- * @return >=0 on success, negative AVERROR in case of failure
+ * @return 成功返回 >=0，失败返回负的 AVERROR
  */
 int av_bsf_list_append2(AVBSFList *lst, const char * bsf_name, AVDictionary **options);
 /**
- * Finalize list of bitstream filters.
+ * 完成比特流过滤器列表。
  *
- * This function will transform @ref AVBSFList to single @ref AVBSFContext,
- * so the whole chain of bitstream filters can be treated as single filter
- * freshly allocated by av_bsf_alloc().
- * If the call is successful, @ref AVBSFList structure is freed and lst
- * will be set to NULL. In case of failure, caller is responsible for
- * freeing the structure by av_bsf_list_free()
+ * 此函数将 @ref AVBSFList 转换为单个 @ref AVBSFContext ，使整个比特流过滤器链
+ * 可像 av_bsf_alloc() 新分配的单个过滤器一样处理。调用成功时释放
+ * @ref AVBSFList 并将 lst 设为 NULL；失败时调用方负责使用
+ * av_bsf_list_free() 释放结构体。
  *
- * @param      lst Filter list structure to be transformed
- * @param[out] bsf Pointer to be set to newly created @ref AVBSFContext structure
- *                 representing the chain of bitstream filters
+ * @param      lst 要转换的过滤器列表结构体
+ * @param[out] bsf 用于写入新创建 @ref AVBSFContext 的指针，该上下文表示过滤器链
  *
- * @return >=0 on success, negative AVERROR in case of failure
+ * @return 成功返回 >=0，失败返回负的 AVERROR
  */
 int av_bsf_list_finalize(AVBSFList **lst, AVBSFContext **bsf);
 
 /**
- * Parse string describing list of bitstream filters and create single
- * @ref AVBSFContext describing the whole chain of bitstream filters.
- * Resulting @ref AVBSFContext can be treated as any other @ref AVBSFContext freshly
- * allocated by av_bsf_alloc().
+ * 解析描述比特流过滤器列表的字符串，并创建表示整个过滤器链的单个
+ * @ref AVBSFContext 。得到的 @ref AVBSFContext 可像其他由 av_bsf_alloc() 新分配的
+ * @ref AVBSFContext 一样处理。
  *
- * @param      str String describing chain of bitstream filters in format
+ * @param      str 描述比特流过滤器链的字符串，格式为
  *                 `bsf1[=opt1=val1:opt2=val2][,bsf2]`
- * @param[out] bsf Pointer to be set to newly created @ref AVBSFContext structure
- *                 representing the chain of bitstream filters
+ * @param[out] bsf 用于写入新创建 @ref AVBSFContext 的指针，该上下文表示过滤器链
  *
- * @return >=0 on success, negative AVERROR in case of failure
+ * @return 成功返回 >=0，失败返回负的 AVERROR
  */
 int av_bsf_list_parse_str(const char *str, AVBSFContext **bsf);
 
 /**
- * Get null/pass-through bitstream filter.
+ * 获取空/直通比特流过滤器。
  *
- * @param[out] bsf Pointer to be set to new instance of pass-through bitstream filter
+ * @param[out] bsf 用于写入新直通过滤器实例的指针
  *
  * @return
  */
 int av_bsf_get_null_filter(AVBSFContext **bsf);
 
 /**
- * @defgroup lavc_bsfgraph Bitstream filter graph
- * Experimental graph-based API for bitstream filters.
+ * @defgroup lavc_bsfgraph 比特流过滤器图
+ * 实验性的图式比特流过滤器 API。
  * @{
  */
 
 /**
- * A link between two filters. This contains pointers to the source and
- * destination filters between which this link exists, and the indexes of
- * the pads involved.
+ * 两个过滤器之间的链接。包含源和目标过滤器指针，以及相关 pad 的索引。
  */
 typedef struct AVBitStreamFilterLink AVBitStreamFilterLink;
 
 /**
- * A filter pad used for either input or output.
+ * 用于输入或输出的过滤器 pad。
  */
 typedef struct AVBitStreamFilterPad AVBitStreamFilterPad;
 
-/** An instance of a filter */
+/** 过滤器实例 */
 typedef struct AVBitStreamFilterContext {
     /**
-     * A class for logging and AVOptions
+     * 用于日志记录和 AVOptions 的类
      */
     const AVClass *av_class;
 
     /**
-     * The bitstream filter this context is an instance of.
+     * 此上下文所实例化的比特流过滤器。
      */
     const struct AVBitStreamFilter *filter;
 
     /**
-     * name of this filter instance
+     * 此过滤器实例的名称
      */
     char *name;
 
-    AVBitStreamFilterPad  *input_pads; ///< array of input pads
-    AVBitStreamFilterLink    **inputs; ///< array of pointers to input links
-    unsigned                nb_inputs; ///< number of input pads
+    AVBitStreamFilterPad  *input_pads; ///< 输入 pad 数组
+    AVBitStreamFilterLink    **inputs; ///< 输入链接指针数组
+    unsigned                nb_inputs; ///< 输入 pad 数量
 
-    AVBitStreamFilterPad *output_pads; ///< array of output pads
-    AVBitStreamFilterLink   **outputs; ///< array of pointers to output links
-    unsigned               nb_outputs; ///< number of output pads
+    AVBitStreamFilterPad *output_pads; ///< 输出 pad 数组
+    AVBitStreamFilterLink   **outputs; ///< 输出链接指针数组
+    unsigned               nb_outputs; ///< 输出 pad 数量
 
     /**
-     * Opaque filter-specific private data. If filter->priv_class is non-NULL,
-     * this is an AVOptions-enabled struct.
+     * 过滤器专用的不透明私有数据。如果 filter->priv_class 非 NULL，
+     * 则这是启用了 AVOptions 的结构体。
      */
     void *priv_data;
 
     /**
-     * filtergraph this filter belongs to
+     * 此过滤器所属的过滤器图
      */
     struct AVBitStreamFilterGraph *graph;
 } AVBitStreamFilterContext;
 
 /**
- * The number of the filter inputs is not determined just by the filter's static
- * inputs. The filter might add additional inputs during initialization depending
- * on the options supplied to it.
+ * 过滤器输入数量并非仅由其静态输入决定。过滤器可能根据提供的选项在初始化时添加输入。
  */
 #define AV_BSF_FLAG_DYNAMIC_INPUTS        (1 << 0)
 /**
- * The number of the filter outputs is not determined just by the filter's static
- * outputs. The filter might add additional outputs during initialization depending
- * on the options supplied to it.
+ * 过滤器输出数量并非仅由其静态输出决定。过滤器可能根据提供的选项在初始化时添加输出。
  */
 #define AV_BSF_FLAG_DYNAMIC_OUTPUTS       (1 << 1)
 /**
- * The filter is a "metadata" filter - it does not modify the packet data in any
- * way. It may only affect the metadata (i.e. those fields copied by
- * av_packet_copy_props()).
+ * 该过滤器是“元数据”过滤器，不以任何方式修改数据包数据。
+ * 它只能影响元数据（即 av_packet_copy_props() 复制的字段）。
  *
- * More precisely, this means that the data of any packet output by the filter
- * must be exactly equal to some packet that is received on one of its inputs.
- * Furthermore, all packets produced on a given output must correspond to packet
- * received on the same input and their order must be unchanged.
- * Note that the filter may still drop or duplicate the frames.
+ * 更准确地说，过滤器输出的任意数据包必须与某个输入接收的数据包完全相同。
+ * 此外，给定输出产生的所有包必须对应同一输入接收的包，且顺序不得改变。
+ * 注意，过滤器仍可能丢弃或复制帧。
  */
 #define AV_BSF_FLAG_METADATA_ONLY         (1 << 2)
 
 /**
- * Get the name of an AVBitStreamFilterPad.
+ * 获取 AVBitStreamFilterPad 的名称。
  *
- * @param pads an array of AVBitStreamFilterPads
- * @param pad_idx index of the pad in the array; it is the caller's
- *                responsibility to ensure the index is valid
+ * @param pads AVBitStreamFilterPad 数组
+ * @param pad_idx pad 在数组中的索引；调用方负责确保索引有效
  *
- * @return name of the pad_idx'th pad in pads
+ * @return pads 中第 pad_idx 个 pad 的名称
  */
 const char *av_bsf_pad_get_name(const AVBitStreamFilterPad *pads, int pad_idx);
 
 /**
- * Get the codec ids supported by an AVBitStreamFilterPad.
+ * 获取 AVBitStreamFilterPad 支持的编解码器 ID。
  *
- * @param pads an array of AVBitStreamFilterPads
- * @param pad_idx index of the pad in the array; it is the caller's
- *                responsibility to ensure the index is valid
+ * @param pads AVBitStreamFilterPad 数组
+ * @param pad_idx pad 在数组中的索引；调用方负责确保索引有效
  *
- * @return an array of AVCodecID terminated by AV_CODEC_ID_NONE, or NULL
- *         if the pad has no codec id constrains.
+ * @return 以 AV_CODEC_ID_NONE 结尾的 AVCodecID 数组；pad 没有编解码器 ID
+ *         约束时返回 NULL。
  */
 const enum AVCodecID *av_bsf_pad_get_codec_ids(const AVBitStreamFilterPad *pads, int pad_idx);
 
 /**
- * Link two filters together.
+ * 将两个过滤器链接在一起。
  *
- * @param src    the source filter
- * @param srcpad index of the output pad on the source filter
- * @param dst    the destination filter
- * @param dstpad index of the input pad on the destination filter
- * @return       zero on success
+ * @param src    源过滤器
+ * @param srcpad 源过滤器输出 pad 的索引
+ * @param dst    目标过滤器
+ * @param dstpad 目标过滤器输入 pad 的索引
+ * @return       成功返回 0
  */
 int av_bsf_link(AVBitStreamFilterContext *src, unsigned srcpad,
                 AVBitStreamFilterContext *dst, unsigned dstpad);
 
 /**
- * Initialize a filter with the supplied parameters.
+ * 使用提供的参数初始化过滤器。
  *
- * @param ctx  uninitialized filter context to initialize
- * @param args Options to initialize the filter with. This must be a
- *             ':'-separated list of options in the 'key=value' form.
- *             May be NULL if the options have been set directly using the
- *             AVOptions API or there are no options that need to be set.
- * @return 0 on success, a negative AVERROR on failure
+ * @param ctx  要初始化的未初始化过滤器上下文
+ * @param args 初始化过滤器的选项。必须是以 ':' 分隔、形式为 'key=value' 的选项列表。
+ *             如果选项已通过 AVOptions API 直接设置，或无需设置选项，则可为 NULL。
+ * @return 成功返回 0，失败返回负的 AVERROR
  */
 int av_bsf_init_str(AVBitStreamFilterContext *ctx, const char *args);
 
 /**
- * Initialize a filter with the supplied dictionary of options.
+ * 使用提供的选项字典初始化过滤器。
  *
- * @param ctx     uninitialized filter context to initialize
- * @param options An AVDictionary filled with options for this filter. On
- *                return this parameter will be destroyed and replaced with
- *                a dict containing options that were not found. This dictionary
- *                must be freed by the caller.
- *                May be NULL, then this function is equivalent to
- *                av_bsf_init_str() with the second parameter set to NULL.
- * @return 0 on success, a negative AVERROR on failure
+ * @param ctx     要初始化的未初始化过滤器上下文
+ * @param options 填有此过滤器选项的 AVDictionary。返回时此参数会被销毁，
+ *                并替换为包含未找到选项的字典。该字典必须由调用方释放。
+ *                可以为 NULL，此时等价于第二个参数为 NULL 的 av_bsf_init_str()。
+ * @return 成功返回 0，失败返回负的 AVERROR
  *
- * @note This function and av_bsf_init_str() do essentially the same thing,
- * the difference is in manner in which the options are passed. It is up to the
- * calling code to choose whichever is more preferable. The two functions also
- * behave differently when some of the provided options are not declared as
- * supported by the filter. In such a case, av_bsf_init_str() will fail, but
- * this function will leave those extra options in the options AVDictionary and
- * continue as usual.
+ * @note 此函数与 av_bsf_init_str() 的作用基本相同，区别在于选项传递方式。
+ * 调用代码可选择更合适的函数。当部分选项未声明为过滤器支持时，两者行为也不同：
+ * av_bsf_init_str() 会失败，而此函数会将额外选项留在 options AVDictionary 中并继续。
  */
 int av_bsf_init_dict(AVBitStreamFilterContext *ctx, AVDictionary **options);
 
@@ -482,37 +423,33 @@ typedef struct AVBitStreamFilterGraph {
     unsigned nb_filters;
 
     /**
-     * Sets the maximum number of buffered packets in the filtergraph combined.
+     * 设置整个过滤器图合计可缓冲的最大数据包数。
      *
-     * Zero means no limit. This field must be set before calling
-     * av_bsf_graph_config().
+     * 0 表示无限制。必须在调用 av_bsf_graph_config() 前设置此字段。
      */
     unsigned max_buffered_packets;
 } AVBitStreamFilterGraph;
 
 /**
- * Allocate a filter graph.
+ * 分配过滤器图。
  *
- * @return the allocated filter graph on success or NULL.
+ * @return 成功返回已分配的过滤器图，否则返回 NULL。
  */
 AVBitStreamFilterGraph *av_bsf_graph_alloc(void);
 
 /**
- * Create a new filter instance in a filter graph.
+ * 在过滤器图中创建新的过滤器实例。
  *
- * @param[out] filt_ctx A pointer into which the pointer to the newly-allocated context
- *                      will be written on success. May be NULL. Note that it is also
- *                      retrievable directly through AVBitStreamFilterGraph.filters or
- *                      with @ref av_bsf_graph_get_filter().
- * @param[in] filter the filter to create an instance of
- * @param[in] name Name to give to the new instance (will be copied to
- *                 AVBitStreamFilterContext.name). This may be used by the caller to
- *                 identify different filters, libavcodec itself assigns no semantics
- *                 to this parameter. May be NULL.
- * @param[in] graph graph in which the new filter will be used
+ * @param[out] filt_ctx 成功时用于写入新分配上下文指针的位置，可以为 NULL。
+ *                      也可通过 AVBitStreamFilterGraph.filters 或
+ *                      @ref av_bsf_graph_get_filter() 获取。
+ * @param[in] filter 要实例化的过滤器
+ * @param[in] name 新实例名称（会复制到 AVBitStreamFilterContext.name）。
+ *                 调用方可用它区分过滤器；libavcodec 不赋予其语义。可以为 NULL。
+ * @param[in] graph 使用新过滤器的图
  *
- * @note On failure and if filt_ctx is not NULL, *filt_ctx will be set to NULL.
- * @return a negative AVERROR error code in case of failure, a non negative value otherwise
+ * @note 失败且 filt_ctx 非 NULL 时，*filt_ctx 会被设为 NULL。
+ * @return 失败返回负的 AVERROR 错误码，否则返回非负值
  */
 int av_bsf_graph_alloc_filter(AVBitStreamFilterContext **filt_ctx,
                               const AVBitStreamFilter *filter,
@@ -520,24 +457,20 @@ int av_bsf_graph_alloc_filter(AVBitStreamFilterContext **filt_ctx,
                               AVBitStreamFilterGraph *graph);
 
 /**
- * A convenience wrapper that allocates and initializes a filter in a single
- * step. The filter instance is created from the filter filt and inited with the
- * parameter args.
+ * 在单一步骤中分配并初始化过滤器的便捷包装函数。
+ * 过滤器实例由 filt 创建，并使用参数 args 初始化。
  *
- * @param[out] filt_ctx A pointer into which the pointer to the newly-allocated context
- *                      will be written on success. May be NULL. Note that it is also
- *                      retrievable directly through AVBitStreamFilterGraph.filters or
- *                      with @ref av_bsf_graph_get_filter().
- * @param[in] name the instance name to give to the created filter instance
- * @param[in] graph_ctx the filter graph
- * @return a negative AVERROR error code in case of failure, a non negative value otherwise
+ * @param[out] filt_ctx 成功时用于写入新分配上下文指针的位置，可以为 NULL。
+ *                      也可通过 AVBitStreamFilterGraph.filters 或
+ *                      @ref av_bsf_graph_get_filter() 获取。
+ * @param[in] name 创建的过滤器实例名称
+ * @param[in] graph_ctx 过滤器图
+ * @return 失败返回负的 AVERROR 错误码，否则返回非负值
  *
- * @note On failure and if filt_ctx is not NULL, *filt_ctx will be set to NULL.
- * @warning Since the filter is initialized after this function successfully
- *          returns, you MUST NOT set any further options on it. If you need to
- *          do that, call ::av_bsf_graph_alloc_filter(), followed by setting
- *          the options, followed by ::av_bsf_init_dict() instead of this
- *          function.
+ * @note 失败且 filt_ctx 非 NULL 时，*filt_ctx 会被设为 NULL。
+ * @warning 此函数成功返回后过滤器已初始化，因此绝对不能再设置任何选项。
+ *          如需继续设置，请改为依次调用 ::av_bsf_graph_alloc_filter()、
+ *          设置选项、::av_bsf_init_dict()。
  */
 int av_bsf_graph_create_filter(AVBitStreamFilterContext **filt_ctx,
                                const AVBitStreamFilter *filt,
@@ -545,106 +478,92 @@ int av_bsf_graph_create_filter(AVBitStreamFilterContext **filt_ctx,
                                AVBitStreamFilterGraph *graph_ctx);
 
 /**
- * Get a filter instance identified by instance name from graph.
+ * 从图中获取由实例名称标识的过滤器实例。
  *
- * @param graph filter graph to search through.
- * @param name filter instance name (should be unique in the graph).
- * @return the pointer to the found filter instance or NULL if it
- * cannot be found.
+ * @param graph 要搜索的过滤器图
+ * @param name 过滤器实例名称（在图中应唯一）
+ * @return 找到的过滤器实例指针；找不到时返回 NULL
  */
 AVBitStreamFilterContext *av_bsf_graph_get_filter(AVBitStreamFilterGraph *graph, const char *name);
 
 /**
- * Check validity and configure all the links and formats in the graph.
+ * 检查有效性并配置图中的所有链接和格式。
  *
- * @param graphctx the filter graph
- * @param log_ctx context used for logging
- * @return >= 0 in case of success, a negative AVERROR code otherwise
+ * @param graphctx 过滤器图
+ * @param log_ctx 用于日志记录的上下文
+ * @return 成功返回 >= 0，否则返回负的 AVERROR 错误码
  */
 int av_bsf_graph_config(AVBitStreamFilterGraph *graphctx, void *log_ctx);
 
 /**
- * Get the index of the source filter in the filtergraph that reported needing
- * input more urgently.
+ * 获取过滤器图中报告更急需输入的源过滤器索引。
  *
- * @return the index value of a source filter in the filtergraph, or AVERROR(EOF)
- *         if no source is accepting more packets.
+ * @return 过滤器图中源过滤器的索引；没有源再接受数据包时返回 AVERROR(EOF)
  */
 int av_bsf_graph_source_needs_input(const AVBitStreamFilterGraph *graph);
 
 /**
- * Free a graph, destroy its links, and set *graph to NULL.
- * If *graph is NULL, do nothing.
+ * 释放图、销毁链接并将 *graph 设为 NULL。如果 *graph 为 NULL，则不执行任何操作。
  */
 void av_bsf_graph_free(AVBitStreamFilterGraph **graph);
 
 /**
- * @defgroup lavc_bsfgraph_source Packet source API
+ * @defgroup lavc_bsfgraph_source 数据包源 API
  *
- * The source filter is there to connect filter graphs to applications
- * They have a single output, connected to the graph, and no input.
- * Packets must be fed to it using av_bsf_source_add_packet().
+ * 源过滤器用于将过滤器图连接到应用程序。它只有一个连接到图的输出，没有输入。
+ * 必须使用 av_bsf_source_add_packet() 向其输入数据包。
  * @{
  */
 
 enum {
     /**
-     * Immediately push the packet to the output.
+     * 立即将数据包推送到输出。
      */
     AV_BSF_SOURCE_FLAG_PUSH = 1 << 0,
 
     /**
-     * Keep a reference to the packet.
+     * 保留数据包引用。
      */
     AV_BSF_SOURCE_FLAG_KEEP_REF = 1 << 1,
 };
 
 /**
- * Initialize the source filter with the provided parameters.
- * This function may be called multiple times, the later calls override the
- * previous ones. Some of the parameters may also be set through AVOptions, then
- * whatever method is used last takes precedence.
+ * 使用提供的参数初始化源过滤器。此函数可多次调用，后续调用覆盖之前调用。
+ * 某些参数也可通过 AVOptions 设置，以最后使用的方法为准。
  *
- * @param ctx an instance of the source filter
- * @param param the stream parameters. The packet later passed to this filter
- *              must conform to those parameters. All the allocated fields in
- *              param remain owned by the caller, libavcodec will make internal
- *              copies or references when necessary.
- * @return 0 on success, a negative AVERROR code on failure.
+ * @param ctx 源过滤器实例
+ * @param param 流参数。之后传给此过滤器的数据包必须符合这些参数。
+ *              param 中所有已分配字段仍归调用方所有，libavcodec 会按需创建内部副本或引用。
+ * @return 成功返回 0，失败返回负的 AVERROR 错误码。
  */
 int av_bsf_source_parameters_set(AVBitStreamFilterContext *ctx, const AVCodecParameters *par);
 
 /**
- * Add a packet to the buffer source.
+ * 向缓冲区源添加数据包。
  *
- * By default, this function will take ownership of the reference(s) and reset
- * the packet. This can be controlled using the flags.
+ * 默认情况下，此函数取得引用的所有权并重置数据包。可使用 flags 控制此行为。
  *
- * If this function returns an error, the input packet is not touched.
+ * 如果此函数返回错误，则不修改输入数据包。
  *
- * @param buffer_src  pointer to a source filter context
- * @param packet      a packet, or NULL to mark EOF
- * @param flags       a combination of AV_BSF_FLAG_*
- * @return            >= 0 in case of success, a negative AVERROR code
- *                    in case of failure
+ * @param buffer_src 指向源过滤器上下文的指针
+ * @param packet     数据包；传入 NULL 表示 EOF
+ * @param flags      AV_BSF_FLAG_* 的组合
+ * @return           成功返回 >= 0，失败返回负的 AVERROR 错误码
  */
 av_warn_unused_result
 int av_bsf_source_add_packet(AVBitStreamFilterContext *ctx, AVPacket *pkt, int flags);
 
 /**
- * Returns 0 or a negative AVERROR code. Currently, this will only ever
- * return AVERROR(EOF), to indicate that the buffer source has been closed,
- * either as a result of av_bsf_source_close(), or because the downstream
- * filter is no longer accepting new data.
+ * 返回 0 或负的 AVERROR 错误码。目前只会返回 AVERROR(EOF)，表示缓冲区源已关闭：
+ * 可能是调用 av_bsf_source_close() 的结果，也可能是下游过滤器不再接受新数据。
  */
 int av_bsf_source_get_status(AVBitStreamFilterContext *ctx);
 
 /**
- * Close the source after EOF.
+ * 在 EOF 后关闭源。
  *
- * This is similar to passing NULL to av_bsf_source_add_packet()
- * except it takes the timestamp of the EOF, i.e. the timestamp of the end
- * of the last packet.
+ * 这与向 av_bsf_source_add_packet() 传入 NULL 类似，但它接收 EOF 的时间戳，
+ * 即最后一个数据包结束位置的时间戳。
  */
 int av_bsf_source_close(AVBitStreamFilterContext *ctx, int64_t pts, unsigned flags);
 
@@ -653,44 +572,39 @@ int av_bsf_source_close(AVBitStreamFilterContext *ctx, int64_t pts, unsigned fla
  */
 
 /**
- * @defgroup lavc_bsfgraph_sink Packet sink API
+ * @defgroup lavc_bsfgraph_sink 数据包汇 API
  * @{
  *
- * The sink filter is there to connect filter graphs to applications
- * They have a single input, connected to the graph, and no output.
- * Packets must be extracted using av_bsf_sink_get_packet().
+ * 汇过滤器用于将过滤器图连接到应用程序。它只有一个连接到图的输入，没有输出。
+ * 必须使用 av_bsf_sink_get_packet() 提取数据包。
  */
 
 enum {
     /**
-     * Tell av_buffersink_get_buffer_ref() to read video/samples buffer
-     * reference, but not remove it from the buffer. This is useful if you
-     * need only to read a video/samples buffer, without to fetch it.
+     * 通知 av_buffersink_get_buffer_ref() 读取视频/采样缓冲区引用，但不从缓冲区移除。
+     * 仅需读取而不取出视频/采样缓冲区时很有用。
      */
     AV_BSF_SINK_FLAG_PEEK = 1 << 0,
 
     /**
-     * Tell av_bsf_sink_get_packet() not to request a packet from its input.
-     * If a packet is already buffered, it is read (and removed from the buffer),
-     * but if no packet is present, return AVERROR(EAGAIN).
+     * 通知 av_bsf_sink_get_packet() 不要向输入请求数据包。已有缓冲包时读取并移除；
+     * 没有数据包时返回 AVERROR(EAGAIN)。
      */
     AV_BSF_SINK_FLAG_NO_REQUEST = 1 << 1,
 };
 
 /**
- * Get a packet with filtered data from sink and put it in packet.
+ * 从汇获取包含过滤数据的数据包，并放入 packet。
  *
- * @param ctx    pointer to a sink filter context.
- * @param packet pointer to an allocated packet that will be filled with data.
- *               The data must be freed using av_packet_unref() / av_packet_free()
- * @param flags  a combination of AV_BSF_SINK_FLAG_* flags
+ * @param ctx    指向汇过滤器上下文的指针
+ * @param packet 指向已分配数据包的指针，该包将被填入数据。
+ *               必须使用 av_packet_unref() / av_packet_free() 释放数据
+ * @param flags  AV_BSF_SINK_FLAG_* 标志的组合
  *
- * @retval AVERROR(EAGAIN) output could not be produced.
- *                         if AV_BSF_SINK_FLAG_NO_REQUEST was not set,
- *                         @ref av_bsf_graph_needs_input can be called to
- *                         know which source needs input more urgently.
- * @retval >= 0            success
- * @retval "another negative error code" legitimate error
+ * @retval AVERROR(EAGAIN) 无法产生输出。如果未设置 AV_BSF_SINK_FLAG_NO_REQUEST，
+ *                         可调用 @ref av_bsf_graph_needs_input 了解哪个源更急需输入。
+ * @retval >= 0            成功
+ * @retval "another negative error code" 合法错误
  */
 int av_bsf_sink_get_packet(AVBitStreamFilterContext *ctx, AVPacket *pkt, int flags);
 

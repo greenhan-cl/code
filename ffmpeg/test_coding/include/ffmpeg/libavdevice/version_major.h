@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -22,15 +22,14 @@
 /**
  * @file
  * @ingroup lavd
- * Libavdevice version macros
+ * Libavdevice 版本宏
  */
 
 #define LIBAVDEVICE_VERSION_MAJOR  63
 
 /**
- * FF_API_* defines may be placed below to indicate public API that will be
- * dropped at a future version bump. The defines themselves are not part of
- * the public API and may change, break or disappear at any time.
+ * 可以在下方放置 FF_API_* 定义，用来标识将在未来主版本升级时移除的公共 API。
+ * 这些定义本身不属于公共 API，可能随时发生变化、失效或消失。
  */
 
 #endif /* AVDEVICE_VERSION_MAJOR_H */

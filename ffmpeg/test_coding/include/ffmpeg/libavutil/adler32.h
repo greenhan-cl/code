@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2006 Mans Rullgard
  *
  * This file is part of FFmpeg.
@@ -21,7 +21,7 @@
 /**
  * @file
  * @ingroup lavu_adler32
- * Public header for Adler-32 hash function implementation.
+ * Adler-32 哈希函数实现的公共头文件。
  */
 
 #ifndef AVUTIL_ADLER32_H
@@ -34,7 +34,7 @@
 /**
  * @defgroup lavu_adler32 Adler-32
  * @ingroup lavu_hash
- * Adler-32 hash function implementation.
+ * Adler-32 哈希函数实现。
  *
  * @{
  */
@@ -42,16 +42,15 @@
 typedef uint32_t AVAdler;
 
 /**
- * Calculate the Adler32 checksum of a buffer.
+ * 计算缓冲区的 Adler32 校验和。
  *
- * Passing the return value to a subsequent av_adler32_update() call
- * allows the checksum of multiple buffers to be calculated as though
- * they were concatenated.
+ * 将返回值传给后续的 av_adler32_update() 调用，可以像多个缓冲区已拼接在一起
+ * 那样计算它们的校验和。
  *
- * @param adler initial checksum value
- * @param buf   pointer to input buffer
- * @param len   size of input buffer
- * @return      updated checksum
+ * @param adler 初始校验和值
+ * @param buf   指向输入缓冲区的指针
+ * @param len   输入缓冲区大小
+ * @return      更新后的校验和
  */
 AVAdler av_adler32_update(AVAdler adler, const uint8_t *buf,
                           size_t len) av_pure;

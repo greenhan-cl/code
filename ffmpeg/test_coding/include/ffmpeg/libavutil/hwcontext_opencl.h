@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -29,70 +29,63 @@
 
 /**
  * @file
- * API-specific header for AV_HWDEVICE_TYPE_OPENCL.
+ * AV_HWDEVICE_TYPE_OPENCL 专用 API 头文件。
  *
- * Pools allocated internally are always dynamic, and are primarily intended
- * to be used in OpenCL-only cases.  If interoperation is required, it is
- * typically required to allocate frames in the other API and then map the
- * frames context to OpenCL with av_hwframe_ctx_create_derived().
+ * 内部分配的池始终为动态池，主要用于仅使用 OpenCL 的场景。需要互操作时，
+ * 通常应在其他 API 中分配帧，再使用 av_hwframe_ctx_create_derived()
+ * 将帧上下文映射到 OpenCL。
  */
 
 /**
- * OpenCL frame descriptor for pool allocation.
+ * 用于池分配的 OpenCL 帧描述符。
  *
- * In user-allocated pools, AVHWFramesContext.pool must return AVBufferRefs
- * with the data pointer pointing at an object of this type describing the
- * planes of the frame.
+ * 在用户分配的池中，AVHWFramesContext.pool 必须返回 AVBufferRef，
+ * 其 data 指针指向描述帧各平面的此类型对象。
  */
 typedef struct AVOpenCLFrameDescriptor {
     /**
-     * Number of planes in the frame.
+     * 帧中的平面数。
      */
     int nb_planes;
     /**
-     * OpenCL image2d objects for each plane of the frame.
+     * 帧各平面的 OpenCL image2d 对象。
      */
     cl_mem planes[AV_NUM_DATA_POINTERS];
 } AVOpenCLFrameDescriptor;
 
 /**
- * OpenCL device details.
+ * OpenCL 设备详细信息。
  *
- * Allocated as AVHWDeviceContext.hwctx
+ * 作为 AVHWDeviceContext.hwctx 分配。
  */
 typedef struct AVOpenCLDeviceContext {
     /**
-     * The primary device ID of the device.  If multiple OpenCL devices
-     * are associated with the context then this is the one which will
-     * be used for all operations internal to FFmpeg.
+     * 设备的主设备 ID。如果上下文关联多个 OpenCL 设备，FFmpeg 内部的
+     * 所有操作都使用此设备。
      */
     cl_device_id device_id;
     /**
-     * The OpenCL context which will contain all operations and frames on
-     * this device.
+     * 包含此设备上全部操作和帧的 OpenCL 上下文。
      */
     cl_context context;
     /**
-     * The default command queue for this device, which will be used by all
-     * frames contexts which do not have their own command queue.  If not
-     * initialised by the user, a default queue will be created on the
-     * primary device.
+     * 此设备的默认命令队列，由没有自有命令队列的所有帧上下文使用。
+     * 如果用户未初始化，则在主设备上创建默认队列。
      */
     cl_command_queue command_queue;
 } AVOpenCLDeviceContext;
 
 /**
- * OpenCL-specific data associated with a frame pool.
+ * 与帧池关联的 OpenCL 专用数据。
  *
- * Allocated as AVHWFramesContext.hwctx.
+ * 作为 AVHWFramesContext.hwctx 分配。
  */
 typedef struct AVOpenCLFramesContext {
     /**
-     * The command queue used for internal asynchronous operations on this
-     * device (av_hwframe_transfer_data(), av_hwframe_map()).
+     * 此设备上用于内部异步操作的命令队列
+     * （av_hwframe_transfer_data()、av_hwframe_map()）。
      *
-     * If this is not set, the command queue from the associated device is
-     * used instead.
+     * 如果未设置，则改用关联设备的命令队列。
      */
     cl_command_queue command_queue;
 } AVOpenCLFramesContext;

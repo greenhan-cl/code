@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Codec descriptors public API
  *
  * This file is part of FFmpeg.
@@ -31,107 +31,98 @@
  */
 
 /**
- * This struct describes the properties of a single codec described by an
- * AVCodecID.
+ * 此结构体描述由 AVCodecID 标识的单个编解码器的属性。
  * @see avcodec_descriptor_get()
  */
 typedef struct AVCodecDescriptor {
     enum AVCodecID     id;
     enum AVMediaType type;
     /**
-     * Name of the codec described by this descriptor. It is non-empty and
-     * unique for each codec descriptor. It should contain alphanumeric
-     * characters and '_' only.
+     * 此描述符所描述编解码器的名称。名称非空，且对每个编解码器描述符唯一。
+     * 名称只能包含字母、数字和 '_'。
      */
     const char      *name;
     /**
-     * A more descriptive name for this codec. May be NULL.
+     * 此编解码器更具描述性的名称，可以为 NULL。
      */
     const char *long_name;
     /**
-     * Codec properties, a combination of AV_CODEC_PROP_* flags.
+     * 编解码器属性，由 AV_CODEC_PROP_* 标志组合而成。
      */
     int             props;
     /**
-     * MIME type(s) associated with the codec.
-     * May be NULL; if not, a NULL-terminated array of MIME types.
-     * The first item is always non-NULL and is the preferred MIME type.
+     * 与编解码器关联的 MIME 类型。
+     * 可以为 NULL；非 NULL 时，是以 NULL 结尾的 MIME 类型数组。
+     * 第一项始终非 NULL，且是首选 MIME 类型。
      */
     const char *const *mime_types;
     /**
-     * If non-NULL, an array of profiles recognized for this codec.
-     * Terminated with AV_PROFILE_UNKNOWN.
+     * 非 NULL 时，是此编解码器可识别的配置文件数组。
+     * 以 AV_PROFILE_UNKNOWN 结尾。
      */
     const struct AVProfile *profiles;
 } AVCodecDescriptor;
 
 /**
- * Codec uses only intra compression.
- * Video and audio codecs only.
+ * 编解码器仅使用帧内压缩。
+ * 仅适用于视频和音频编解码器。
  */
 #define AV_CODEC_PROP_INTRA_ONLY    (1 << 0)
 /**
- * Codec supports lossy compression. Audio and video codecs only.
- * @note a codec may support both lossy and lossless
- * compression modes
+ * 编解码器支持有损压缩。仅适用于音频和视频编解码器。
+ * @note 编解码器可以同时支持有损和无损压缩模式
  */
 #define AV_CODEC_PROP_LOSSY         (1 << 1)
 /**
- * Codec supports lossless compression. Audio and video codecs only.
+ * 编解码器支持无损压缩。仅适用于音频和视频编解码器。
  */
 #define AV_CODEC_PROP_LOSSLESS      (1 << 2)
 /**
- * Codec supports frame reordering. That is, the coded order (the order in which
- * the encoded packets are output by the encoders / stored / input to the
- * decoders) may be different from the presentation order of the corresponding
- * frames.
+ * 编解码器支持帧重排。也就是说，编码顺序（编码器输出数据包、存储数据包或
+ * 向解码器输入数据包的顺序）可能不同于对应帧的呈现顺序。
  *
- * For codecs that do not have this property set, PTS and DTS should always be
- * equal.
+ * 对于未设置此属性的编解码器，PTS 和 DTS 应始终相等。
  */
 #define AV_CODEC_PROP_REORDER       (1 << 3)
 
 /**
- * Video codec supports separate coding of fields in interlaced frames.
+ * 视频编解码器支持分别编码隔行帧中的场。
  */
 #define AV_CODEC_PROP_FIELDS        (1 << 4)
 
 /**
- * Video codec contains enhancement information meant to be applied to other
- * existing frames, and can't generate usable image data on its own.
- * A standalone decoder is unlikely to be available for it and should not
- * be expected.
+ * 视频编解码器包含要应用于其他现有帧的增强信息，自身无法生成可用图像数据。
+ * 通常不会提供相应的独立解码器，也不应对此有所预期。
  */
 #define AV_CODEC_PROP_ENHANCEMENT   (1 << 5)
 
 /**
- * Subtitle codec is bitmap based
- * Decoded AVSubtitle data can be read from the AVSubtitleRect->pict field.
+ * 字幕编解码器基于位图。
+ * 可从 AVSubtitleRect->pict 字段读取解码后的 AVSubtitle 数据。
  */
 #define AV_CODEC_PROP_BITMAP_SUB    (1 << 16)
 /**
- * Subtitle codec is text based.
- * Decoded AVSubtitle data can be read from the AVSubtitleRect->ass field.
+ * 字幕编解码器基于文本。
+ * 可从 AVSubtitleRect->ass 字段读取解码后的 AVSubtitle 数据。
  */
 #define AV_CODEC_PROP_TEXT_SUB      (1 << 17)
 
 /**
- * @return descriptor for given codec ID or NULL if no descriptor exists.
+ * @return 给定编解码器 ID 的描述符；不存在时返回 NULL。
  */
 const AVCodecDescriptor *avcodec_descriptor_get(enum AVCodecID id);
 
 /**
- * Iterate over all codec descriptors known to libavcodec.
+ * 遍历 libavcodec 已知的所有编解码器描述符。
  *
- * @param prev previous descriptor. NULL to get the first descriptor.
+ * @param prev 上一个描述符。传入 NULL 可获取第一个描述符。
  *
- * @return next descriptor or NULL after the last descriptor
+ * @return 下一个描述符；最后一个描述符之后返回 NULL
  */
 const AVCodecDescriptor *avcodec_descriptor_next(const AVCodecDescriptor *prev);
 
 /**
- * @return codec descriptor with the given name or NULL if no such descriptor
- *         exists.
+ * @return 具有给定名称的编解码器描述符；不存在时返回 NULL。
  */
 const AVCodecDescriptor *avcodec_descriptor_get_by_name(const char *name);
 

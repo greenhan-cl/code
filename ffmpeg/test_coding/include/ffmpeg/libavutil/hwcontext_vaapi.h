@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -23,93 +23,84 @@
 
 /**
  * @file
- * API-specific header for AV_HWDEVICE_TYPE_VAAPI.
+ * AV_HWDEVICE_TYPE_VAAPI 专用 API 头文件。
  *
- * Dynamic frame pools are supported, but note that any pool used as a render
- * target is required to be of fixed size in order to be usable as an
- * argument to vaCreateContext().
+ * 支持动态帧池，但请注意，用作渲染目标的池必须具有固定大小，才能作为
+ * vaCreateContext() 的参数使用。
  *
- * For user-allocated pools, AVHWFramesContext.pool must return AVBufferRefs
- * with the data pointer set to a VASurfaceID.
+ * 对于用户分配的池，AVHWFramesContext.pool 必须返回数据指针设为 VASurfaceID
+ * 的 AVBufferRef。
  */
 
 enum {
     /**
-     * The quirks field has been set by the user and should not be detected
-     * automatically by av_hwdevice_ctx_init().
+     * quirks 字段已由用户设置，不应由 av_hwdevice_ctx_init() 自动检测。
      */
     AV_VAAPI_DRIVER_QUIRK_USER_SET = (1 << 0),
     /**
-     * The driver does not destroy parameter buffers when they are used by
-     * vaRenderPicture().  Additional code will be required to destroy them
-     * separately afterwards.
+     * 驱动程序不会销毁 vaRenderPicture() 使用过的参数缓冲区，之后需要使用额外
+     * 代码单独销毁它们。
      */
     AV_VAAPI_DRIVER_QUIRK_RENDER_PARAM_BUFFERS = (1 << 1),
 
     /**
-     * The driver does not support the VASurfaceAttribMemoryType attribute,
-     * so the surface allocation code will not try to use it.
+     * 驱动程序不支持 VASurfaceAttribMemoryType 属性，因此表面分配代码不会尝试
+     * 使用它。
      */
     AV_VAAPI_DRIVER_QUIRK_ATTRIB_MEMTYPE = (1 << 2),
 
     /**
-     * The driver does not support surface attributes at all.
-     * The surface allocation code will never pass them to surface allocation,
-     * and the results of the vaQuerySurfaceAttributes() call will be faked.
+     * 驱动程序完全不支持表面属性。表面分配代码绝不会将它们传给表面分配，
+     * vaQuerySurfaceAttributes() 调用的结果将被模拟。
      */
     AV_VAAPI_DRIVER_QUIRK_SURFACE_ATTRIBUTES = (1 << 3),
 };
 
 /**
- * VAAPI connection details.
+ * VAAPI 连接详情。
  *
- * Allocated as AVHWDeviceContext.hwctx
+ * 被分配为 AVHWDeviceContext.hwctx。
  */
 typedef struct AVVAAPIDeviceContext {
     /**
-     * The VADisplay handle, to be filled by the user.
+     * VADisplay 句柄，由用户填充。
      */
     VADisplay display;
     /**
-     * Driver quirks to apply - this is filled by av_hwdevice_ctx_init(),
-     * with reference to a table of known drivers, unless the
-     * AV_VAAPI_DRIVER_QUIRK_USER_SET bit is already present.  The user
-     * may need to refer to this field when performing any later
-     * operations using VAAPI with the same VADisplay.
+     * 要应用的驱动程序特殊处理——除非已经设置 AV_VAAPI_DRIVER_QUIRK_USER_SET
+     * 位，否则由 av_hwdevice_ctx_init() 参考已知驱动程序表填充。之后使用相同
+     * VADisplay 执行任何 VAAPI 操作时，用户可能需要参考此字段。
      */
     unsigned int driver_quirks;
 } AVVAAPIDeviceContext;
 
 /**
- * VAAPI-specific data associated with a frame pool.
+ * 与帧池关联的 VAAPI 专用数据。
  *
- * Allocated as AVHWFramesContext.hwctx.
+ * 被分配为 AVHWFramesContext.hwctx。
  */
 typedef struct AVVAAPIFramesContext {
     /**
-     * Set by the user to apply surface attributes to all surfaces in
-     * the frame pool.  If null, default settings are used.
+     * 由用户设置，以将表面属性应用于帧池中的所有表面。为 null 时使用默认设置。
      */
     VASurfaceAttrib *attributes;
     int           nb_attributes;
     /**
-     * The surfaces IDs of all surfaces in the pool after creation.
-     * Only valid if AVHWFramesContext.initial_pool_size was positive.
-     * These are intended to be used as the render_targets arguments to
-     * vaCreateContext().
+     * 创建后池中所有表面的表面 ID。仅当 AVHWFramesContext.initial_pool_size
+     * 为正时有效。这些 ID 用作 vaCreateContext() 的 render_targets 参数。
      */
     VASurfaceID     *surface_ids;
     int           nb_surfaces;
 } AVVAAPIFramesContext;
 
 /**
- * VAAPI hardware pipeline configuration details.
+ * VAAPI 硬件管线配置详情。
  *
- * Allocated with av_hwdevice_hwconfig_alloc().
+ * 使用 av_hwdevice_hwconfig_alloc() 分配。
  */
 typedef struct AVVAAPIHWConfig {
     /**
-     * ID of a VAAPI pipeline configuration.
+     * VAAPI 管线配置的 ID。
      */
     VAConfigID config_id;
 } AVVAAPIHWConfig;

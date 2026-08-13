@@ -1,4 +1,4 @@
-/*
+﻿/*
  * The Video Decode and Presentation API for UNIX (VDPAU) is used for
  * hardware-accelerated decoding of MPEG-1/2, H.264 and VC-1.
  *
@@ -27,7 +27,7 @@
 /**
  * @file
  * @ingroup lavc_codec_hwaccel_vdpau
- * Public libavcodec VDPAU header.
+ * libavcodec 的公共 VDPAU 头文件。
  */
 
 
@@ -35,16 +35,15 @@
  * @defgroup lavc_codec_hwaccel_vdpau VDPAU Decoder and Renderer
  * @ingroup lavc_codec_hwaccel
  *
- * VDPAU hardware acceleration has two modules
- * - VDPAU decoding
- * - VDPAU presentation
+ * VDPAU 硬件加速包含两个模块：
+ * - VDPAU 解码
+ * - VDPAU 呈现
  *
- * The VDPAU decoding module parses all headers using FFmpeg
- * parsing mechanisms and uses VDPAU for the actual decoding.
+ * VDPAU 解码模块使用 FFmpeg 解析机制解析所有头信息，
+ * 并使用 VDPAU 执行实际解码。
  *
- * As per the current implementation, the actual decoding
- * and rendering (API calls) are done as part of the VDPAU
- * presentation (vo_vdpau.c) module.
+ * 按照当前实现，实际解码和渲染（API 调用）作为 VDPAU 呈现模块
+ * （vo_vdpau.c）的一部分执行。
  *
  * @{
  */
@@ -64,29 +63,26 @@ typedef int (*AVVDPAU_Render2)(struct AVCodecContext *, struct AVFrame *,
                                const VdpBitstreamBuffer *);
 
 /**
- * This structure is used to share data between the libavcodec library and
- * the client video application.
- * This structure will be allocated and stored in AVCodecContext.hwaccel_context
- * by av_vdpau_bind_context(). Members can be set by the user once
- * during initialization or through each AVCodecContext.get_buffer()
- * function call. In any case, they must be valid prior to calling
- * decoding functions.
+ * 此结构体用于在 libavcodec 库与客户端视频应用程序之间共享数据。
+ * av_vdpau_bind_context() 会分配此结构体并将其存储在
+ * AVCodecContext.hwaccel_context 中。用户可以在初始化期间设置一次成员，
+ * 或在每次调用 AVCodecContext.get_buffer() 时设置。无论哪种方式，
+ * 调用解码函数前这些成员都必须有效。
  *
- * The size of this structure is not a part of the public ABI and must not
- * be used outside of libavcodec.
+ * 此结构体的大小不属于公共 ABI，不得在 libavcodec 外部使用。
  */
 typedef struct AVVDPAUContext {
     /**
-     * VDPAU decoder handle
+     * VDPAU 解码器句柄
      *
-     * Set by user.
+     * 由用户设置。
      */
     VdpDecoder decoder;
 
     /**
-     * VDPAU decoder render callback
+     * VDPAU 解码器渲染回调
      *
-     * Set by the user.
+     * 由用户设置。
      */
     VdpDecoderRender *render;
 
@@ -94,41 +90,36 @@ typedef struct AVVDPAUContext {
 } AVVDPAUContext;
 
 /**
- * Associate a VDPAU device with a codec context for hardware acceleration.
- * This function is meant to be called from the get_format() codec callback,
- * or earlier. It can also be called after avcodec_flush_buffers() to change
- * the underlying VDPAU device mid-stream (e.g. to recover from non-transparent
- * display preemption).
+ * 将 VDPAU 设备与编解码器上下文关联，以进行硬件加速。
+ * 此函数应从 get_format() 编解码器回调中调用，或更早调用。
+ * 也可在 avcodec_flush_buffers() 后调用，以便在流处理中途更换底层 VDPAU 设备
+ * （例如从非透明显示抢占中恢复）。
  *
- * @note get_format() must return AV_PIX_FMT_VDPAU if this function completes
- * successfully.
+ * @note 如果此函数成功完成，get_format() 必须返回 AV_PIX_FMT_VDPAU。
  *
- * @param avctx decoding context whose get_format() callback is invoked
- * @param device VDPAU device handle to use for hardware acceleration
- * @param get_proc_address VDPAU device driver
- * @param flags zero of more OR'd AV_HWACCEL_FLAG_* flags
+ * @param avctx 调用了 get_format() 回调的解码上下文
+ * @param device 用于硬件加速的 VDPAU 设备句柄
+ * @param get_proc_address VDPAU 设备驱动程序
+ * @param flags 零个或多个按位 OR 组合的 AV_HWACCEL_FLAG_* 标志
  *
- * @return 0 on success, an AVERROR code on failure.
+ * @return 成功返回 0，失败返回 AVERROR 错误码。
  */
 int av_vdpau_bind_context(AVCodecContext *avctx, VdpDevice device,
                           VdpGetProcAddress *get_proc_address, unsigned flags);
 
 /**
- * Gets the parameters to create an adequate VDPAU video surface for the codec
- * context using VDPAU hardware decoding acceleration.
+ * 获取相关参数，以便为使用 VDPAU 硬件解码加速的编解码器上下文
+ * 创建合适的 VDPAU 视频表面。
  *
- * @note Behavior is undefined if the context was not successfully bound to a
- * VDPAU device using av_vdpau_bind_context().
+ * @note 如果没有使用 av_vdpau_bind_context() 将上下文成功绑定到 VDPAU 设备，
+ * 则行为未定义。
  *
- * @param avctx the codec context being used for decoding the stream
- * @param type storage space for the VDPAU video surface chroma type
- *              (or NULL to ignore)
- * @param width storage space for the VDPAU video surface pixel width
- *              (or NULL to ignore)
- * @param height storage space for the VDPAU video surface pixel height
- *              (or NULL to ignore)
+ * @param avctx 用于解码流的编解码器上下文
+ * @param type 用于保存 VDPAU 视频表面色度类型的空间（传入 NULL 可忽略）
+ * @param width 用于保存 VDPAU 视频表面像素宽度的空间（传入 NULL 可忽略）
+ * @param height 用于保存 VDPAU 视频表面像素高度的空间（传入 NULL 可忽略）
  *
- * @return 0 on success, a negative AVERROR code on failure.
+ * @return 成功返回 0，失败返回负的 AVERROR 错误码。
  */
 int av_vdpau_get_surface_parameters(AVCodecContext *avctx, VdpChromaType *type,
                                     uint32_t *width, uint32_t *height);

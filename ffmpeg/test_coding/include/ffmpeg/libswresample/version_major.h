@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Version macros.
  *
  * This file is part of libswresample
@@ -23,7 +23,7 @@
 
 /**
  * @file
- * Libswresample version macros
+ * Libswresample 版本宏
  */
 
 #define LIBSWRESAMPLE_VERSION_MAJOR   7

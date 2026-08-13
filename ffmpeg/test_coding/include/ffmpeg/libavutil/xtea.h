@@ -1,4 +1,4 @@
-/*
+﻿/*
  * A 32-bit implementation of the XTEA algorithm
  * Copyright (c) 2012 Samuel Pitoiset
  *
@@ -26,7 +26,7 @@
 
 /**
  * @file
- * @brief Public header for libavutil XTEA algorithm
+ * @brief libavutil XTEA 算法的公共头文件
  * @defgroup lavu_xtea XTEA
  * @ingroup lavu_crypto
  * @{
@@ -37,52 +37,48 @@ typedef struct AVXTEA {
 } AVXTEA;
 
 /**
- * Allocate an AVXTEA context.
+ * 分配 AVXTEA 上下文。
  */
 AVXTEA *av_xtea_alloc(void);
 
 /**
- * Initialize an AVXTEA context.
+ * 初始化 AVXTEA 上下文。
  *
- * @param ctx an AVXTEA context
- * @param key a key of 16 bytes used for encryption/decryption,
- *            interpreted as big endian 32 bit numbers
+ * @param ctx AVXTEA 上下文
+ * @param key 用于加密/解密的 16 字节密钥，解释为大端 32 位数
  */
 void av_xtea_init(struct AVXTEA *ctx, const uint8_t key[16]);
 
 /**
- * Initialize an AVXTEA context.
+ * 初始化 AVXTEA 上下文。
  *
- * @param ctx an AVXTEA context
- * @param key a key of 16 bytes used for encryption/decryption,
- *            interpreted as little endian 32 bit numbers
+ * @param ctx AVXTEA 上下文
+ * @param key 用于加密/解密的 16 字节密钥，解释为小端 32 位数
  */
 void av_xtea_le_init(struct AVXTEA *ctx, const uint8_t key[16]);
 
 /**
- * Encrypt or decrypt a buffer using a previously initialized context,
- * in big endian format.
+ * 使用之前初始化的上下文，以大端格式加密或解密缓冲区。
  *
- * @param ctx an AVXTEA context
- * @param dst destination array, can be equal to src
- * @param src source array, can be equal to dst
- * @param count number of 8 byte blocks
- * @param iv initialization vector for CBC mode, if NULL then ECB will be used
- * @param decrypt 0 for encryption, 1 for decryption
+ * @param ctx AVXTEA 上下文
+ * @param dst 目标数组，可以等于 src
+ * @param src 源数组，可以等于 dst
+ * @param count 8 字节块的数量
+ * @param iv CBC 模式初始化向量；为 NULL 时使用 ECB
+ * @param decrypt 0 表示加密，1 表示解密
  */
 void av_xtea_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
                    int count, uint8_t *iv, int decrypt);
 
 /**
- * Encrypt or decrypt a buffer using a previously initialized context,
- * in little endian format.
+ * 使用之前初始化的上下文，以小端格式加密或解密缓冲区。
  *
- * @param ctx an AVXTEA context
- * @param dst destination array, can be equal to src
- * @param src source array, can be equal to dst
- * @param count number of 8 byte blocks
- * @param iv initialization vector for CBC mode, if NULL then ECB will be used
- * @param decrypt 0 for encryption, 1 for decryption
+ * @param ctx AVXTEA 上下文
+ * @param dst 目标数组，可以等于 src
+ * @param src 源数组，可以等于 dst
+ * @param count 8 字节块的数量
+ * @param iv CBC 模式初始化向量；为 NULL 时使用 ECB
+ * @param decrypt 0 表示加密，1 表示解密
  */
 void av_xtea_le_crypt(struct AVXTEA *ctx, uint8_t *dst, const uint8_t *src,
                       int count, uint8_t *iv, int decrypt);

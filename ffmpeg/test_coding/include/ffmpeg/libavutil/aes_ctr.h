@@ -1,4 +1,4 @@
-/*
+﻿/*
  * AES-CTR cipher
  * Copyright (c) 2015 Eran Kornblau <erankor at gmail dot com>
  *
@@ -38,57 +38,57 @@
 struct AVAESCTR;
 
 /**
- * Allocate an AVAESCTR context.
+ * 分配 AVAESCTR 上下文。
  */
 struct AVAESCTR *av_aes_ctr_alloc(void);
 
 /**
- * Initialize an AVAESCTR context.
+ * 初始化 AVAESCTR 上下文。
  *
- * @param a The AVAESCTR context to initialize
- * @param key encryption key, must have a length of AES_CTR_KEY_SIZE
+ * @param a 要初始化的 AVAESCTR 上下文
+ * @param key 加密密钥，长度必须为 AES_CTR_KEY_SIZE
  */
 int av_aes_ctr_init(struct AVAESCTR *a, const uint8_t *key);
 
 /**
- * Release an AVAESCTR context.
+ * 释放 AVAESCTR 上下文。
  *
- * @param a The AVAESCTR context
+ * @param a AVAESCTR 上下文
  */
 void av_aes_ctr_free(struct AVAESCTR *a);
 
 /**
- * Process a buffer using a previously initialized context.
+ * 使用之前初始化的上下文处理缓冲区。
  *
- * @param a The AVAESCTR context
- * @param dst destination array, can be equal to src
- * @param src source array, can be equal to dst
- * @param size the size of src and dst
+ * @param a AVAESCTR 上下文
+ * @param dst 目标数组，可以与 src 相同
+ * @param src 源数组，可以与 dst 相同
+ * @param size src 和 dst 的大小
  */
 void av_aes_ctr_crypt(struct AVAESCTR *a, uint8_t *dst, const uint8_t *src, int size);
 
 /**
- * Get the current iv
+ * 获取当前 iv。
  */
 const uint8_t* av_aes_ctr_get_iv(struct AVAESCTR *a);
 
 /**
- * Generate a random iv
+ * 生成随机 iv。
  */
 void av_aes_ctr_set_random_iv(struct AVAESCTR *a);
 
 /**
- * Forcefully change the 8-byte iv
+ * 强制更改 8 字节 iv。
  */
 void av_aes_ctr_set_iv(struct AVAESCTR *a, const uint8_t* iv);
 
 /**
- * Forcefully change the "full" 16-byte iv, including the counter
+ * 强制更改包含计数器在内的“完整”16 字节 iv。
  */
 void av_aes_ctr_set_full_iv(struct AVAESCTR *a, const uint8_t* iv);
 
 /**
- * Increment the top 64 bit of the iv (performed after each frame)
+ * 递增 iv 的高 64 位（在每帧之后执行）。
  */
 void av_aes_ctr_increment_iv(struct AVAESCTR *a);
 

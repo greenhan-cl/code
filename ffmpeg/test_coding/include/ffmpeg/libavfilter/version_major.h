@@ -1,5 +1,5 @@
-/*
- * Version macros.
+﻿/*
+ * 版本宏。
  *
  * This file is part of FFmpeg.
  *
@@ -23,16 +23,13 @@
 
 /**
  * @file
- * @ingroup lavfi
- * Libavfilter version macros
+ * @ingroup lavfi Libavfilter 版本宏
  */
 
 #define LIBAVFILTER_VERSION_MAJOR  12
 
 /**
- * FF_API_* defines may be placed below to indicate public API that will be
- * dropped at a future version bump. The defines themselves are not part of
- * the public API and may change, break or disappear at any time.
+ * FF_API_* 定义可以放置在下面，以指示将在未来版本升级时删除的公共 API。定义本身不属于公共 API 的一部分，可能随时更改、中断或消失。
  */
 
 #endif /* AVFILTER_VERSION_MAJOR_H */

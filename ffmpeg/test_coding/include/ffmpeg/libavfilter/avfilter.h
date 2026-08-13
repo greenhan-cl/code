@@ -1,5 +1,5 @@
-/*
- * filter layer
+﻿/*
+ * 滤镜层
  * Copyright (c) 2007 Bobby Bingham
  *
  * This file is part of FFmpeg.
@@ -24,13 +24,11 @@
 
 /**
  * @file
- * @ingroup lavfi
- * Main libavfilter public API header
+ * @ingroup lavfi 主要 libavfilter 公共 API 标头
  */
 
 /**
- * @defgroup lavfi libavfilter
- * Graph-based frame editing library.
+ * @defgroup lavfi libavfilter 基于图形的帧编辑库。
  *
  * @{
  */
@@ -47,24 +45,24 @@
 
 #include "libavfilter/version_major.h"
 #ifndef HAVE_AV_CONFIG_H
-/* When included as part of the ffmpeg build, only include the major version
- * to avoid unnecessary rebuilds. When included externally, keep including
- * the full version information. */
+/*
+ * 当包含在 ffmpeg 构建中时，仅包含主要版本以避免不必要的重建。当外部包含时，请保留完整的版本信息。
+ */
 #include "libavfilter/version.h"
 #endif
 
 /**
- * Return the LIBAVFILTER_VERSION_INT constant.
+ * 返回 LIBAVFILTER_VERSION_INT 常量。
  */
 unsigned avfilter_version(void);
 
 /**
- * Return the libavfilter build-time configuration.
+ * 返回 libavfilter 的构建时配置。
  */
 const char *avfilter_configuration(void);
 
 /**
- * Return the libavfilter license.
+ * 返回 libavfilter 的许可证信息。
  */
 const char *avfilter_license(void);
 
@@ -74,486 +72,386 @@ typedef struct AVFilterFormats AVFilterFormats;
 typedef struct AVFilterChannelLayouts AVFilterChannelLayouts;
 
 /**
- * Get the name of an AVFilterPad.
+ * 获取 AVFilterPad 的名称。
  *
- * @param pads an array of AVFilterPads
- * @param pad_idx index of the pad in the array; it is the caller's
- *                responsibility to ensure the index is valid
+ * @param pads AVFilterPad 数组
+ * @param pad_idx 数组中 pad 的索引；调用者有责任确保索引有效
  *
- * @return name of the pad_idx'th pad in pads
+ * @return pads 中 pad_idx'th pad 的名称
  */
 const char *avfilter_pad_get_name(const AVFilterPad *pads, int pad_idx);
 
 /**
- * Get the type of an AVFilterPad.
+ * 获取 AVFilterPad 的类型。
  *
- * @param pads an array of AVFilterPads
- * @param pad_idx index of the pad in the array; it is the caller's
- *                responsibility to ensure the index is valid
+ * @param pads AVFilterPad 数组
+ * @param pad_idx 数组中 pad 的索引；调用者有责任确保索引有效
  *
- * @return type of the pad_idx'th pad in pads
+ * @return pads 中 pad_idx'th pad 的类型
  */
 enum AVMediaType avfilter_pad_get_type(const AVFilterPad *pads, int pad_idx);
 
 /**
- * Get the hardware frames context of a filter link.
+ * 获取过滤器链接的硬件框架上下文。
  *
- * @param link an AVFilterLink
+ * @param link AVFilterLink
  *
- * @return a ref-counted copy of the link's hw_frames_ctx field if there is
- *         a hardware frames context associated with the link or NULL otherwise.
- *         The returned AVBufferRef needs to be released with av_buffer_unref()
- *         when it is no longer used.
+ * @return 如果存在与链接关联的硬件帧上下文，则为链接的 hw_frames_ctx 字段的引用计数副本，否则为 NULL。返回的 AVBufferRef 不再使用时需要用 av_buffer_unref() 释放。
  */
 AVBufferRef* avfilter_link_get_hw_frames_ctx(AVFilterLink *link);
 
 /**
- * Lists of formats / etc. supported by an end of a link.
+ * 链接末尾支持的格式/等列表。
  *
- * This structure is directly part of AVFilterLink, in two copies:
- * one for the source filter, one for the destination filter.
-
- * These lists are used for negotiating the format to actually be used,
- * which will be loaded into the format and channel_layout members of
- * AVFilterLink, when chosen.
+ * 该结构直接是 AVFilterLink 的一部分，有两份：一份用于源过滤器，一份用于目标过滤器。
+ *
+ * 这些列表用于协商实际使用的格式，在选择时将加载到 AVFilterLink 的 format 和 channel_layout 成员中。
  */
 typedef struct AVFilterFormatsConfig {
 
     /**
-     * List of supported formats (pixel or sample).
-     */
+ * 支持的格式列表（像素或样本）。
+ */
     AVFilterFormats *formats;
 
     /**
-     * Lists of supported sample rates, only for audio.
-     */
+ * 支持的采样率列表，仅适用于音频。
+ */
     AVFilterFormats  *samplerates;
 
     /**
-     * Lists of supported channel layouts, only for audio.
-     */
+ * 支持的通道布局列表，仅适用于音频。
+ */
     AVFilterChannelLayouts  *channel_layouts;
 
     /**
-     * Lists of supported YUV color metadata, only for YUV video.
-     */
+ * 支持的 YUV 颜色元数据列表，仅适用于 YUV 视频。
+ */
     AVFilterFormats *color_spaces;  ///< AVColorSpace
     AVFilterFormats *color_ranges;  ///< AVColorRange
 
     /**
-     * List of supported alpha modes, only for video with an alpha channel.
-     */
+ * 支持的 Alpha 模式列表，仅适用于具有 Alpha 通道的视频。
+ */
     AVFilterFormats *alpha_modes;  ///< AVAlphaMode
 
 } AVFilterFormatsConfig;
 
 /**
- * The number of the filter inputs is not determined just by AVFilter.inputs.
- * The filter might add additional inputs during initialization depending on the
- * options supplied to it.
+ * 滤波器输入的数量不仅仅由 AVFilter.inputs 决定。过滤器可能会在初始化期间添加额外的输入，具体取决于提供给它的选项。
  */
 #define AVFILTER_FLAG_DYNAMIC_INPUTS        (1 << 0)
 /**
- * The number of the filter outputs is not determined just by AVFilter.outputs.
- * The filter might add additional outputs during initialization depending on
- * the options supplied to it.
+ * 滤波器输出的数量不仅仅由 AVFilter.outputs 决定。过滤器可能会在初始化期间添加额外的输出，具体取决于提供给它的选项。
  */
 #define AVFILTER_FLAG_DYNAMIC_OUTPUTS       (1 << 1)
 /**
- * The filter supports multithreading by splitting frames into multiple parts
- * and processing them concurrently.
+ * 该过滤器通过将帧拆分为多个部分并同时处理它们来支持多线程。
  */
 #define AVFILTER_FLAG_SLICE_THREADS         (1 << 2)
 /**
- * The filter is a "metadata" filter - it does not modify the frame data in any
- * way. It may only affect the metadata (i.e. those fields copied by
- * av_frame_copy_props()).
+ * 该过滤器是一个“元数据”过滤器 - 它不会以任何方式修改帧数据。它可能只影响元数据（即由 av_frame_copy_props() 复制的那些字段）。
  *
- * More precisely, this means:
- * - video: the data of any frame output by the filter must be exactly equal to
- *   some frame that is received on one of its inputs. Furthermore, all frames
- *   produced on a given output must correspond to frames received on the same
- *   input and their order must be unchanged. Note that the filter may still
- *   drop or duplicate the frames.
- * - audio: the data produced by the filter on any of its outputs (viewed e.g.
- *   as an array of interleaved samples) must be exactly equal to the data
- *   received by the filter on one of its inputs.
+ * 更准确地说，这意味着： - 视频：过滤器输出的任何帧的数据必须完全等于其输入之一接收到的某个帧。此外，给定输出上生成的所有帧必须对应于同一输入上接收到的帧，并且它们的顺序必须保持不变。请注意，过滤器仍可能会丢弃或重复帧。 - 音频：滤波器在其任何输出上产生的数据（例如，视为交错样本数组）必须完全等于滤波器在其输入之一上接收到的数据。
  */
 #define AVFILTER_FLAG_METADATA_ONLY         (1 << 3)
 
 /**
- * The filter can create hardware frames using AVFilterContext.hw_device_ctx.
+ * 过滤器可以使用 AVFilterContext.hw_device_ctx 创建硬件帧。
  */
 #define AVFILTER_FLAG_HWDEVICE              (1 << 4)
 /**
- * Some filters support a generic "enable" expression option that can be used
- * to enable or disable a filter in the timeline. Filters supporting this
- * option have this flag set. When the enable expression is false, the default
- * no-op filter_frame() function is called in place of the filter_frame()
- * callback defined on each input pad, thus the frame is passed unchanged to
- * the next filters.
+ * 某些过滤器支持通用“启用”表达式选项，可用于启用或禁用时间线中的过滤器。支持此选项的过滤器设置了此标志。当启用表达式为 false 时，将调用默认的无操作 filter_frame() 函数来代替每个输入板上定义的 filter_frame() 回调，从而将帧原封不动地传递到下一个过滤器。
  */
 #define AVFILTER_FLAG_SUPPORT_TIMELINE_GENERIC  (1 << 16)
 /**
- * Same as AVFILTER_FLAG_SUPPORT_TIMELINE_GENERIC, except that the filter will
- * have its filter_frame() callback(s) called as usual even when the enable
- * expression is false. The filter will disable filtering within the
- * filter_frame() callback(s) itself, for example executing code depending on
- * the AVFilterContext->is_disabled value.
+ * 与 AVFILTER_FLAG_SUPPORT_TIMELINE_GENERIC 相同，不同之处在于，即使启用表达式为 false，过滤器也会照常调用其 filter_frame() 回调。过滤器将在 filter_frame() 回调本身内禁用过滤，例如根据 AVFilterContext->is_disabled 值执行代码。
  */
 #define AVFILTER_FLAG_SUPPORT_TIMELINE_INTERNAL (1 << 17)
 /**
- * Handy mask to test whether the filter supports or no the timeline feature
- * (internally or generically).
+ * 方便的掩码，用于测试过滤器是否支持时间线功能（内部或一般）。
  */
 #define AVFILTER_FLAG_SUPPORT_TIMELINE (AVFILTER_FLAG_SUPPORT_TIMELINE_GENERIC | AVFILTER_FLAG_SUPPORT_TIMELINE_INTERNAL)
 
 /**
- * Filter definition. This defines the pads a filter contains, and all the
- * callback functions used to interact with the filter.
+ * 过滤器定义。这定义了过滤器包含的 pad，以及用于与过滤器交互的所有回调函数。
  */
 typedef struct AVFilter {
     /**
-     * Filter name. Must be non-NULL and unique among filters.
-     */
+ * 过滤器名称。必须为非 NULL 并且在过滤器中是唯一的。
+ */
     const char *name;
 
     /**
-     * A description of the filter. May be NULL.
-     *
-     * You should use the NULL_IF_CONFIG_SMALL() macro to define it.
-     */
+ * 过滤器的描述。可能为 NULL。
+ *
+ * 您应该使用 NULL_IF_CONFIG_SMALL() 宏来定义它。
+ */
     const char *description;
 
     /**
-     * List of static inputs.
-     *
-     * NULL if there are no (static) inputs. Instances of filters with
-     * AVFILTER_FLAG_DYNAMIC_INPUTS set may have more inputs than present in
-     * this list.
-     */
+ * 静态输入列表。
+ *
+ * 如果没有（静态）输入，则为 NULL。设置了 AVFILTER_FLAG_DYNAMIC_INPUTS 的过滤器实例可能具有比此列表中显示的更多的输入。
+ */
     const AVFilterPad *inputs;
 
     /**
-     * List of static outputs.
-     *
-     * NULL if there are no (static) outputs. Instances of filters with
-     * AVFILTER_FLAG_DYNAMIC_OUTPUTS set may have more outputs than present in
-     * this list.
-     */
+ * 静态输出列表。
+ *
+ * 如果没有（静态）输出，则为 NULL。设置了 AVFILTER_FLAG_DYNAMIC_OUTPUTS 的过滤器实例可能具有比此列表中显示的更多的输出。
+ */
     const AVFilterPad *outputs;
 
     /**
-     * A class for the private data, used to declare filter private AVOptions.
-     * This field is NULL for filters that do not declare any options.
-     *
-     * If this field is non-NULL, the first member of the filter private data
-     * must be a pointer to AVClass, which will be set by libavfilter generic
-     * code to this class.
-     */
+ * 私有数据类，用于声明过滤器私有AVOptions。对于未声明任何选项的过滤器，此字段为 NULL。
+ *
+ * 如果此字段为非 NULL，则过滤器私有数据的第一个成员必须是指向 AVClass 的指针，该指针将由 libavfilter 通用代码设置到此类。
+ */
     const AVClass *priv_class;
 
     /**
-     * A combination of AVFILTER_FLAG_*
-     */
+ * AVFILTER_FLAG_* 的组合
+ */
     int flags;
 } AVFilter;
 
 /**
- * Get the number of elements in an AVFilter's inputs or outputs array.
+ * 获取 AVFilter 的输入或输出数组中的元素数量。
  */
 unsigned avfilter_filter_pad_count(const AVFilter *filter, int is_output);
 
 /**
- * Process multiple parts of the frame concurrently.
+ * 同时处理框架的多个部分。
  */
 #define AVFILTER_THREAD_SLICE (1 << 0)
 
-/** An instance of a filter */
+/** 过滤器的实例 */
 typedef struct AVFilterContext {
-    const AVClass *av_class;        ///< needed for av_log() and filters common options
+    const AVClass *av_class;        ///< av_log() 和过滤器公共选项所需
 
-    const AVFilter *filter;         ///< the AVFilter of which this is an instance
+    const AVFilter *filter;         ///< 这是其实例的 AVFilter
 
-    char *name;                     ///< name of this filter instance
+    char *name;                     ///< 此过滤器实例的名称
 
-    AVFilterPad   *input_pads;      ///< array of input pads
-    AVFilterLink **inputs;          ///< array of pointers to input links
-    unsigned    nb_inputs;          ///< number of input pads
+    AVFilterPad   *input_pads;      ///< 输入焊盘数组
+    AVFilterLink **inputs;          ///< 指向输入链接的指针数组
+    unsigned    nb_inputs;          ///< 输入焊盘数量
 
-    AVFilterPad   *output_pads;     ///< array of output pads
-    AVFilterLink **outputs;         ///< array of pointers to output links
-    unsigned    nb_outputs;         ///< number of output pads
+    AVFilterPad   *output_pads;     ///< 输出焊盘数组
+    AVFilterLink **outputs;         ///< 指向输出链接的指针数组
+    unsigned    nb_outputs;         ///< 输出焊盘数量
 
-    void *priv;                     ///< private data for use by the filter
+    void *priv;                     ///< 供过滤器使用的私有数据
 
-    struct AVFilterGraph *graph;    ///< filtergraph this filter belongs to
+    struct AVFilterGraph *graph;    ///< filtergraph 该过滤器属于
 
     /**
-     * Type of multithreading being allowed/used. A combination of
-     * AVFILTER_THREAD_* flags.
-     *
-     * May be set by the caller before initializing the filter to forbid some
-     * or all kinds of multithreading for this filter. The default is allowing
-     * everything.
-     *
-     * When the filter is initialized, this field is combined using bit AND with
-     * AVFilterGraph.thread_type to get the final mask used for determining
-     * allowed threading types. I.e. a threading type needs to be set in both
-     * to be allowed.
-     *
-     * After the filter is initialized, libavfilter sets this field to the
-     * threading type that is actually used (0 for no multithreading).
-     */
+ * 允许/使用的多线程类型。 AVFILTER_THREAD_* 标志的组合。
+ *
+ * 可以由调用者在初始化过滤器之前设置，以禁止此过滤器的某些或所有类型的多线程。默认设置是允许一切。
+ *
+ * 初始化过滤器时，使用位 AND 与 AVFilterGraph.thread_type 组合该字段，以获得用于确定允许的线程类型的最终掩码。 IE。需要在两者中设置线程类型才能允许。
+ *
+ * 过滤器初始化后，libavfilter 将此字段设置为实际使用的线程类型（0 表示无多线程）。
+ */
     int thread_type;
 
     /**
-     * Max number of threads allowed in this filter instance.
-     * If <= 0, its value is ignored.
-     * Overrides global number of threads set per filter graph.
-     */
+ * 此过滤器实例中允许的最大线程数。如果 <= 0，则忽略其值。覆盖每个过滤器图表设置的全局线程数。
+ */
     int nb_threads;
 
-    char *enable_str;               ///< enable expression string
+    char *enable_str;               ///< 启用表达式字符串
     /**
-     * MUST NOT be accessed from outside avfilter.
-     *
-     * the enabled state from the last expression evaluation
-     */
+ * 不得从外部 avfilter 访问。
+ *
+ * 最后一次表达式求值的启用状态
+ */
     int is_disabled;
 
     /**
-     * For filters which will create hardware frames, sets the device the
-     * filter should create them in.  All other filters will ignore this field:
-     * in particular, a filter which consumes or processes hardware frames will
-     * instead use the hw_frames_ctx field in AVFilterLink to carry the
-     * hardware context information.
-     *
-     * May be set by the caller on filters flagged with AVFILTER_FLAG_HWDEVICE
-     * before initializing the filter with avfilter_init_str() or
-     * avfilter_init_dict().
-     */
+ * 对于将创建硬件帧的过滤器，设置过滤器应在其中创建它们的设备。所有其他过滤器将忽略此字段：特别是，消耗或处理硬件帧的过滤器将使用 AVFilterLink 中的 hw_frames_ctx 字段来携带硬件上下文信息。
+ *
+ * 在使用 avfilter_init_str() 或 avfilter_init_dict() 初始化过滤器之前，可以由调用者在标记有 AVFILTER_FLAG_HWDEVICE 的过滤器上设置。
+ */
     AVBufferRef *hw_device_ctx;
 
     /**
-     * Sets the number of extra hardware frames which the filter will
-     * allocate on its output links for use in following filters or by
-     * the caller.
-     *
-     * Some hardware filters require all frames that they will use for
-     * output to be defined in advance before filtering starts.  For such
-     * filters, any hardware frame pools used for output must therefore be
-     * of fixed size.  The extra frames set here are on top of any number
-     * that the filter needs internally in order to operate normally.
-     *
-     * This field must be set before the graph containing this filter is
-     * configured.
-     */
+ * 设置过滤器将在其输出链路上分配的额外硬件帧的数量，以供后续过滤器或调用者使用。
+ *
+ * 某些硬件过滤器要求在过滤开始之前提前定义它们将用于输出的所有帧。  对于此类过滤器，用于输出的任何硬件帧池都必须具有固定大小。  此处设置的额外帧位于过滤器内部正常运行所需的任何数量之上。
+ *
+ * 在配置包含此过滤器的图形之前必须设置此字段。
+ */
     int extra_hw_frames;
 } AVFilterContext;
 
 /**
- * A link between two filters. This contains pointers to the source and
- * destination filters between which this link exists, and the indexes of
- * the pads involved. In addition, this link also contains the parameters
- * which have been negotiated and agreed upon between the filter, such as
- * image dimensions, format, etc.
+ * 两个过滤器之间的链接。它包含指向源过滤器和目标过滤器（其间存在此链接）的指针，以及所涉及的 pad 的索引。此外，该链接还包含过滤器之间已协商同意的参数，例如图像尺寸、格式等。
  *
- * Applications must not normally access the link structure directly.
- * Use the buffersrc and buffersink API instead.
- * In the future, access to the header may be reserved for filters
- * implementation.
+ * 应用程序通常不得直接访问该链接结构。请改用 buffersrc 和 buffersink API。将来，对标头的访问可能会保留用于过滤器实现。
  */
 struct AVFilterLink {
-    AVFilterContext *src;       ///< source filter
-    AVFilterPad *srcpad;        ///< output pad on the source filter
+    AVFilterContext *src;       ///< 源滤波器
+    AVFilterPad *srcpad;        ///< 源滤波器上的输出焊盘
 
-    AVFilterContext *dst;       ///< dest filter
-    AVFilterPad *dstpad;        ///< input pad on the dest filter
+    AVFilterContext *dst;       ///< 目标滤波器
+    AVFilterPad *dstpad;        ///< 目标滤波器上的输入焊盘
 
-    enum AVMediaType type;      ///< filter media type
+    enum AVMediaType type;      ///< 过滤介质类型
 
-    int format;                 ///< agreed upon media format
+    int format;                 ///< 商定的介质格式
 
-    /* These parameters apply only to video */
-    int w;                      ///< agreed upon image width
-    int h;                      ///< agreed upon image height
-    AVRational sample_aspect_ratio; ///< agreed upon sample aspect ratio
+    /* 这些参数仅适用于视频 */
+    int w;                      ///< 商定的图像宽度
+    int h;                      ///< 商定的图像高度
+    AVRational sample_aspect_ratio; ///< 商定的样本纵横比
     /**
-     * For non-YUV links, these are respectively set to fallback values (as
-     * appropriate for that colorspace).
-     *
-     * Note: This includes grayscale formats, as these are currently treated
-     * as forced full range always.
-     */
-    enum AVColorSpace colorspace;   ///< agreed upon YUV color space
-    enum AVColorRange color_range;  ///< agreed upon YUV color range
+ * 对于非 YUV 链接，这些分别设置为后备值（适合该色彩空间）。
+ *
+ * 注意：这包括灰度格式，因为这些格式目前始终被视为强制全范围。
+ */
+    enum AVColorSpace colorspace;   ///< 商定的 YUV 颜色空间
+    enum AVColorRange color_range;  ///< 商定的 YUV 颜色范围
 
-    /* These parameters apply only to audio */
-    int sample_rate;            ///< samples per second
-    AVChannelLayout ch_layout;  ///< channel layout of current buffer (see libavutil/channel_layout.h)
+    /* 这些参数仅适用于音频 */
+    int sample_rate;            ///< 每秒采样数
+    AVChannelLayout ch_layout;  ///< 当前缓冲区的通道布局（请参阅 libavutil/channel_layout.h）
 
     /**
-     * Define the time base used by the PTS of the frames/samples
-     * which will pass through this link.
-     * During the configuration stage, each filter is supposed to
-     * change only the output timebase, while the timebase of the
-     * input link is assumed to be an unchangeable property.
-     */
+ * 定义将通过此链接的帧/样本的 PTS 使用的时基。在配置阶段，每个滤波器应该仅更改输出时基，而输入链路的时基被假定为不可更改的属性。
+ */
     AVRational time_base;
 
     AVFrameSideData **side_data;
     int nb_side_data;
 
-    enum AVAlphaMode alpha_mode; ///< alpha mode (for videos with an alpha channel)
-
-    /*****************************************************************
-     * All fields below this line are not part of the public API. They
-     * may not be used outside of libavfilter and can be changed and
-     * removed at will.
-     * New public fields should be added right above.
-     *****************************************************************
-     */
+    enum AVAlphaMode alpha_mode; ///< Alpha 模式（适用于具有 Alpha 通道的视频）
 
     /**
-     * Lists of supported formats / etc. supported by the input filter.
-     */
+ * **************************************************************
+ * 此行下方的所有字段都不属于公共 API 的一部分。它们不能在 libavfilter 之外使用，并且可以随意更改和删除。新的公共字段应添加到正上方。
+ * ****************************************************************
+ */
+
+    /**
+ * 输入过滤器支持的支持格式/等列表。
+ */
     AVFilterFormatsConfig incfg;
 
     /**
-     * Lists of supported formats / etc. supported by the output filter.
-     */
+ * 输出过滤器支持的支持格式/等列表。
+ */
     AVFilterFormatsConfig outcfg;
 };
 
 /**
- * Link two filters together.
+ * 将两个过滤器连接在一起。
  *
- * @param src    the source filter
- * @param srcpad index of the output pad on the source filter
- * @param dst    the destination filter
- * @param dstpad index of the input pad on the destination filter
- * @return       zero on success
+ * @param src 源过滤器
+ * @param srcpad 源过滤器上输出 pad 的索引
+ * @param dst 目标过滤器
+ * @param dstpad 目标过滤器上输入 pad 的索引
+ * @return 成功时为零
  */
 int avfilter_link(AVFilterContext *src, unsigned srcpad,
                   AVFilterContext *dst, unsigned dstpad);
 
-#define AVFILTER_CMD_FLAG_ONE   1 ///< Stop once a filter understood the command (for target=all for example), fast filters are favored automatically
-#define AVFILTER_CMD_FLAG_FAST  2 ///< Only execute command when its fast (like a video out that supports contrast adjustment in hw)
+#define AVFILTER_CMD_FLAG_ONE   1 ///< 一旦过滤器理解命令（例如 target=all）就停止，自动优先使用快速过滤器
+#define AVFILTER_CMD_FLAG_FAST  2 ///< 仅在快速时执行命令（如支持硬件对比度调整的视频输出）
 
 /**
- * Make the filter instance process a command.
- * It is recommended to use avfilter_graph_send_command().
+ * 使过滤器实例处理命令。推荐使用avfilter_graph_send_command()。
  */
 int avfilter_process_command(AVFilterContext *filter, const char *cmd, const char *arg, char *res, int res_len, int flags);
 
 /**
- * Iterate over all registered filters.
+ * 迭代所有已注册的过滤器。
  *
- * @param opaque a pointer where libavfilter will store the iteration state. Must
- *               point to NULL to start the iteration.
+ * @param opaque 一个指针，libavfilter 将在其中存储迭代状态。必须指向 NULL 才能开始迭代。
  *
- * @return the next registered filter or NULL when the iteration is
- *         finished
+ * @return 下一个注册的过滤器或迭代完成时为 NULL
  */
 const AVFilter *av_filter_iterate(void **opaque);
 
 /**
- * Get a filter definition matching the given name.
+ * 获取与给定名称匹配的过滤器定义。
  *
- * @param name the filter name to find
- * @return     the filter definition, if any matching one is registered.
- *             NULL if none found.
+ * @param name 过滤器名称，用于查找
+ * @return 过滤器定义（如果注册了任何匹配的过滤器定义）。如果没有找到则为 NULL。
  */
 const AVFilter *avfilter_get_by_name(const char *name);
 
 
 /**
- * Initialize a filter with the supplied parameters.
+ * 使用提供的参数初始化过滤器。
  *
- * @param ctx  uninitialized filter context to initialize
- * @param args Options to initialize the filter with. This must be a
- *             ':'-separated list of options in the 'key=value' form.
- *             May be NULL if the options have been set directly using the
- *             AVOptions API or there are no options that need to be set.
- * @return 0 on success, a negative AVERROR on failure
+ * @param ctx 用于初始化的未初始化过滤器上下文
+ * @param args 用于初始化过滤器的选项。这必须是“key=value”形式的以“:”分隔的选项列表。如果直接使用 AVOptions API 设置选项或者没有需要设置的选项，则可能为 NULL。
+ * @return 成功时为 0，失败时为负 AVERROR
  */
 int avfilter_init_str(AVFilterContext *ctx, const char *args);
 
 /**
- * Initialize a filter with the supplied dictionary of options.
+ * 使用提供的选项字典初始化过滤器。
  *
- * @param ctx     uninitialized filter context to initialize
- * @param options An AVDictionary filled with options for this filter. On
- *                return this parameter will be destroyed and replaced with
- *                a dict containing options that were not found. This dictionary
- *                must be freed by the caller.
- *                May be NULL, then this function is equivalent to
- *                avfilter_init_str() with the second parameter set to NULL.
- * @return 0 on success, a negative AVERROR on failure
+ * @param ctx 未初始化的过滤器上下文，用于初始化
+ * @param options 一个 AVDictionary，其中填充了此过滤器的选项。返回时，此参数将被销毁并替换为包含未找​​到的选项的字典。该字典必须由调用者释放。可能为NULL，那么这个函数相当于第二个参数设置为NULL的avfilter_init_str()。
+ * @return 成功时为 0，失败时为负 AVERROR
  *
- * @note This function and avfilter_init_str() do essentially the same thing,
- * the difference is in manner in which the options are passed. It is up to the
- * calling code to choose whichever is more preferable. The two functions also
- * behave differently when some of the provided options are not declared as
- * supported by the filter. In such a case, avfilter_init_str() will fail, but
- * this function will leave those extra options in the options AVDictionary and
- * continue as usual.
+ * @note 该函数和 avfilter_init_str() 本质上做同样的事情，区别在于传递选项的方式。由调用代码选择更优选的一个。当某些提供的选项未声明为过滤器支持时，这两个函数的行为也不同。在这种情况下， avfilter_init_str() 将失败，但该函数会将这些额外选项保留在选项 AVDictionary 中并照常继续。
  */
 int avfilter_init_dict(AVFilterContext *ctx, AVDictionary **options);
 
 /**
- * Free a filter context. This will also remove the filter from its
- * filtergraph's list of filters.
+ * 释放过滤器上下文。这也将从其过滤器图表的过滤器列表中删除该过滤器。
  *
- * @param filter the filter to free
+ * @param filter 用于释放的过滤器
  */
 void avfilter_free(AVFilterContext *filter);
 
 /**
- * Insert a filter in the middle of an existing link.
+ * 在现有链接的中间插入过滤器。
  *
- * @param link the link into which the filter should be inserted
- * @param filt the filter to be inserted
- * @param filt_srcpad_idx the input pad on the filter to connect
- * @param filt_dstpad_idx the output pad on the filter to connect
- * @return     zero on success
+ * @param link 应插入滤波器的链路
+ * @param filt 要插入的滤波器
+ * @param filt_srcpad_idx 要连接的滤波器上的输入焊盘
+ * @param filt_dstpad_idx 要连接的滤波器上的输出焊盘
+ * @return 成功时为零
  */
 int avfilter_insert_filter(AVFilterLink *link, AVFilterContext *filt,
                            unsigned filt_srcpad_idx, unsigned filt_dstpad_idx);
 
 /**
- * @return AVClass for AVFilterContext.
+ * @return AVFilterContext 的 AVClass。
  *
- * @see av_opt_find().
+ * @see av_opt_find()。
  */
 const AVClass *avfilter_get_class(void);
 
 /**
- * A function pointer passed to the @ref AVFilterGraph.execute callback to be
- * executed multiple times, possibly in parallel.
+ * 传递给 @ref AVFilterGraph.execute 回调的函数指针，以便多次执行（可能是并行执行）。
  *
- * @param ctx the filter context the job belongs to
- * @param arg an opaque parameter passed through from @ref
- *            AVFilterGraph.execute
- * @param jobnr the index of the job being executed
- * @param nb_jobs the total number of jobs
+ * @param ctx 作业所属的过滤器上下文
+ * @param arg 从 @ref AVFilterGraph.execute 传递的不透明参数
+ * @param jobnr 正在执行的作业的索引
+ * @param nb_jobs 作业总数
  *
- * @return 0 on success, a negative AVERROR on error
+ * @return 成功时为 0，错误时为负 AVERROR
  */
 typedef int (avfilter_action_func)(AVFilterContext *ctx, void *arg, int jobnr, int nb_jobs);
 
 /**
- * A function executing multiple jobs, possibly in parallel.
+ * 执行多个作业（可能并行）的函数。
  *
- * @param ctx the filter context to which the jobs belong
- * @param func the function to be called multiple times
- * @param arg the argument to be passed to func
- * @param ret a nb_jobs-sized array to be filled with return values from each
- *            invocation of func
- * @param nb_jobs the number of jobs to execute
+ * @param ctx 作业所属的过滤器上下文
+ * @param func 要多次调用的函数
+ * @param arg 要传递给 func 的参数
+ * @param ret 要填充每次调用 func 的返回值的 nb_jobs 大小的数组
+ * @param nb_jobs 要执行的作业数
  *
- * @return 0 on success, a negative AVERROR on error
+ * @return 成功时为 0，错误时为负 AVERROR
  */
 typedef int (avfilter_execute_func)(AVFilterContext *ctx, avfilter_action_func *func,
                                     void *arg, int *ret, int nb_jobs);
@@ -563,329 +461,251 @@ typedef struct AVFilterGraph {
     AVFilterContext **filters;
     unsigned nb_filters;
 
-    char *scale_sws_opts; ///< sws options to use for the auto-inserted scale filters
+    char *scale_sws_opts; ///< 用于自动插入比例过滤器的 sws 选项
 
     /**
-     * Type of multithreading allowed for filters in this graph. A combination
-     * of AVFILTER_THREAD_* flags.
-     *
-     * May be set by the caller at any point, the setting will apply to all
-     * filters initialized after that. The default is allowing everything.
-     *
-     * When a filter in this graph is initialized, this field is combined using
-     * bit AND with AVFilterContext.thread_type to get the final mask used for
-     * determining allowed threading types. I.e. a threading type needs to be
-     * set in both to be allowed.
-     */
+ * 该图中的过滤器允许的多线程类型。 AVFILTER_THREAD_* 标志的组合。
+ *
+ * 可由调用者随时设置，该设置将应用于此后初始化的所有过滤器。默认设置是允许一切。
+ *
+ * 初始化此图中的过滤器时，使用位 AND 与 AVFilterContext.thread_type 组合该字段，以获得用于确定允许的线程类型的最终掩码。 IE。需要在两者中设置线程类型才能允许。
+ */
     int thread_type;
 
     /**
-     * Maximum number of threads used by filters in this graph. May be set by
-     * the caller before adding any filters to the filtergraph. Zero (the
-     * default) means that the number of threads is determined automatically.
-     */
+ * 该图中过滤器使用的最大线程数。可以由调用者在将任何过滤器添加到过滤器图表之前设置。零（默认值）意味着线程数是自动确定的。
+ */
     int nb_threads;
 
     /**
-     * Opaque user data. May be set by the caller to an arbitrary value, e.g. to
-     * be used from callbacks like @ref AVFilterGraph.execute.
-     * Libavfilter will not touch this field in any way.
-     */
+ * 不透明的用户数据。可以由调用者设置为任意值，例如从 @ref AVFilterGraph.execute 等回调中使用。 Libavfilter 不会以任何方式触及这个领域。
+ */
     void *opaque;
 
     /**
-     * This callback may be set by the caller immediately after allocating the
-     * graph and before adding any filters to it, to provide a custom
-     * multithreading implementation.
-     *
-     * If set, filters with slice threading capability will call this callback
-     * to execute multiple jobs in parallel.
-     *
-     * If this field is left unset, libavfilter will use its internal
-     * implementation, which may or may not be multithreaded depending on the
-     * platform and build options.
-     */
+ * 调用者可以在分配图形之后和向其中添加任何过滤器之前立即设置此回调，以提供自定义多线程实现。
+ *
+ * 如果设置，具有切片线程功能的过滤器将调用此回调来并行执行多个作业。
+ *
+ * 如果此字段未设置，libavfilter 将使用其内部实现，该实现可能是也可能不是多线程，具体取决于平台和构建选项。
+ */
     avfilter_execute_func *execute;
 
-    char *aresample_swr_opts; ///< swr options to use for the auto-inserted aresample filters, Access ONLY through AVOptions
+    char *aresample_swr_opts; ///< swr 选项用于自动插入的 aresample 过滤器，仅通过 AVOptions 访问
 
     /**
-     * Sets the maximum number of buffered frames in the filtergraph combined.
-     *
-     * Zero means no limit. This field must be set before calling
-     * avfilter_graph_config().
-     */
+ * 设置组合过滤器图中缓冲帧的最大数量。
+ *
+ * 零表示没有限制。该字段必须在调用 avfilter_graph_config() 之前设置。
+ */
     unsigned max_buffered_frames;
 } AVFilterGraph;
 
 /**
- * Allocate a filter graph.
+ * 分配过滤器图表。
  *
- * @return the allocated filter graph on success or NULL.
+ * @return 成功或 NULL 时分配的过滤器图。
  */
 AVFilterGraph *avfilter_graph_alloc(void);
 
 /**
- * Create a new filter instance in a filter graph.
+ * 在过滤器图中创建一个新的过滤器实例。
  *
- * @param graph graph in which the new filter will be used
- * @param filter the filter to create an instance of
- * @param name Name to give to the new instance (will be copied to
- *             AVFilterContext.name). This may be used by the caller to identify
- *             different filters, libavfilter itself assigns no semantics to
- *             this parameter. May be NULL.
+ * @param graph 图，其中新过滤器将使用
+ * @param filter 过滤器创建
+ * @param name 实例 赋予新实例的名称（将被复制到 AVFilterContext.name）。调用者可以使用它来识别不同的过滤器，libavfilter 本身没有为此参数分配任何语义。可能为 NULL。
  *
- * @return the context of the newly created filter instance (note that it is
- *         also retrievable directly through AVFilterGraph.filters or with
- *         avfilter_graph_get_filter()) on success or NULL on failure.
+ * @return 新创建的过滤器实例的上下文（请注意，它也可以直接通过 AVFilterGraph.filters 或使用 avfilter_graph_get_filter() 检索）成功时或失败时为 NULL。
  */
 AVFilterContext *avfilter_graph_alloc_filter(AVFilterGraph *graph,
                                              const AVFilter *filter,
                                              const char *name);
 
 /**
- * Get a filter instance identified by instance name from graph.
+ * 从图中获取由实例名称标识的过滤器实例。
  *
- * @param graph filter graph to search through.
- * @param name filter instance name (should be unique in the graph).
- * @return the pointer to the found filter instance or NULL if it
- * cannot be found.
+ * @param graph 要搜索的过滤图。
+ * @param name 过滤器实例名称（在图中应该是唯一的）。
+ * @return 指向找到的过滤器实例的指针，如果找不到，则为 NULL。
  */
 AVFilterContext *avfilter_graph_get_filter(AVFilterGraph *graph, const char *name);
 
 /**
- * A convenience wrapper that allocates and initializes a filter in a single
- * step. The filter instance is created from the filter filt and inited with the
- * parameter args. opaque is currently ignored.
+ * 一个方便的包装器，只需一步即可分配和初始化过滤器。过滤器实例是从过滤器 filt 创建的，并使用参数 args 初始化。目前忽略不透明。
  *
- * In case of success put in *filt_ctx the pointer to the created
- * filter instance, otherwise set *filt_ctx to NULL.
+ * 如果成功，请将 *filt_ctx 放入指向创建的过滤器实例的指针，否则将 *filt_ctx 设置为 NULL。
  *
- * @param name the instance name to give to the created filter instance
- * @param graph_ctx the filter graph
- * @return a negative AVERROR error code in case of failure, a non
- * negative value otherwise
+ * @param name 赋予创建的过滤器实例的实例名称
+ * @param graph_ctx 过滤器图
+ * @return 如果失败则为负 AVERROR 错误代码，否则为非负值
  *
- * @warning Since the filter is initialized after this function successfully
- *          returns, you MUST NOT set any further options on it. If you need to
- *          do that, call ::avfilter_graph_alloc_filter(), followed by setting
- *          the options, followed by ::avfilter_init_dict() instead of this
- *          function.
+ * @warning 由于在此函数成功返回后过滤器被初始化，因此您可以不得在其上设置任何其他选项。如果您需要这样做，请调用 ::avfilter_graph_alloc_filter()，然后设置选项，然后调用 ::avfilter_init_dict() 而不是此函数。
  */
 int avfilter_graph_create_filter(AVFilterContext **filt_ctx, const AVFilter *filt,
                                  const char *name, const char *args, void *opaque,
                                  AVFilterGraph *graph_ctx);
 
 /**
- * Enable or disable automatic format conversion inside the graph.
+ * 启用或禁用图形内的自动格式转换。
  *
- * Note that format conversion can still happen inside explicitly inserted
- * scale and aresample filters.
+ * 请注意，格式转换仍然可以在显式插入的比例和样本过滤器内发生。
  *
- * @param flags  any of the AVFILTER_AUTO_CONVERT_* constants
+ * @param flags 任何 AVFILTER_AUTO_CONVERT_* 常量
  */
 void avfilter_graph_set_auto_convert(AVFilterGraph *graph, unsigned flags);
 
 enum {
-    AVFILTER_AUTO_CONVERT_ALL  =  0, /**< all automatic conversions enabled */
-    AVFILTER_AUTO_CONVERT_NONE = -1, /**< all automatic conversions disabled */
+    AVFILTER_AUTO_CONVERT_ALL  =  0, /**< 启用所有自动转换 */
+    AVFILTER_AUTO_CONVERT_NONE = -1, /**< 禁用所有自动转换 */
 };
 
 /**
- * Check validity and configure all the links and formats in the graph.
+ * 检查有效性并配置图中的所有链接和格式。
  *
- * @param graphctx the filter graph
- * @param log_ctx context used for logging
- * @return >= 0 in case of success, a negative AVERROR code otherwise
+ * @param graphctx 用于记录的过滤器图
+ * @param log_ctx 上下文
+ * @return >= 0 如果成功，则为负 AVERROR 代码，否则
  */
 int avfilter_graph_config(AVFilterGraph *graphctx, void *log_ctx);
 
 /**
- * Free a graph, destroy its links, and set *graph to NULL.
- * If *graph is NULL, do nothing.
+ * 释放图，销毁其链接，并将 *graph 设置为 NULL。如果 *graph 为 NULL，则不执行任何操作。
  */
 void avfilter_graph_free(AVFilterGraph **graph);
 
 /**
- * A linked-list of the inputs/outputs of the filter chain.
+ * 过滤器链的输入/输出的链表。
  *
- * This is mainly useful for avfilter_graph_parse() / avfilter_graph_parse2(),
- * where it is used to communicate open (unlinked) inputs and outputs from and
- * to the caller.
- * This struct specifies, per each not connected pad contained in the graph, the
- * filter context and the pad index required for establishing a link.
+ * 这主要对 avfilter_graph_parse() / avfilter_graph_parse2() 有用，它用于与调用者之间传递开放（未链接）的输入和输出。该结构指定图中包含的每个未连接的焊盘、过滤器上下文和建立链接所需的焊盘索引。
  */
 typedef struct AVFilterInOut {
-    /** unique name for this input/output in the list */
+    /** 列表中此输入/输出的唯一名称 */
     char *name;
 
-    /** filter context associated to this input/output */
+    /** 与此输入/输出关联的过滤器上下文 */
     AVFilterContext *filter_ctx;
 
-    /** index of the filt_ctx pad to use for linking */
+    /** 用于链接 */
     int pad_idx;
 
-    /** next input/input in the list, NULL if this is the last */
+    /** 列表中下一个输入/输入的 filt_ctx 垫的索引，如果为 NULL，则为 NULL最后一个 */
     struct AVFilterInOut *next;
 } AVFilterInOut;
 
 /**
- * Allocate a single AVFilterInOut entry.
- * Must be freed with avfilter_inout_free().
- * @return allocated AVFilterInOut on success, NULL on failure.
+ * 分配单个 AVFilterInOut 条目。必须用 avfilter_inout_free() 释放。
+ * @return 成功时分配 AVFilterInOut，失败时分配 NULL。
  */
 AVFilterInOut *avfilter_inout_alloc(void);
 
 /**
- * Free the supplied list of AVFilterInOut and set *inout to NULL.
- * If *inout is NULL, do nothing.
+ * 释放提供的 AVFilterInOut 列表并将 *inout 设置为 NULL。如果 *inout 为 NULL，则不执行任何操作。
  */
 void avfilter_inout_free(AVFilterInOut **inout);
 
 /**
- * Add a graph described by a string to a graph.
+ * 将字符串描述的图形添加到图形中。
  *
- * @note The caller must provide the lists of inputs and outputs,
- * which therefore must be known before calling the function.
+ * @note 调用者必须提供输入和输出列表，因此在调用函数之前必须知道这些列表。
  *
- * @note The inputs parameter describes inputs of the already existing
- * part of the graph; i.e. from the point of view of the newly created
- * part, they are outputs. Similarly the outputs parameter describes
- * outputs of the already existing filters, which are provided as
- * inputs to the parsed filters.
+ * @note 输入参数描述了图形中已存在部分的输入；即从新创建的部分的角度来看，它们是输出。类似地，outputs 参数描述了现有过滤器的输出，这些输出作为已解析过滤器的输入提供。
  *
- * @param graph   the filter graph where to link the parsed graph context
- * @param filters string to be parsed
- * @param inputs  linked list to the inputs of the graph
- * @param outputs linked list to the outputs of the graph
- * @return zero on success, a negative AVERROR code on error
+ * @param graph 过滤器图，将解析的图上下文链接到其中
+ * @param filters 要解析的字符串
+ * @param inputs 链表到图的输入
+ * @param outputs 链表到图的输出
+ * @return 成功时为零，错误时为负 AVERROR 代码
  */
 int avfilter_graph_parse(AVFilterGraph *graph, const char *filters,
                          AVFilterInOut *inputs, AVFilterInOut *outputs,
                          void *log_ctx);
 
 /**
- * Add a graph described by a string to a graph.
+ * 将由字符串描述的图形添加到图形中。
  *
- * In the graph filters description, if the input label of the first
- * filter is not specified, "in" is assumed; if the output label of
- * the last filter is not specified, "out" is assumed.
+ * 在图形过滤器描述中，如果未指定第一个过滤器的输入标签，则假定为“in”；如果未指定最后一个过滤器的输出标签，则假定为“out”。
  *
- * @param graph   the filter graph where to link the parsed graph context
- * @param filters string to be parsed
- * @param inputs  pointer to a linked list to the inputs of the graph, may be NULL.
- *                If non-NULL, *inputs is updated to contain the list of open inputs
- *                after the parsing, should be freed with avfilter_inout_free().
- * @param outputs pointer to a linked list to the outputs of the graph, may be NULL.
- *                If non-NULL, *outputs is updated to contain the list of open outputs
- *                after the parsing, should be freed with avfilter_inout_free().
- * @return non negative on success, a negative AVERROR code on error
+ * @param graph 将解析的图形上下文链接到的过滤器图形
+ * @param filters 要解析的字符串
+ * @param inputs 指向图形输入的链接列表的指针，可以为 NULL。如果非 NULL，则 *inputs 会更新为包含解析后打开的输入列表，应使用 avfilter_inout_free() 释放。
+ * @param outputs 指向图输出的链表的指针可以为 NULL。如果非 NULL，*outputs 会更新为包含解析后打开的输出列表，应使用 avfilter_inout_free() 释放。
+ * @return 成功时为非负，错误时为负 AVERROR 代码
  */
 int avfilter_graph_parse_ptr(AVFilterGraph *graph, const char *filters,
                              AVFilterInOut **inputs, AVFilterInOut **outputs,
                              void *log_ctx);
 
 /**
- * Add a graph described by a string to a graph.
+ * 将由字符串描述的图形添加到图形中。
  *
- * @param[in]  graph   the filter graph where to link the parsed graph context
- * @param[in]  filters string to be parsed
- * @param[out] inputs  a linked list of all free (unlinked) inputs of the
- *                     parsed graph will be returned here. It is to be freed
- *                     by the caller using avfilter_inout_free().
- * @param[out] outputs a linked list of all free (unlinked) outputs of the
- *                     parsed graph will be returned here. It is to be freed by the
- *                     caller using avfilter_inout_free().
- * @return zero on success, a negative AVERROR code on error
+ * @param[in]  graph 链接解析图上下文的过滤器图
+ * @param[in]  filters 要解析的字符串
+ * @param[out] inputs 解析图的所有空闲（未链接）输入的链接列表将在此处返回。它由调用者使用 avfilter_inout_free() 释放。
+ * @param[out] outputs 解析图的所有空闲（未链接）输出的链接列表将在此处返回。它由调用者使用 avfilter_inout_free() 释放。
+ * @return 成功时为零，错误时为负 AVERROR 代码
  *
- * @note This function returns the inputs and outputs that are left
- * unlinked after parsing the graph and the caller then deals with
- * them.
- * @note This function makes no reference whatsoever to already
- * existing parts of the graph and the inputs parameter will on return
- * contain inputs of the newly parsed part of the graph.  Analogously
- * the outputs parameter will contain outputs of the newly created
- * filters.
+ * @note 该函数返回解析图形后未链接的输入和输出，然后调用者处理它们。
+ * @note 该函数不会引用图形的现有部分，并且输入参数将在返回时包含图形的新解析部分的输入。  类似地，输出参数将包含新创建的过滤器的输出。
  */
 int avfilter_graph_parse2(AVFilterGraph *graph, const char *filters,
                           AVFilterInOut **inputs,
                           AVFilterInOut **outputs);
 
 /**
- * Parameters of a filter's input or output pad.
+ * 滤波器输入或输出垫的参数。
  *
- * Created as a child of AVFilterParams by avfilter_graph_segment_parse().
- * Freed in avfilter_graph_segment_free().
+ * 由 avfilter_graph_segment_parse() 创建为 AVFilterParams 的子级。在 avfilter_graph_segment_free() 中释放。
  */
 typedef struct AVFilterPadParams {
     /**
-     * An av_malloc()'ed string containing the pad label.
-     *
-     * May be av_free()'d and set to NULL by the caller, in which case this pad
-     * will be treated as unlabeled for linking.
-     * May also be replaced by another av_malloc()'ed string.
-     */
+ * 包含 pad 标签的 av_malloc() 字符串。
+ *
+ * 可能被调用者 av_free() 并设置为 NULL，在这种情况下，该 pad 将被视为未标记链接。也可以被另一个 av_malloc()'ed 字符串替换。
+ */
     char *label;
 } AVFilterPadParams;
 
 /**
- * Parameters describing a filter to be created in a filtergraph.
+ * 描述要在过滤器图中创建的过滤器的参数。
  *
- * Created as a child of AVFilterGraphSegment by avfilter_graph_segment_parse().
- * Freed in avfilter_graph_segment_free().
+ * 由 avfilter_graph_segment_parse() 创建为 AVFilterGraphSegment 的子级。在 avfilter_graph_segment_free() 中释放。
  */
 typedef struct AVFilterParams {
     /**
-     * The filter context.
-     *
-     * Created by avfilter_graph_segment_create_filters() based on
-     * AVFilterParams.filter_name and instance_name.
-     *
-     * Callers may also create the filter context manually, then they should
-     * av_free() filter_name and set it to NULL. Such AVFilterParams instances
-     * are then skipped by avfilter_graph_segment_create_filters().
-     */
+ * 过滤器上下文。
+ *
+ * 由avfilter_graph_segment_create_filters()根据AVFilterParams.filter_name和instance_name创建。
+ *
+ * 调用者也可以手动创建过滤器上下文，然后他们应该 av_free() filter_name 并将其设置为 NULL。然后，avfilter_graph_segment_create_filters() 会跳过此类 AVFilterParams 实例。
+ */
     AVFilterContext     *filter;
 
     /**
-     * Name of the AVFilter to be used.
-     *
-     * An av_malloc()'ed string, set by avfilter_graph_segment_parse(). Will be
-     * passed to avfilter_get_by_name() by
-     * avfilter_graph_segment_create_filters().
-     *
-     * Callers may av_free() this string and replace it with another one or
-     * NULL. If the caller creates the filter instance manually, this string
-     * MUST be set to NULL.
-     *
-     * When both AVFilterParams.filter an AVFilterParams.filter_name are NULL,
-     * this AVFilterParams instance is skipped by avfilter_graph_segment_*()
-     * functions.
-     */
+ * 要使用的 AVFilter 的名称。
+ *
+ * av_malloc() 的字符串，由 avfilter_graph_segment_parse() 设置。将由 avfilter_graph_segment_create_filters() 传递给 avfilter_get_by_name()。
+ *
+ * 调用者可以 av_free() 该字符串并将其替换为另一个字符串或 NULL。如果调用者手动创建过滤器实例，则该字符串必须设置为 NULL。
+ *
+ * 当 AVFilterParams.filter 和 AVFilterParams.filter_name 均为 NULL 时，avfilter_graph_segment_*() 函数会跳过此 AVFilterParams 实例。
+ */
     char                *filter_name;
     /**
-     * Name to be used for this filter instance.
-     *
-     * An av_malloc()'ed string, may be set by avfilter_graph_segment_parse() or
-     * left NULL. The caller may av_free() this string and replace with another
-     * one or NULL.
-     *
-     * Will be used by avfilter_graph_segment_create_filters() - passed as the
-     * third argument to avfilter_graph_alloc_filter(), then freed and set to
-     * NULL.
-     */
+ * 用于此过滤器实例的名称。
+ *
+ * av_malloc() 的字符串，可以通过 avfilter_graph_segment_parse() 设置或保留 NULL。调用者可以 av_free() 该字符串并替换为另一个字符串或 NULL。
+ *
+ * 将由 avfilter_graph_segment_create_filters() 使用 - 作为第三个参数传递给 avfilter_graph_alloc_filter()，然后释放并设置为 NULL。
+ */
     char                *instance_name;
 
     /**
-     * Options to be applied to the filter.
-     *
-     * Filled by avfilter_graph_segment_parse(). Afterwards may be freely
-     * modified by the caller.
-     *
-     * Will be applied to the filter by avfilter_graph_segment_apply_opts()
-     * with an equivalent of av_opt_set_dict2(filter, &opts, AV_OPT_SEARCH_CHILDREN),
-     * i.e. any unapplied options will be left in this dictionary.
-     */
+ * 应用于过滤器的选项。
+ *
+ * 由 avfilter_graph_segment_parse() 填充。之后可以由调用者自由修改。
+ *
+ * 将通过 avfilter_graph_segment_apply_opts() 应用于过滤器，相当于 av_opt_set_dict2(filter, &opts, AV_OPT_SEARCH_CHILDREN)，即任何未应用的选项将保留在此字典中。
+ */
     AVDictionary        *opts;
 
     AVFilterPadParams  **inputs;
@@ -896,10 +716,9 @@ typedef struct AVFilterParams {
 } AVFilterParams;
 
 /**
- * A filterchain is a list of filter specifications.
+ * 过滤器链是过滤器规范的列表。
  *
- * Created as a child of AVFilterGraphSegment by avfilter_graph_segment_parse().
- * Freed in avfilter_graph_segment_free().
+ * 由 avfilter_graph_segment_parse() 创建为 AVFilterGraphSegment 的子级。在 avfilter_graph_segment_free() 中释放。
  */
 typedef struct AVFilterChain {
     AVFilterParams  **filters;
@@ -907,283 +726,202 @@ typedef struct AVFilterChain {
 } AVFilterChain;
 
 /**
- * A parsed representation of a filtergraph segment.
+ * 过滤器图段的解析表示。
  *
- * A filtergraph segment is conceptually a list of filterchains, with some
- * supplementary information (e.g. format conversion flags).
+ * 从概念上讲，filtergraph 段是一个过滤器链列表，带有一些补充信息（例如格式转换标志）。
  *
- * Created by avfilter_graph_segment_parse(). Must be freed with
- * avfilter_graph_segment_free().
+ * 由 avfilter_graph_segment_parse() 创建。必须用 avfilter_graph_segment_free() 释放。
  */
 typedef struct AVFilterGraphSegment {
     /**
-     * The filtergraph this segment is associated with.
-     * Set by avfilter_graph_segment_parse().
-     */
+ * 与此段关联的过滤器图表。由avfilter_graph_segment_parse()设置。
+ */
     AVFilterGraph *graph;
 
     /**
-     * A list of filter chain contained in this segment.
-     * Set in avfilter_graph_segment_parse().
-     */
+ * 该段中包含的过滤器链的列表。在avfilter_graph_segment_parse()中设置。
+ */
     AVFilterChain **chains;
     size_t       nb_chains;
 
     /**
-     * A string containing a colon-separated list of key=value options applied
-     * to all scale filters in this segment.
-     *
-     * May be set by avfilter_graph_segment_parse().
-     * The caller may free this string with av_free() and replace it with a
-     * different av_malloc()'ed string.
-     */
+ * 一个字符串，其中包含应用于此段中所有比例过滤器的以冒号分隔的 key=value 选项列表。
+ *
+ * 可以通过 avfilter_graph_segment_parse() 设置。调用者可以使用 av_free() 释放该字符串，并将其替换为不同的 av_malloc() 字符串。
+ */
     char *scale_sws_opts;
 } AVFilterGraphSegment;
 
 /**
- * Parse a textual filtergraph description into an intermediate form.
+ * 将文本过滤器图描述解析为中间形式。
  *
- * This intermediate representation is intended to be modified by the caller as
- * described in the documentation of AVFilterGraphSegment and its children, and
- * then applied to the graph either manually or with other
- * avfilter_graph_segment_*() functions. See the documentation for
- * avfilter_graph_segment_apply() for the canonical way to apply
- * AVFilterGraphSegment.
+ * 此中间表示旨在由调用者按照 AVFilterGraphSegment 及其子项的文档中所述进行修改，然后手动或使用其他 avfilter_graph_segment_*() 函数应用于图形。有关应用 AVFilterGraphSegment 的规范方法，请参阅 avfilter_graph_segment_apply() 的文档。
  *
- * @param graph Filter graph the parsed segment is associated with. Will only be
- *              used for logging and similar auxiliary purposes. The graph will
- *              not be actually modified by this function - the parsing results
- *              are instead stored in seg for further processing.
- * @param graph_str a string describing the filtergraph segment
- * @param flags reserved for future use, caller must set to 0 for now
- * @param seg A pointer to the newly-created AVFilterGraphSegment is written
- *            here on success. The graph segment is owned by the caller and must
- *            be freed with avfilter_graph_segment_free() before graph itself is
- *            freed.
+ * @param graph 与解析的段关联的过滤器图。仅用于日志记录和类似的辅助目的。该函数实际上不会修改图表 - 解析结果会存储在 seg 中以供进一步处理。
+ * @param graph_str 描述filtergraph段的字符串
+ * @param flags 保留供将来使用，调用者现在必须设置为0
+ * @param seg 如果成功，则在此写入指向新创建的AVFilterGraphSegment的指针。图段由调用者拥有，并且必须在图本身被释放之前使用 avfilter_graph_segment_free() 释放。
  *
- * @retval "non-negative number" success
- * @retval "negative error code" failure
+ * @retval "non-negative 编号“成功
+ * @retval "negative 错误代码”失败
  */
 int avfilter_graph_segment_parse(AVFilterGraph *graph, const char *graph_str,
                                  int flags, AVFilterGraphSegment **seg);
 
 /**
- * Create filters specified in a graph segment.
+ * 创建在图形段中指定的过滤器。
  *
- * Walk through the creation-pending AVFilterParams in the segment and create
- * new filter instances for them.
- * Creation-pending params are those where AVFilterParams.filter_name is
- * non-NULL (and hence AVFilterParams.filter is NULL). All other AVFilterParams
- * instances are ignored.
+ * 遍历段中待创建的 AVFilterParams 并为它们创建新的过滤器实例。创建待处理参数是 AVFilterParams.filter_name 为非 NULL 的参数（因此 AVFilterParams.filter 为 NULL）。所有其他 AVFilterParams 实例都将被忽略。
  *
- * For any filter created by this function, the corresponding
- * AVFilterParams.filter is set to the newly-created filter context,
- * AVFilterParams.filter_name and AVFilterParams.instance_name are freed and set
- * to NULL.
+ * 对于此函数创建的任何过滤器，相应的 AVFilterParams.filter 将设置为新创建的过滤器上下文，AVFilterParams.filter_name 和 AVFilterParams.instance_name 将被释放并设置为 NULL。
  *
- * @param seg the filtergraph segment to process
- * @param flags reserved for future use, caller must set to 0 for now
+ * @param seg 要处理的过滤器图段
+ * @param flags 保留供将来使用，调用者现在必须设置为 0
  *
- * @retval "non-negative number" Success, all creation-pending filters were
- *                               successfully created
- * @retval AVERROR_FILTER_NOT_FOUND some filter's name did not correspond to a
- *                                  known filter
- * @retval "another negative error code" other failures
+ * @retval "non-negative 数字” 成功，所有待创建的过滤器已成功创建
+ * @retval AVERROR_FILTER_NOT_FOUND 某些过滤器的名称与已知过滤器不对应
+ * @retval "another 负错误代码” 其他故障
  *
- * @note Calling this function multiple times is safe, as it is idempotent.
+ * @note 多次调用此函数是安全的，因为它是幂等的。
  */
 int avfilter_graph_segment_create_filters(AVFilterGraphSegment *seg, int flags);
 
 /**
- * Apply parsed options to filter instances in a graph segment.
+ * 应用解析的选项来过滤图形段中的实例。
  *
- * Walk through all filter instances in the graph segment that have option
- * dictionaries associated with them and apply those options with
- * av_opt_set_dict2(..., AV_OPT_SEARCH_CHILDREN). AVFilterParams.opts is
- * replaced by the dictionary output by av_opt_set_dict2(), which should be
- * empty (NULL) if all options were successfully applied.
+ * 遍历图形段中具有与其关联的选项字典的所有过滤器实例，并使用 av_opt_set_dict2(..., AV_OPT_SEARCH_CHILDREN) 应用这些选项。 AVFilterParams.opts 被 av_opt_set_dict2() 输出的字典替换，如果成功应用所有选项，该字典应该为空 (NULL)。
  *
- * If any options could not be found, this function will continue processing all
- * other filters and finally return AVERROR_OPTION_NOT_FOUND (unless another
- * error happens). The calling program may then deal with unapplied options as
- * it wishes.
+ * 如果找不到任何选项，该函数将继续处理所有其他过滤器，并最终返回 AVERROR_OPTION_NOT_FOUND（除非发生另一个错误）。然后，调用程序可以根据需要处理未应用的选项。
  *
- * Any creation-pending filters (see avfilter_graph_segment_create_filters())
- * present in the segment will cause this function to fail. AVFilterParams with
- * no associated filter context are simply skipped.
+ * 段中存在的任何创建待处理过滤器（请参阅 avfilter_graph_segment_create_filters()）将导致此函数失败。没有关联过滤器上下文的 AVFilterParams 会被简单地跳过。
  *
- * @param seg the filtergraph segment to process
- * @param flags reserved for future use, caller must set to 0 for now
+ * @param seg 用于处理的过滤器图段
+ * @param flags 保留供将来使用，调用者现在必须设置为 0
  *
- * @retval "non-negative number" Success, all options were successfully applied.
- * @retval AVERROR_OPTION_NOT_FOUND some options were not found in a filter
- * @retval "another negative error code" other failures
+ * @retval "non-negative 数字” 成功，所有选项均已成功应用。
+ * @retval AVERROR_OPTION_NOT_FOUND 在过滤器中未找到某些选项
+ * @retval "another 负错误代码” 其他故障
  *
- * @note Calling this function multiple times is safe, as it is idempotent.
+ * @note 多次调用此函数是安全的，因为它是幂等的。
  */
 int avfilter_graph_segment_apply_opts(AVFilterGraphSegment *seg, int flags);
 
 /**
- * Initialize all filter instances in a graph segment.
+ * 初始化图段中的所有过滤器实例。
  *
- * Walk through all filter instances in the graph segment and call
- * avfilter_init_dict(..., NULL) on those that have not been initialized yet.
+ * 遍历图形段中的所有过滤器实例，并对尚未初始化的过滤器实例调用 avfilter_init_dict(..., NULL) 。
  *
- * Any creation-pending filters (see avfilter_graph_segment_create_filters())
- * present in the segment will cause this function to fail. AVFilterParams with
- * no associated filter context or whose filter context is already initialized,
- * are simply skipped.
+ * 段中存在的任何创建待处理过滤器（请参阅 avfilter_graph_segment_create_filters()）将导致此函数失败。没有关联过滤器上下文或其过滤器上下文已初始化的 AVFilterParams 将被简单地跳过。
  *
- * @param seg the filtergraph segment to process
- * @param flags reserved for future use, caller must set to 0 for now
+ * @param seg 要处理的 FilterGraph 段
+ * @param flags 保留供将来使用，调用者现在必须设置为 0
  *
- * @retval "non-negative number" Success, all filter instances were successfully
- *                               initialized
- * @retval "negative error code" failure
+ * @retval "non-negative 数字“成功，所有过滤器实例均已成功初始化
+ * @retval "negative 错误代码”失败
  *
- * @note Calling this function multiple times is safe, as it is idempotent.
+ * @note 多次调用此函数是安全的，因为它是幂等的。
  */
 int avfilter_graph_segment_init(AVFilterGraphSegment *seg, int flags);
 
 /**
- * Link filters in a graph segment.
+ * 图形段中的链接过滤器。
  *
- * Walk through all filter instances in the graph segment and try to link all
- * unlinked input and output pads. Any creation-pending filters (see
- * avfilter_graph_segment_create_filters()) present in the segment will cause
- * this function to fail. Disabled filters and already linked pads are skipped.
+ * 遍历图形段中的所有过滤器实例，并尝试链接所有未链接的输入和输出板。段中存在的任何待创建的过滤器（请参阅 avfilter_graph_segment_create_filters()）将导致此函数失败。禁用的过滤器和已链接的焊盘将被跳过。
  *
- * Every filter output pad that has a corresponding AVFilterPadParams with a
- * non-NULL label is
- * - linked to the input with the matching label, if one exists;
- * - exported in the outputs linked list otherwise, with the label preserved.
- * Unlabeled outputs are
- * - linked to the first unlinked unlabeled input in the next non-disabled
- *   filter in the chain, if one exists
- * - exported in the outputs linked list otherwise, with NULL label
+ * 每个具有相应 AVFilterPadParams（带有非 NULL 标签）的过滤器输出板 - 链接到具有匹配标签的输入（如果存在）； - 否则导出到输出链接列表中，并保留标签。未标记的输出 - 链接到链中下一个非禁用过滤器中的第一个未链接的未标记输入（如果存在） - 在输出链表中导出，否则使用 NULL 标签
  *
- * Similarly, unlinked input pads are exported in the inputs linked list.
+ * 类似地，未链接的输入板在输入链表中导出。
  *
- * @param seg the filtergraph segment to process
- * @param flags reserved for future use, caller must set to 0 for now
- * @param[out] inputs  a linked list of all free (unlinked) inputs of the
- *                     filters in this graph segment will be returned here. It
- *                     is to be freed by the caller using avfilter_inout_free().
- * @param[out] outputs a linked list of all free (unlinked) outputs of the
- *                     filters in this graph segment will be returned here. It
- *                     is to be freed by the caller using avfilter_inout_free().
+ * @param seg 用于处理的过滤器图段
+ * @param flags 保留供将来使用，调用者现在必须设置为 0
+ * @param[out] inputs 该图段中过滤器的所有空闲（未链接）输入的链接列表将在此处返回。它由调用者使用 avfilter_inout_free() 释放。
+ * @param[out] outputs 此处将返回此图段中过滤器的所有空闲（未链接）输出的链接列表。它由调用者使用 avfilter_inout_free() 释放。
  *
- * @retval "non-negative number" success
- * @retval "negative error code" failure
+ * @retval "non-negative 编号“成功
+ * @retval "negative 错误代码”失败
  *
- * @note Calling this function multiple times is safe, as it is idempotent.
+ * @note 多次调用此函数是安全的，因为它是幂等的。
  */
 int avfilter_graph_segment_link(AVFilterGraphSegment *seg, int flags,
                                 AVFilterInOut **inputs,
                                 AVFilterInOut **outputs);
 
 /**
- * Apply all filter/link descriptions from a graph segment to the associated filtergraph.
+ * 将图形段中的所有过滤器/链接描述应用到关联的过滤器图形。
  *
- * This functions is currently equivalent to calling the following in sequence:
- * - avfilter_graph_segment_create_filters();
- * - avfilter_graph_segment_apply_opts();
- * - avfilter_graph_segment_init();
- * - avfilter_graph_segment_link();
- * failing if any of them fails. This list may be extended in the future.
+ * 该函数目前相当于按顺序调用以下函数： - avfilter_graph_segment_create_filters(); - avfilter_graph_segment_apply_opts(); - avfilter_graph_segment_init(); - avfilter_graph_segment_link();如果其中任何一个失败，则失败。该列表将来可能会扩展。
  *
- * Since the above functions are idempotent, the caller may call some of them
- * manually, then do some custom processing on the filtergraph, then call this
- * function to do the rest.
+ * 由于上述函数是幂等的，调用者可能会手动调用其中一些函数，然后对filtergraph进行一些自定义处理，然后调用此函数来完成其余的操作。
  *
- * @param seg the filtergraph segment to process
- * @param flags reserved for future use, caller must set to 0 for now
- * @param[out] inputs passed to avfilter_graph_segment_link()
- * @param[out] outputs passed to avfilter_graph_segment_link()
+ * @param seg 要处理的 filtergraph 段
+ * @param flags 保留供将来使用，调用者现在必须设置为 0
+ * @param[out] inputs 传递给 avfilter_graph_segment_link()
+ * @param[out] outputs 传递给 avfilter_graph_segment_link()
  *
- * @retval "non-negative number" success
- * @retval "negative error code" failure
+ * @retval "non-negative 数字“成功
+ * @retval "negative 错误代码”失败
  *
- * @note Calling this function multiple times is safe, as it is idempotent.
+ * @note 多次调用此函数是安全的，因为它是幂等的。
  */
 int avfilter_graph_segment_apply(AVFilterGraphSegment *seg, int flags,
                                  AVFilterInOut **inputs,
                                  AVFilterInOut **outputs);
 
 /**
- * Free the provided AVFilterGraphSegment and everything associated with it.
+ * 释放提供的 AVFilterGraphSegment 以及与之相关的所有内容。
  *
- * @param seg double pointer to the AVFilterGraphSegment to be freed. NULL will
- * be written to this pointer on exit from this function.
+ * @param seg 指向要释放的 AVFilterGraphSegment 的双指针。退出该函数时，NULL 将被写入该指针。
  *
- * @note
- * The filter contexts (AVFilterParams.filter) are owned by AVFilterGraph rather
- * than AVFilterGraphSegment, so they are not freed.
+ * @note 过滤器上下文 (AVFilterParams.filter) 由 AVFilterGraph 而不是 AVFilterGraphSegment 所有，因此它们不会被释放。
  */
 void avfilter_graph_segment_free(AVFilterGraphSegment **seg);
 
 /**
- * Send a command to one or more filter instances.
+ * 向一个或多个过滤器实例发送命令。
  *
- * @param graph  the filter graph
- * @param target the filter(s) to which the command should be sent
- *               "all" sends to all filters
- *               otherwise it can be a filter or filter instance name
- *               which will send the command to all matching filters.
- * @param cmd    the command to send, for handling simplicity all commands must be alphanumeric only
- * @param arg    the argument for the command
- * @param res    a buffer with size res_size where the filter(s) can return a response.
+ * @param graph 过滤器图
+ * @param target 命令应发送到的过滤器 “all”发送到所有过滤器，否则它可以是过滤器或过滤器实例名称，它将命令发送到所有匹配的过滤器。
+ * @param cmd 要发送的命令，为了处理简单，所有命令都只能是字母数字
+ * @param arg 命令的参数
+ * @param res 大小为 res_size 的缓冲区，过滤器可以在其中返回响应。
  *
- * @returns >=0 on success otherwise an error code.
- *              AVERROR(ENOSYS) on unsupported commands
+ * @returns >=0 成功，否则错误代码。对不支持的命令执行 AVERROR(ENOSYS)
  */
 int avfilter_graph_send_command(AVFilterGraph *graph, const char *target, const char *cmd, const char *arg, char *res, int res_len, int flags);
 
 /**
- * Queue a command for one or more filter instances.
+ * 将一个或多个过滤器实例的命令排队。
  *
- * @param graph  the filter graph
- * @param target the filter(s) to which the command should be sent
- *               "all" sends to all filters
- *               otherwise it can be a filter or filter instance name
- *               which will send the command to all matching filters.
- * @param cmd    the command to sent, for handling simplicity all commands must be alphanumeric only
- * @param arg    the argument for the command
- * @param ts     time at which the command should be sent to the filter
+ * @param graph 过滤器图
+ * @param target 命令应发送到的过滤器 “all”发送到所有过滤器，否则它可以是过滤器或过滤器实例名称，它将命令发送到所有匹配的过滤器。
+ * @param cmd 要发送的命令，为了处理简单，所有命令只能是字母数字
+ * @param arg 命令的参数
+ * @param ts 命令应发送到过滤器的时间
  *
- * @note As this executes commands after this function returns, no return code
- *       from the filter is provided, also AVFILTER_CMD_FLAG_ONE is not supported.
+ * @note 因为此函数返回后执行命令，所以不返回提供了来自过滤器的代码，也不支持 AVFILTER_CMD_FLAG_ONE。
  */
 int avfilter_graph_queue_command(AVFilterGraph *graph, const char *target, const char *cmd, const char *arg, int flags, double ts);
 
 
 /**
- * Dump a graph into a human-readable string representation.
+ * 将图形转储为人类可读的字符串表示形式。
  *
- * @param graph    the graph to dump
- * @param options  formatting options; currently ignored
- * @return  a string, or NULL in case of memory allocation failure;
- *          the string must be freed using av_free
+ * @param graph 用于转储
+ * @param options 格式选项的图表；当前忽略
+ * @return 字符串，或者在内存分配失败的情况下忽略 NULL；必须使用 av_free 释放字符串
  */
 char *avfilter_graph_dump(AVFilterGraph *graph, const char *options);
 
 /**
- * Request a frame on the oldest sink link.
+ * 在最旧的接收器链路上请求帧。
  *
- * If the request returns AVERROR_EOF, try the next.
+ * 如果请求返回 AVERROR_EOF，请尝试下一步。
  *
- * Note that this function is not meant to be the sole scheduling mechanism
- * of a filtergraph, only a convenience function to help drain a filtergraph
- * in a balanced way under normal circumstances.
+ * 请注意，此函数并不是filtergraph的唯一调度机制，只是一个在正常情况下帮助以平衡方式耗尽filtergraph的便利函数。
  *
- * Also note that AVERROR_EOF does not mean that frames did not arrive on
- * some of the sinks during the process.
- * When there are multiple sink links, in case the requested link
- * returns an EOF, this may cause a filter to flush pending frames
- * which are sent to another sink link, although unrequested.
+ * 另请注意，AVERROR_EOF 并不意味着在此过程中帧未到达某些接收器。当存在多个接收器链接时，如果请求的链接返回 EOF，则这可能会导致过滤器刷新发送到另一个接收器链接的待处理帧（尽管未经请求）。
  *
- * @return  the return value of ff_request_frame(),
- *          or AVERROR_EOF if all links returned AVERROR_EOF
+ * @return ff_request_frame() 的返回值，如果所有链接都返回 AVERROR_EOF，则为 AVERROR_EOF
  */
 int avfilter_graph_request_oldest(AVFilterGraph *graph);
 

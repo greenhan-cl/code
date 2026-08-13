@@ -1,21 +1,21 @@
-/*
- * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
+﻿/*
+ * 复制right (c) 2006 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 #ifndef AVUTIL_LOG_H
@@ -49,9 +49,9 @@ typedef enum {
 
 enum AVClassStateFlags {
     /**
-     * Object initialization has finished and it is now in the 'runtime' stage.
-     * This affects e.g. what options can be set on the object (only
-     * AV_OPT_FLAG_RUNTIME_PARAM options can be set on initialized objects).
+     * Object initialization has finished 和 it is now 中 the 'runtime' stage.
+     * This affects e.g. what 选项 can be 设置 上 the object (only
+     * AV_OPT_标志_RUNTIME_PARAM 选项 can be 设置 上 初始化d objects).
      */
     AV_CLASS_STATE_INITIALIZED         = (1 << 0),
 };
@@ -69,109 +69,109 @@ enum AVClassStateFlags {
 struct AVOptionRanges;
 
 /**
- * Describe the class of an AVClass context structure. That is an
- * arbitrary struct of which the first field is a pointer to an
- * AVClass struct (e.g. AVCodecContext, AVFormatContext etc.).
+ * Describe the class 的 an AVClass 上下文 结构体. That is an
+ * arbitrary struct 的 which the first field is a 指针 到 an
+ * AVClass struct (e.g. AVCodec上下文, AV格式上下文 etc.).
  */
 typedef struct AVClass {
     /**
-     * The name of the class; usually it is the same name as the
-     * context structure type to which the AVClass is associated.
+     * name 的 the class; usually it is the same name as the
+     * 上下文 结构体 type 到 which the AVClass is associated.
      */
     const char* class_name;
 
     /**
-     * A pointer to a function which returns the name of a context
-     * instance ctx associated with the class.
+     * 指针 到 a function which 返回s the name 的 a 上下文
+     * instance ctx associated，使用 the class.
      */
     const char* (*item_name)(void* ctx);
 
     /**
-     * An array of options for the structure or NULL.
-     * When non-NULL, the array must be terminated by an option with a NULL
+     * 数组 的 选项 用于 the 结构体 或 NULL.
+     * 当 non-NULL, the 数组 must be terminated by an 选项，使用 a NULL
      * name.
      *
-     * @see av_set_default_options()
+     * @参见 av_设置_默认_选项()
      */
     const struct AVOption *option;
 
     /**
-     * LIBAVUTIL_VERSION with which this structure was created.
-     * This is used to allow fields to be added to AVClass without requiring
+     * LIBAVUTIL_VERSION，使用 which this 结构体 was 创建d.
+     * This is 用于 allow fields 到 be added 到 AVClass without requiring
      * major version bumps everywhere.
      */
 
     int version;
 
     /**
-     * Offset in the structure where the log level offset is stored. The log
-     * level offset is an int added to the log level for logging with this
-     * object as the context.
+     * Off设置 中 the 结构体 where the log level off设置 is stored. log
+     * level off设置 is an int added 到 the log level 用于 logging，使用 this
+     * object as the 上下文.
      *
      * 0 means there is no such variable.
      */
     int log_level_offset_offset;
 
     /**
-     * Offset in the structure where a pointer to the parent context for
-     * logging is stored. For example a decoder could pass its AVCodecContext
-     * to eval as such a parent context, which an ::av_log() implementation
-     * could then leverage to display the parent context.
+     * Off设置 中 the 结构体 where a 指针 到 the parent 上下文 for
+     * logging is stored. For example a 解码器 could pass its AVCodec上下文
+     * 到 eval as such a parent 上下文, which an ::av_log() implementation
+     * could then leverage 到 display the parent 上下文.
      *
-     * When the pointer is NULL, or this offset is zero, the object is assumed
-     * to have no parent.
+     * 当 the 指针 is NULL, 或 this off设置 is zero, the object is assumed
+     * 到 have no parent.
      */
     int parent_log_context_offset;
 
     /**
-     * Category used for visualization (like color).
+     * Category 用于 visualization (like color).
      *
-     * Only used when ::get_category() is NULL. Use this field when all
-     * instances of this class have the same category, use ::get_category()
+     * Only used 当 ::get_category() is NULL. Use this field 当 all
+     * instances 的 this class have the same category, use ::get_category()
      * otherwise.
      */
     AVClassCategory category;
 
     /**
-     * Callback to return the instance category. Use this callback when
-     * different instances of this class may have different categories,
+     * Callback 到 返回 the instance category. Use this callback 当
+     * d如果ferent instances 的 this class may have d如果ferent categories,
      * ::category otherwise.
      */
     AVClassCategory (*get_category)(void* ctx);
 
     /**
-     * Callback to return the supported/allowed ranges.
+     * Callback 到 返回 the supported/allowed ranges.
      */
     int (*query_ranges)(struct AVOptionRanges **, void *obj, const char *key, int flags);
 
     /**
-     * Return next AVOptions-enabled child or NULL
+     * 返回 next AV选项-enabled child 或 NULL
      */
     void* (*child_next)(void *obj, void *prev);
 
     /**
-     * Iterate over the AVClasses corresponding to potential AVOptions-enabled
+     * Iterate over the AVClasses corresponding 到 potential AV选项-enabled
      * children.
      *
-     * @param iter pointer to opaque iteration state. The caller must initialize
-     *             *iter to NULL before the first call.
-     * @return AVClass for the next AVOptions-enabled child or NULL if there are
+     * @param iter 指针 到 opaque iteration state. caller must 初始化
+     *             *iter 到 NULL before the first call.
+     * @返回 AVClass 用于 the next AV选项-enabled child 或 NULL 如果 there are
      *         no more such children.
      *
-     * @note The difference between ::child_next() and ::child_class_iterate()
-     *       is that ::child_next() iterates over _actual_ children of an
+     * @note d如果ference between ::child_next() 和 ::child_class_iterate()
+     *       is that ::child_next() iterates over _actual_ children 的 an
      *       _existing_ object instance, while ::child_class_iterate() iterates
-     *       over the classes of all _potential_ children of any possible
-     *       instance of this class.
+     *       over the classes 的 all _potential_ children 的 any possible
+     *       instance 的 this class.
      */
     const struct AVClass* (*child_class_iterate)(void **iter);
 
     /**
-     * When non-zero, offset in the object to an unsigned int holding object
-     * state flags, a combination of AVClassStateFlags values. The flags are
-     * updated by the object to signal its state to the generic code.
+     * 当 non-zero, off设置 中 the object 到 an unsigned int holding object
+     * state 标志, a combination 的 AVClassState标志 值. 标志 are
+     * updated by the object 到 signal its state 到 the generic code.
      *
-     * Added in version 59.41.100.
+     * Added 中 version 59.41.100.
      */
     int state_flags_offset;
 } AVClass;
@@ -187,51 +187,51 @@ typedef struct AVClass {
  */
 
 /**
- * Print no output.
+ * Print no 输出.
  */
 #define AV_LOG_QUIET    -8
 
 /**
- * Something went really wrong and we will crash now.
+ * Something went really wrong 和 we will crash now.
  */
 #define AV_LOG_PANIC     0
 
 /**
- * Something went wrong and recovery is not possible.
- * For example, no header was found for a format which depends
- * on headers or an illegal combination of parameters is used.
+ * Something went wrong 和 recovery is not possible.
+ * For example, no header was found 用于 a 格式 which depends
+ * 上 headers 或 an illegal combination 的 parameters is used.
  */
 #define AV_LOG_FATAL     8
 
 /**
- * Something went wrong and cannot losslessly be recovered.
+ * Something went wrong 和 cannot losslessly be recovered.
  * However, not all future data is affected.
  */
 #define AV_LOG_ERROR    16
 
 /**
- * Something somehow does not look correct. This may or may not
- * lead to problems. An example would be the use of '-vstrict -2'.
+ * Something somehow does not look correct. This may 或 may not
+ * lead 到 problems. example would be the use 的 '-vstrict -2'.
  */
 #define AV_LOG_WARNING  24
 
 /**
- * Standard information.
+ * Standard in格式ion.
  */
 #define AV_LOG_INFO     32
 
 /**
- * Detailed information.
+ * Detailed in格式ion.
  */
 #define AV_LOG_VERBOSE  40
 
 /**
- * Stuff which is only useful for libav* developers.
+ * Stuff which is only useful 用于 libav* developers.
  */
 #define AV_LOG_DEBUG    48
 
 /**
- * Extremely verbose debugging, useful for libav* development.
+ * Extremely verbose debugging, useful 用于 libav* development.
  */
 #define AV_LOG_TRACE    56
 
@@ -242,7 +242,7 @@ typedef struct AVClass {
  */
 
 /**
- * Sets additional colors for extended debugging sessions.
+ * 设置s additional colors 用于 extended debugging sessions.
  * @code
    av_log(ctx, AV_LOG_DEBUG|AV_LOG_C(134), "Message in purple\n");
    @endcode
@@ -252,168 +252,168 @@ typedef struct AVClass {
 #define AV_LOG_C(x) ((x) << 8)
 
 /**
- * Send the specified message to the log if the level is less than or equal
- * to the current av_log_level. By default, all logging messages are sent to
- * stderr. This behavior can be altered by setting a different logging callback
+ * Send the spec如果ied message 到 the log 如果 the level is less than 或 equal
+ * 到 the current av_log_level. By 默认, all logging messages are sent to
+ * stderr. This behavior can be altered by 设置ting a d如果ferent logging callback
  * function.
- * @see av_log_set_callback
+ * @参见 av_log_设置_callback
  *
- * @param avcl A pointer to an arbitrary struct of which the first field is a
- *        pointer to an AVClass struct or NULL if general log.
- * @param level The importance level of the message expressed using a @ref
+ * @param avcl 指针 到 an arbitrary struct 的 which the first field is a
+ *        指针 到 an AVClass struct 或 NULL 如果 general log.
+ * @param level importance level 的 the message expressed using a @ref
  *        lavu_log_constants "Logging Constant".
- * @param fmt The format string (printf-compatible) that specifies how
- *        subsequent arguments are converted to output.
+ * @param fmt 格式 string (printf-compatible) that spec如果ies how
+ *        subsequent arguments are 转换ed 到 输出.
  */
 void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
 
 /**
- * Send the specified message to the log once with the initial_level and then with
- * the subsequent_level. By default, all logging messages are sent to
- * stderr. This behavior can be altered by setting a different logging callback
+ * Send the spec如果ied message 到 the log once，使用 the initial_level 和 then with
+ * the subsequent_level. By 默认, all logging messages are sent to
+ * stderr. This behavior can be altered by 设置ting a d如果ferent logging callback
  * function.
- * @see av_log
+ * @参见 av_log
  *
- * @param avcl A pointer to an arbitrary struct of which the first field is a
- *        pointer to an AVClass struct or NULL if general log.
- * @param initial_level importance level of the message expressed using a @ref
- *        lavu_log_constants "Logging Constant" for the first occurrence.
- * @param subsequent_level importance level of the message expressed using a @ref
+ * @param avcl 指针 到 an arbitrary struct 的 which the first field is a
+ *        指针 到 an AVClass struct 或 NULL 如果 general log.
+ * @param initial_level importance level 的 the message expressed using a @ref
+ *        lavu_log_constants "Logging Constant" 用于 the first occurrence.
+ * @param subsequent_level importance level 的 the message expressed using a @ref
  *        lavu_log_constants "Logging Constant" after the first occurrence.
- * @param fmt The format string (printf-compatible) that specifies how
- *        subsequent arguments are converted to output.
- * @param state a variable to keep trak of if a message has already been printed
- *        this must be initialized to 0 before the first use. The same state
+ * @param fmt 格式 string (printf-compatible) that spec如果ies how
+ *        subsequent arguments are 转换ed 到 输出.
+ * @param state a variable 到 keep trak 的 如果 a message has already been printed
+ *        this must be 初始化d 到 0 before the first use. same state
  *        must not be accessed by 2 Threads simultaneously.
  */
 void av_log_once(void* avcl, int initial_level, int subsequent_level, int *state, const char *fmt, ...) av_printf_format(5, 6);
 
 
 /**
- * Send the specified message to the log if the level is less than or equal
- * to the current av_log_level. By default, all logging messages are sent to
- * stderr. This behavior can be altered by setting a different logging callback
+ * Send the spec如果ied message 到 the log 如果 the level is less than 或 equal
+ * 到 the current av_log_level. By 默认, all logging messages are sent to
+ * stderr. This behavior can be altered by 设置ting a d如果ferent logging callback
  * function.
- * @see av_log_set_callback
+ * @参见 av_log_设置_callback
  *
- * @param avcl A pointer to an arbitrary struct of which the first field is a
- *        pointer to an AVClass struct.
- * @param level The importance level of the message expressed using a @ref
+ * @param avcl 指针 到 an arbitrary struct 的 which the first field is a
+ *        指针 到 an AVClass struct.
+ * @param level importance level 的 the message expressed using a @ref
  *        lavu_log_constants "Logging Constant".
- * @param fmt The format string (printf-compatible) that specifies how
- *        subsequent arguments are converted to output.
- * @param vl The arguments referenced by the format string.
+ * @param fmt 格式 string (printf-compatible) that spec如果ies how
+ *        subsequent arguments are 转换ed 到 输出.
+ * @param vl arguments 引用d by the 格式 string.
  */
 void av_vlog(void *avcl, int level, const char *fmt, va_list vl);
 
 /**
- * Get the current log level
+ * 获取 the current log level
  *
- * @see lavu_log_constants
+ * @参见 lavu_log_constants
  *
- * @return Current log level
+ * @返回 Current log level
  */
 int av_log_get_level(void);
 
 /**
- * Set the log level
+ * 设置 the log level
  *
- * @see lavu_log_constants
+ * @参见 lavu_log_constants
  *
  * @param level Logging level
  */
 void av_log_set_level(int level);
 
 /**
- * Set the logging callback
+ * 设置 the logging callback
  *
- * @note The callback must be thread safe, even if the application does not use
+ * @note callback must be thread safe, even 如果 the application does not use
  *       threads itself as some codecs are multithreaded.
  *
- * @see av_log_default_callback
+ * @参见 av_log_默认_callback
  *
- * @param callback A logging function with a compatible signature.
+ * @param callback logging function，使用 a compatible signature.
  */
 void av_log_set_callback(void (*callback)(void*, int, const char*, va_list));
 
 /**
- * Default logging callback
+ * 默认 logging callback
  *
- * It prints the message to stderr, optionally colorizing it.
+ * It prints the message 到 stderr, 可选ly colorizing it.
  *
- * @param avcl A pointer to an arbitrary struct of which the first field is a
- *        pointer to an AVClass struct.
- * @param level The importance level of the message expressed using a @ref
+ * @param avcl 指针 到 an arbitrary struct 的 which the first field is a
+ *        指针 到 an AVClass struct.
+ * @param level importance level 的 the message expressed using a @ref
  *        lavu_log_constants "Logging Constant".
- * @param fmt The format string (printf-compatible) that specifies how
- *        subsequent arguments are converted to output.
- * @param vl The arguments referenced by the format string.
+ * @param fmt 格式 string (printf-compatible) that spec如果ies how
+ *        subsequent arguments are 转换ed 到 输出.
+ * @param vl arguments 引用d by the 格式 string.
  */
 void av_log_default_callback(void *avcl, int level, const char *fmt,
                              va_list vl);
 
 /**
- * Return the context name
+ * 返回 the 上下文 name
  *
- * @param  ctx The AVClass context
+ * @param  ctx AVClass 上下文
  *
- * @return The AVClass class_name
+ * @返回 AVClass class_name
  */
 const char* av_default_item_name(void* ctx);
 AVClassCategory av_default_get_category(void *ptr);
 
 /**
- * Format a line of log the same way as the default callback.
- * @param line          buffer to receive the formatted line
- * @param line_size     size of the buffer
- * @param print_prefix  used to store whether the prefix must be printed;
- *                      must point to a persistent integer initially set to 1
+ * 格式 a line 的 log the same way as the 默认 callback.
+ * @param line          缓冲区 到 receive the 格式ted line
+ * @param line_大小     大小 的 the 缓冲区
+ * @param print_prefix  用于 store 是否 the prefix must be printed;
+ *                      must point 到 a persistent integer initially 设置 到 1
  */
 void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
                         char *line, int line_size, int *print_prefix);
 
 /**
- * Format a line of log the same way as the default callback.
- * @param line          buffer to receive the formatted line;
- *                      may be NULL if line_size is 0
- * @param line_size     size of the buffer; at most line_size-1 characters will
- *                      be written to the buffer, plus one null terminator
- * @param print_prefix  used to store whether the prefix must be printed;
- *                      must point to a persistent integer initially set to 1
- * @return Returns a negative value if an error occurred, otherwise returns
- *         the number of characters that would have been written for a
- *         sufficiently large buffer, not including the terminating null
- *         character. If the return value is not less than line_size, it means
- *         that the log message was truncated to fit the buffer.
+ * 格式 a line 的 log the same way as the 默认 callback.
+ * @param line          缓冲区 到 receive the 格式ted line;
+ *                      may be NULL 如果 line_大小 is 0
+ * @param line_大小     大小 的 the 缓冲区; at most line_大小-1 characters will
+ *                      be written 到 the 缓冲区, plus one null terminator
+ * @param print_prefix  用于 store 是否 the prefix must be printed;
+ *                      must point 到 a persistent integer initially 设置 到 1
+ * @返回 返回 a negative 值 如果 an error occurred, otherwise 返回s
+ *         the 数量 的 characters that would have been written 用于 a
+ *         sufficiently large 缓冲区, not including the terminating null
+ *         character. 如果 the 返回 值 is not less than line_大小, it means
+ *         that the log message was truncated 到 fit the 缓冲区.
  */
 int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
                         char *line, int line_size, int *print_prefix);
 
 /**
- * Skip repeated messages, this requires the user app to use av_log() instead of
- * (f)printf as the 2 would otherwise interfere and lead to
- * "Last message repeated x times" messages below (f)printf messages with some
+ * Skip repeated messages, this requires the user app 到 use av_log() instead of
+ * (f)printf as the 2 would otherwise interfere 和 lead to
+ * "Last message repeated x times" messages below (f)printf messages，使用 some
  * bad luck.
- * Also to receive the last, "last repeated" line if any, the user app must
+ * Also 到 receive the last, "last repeated" line 如果 any, the user app must
  * call av_log(NULL, AV_LOG_QUIET, "%s", ""); at the end
  */
 #define AV_LOG_SKIP_REPEATED 1
 
 /**
- * Include the log severity in messages originating from codecs.
+ * Include the log severity 中 messages originating，来自 codecs.
  *
- * Results in messages such as:
- * [rawvideo @ 0xDEADBEEF] [error] encode did not produce valid pts
+ * Results 中 messages such as:
+ * [raw视频 @ 0xDEADBEEF] [error] encode did not produce valid pts
  */
 #define AV_LOG_PRINT_LEVEL 2
 
 /**
- * Include system time in log output.
+ * Include system time 中 log 输出.
  */
 #define AV_LOG_PRINT_TIME 4
 
 /**
- * Include system date and time in log output.
+ * Include system date 和 time 中 log 输出.
  */
 #define AV_LOG_PRINT_DATETIME 8
 

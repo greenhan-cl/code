@@ -1,21 +1,21 @@
-/*
- * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
+﻿/*
+ * 复制right (c) 2006 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 #ifndef AVUTIL_PIXFMT_H
@@ -23,7 +23,7 @@
 
 /**
  * @file
- * pixel format definitions
+ * 像素格式 definitions
  */
 
 #include "libavutil/avconfig.h"
@@ -33,39 +33,39 @@
 #define AVPALETTE_COUNT 256
 
 /**
- * Maximum number of planes in any pixel format.
- * This should be used when a maximum is needed, but code should not
- * be written to require a maximum for no good reason.
+ * Maximum 数量 的 planes 中 any 像素格式.
+ * This should be used 当 a maximum is needed, but code should not
+ * be written 到 require a maximum 用于 no good reason.
  */
 #define AV_VIDEO_MAX_PLANES 4
 
 /**
- * Pixel format.
+ * 像素格式.
  *
  * @note
- * AV_PIX_FMT_RGB32 is handled in an endian-specific manner. An RGBA
+ * AV_PIX_FMT_RGB32 is handled 中 an endian-spec如果ic manner. RGBA
  * color is put together as:
- *  (A << 24) | (R << 16) | (G << 8) | B
- * This is stored as BGRA on little-endian CPU architectures and ARGB on
+ *  (<< 24) | (R << 16) | (G << 8) | B
+ * This is stored as BGR上 little-endian CPU architectures 和 ARGB on
  * big-endian CPUs.
  *
  * @note
- * If the resolution is not a multiple of the chroma subsampling factor
+ * 如果 the resolution is not a multiple 的 the chroma subsampling factor
  * then the chroma plane resolution must be rounded up.
  *
  * @par
- * When the pixel format is palettized RGB32 (AV_PIX_FMT_PAL8), the palettized
- * image data is stored in AVFrame.data[0]. The palette is transported in
- * AVFrame.data[1], is 1024 bytes long (256 4-byte entries) and is
- * formatted the same as in AV_PIX_FMT_RGB32 described above (i.e., it is
- * also endian-specific). Note also that the individual RGB32 palette
- * components stored in AVFrame.data[1] should be in the range 0..255.
- * This is important as many custom PAL8 video codecs that were designed
- * to run on the IBM VGA graphics adapter use 6-bit palette components.
+ * 当 the 像素格式 is palettized RGB32 (AV_PIX_FMT_PAL8), the palettized
+ * image data is stored 中 AV帧.data[0]. palette is transported in
+ * AV帧.data[1], is 1024 bytes long (256 4-byte entries) 和 is
+ * 格式ted the same as 中 AV_PIX_FMT_RGB32 described above (i.e., it is
+ * also endian-spec如果ic). Note also that the individual RGB32 palette
+ * components stored 中 AV帧.data[1] should be 中 the range 0..255.
+ * This is important as many custom PAL8 视频 codecs that were designed
+ * 到 run 上 the IBM VGgraphics adapter use 6-bit palette components.
  *
  * @par
- * For all the 8 bits per pixel formats, an RGB32 palette is in data[1] like
- * for pal8. This palette is filled in automatically by the function
+ * For all the 8 bits per 像素格式s, an RGB32 palette is 中 data[1] like
+ * 用于 pal8. This palette is filled 中 automatically by the function
  * allocating the picture.
  */
 enum AVPixelFormat {
@@ -120,7 +120,7 @@ enum AVPixelFormat {
     AV_PIX_FMT_BGR555LE,  ///< packed BGR 5:5:5, 16bpp, (msb)1X 5B 5G 5R(lsb), little-endian, X=unused/undefined
 
     /**
-     *  Hardware acceleration through VA-API, data[3] contains a
+     *  硬件 acceleration through VA-API, data[3] 包含 a
      *  VASurfaceID.
      */
     AV_PIX_FMT_VAAPI,
@@ -146,9 +146,9 @@ enum AVPixelFormat {
     AV_PIX_FMT_BGR48LE,   ///< packed RGB 16:16:16, 48bpp, 16B, 16G, 16R, the 2-byte value for each R/G/B component is stored as little-endian
 
     /**
-     * The following 12 formats have the disadvantage of needing 1 format for each bit depth.
-     * Notice that each 9/10 bits sample is stored in 16 bits with extra padding.
-     * If you want to support multiple bit depths, then using AV_PIX_FMT_YUV420P16* with the bpp stored separately is better.
+     * following 12 格式s have the disadvantage 的 needing 1 格式 用于 each bit depth.
+     * Notice that each 9/10 bits 采样 is stored 中 16 bits，使用 extra padding.
+     * 如果 you want 到 support multiple bit depths, then using AV_PIX_FMT_YUV420P16*，使用 the bpp stored separately is better.
      */
     AV_PIX_FMT_YUV420P9BE, ///< planar YUV 4:2:0, 13.5bpp, (1 Cr & Cb sample per 2x2 Y samples), big-endian
     AV_PIX_FMT_YUV420P9LE, ///< planar YUV 4:2:0, 13.5bpp, (1 Cr & Cb sample per 2x2 Y samples), little-endian
@@ -213,49 +213,49 @@ enum AVPixelFormat {
     AV_PIX_FMT_GBRAP16BE,    ///< planar GBRA 4:4:4:4 64bpp, big-endian
     AV_PIX_FMT_GBRAP16LE,    ///< planar GBRA 4:4:4:4 64bpp, little-endian
     /**
-     * HW acceleration through QSV, data[3] contains a pointer to the
-     * mfxFrameSurface1 structure.
+     * HW acceleration through QSV, data[3] 包含 a 指针 到 the
+     * mfx帧Surface1 结构体.
      *
      * Before FFmpeg 5.0:
-     * mfxFrameSurface1.Data.MemId contains a pointer when importing
-     * the following frames as QSV frames:
+     * mfx帧Surface1.Data.MemId 包含 a 指针 当 importing
+     * the following 帧s as QSV 帧s:
      *
      * VAAPI:
-     * mfxFrameSurface1.Data.MemId contains a pointer to VASurfaceID
+     * mfx帧Surface1.Data.MemId 包含 a 指针 到 VASurfaceID
      *
      * DXVA2:
-     * mfxFrameSurface1.Data.MemId contains a pointer to IDirect3DSurface9
+     * mfx帧Surface1.Data.MemId 包含 a 指针 到 IDirect3DSurface9
      *
-     * FFmpeg 5.0 and above:
-     * mfxFrameSurface1.Data.MemId contains a pointer to the mfxHDLPair
-     * structure when importing the following frames as QSV frames:
+     * FFmpeg 5.0 和 above:
+     * mfx帧Surface1.Data.MemId 包含 a 指针 到 the mfxHDLPair
+     * 结构体 当 importing the following 帧s as QSV 帧s:
      *
      * VAAPI:
-     * mfxHDLPair.first contains a VASurfaceID pointer.
+     * mfxHDLPair.first 包含 a VASurfaceID 指针.
      * mfxHDLPair.second is always MFX_INFINITE.
      *
      * DXVA2:
-     * mfxHDLPair.first contains IDirect3DSurface9 pointer.
+     * mfxHDLPair.first 包含 IDirect3DSurface9 指针.
      * mfxHDLPair.second is always MFX_INFINITE.
      *
      * D3D11:
-     * mfxHDLPair.first contains a ID3D11Texture2D pointer.
-     * mfxHDLPair.second contains the texture array index of the frame if the
-     * ID3D11Texture2D is an array texture, or always MFX_INFINITE if it is a
+     * mfxHDLPair.first 包含 a ID3D11Texture2D 指针.
+     * mfxHDLPair.second 包含 texture 数组 index 的 the 帧 如果 the
+     * ID3D11Texture2D is an 数组 texture, 或 always MFX_INFINITE 如果 it is a
      * normal texture.
      */
     AV_PIX_FMT_QSV,
     /**
-     * HW acceleration though MMAL, data[3] contains a pointer to the
-     * MMAL_BUFFER_HEADER_T structure.
+     * HW acceleration though MMAL, data[3] 包含 a 指针 到 the
+     * MMAL_缓冲区_HEADER_T 结构体.
      */
     AV_PIX_FMT_MMAL,
 
     AV_PIX_FMT_D3D11VA_VLD,  ///< HW decoding through Direct3D11 via old API, Picture.data[3] contains a ID3D11VideoDecoderOutputView pointer
 
     /**
-     * HW acceleration through CUDA. data[i] contain CUdeviceptr pointers
-     * exactly as for system memory frames.
+     * HW acceleration through CUDA. data[i] contain CU设备ptr 指针s
+     * exactly as 用于 system 内存 帧s.
      */
     AV_PIX_FMT_CUDA,
 
@@ -324,14 +324,14 @@ enum AVPixelFormat {
     AV_PIX_FMT_P016BE, ///< like NV12, with 16bpp per component, big-endian
 
     /**
-     * Hardware surfaces for Direct3D11.
+     * 硬件 surfaces 用于 Direct3D11.
      *
-     * This is preferred over the legacy AV_PIX_FMT_D3D11VA_VLD. The new D3D11
-     * hwaccel API and filtering support AV_PIX_FMT_D3D11 only.
+     * This is preferred over the legacy AV_PIX_FMT_D3D11VA_VLD. new D3D11
+     * hwaccel API 和 filtering support AV_PIX_FMT_D3D11 only.
      *
-     * data[0] contains a ID3D11Texture2D pointer, and data[1] contains the
-     * texture array index of the frame as intptr_t if the ID3D11Texture2D is
-     * an array texture (or always 0 if it's a normal texture).
+     * data[0] 包含 a ID3D11Texture2D 指针, 和 data[1] 包含
+     * texture 数组 index 的 the 帧 as intptr_t 如果 the ID3D11Texture2D is
+     * an 数组 texture (or always 0 如果 it's a normal texture).
      */
     AV_PIX_FMT_D3D11,
 
@@ -344,16 +344,16 @@ enum AVPixelFormat {
     AV_PIX_FMT_GBRAPF32LE, ///< IEEE-754 single precision planar GBRA 4:4:4:4, 128bpp, little-endian
 
     /**
-     * DRM-managed buffers exposed through PRIME buffer sharing.
+     * DRM-managed 缓冲区 exposed through PRIME 缓冲区 sharing.
      *
-     * data[0] points to an AVDRMFrameDescriptor.
+     * data[0] points 到 an AVDRM帧描述符.
      */
     AV_PIX_FMT_DRM_PRIME,
     /**
-     * Hardware surfaces for OpenCL.
+     * 硬件 surfaces 用于 OpenCL.
      *
-     * data[i] contain 2D image objects (typed in C as cl_mem, used
-     * in OpenCL as image2d_t) for each plane of the surface.
+     * data[i] contain 2D image objects (typed 中 C as cl_mem, used
+     * 中 OpenCL as image2d_t) 用于 each plane 的 the surface.
      */
     AV_PIX_FMT_OPENCL,
 
@@ -372,9 +372,9 @@ enum AVPixelFormat {
     AV_PIX_FMT_NV42,      ///< as above, but U and V bytes are swapped
 
     /**
-     * Vulkan hardware images.
+     * Vulkan 硬件 images.
      *
-     * data[0] points to an AVVkFrame
+     * data[0] points 到 an AVVk帧
      */
     AV_PIX_FMT_VULKAN,
 
@@ -433,9 +433,9 @@ enum AVPixelFormat {
     AV_PIX_FMT_GBRAP14LE,  ///< planar GBR 4:4:4:4 56bpp, little-endian
 
     /**
-     * Hardware surfaces for Direct3D 12.
+     * 硬件 surfaces 用于 Direct3D 12.
      *
-     * data[0] points to an AVD3D12VAFrame
+     * data[0] points 到 an AVD3D12VA帧
      */
     AV_PIX_FMT_D3D12,
 
@@ -472,7 +472,7 @@ enum AVPixelFormat {
     AV_PIX_FMT_GRAYF16LE,  ///< IEEE-754 half precision Y, 16bpp, little-endian
 
     /**
-     * HW acceleration through AMF. data[0] contain AMFSurface pointer
+     * HW acceleration through AMF. data[0] contain AMFSurface 指针
      */
     AV_PIX_FMT_AMF_SURFACE,
 
@@ -500,8 +500,8 @@ enum AVPixelFormat {
     AV_PIX_FMT_OHCODEC, /// hardware decoding through openharmony
 
     /**
-     * CUDA block-linear (opaque). data[0] is a CUarray in block-linear layout,
-     * e.g. from NVDEC opaque decode. Use for zero-copy to NVENC (CUDA array input).
+     * CUDblock-linear (opaque). data[0] is a CU数组 中 block-linear layout,
+     * e.g.，来自 NVDEC opaque decode. Use 用于 zero-复制 到 NVENC (CUD数组 输入).
      */
     AV_PIX_FMT_CUARRAY,
 
@@ -636,8 +636,8 @@ enum AVPixelFormat {
 #define AV_PIX_FMT_RGBA128    AV_PIX_FMT_NE(RGBA128BE, RGBA128LE)
 
 /**
-  * Chromaticity coordinates of the source primaries.
-  * These values match the ones defined by ISO/IEC 23091-2_2019 subclause 8.1 and ITU-T H.273.
+  * Chromaticity coordinates 的 the source primaries.
+  * These 值 match the ones defined by ISO/IEC 23091-2_2019 subclause 8.1 和 ITU-T H.273.
   */
 enum AVColorPrimaries {
     AVCOL_PRI_RESERVED0   = 0,
@@ -659,7 +659,7 @@ enum AVColorPrimaries {
     AVCOL_PRI_JEDEC_P22   = AVCOL_PRI_EBU3213,
     AVCOL_PRI_NB,               ///< Not part of ABI
 
-    /* The following entries are not part of H.273, but custom extensions */
+    /* following entries are not part 的 H.273, but custom extensions */
     AVCOL_PRI_EXT_BASE     = 256,
     AVCOL_PRI_V_GAMUT      = AVCOL_PRI_EXT_BASE,
     AVCOL_PRI_EXT_NB            ///< Not part of ABI
@@ -667,7 +667,7 @@ enum AVColorPrimaries {
 
 /**
  * Color Transfer Characteristic.
- * These values match the ones defined by ISO/IEC 23091-2_2019 subclause 8.2.
+ * These 值 match the ones defined by ISO/IEC 23091-2_2019 subclause 8.2.
  */
 enum AVColorTransferCharacteristic {
     AVCOL_TRC_RESERVED0    = 0,
@@ -693,7 +693,7 @@ enum AVColorTransferCharacteristic {
     AVCOL_TRC_ARIB_STD_B67 = 18, ///< ARIB STD-B67, known as "Hybrid log-gamma"
     AVCOL_TRC_NB,                ///< Not part of ABI
 
-    /* The following entries are not part of H.273, but custom extensions */
+    /* following entries are not part 的 H.273, but custom extensions */
     AVCOL_TRC_EXT_BASE     = 256,
     AVCOL_TRC_V_LOG        = AVCOL_TRC_EXT_BASE,
     AVCOL_TRC_EXT_NB             ///< Not part of ABI
@@ -701,7 +701,7 @@ enum AVColorTransferCharacteristic {
 
 /**
  * YUV colorspace type.
- * These values match the ones defined by ISO/IEC 23091-2_2019 subclause 8.3.
+ * These 值 match the ones defined by ISO/IEC 23091-2_2019 subclause 8.3.
  */
 enum AVColorSpace {
     AVCOL_SPC_RGB         = 0,  ///< order of coefficients is actually GBR, also IEC 61966-2-1 (sRGB), YZX and ST 428-1
@@ -727,75 +727,75 @@ enum AVColorSpace {
 };
 
 /**
- * Visual content value range.
+ * Visual content 值 range.
  *
- * These values are based on definitions that can be found in multiple
- * specifications, such as ITU-T BT.709 (3.4 - Quantization of RGB, luminance
- * and colour-difference signals), ITU-T BT.2020 (Table 5 - Digital
- * Representation) as well as ITU-T BT.2100 (Table 9 - Digital 10- and 12-bit
- * integer representation). At the time of writing, the BT.2100 one is
+ * These 值 are based 上 definitions that can be found 中 multiple
+ * spec如果ications, such as ITU-T BT.709 (3.4 - Quantization 的 RGB, luminance
+ * 和 colour-d如果ference signals), ITU-T BT.2020 (Table 5 - Digital
+ * Representation) as well as ITU-T BT.2100 (Table 9 - Digital 10- 和 12-bit
+ * integer representation). At the time 的 writing, the BT.2100 one is
  * recommended, as it also defines the full range representation.
  *
  * Common definitions:
- *   - For RGB and luma planes such as Y in YCbCr and I in ICtCp,
- *     'E' is the original value in range of 0.0 to 1.0.
- *   - For chroma planes such as Cb,Cr and Ct,Cp, 'E' is the original
- *     value in range of -0.5 to 0.5.
- *   - 'n' is the output bit depth.
- *   - For additional definitions such as rounding and clipping to valid n
- *     bit unsigned integer range, please refer to BT.2100 (Table 9).
+ *   - For RGB 和 luma planes such as Y 中 YCbCr 和 I 中 ICtCp,
+ *     'E' is the original 值 中 range 的 0.0 到 1.0.
+ *   - For chroma planes such as Cb,Cr 和 Ct,Cp, 'E' is the original
+ *     值 中 range 的 -0.5 到 0.5.
+ *   - 'n' is the 输出 bit depth.
+ *   - For additional definitions such as rounding 和 clipping 到 valid n
+ *     bit unsigned integer range, please refer 到 BT.2100 (Table 9).
  */
 enum AVColorRange {
     AVCOL_RANGE_UNSPECIFIED = 0,
 
     /**
-     * Narrow or limited range content.
+     * Narrow 或 limited range content.
      *
      * - For luma planes:
      *
      *       (219 * E + 16) * 2^(n-8)
      *
-     *   F.ex. the range of 16-235 for 8 bits
+     *   F.ex. the range 的 16-235 用于 8 bits
      *
      * - For chroma planes:
      *
      *       (224 * E + 128) * 2^(n-8)
      *
-     *   F.ex. the range of 16-240 for 8 bits
+     *   F.ex. the range 的 16-240 用于 8 bits
      */
     AVCOL_RANGE_MPEG        = 1,
 
     /**
      * Full range content.
      *
-     * - For RGB and luma planes:
+     * - For RGB 和 luma planes:
      *
      *       (2^n - 1) * E
      *
-     *   F.ex. the range of 0-255 for 8 bits
+     *   F.ex. the range 的 0-255 用于 8 bits
      *
      * - For chroma planes:
      *
      *       (2^n - 1) * E + 2^(n - 1)
      *
-     *   F.ex. the range of 1-255 for 8 bits
+     *   F.ex. the range 的 1-255 用于 8 bits
      */
     AVCOL_RANGE_JPEG        = 2,
     AVCOL_RANGE_NB               ///< Not part of ABI
 };
 
 /**
- * Location of chroma samples.
+ * Location 的 chroma 采样s.
  *
- * Illustration showing the location of the first (top left) chroma sample of the
+ * Illustration showing the location 的 the first (top left) chroma 采样 的 the
  * image, the left shows only luma, the right
- * shows the location of the chroma sample, the 2 could be imagined to overlay
- * each other but are drawn separately due to limitations of ASCII
+ * shows the location 的 the chroma 采样, the 2 could be imagined 到 overlay
+ * each other but are drawn separately due 到 limitations 的 ASCII
  *
- *                1st 2nd       1st 2nd horizontal luma sample positions
+ *                1st 2nd       1st 2nd horizontal luma 采样 positions
  *                 v   v         v   v
  *                 ______        ______
- *1st luma line > |X   X ...    |3 4 X ...     X are luma samples,
+ *1st luma line > |X   X ...    |3 4 X ...     X are luma 采样s,
  *                |             |1 2           1-6 are possible chroma positions
  *2nd luma line > |X   X ...    |5 6 X ...     0 is undefined/unknown position
  */
@@ -811,7 +811,7 @@ enum AVChromaLocation {
 };
 
 /**
- * Correlation between the alpha channel and color values.
+ * Correlation between the alpha 声道 和 color 值.
  */
 enum AVAlphaMode {
     AVALPHA_MODE_UNSPECIFIED   = 0, ///< Unknown alpha handling, or no alpha channel

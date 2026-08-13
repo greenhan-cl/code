@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -24,91 +24,80 @@ typedef struct AVThreadMessageQueue AVThreadMessageQueue;
 typedef enum AVThreadMessageFlags {
 
     /**
-     * Perform non-blocking operation.
-     * If this flag is set, send and recv operations are non-blocking and
-     * return AVERROR(EAGAIN) immediately if they can not proceed.
+     * 执行非阻塞操作。设置后，send 和 recv 为非阻塞操作；无法继续时立即返回 AVERROR(EAGAIN)。
      */
     AV_THREAD_MESSAGE_NONBLOCK = 1,
 
 } AVThreadMessageFlags;
 
 /**
- * Allocate a new message queue.
+ * 分配新消息队列。
  *
- * @param mq      pointer to the message queue
- * @param nelem   maximum number of elements in the queue
- * @param elsize  size of each element in the queue
- * @return  >=0 for success; <0 for error, in particular AVERROR(ENOSYS) if
- *          lavu was built without thread support
+ * @param mq      指向消息队列的指针
+ * @param nelem   队列中的最大元素数
+ * @param elsize  每个队列元素的大小
+ * @return 成功返回 >=0；出错返回 <0；lavu 构建时未启用线程支持时返回 AVERROR(ENOSYS)
  */
 int av_thread_message_queue_alloc(AVThreadMessageQueue **mq,
                                   unsigned nelem,
                                   unsigned elsize);
 
 /**
- * Free a message queue.
+ * 释放消息队列。
  *
- * The message queue must no longer be in use by another thread.
+ * 消息队列必须不再被其他线程使用。
  */
 void av_thread_message_queue_free(AVThreadMessageQueue **mq);
 
 /**
- * Send a message on the queue.
+ * 向队列发送消息。
  */
 int av_thread_message_queue_send(AVThreadMessageQueue *mq,
                                  void *msg,
                                  unsigned flags);
 
 /**
- * Receive a message from the queue.
+ * 从队列接收消息。
  */
 int av_thread_message_queue_recv(AVThreadMessageQueue *mq,
                                  void *msg,
                                  unsigned flags);
 
 /**
- * Set the sending error code.
+ * 设置发送错误码。
  *
- * If the error code is set to non-zero, av_thread_message_queue_send() will
- * return it immediately. Conventional values, such as AVERROR_EOF or
- * AVERROR(EAGAIN), can be used to cause the sending thread to stop or
- * suspend its operation.
+ * 错误码非零时，av_thread_message_queue_send() 会立即返回该值。
+ * AVERROR_EOF、AVERROR(EAGAIN) 等常规值可使发送线程停止或暂停操作。
  */
 void av_thread_message_queue_set_err_send(AVThreadMessageQueue *mq,
                                           int err);
 
 /**
- * Set the receiving error code.
+ * 设置接收错误码。
  *
- * If the error code is set to non-zero, av_thread_message_queue_recv() will
- * return it immediately when there are no longer available messages.
- * Conventional values, such as AVERROR_EOF or AVERROR(EAGAIN), can be used
- * to cause the receiving thread to stop or suspend its operation.
+ * 错误码非零且不再有可用消息时，av_thread_message_queue_recv() 会立即返回该值。
+ * AVERROR_EOF、AVERROR(EAGAIN) 等常规值可使接收线程停止或暂停操作。
  */
 void av_thread_message_queue_set_err_recv(AVThreadMessageQueue *mq,
                                           int err);
 
 /**
- * Set the optional free message callback function which will be called if an
- * operation is removing messages from the queue.
+ * 设置可选的消息释放回调；操作从队列移除消息时调用。
  */
 void av_thread_message_queue_set_free_func(AVThreadMessageQueue *mq,
                                            void (*free_func)(void *msg));
 
 /**
- * Return the current number of messages in the queue.
+ * 返回队列中的当前消息数。
  *
- * @return the current number of messages or AVERROR(ENOSYS) if lavu was built
- *         without thread support
+ * @return 当前消息数；lavu 构建时未启用线程支持则返回 AVERROR(ENOSYS)
  */
 int av_thread_message_queue_nb_elems(AVThreadMessageQueue *mq);
 
 /**
- * Flush the message queue
+ * 冲刷消息队列。
  *
- * This function is mostly equivalent to reading and free-ing every message
- * except that it will be done in a single operation (no lock/unlock between
- * reads).
+ * 此函数基本等同于读取并释放每条消息，但会在单个操作中完成，读取之间不加锁/解锁。
  */
 void av_thread_message_flush(AVThreadMessageQueue *mq);
 

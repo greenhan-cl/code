@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -20,7 +20,7 @@
 
 /**
  * @file
- * byte swapping routines
+ * 字节交换例程
  */
 
 #ifndef AVUTIL_BSWAP_H
@@ -72,8 +72,8 @@ static inline uint64_t av_const av_bswap64(uint64_t x)
 }
 #endif
 
-// be2ne ... big-endian to native-endian
-// le2ne ... little-endian to native-endian
+// be2ne：大端序转本机字节序
+// le2ne：小端序转本机字节序
 
 #if AV_HAVE_BIGENDIAN
 #define av_be2ne16(x) (x)

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 
 /**
  * @file
- * error code definitions
+ * 错误码定义
  */
 
 #ifndef AVUTIL_ERROR_H
@@ -36,45 +36,45 @@
  */
 
 
-/* error handling */
+/* 错误处理 */
 #if EDOM > 0
-#define AVERROR(e) (-(e))   ///< Returns a negative error code from a POSIX error code, to return from library functions.
-#define AVUNERROR(e) (-(e)) ///< Returns a POSIX error code from a library function error return value.
+#define AVERROR(e) (-(e))   ///< 将 POSIX 错误码转换为供库函数返回的负错误码。
+#define AVUNERROR(e) (-(e)) ///< 将库函数返回的错误值转换为 POSIX 错误码。
 #else
-/* Some platforms have E* and errno already negated. */
+/* 某些平台的 E* 和 errno 已经是负值。 */
 #define AVERROR(e) (e)
 #define AVUNERROR(e) (e)
 #endif
 
 #define FFERRTAG(a, b, c, d) (-(int)MKTAG(a, b, c, d))
 
-#define AVERROR_BSF_NOT_FOUND      FFERRTAG(0xF8,'B','S','F') ///< Bitstream filter not found
-#define AVERROR_BUG                FFERRTAG( 'B','U','G','!') ///< Internal bug, also see AVERROR_BUG2
-#define AVERROR_BUFFER_TOO_SMALL   FFERRTAG( 'B','U','F','S') ///< Buffer too small
-#define AVERROR_DECODER_NOT_FOUND  FFERRTAG(0xF8,'D','E','C') ///< Decoder not found
-#define AVERROR_DEMUXER_NOT_FOUND  FFERRTAG(0xF8,'D','E','M') ///< Demuxer not found
-#define AVERROR_ENCODER_NOT_FOUND  FFERRTAG(0xF8,'E','N','C') ///< Encoder not found
-#define AVERROR_EOF                FFERRTAG( 'E','O','F',' ') ///< End of file
-#define AVERROR_EXIT               FFERRTAG( 'E','X','I','T') ///< Immediate exit was requested; the called function should not be restarted
-#define AVERROR_EXTERNAL           FFERRTAG( 'E','X','T',' ') ///< Generic error in an external library
-#define AVERROR_FILTER_NOT_FOUND   FFERRTAG(0xF8,'F','I','L') ///< Filter not found
-#define AVERROR_INVALIDDATA        FFERRTAG( 'I','N','D','A') ///< Invalid data found when processing input
-#define AVERROR_MUXER_NOT_FOUND    FFERRTAG(0xF8,'M','U','X') ///< Muxer not found
-#define AVERROR_OPTION_NOT_FOUND   FFERRTAG(0xF8,'O','P','T') ///< Option not found
-#define AVERROR_PATCHWELCOME       FFERRTAG( 'P','A','W','E') ///< Not yet implemented in FFmpeg, patches welcome
-#define AVERROR_PROTOCOL_NOT_FOUND FFERRTAG(0xF8,'P','R','O') ///< Protocol not found
+#define AVERROR_BSF_NOT_FOUND      FFERRTAG(0xF8,'B','S','F') ///< 未找到比特流过滤器
+#define AVERROR_BUG                FFERRTAG( 'B','U','G','!') ///< 内部错误，另见 AVERROR_BUG2
+#define AVERROR_BUFFER_TOO_SMALL   FFERRTAG( 'B','U','F','S') ///< 缓冲区太小
+#define AVERROR_DECODER_NOT_FOUND  FFERRTAG(0xF8,'D','E','C') ///< 未找到解码器
+#define AVERROR_DEMUXER_NOT_FOUND  FFERRTAG(0xF8,'D','E','M') ///< 未找到解复用器
+#define AVERROR_ENCODER_NOT_FOUND  FFERRTAG(0xF8,'E','N','C') ///< 未找到编码器
+#define AVERROR_EOF                FFERRTAG( 'E','O','F',' ') ///< 文件结束
+#define AVERROR_EXIT               FFERRTAG( 'E','X','I','T') ///< 请求立即退出；不应重新启动被调用函数
+#define AVERROR_EXTERNAL           FFERRTAG( 'E','X','T',' ') ///< 外部库中的通用错误
+#define AVERROR_FILTER_NOT_FOUND   FFERRTAG(0xF8,'F','I','L') ///< 未找到过滤器
+#define AVERROR_INVALIDDATA        FFERRTAG( 'I','N','D','A') ///< 处理输入时发现无效数据
+#define AVERROR_MUXER_NOT_FOUND    FFERRTAG(0xF8,'M','U','X') ///< 未找到复用器
+#define AVERROR_OPTION_NOT_FOUND   FFERRTAG(0xF8,'O','P','T') ///< 未找到选项
+#define AVERROR_PATCHWELCOME       FFERRTAG( 'P','A','W','E') ///< FFmpeg 尚未实现，欢迎提交补丁
+#define AVERROR_PROTOCOL_NOT_FOUND FFERRTAG(0xF8,'P','R','O') ///< 未找到协议
 
-#define AVERROR_STREAM_NOT_FOUND   FFERRTAG(0xF8,'S','T','R') ///< Stream not found
+#define AVERROR_STREAM_NOT_FOUND   FFERRTAG(0xF8,'S','T','R') ///< 未找到流
 /**
- * This is semantically identical to AVERROR_BUG
- * it has been introduced in Libav after our AVERROR_BUG and with a modified value.
+ * 其语义与 AVERROR_BUG 相同。它在我们的 AVERROR_BUG 之后引入 Libav，
+ * 并使用了不同的值。
  */
 #define AVERROR_BUG2               FFERRTAG( 'B','U','G',' ')
-#define AVERROR_UNKNOWN            FFERRTAG( 'U','N','K','N') ///< Unknown error, typically from an external library
-#define AVERROR_EXPERIMENTAL       (-0x2bb2afa8) ///< Requested feature is flagged experimental. Set strict_std_compliance if you really want to use it.
-#define AVERROR_INPUT_CHANGED      (-0x636e6701) ///< Input changed between calls. Reconfiguration is required. (can be OR-ed with AVERROR_OUTPUT_CHANGED)
-#define AVERROR_OUTPUT_CHANGED     (-0x636e6702) ///< Output changed between calls. Reconfiguration is required. (can be OR-ed with AVERROR_INPUT_CHANGED)
-/* HTTP & RTSP errors */
+#define AVERROR_UNKNOWN            FFERRTAG( 'U','N','K','N') ///< 未知错误，通常来自外部库
+#define AVERROR_EXPERIMENTAL       (-0x2bb2afa8) ///< 请求的功能被标记为实验性。确实需要使用时请设置 strict_std_compliance。
+#define AVERROR_INPUT_CHANGED      (-0x636e6701) ///< 两次调用之间输入发生变化，需要重新配置。（可与 AVERROR_OUTPUT_CHANGED 按位或）
+#define AVERROR_OUTPUT_CHANGED     (-0x636e6702) ///< 两次调用之间输出发生变化，需要重新配置。（可与 AVERROR_INPUT_CHANGED 按位或）
+/* HTTP 和 RTSP 错误 */
 #define AVERROR_HTTP_BAD_REQUEST   FFERRTAG(0xF8,'4','0','0')
 #define AVERROR_HTTP_UNAUTHORIZED  FFERRTAG(0xF8,'4','0','1')
 #define AVERROR_HTTP_FORBIDDEN     FFERRTAG(0xF8,'4','0','3')
@@ -86,27 +86,24 @@
 #define AV_ERROR_MAX_STRING_SIZE 64
 
 /**
- * Put a description of the AVERROR code errnum in errbuf.
- * In case of failure the global variable errno is set to indicate the
- * error. Even in case of failure av_strerror() will print a generic
- * error message indicating the errnum provided to errbuf.
+ * 将 AVERROR 错误码 errnum 的描述放入 errbuf。失败时会设置全局变量 errno 以
+ * 表明错误。即使失败，av_strerror() 也会向 errbuf 写入指出所给 errnum 的
+ * 通用错误消息。
  *
- * @param errnum      error code to describe
- * @param errbuf      buffer to which description is written
- * @param errbuf_size the size in bytes of errbuf
- * @return 0 on success, a negative value if a description for errnum
- * cannot be found
+ * @param errnum      要描述的错误码
+ * @param errbuf      写入描述的缓冲区
+ * @param errbuf_size errbuf 的字节大小
+ * @return 成功时返回 0；找不到 errnum 的描述时返回负值
  */
 int av_strerror(int errnum, char *errbuf, size_t errbuf_size);
 
 /**
- * Fill the provided buffer with a string containing an error string
- * corresponding to the AVERROR code errnum.
+ * 使用与 AVERROR 错误码 errnum 对应的错误字符串填充所提供的缓冲区。
  *
- * @param errbuf         a buffer
- * @param errbuf_size    size in bytes of errbuf
- * @param errnum         error code to describe
- * @return the buffer in input, filled with the error description
+ * @param errbuf         缓冲区
+ * @param errbuf_size    errbuf 的字节大小
+ * @param errnum         要描述的错误码
+ * @return 输入的缓冲区，其中已填入错误描述
  * @see av_strerror()
  */
 static inline char *av_make_error_string(char *errbuf, size_t errbuf_size, int errnum)
@@ -116,8 +113,7 @@ static inline char *av_make_error_string(char *errbuf, size_t errbuf_size, int e
 }
 
 /**
- * Convenience macro, the return value should be used only directly in
- * function arguments but never stand-alone.
+ * 便捷宏，其返回值只能直接用于函数参数，绝不能单独使用。
  */
 #define av_err2str(errnum) \
     av_make_error_string((char[AV_ERROR_MAX_STRING_SIZE]){0}, AV_ERROR_MAX_STRING_SIZE, errnum)

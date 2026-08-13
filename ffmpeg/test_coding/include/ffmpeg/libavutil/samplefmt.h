@@ -1,19 +1,19 @@
-/*
- * This file is part of FFmpeg.
+﻿/*
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 #ifndef AVUTIL_SAMPLEFMT_H
@@ -22,34 +22,34 @@
 #include <stdint.h>
 
 /**
- * @addtogroup lavu_audio
+ * @addtogroup lavu_音频
  * @{
  *
- * @defgroup lavu_sampfmts Audio sample formats
+ * @defgroup lavu_sampfmts 音频 采样格式s
  *
- * Audio sample format enumeration and related convenience functions.
+ * 音频 采样格式 enumeration 和 related convenience functions.
  * @{
  */
 
 /**
- * Audio sample formats
+ * 音频 采样格式s
  *
- * - The data described by the sample format is always in native-endian order.
- *   Sample values can be expressed by native C types, hence the lack of a signed
- *   24-bit sample format even though it is a common raw audio data format.
+ * - data described by the 采样格式 is always 中 native-endian order.
+ *   采样 值 can be expressed by native C types, hence the lack 的 a signed
+ *   24-bit 采样格式 even though it is a common raw 音频 data 格式.
  *
- * - The floating-point formats are based on full volume being in the range
- *   [-1.0, 1.0]. Any values outside this range are beyond full volume level.
+ * - floating-point 格式s are based 上 full volume being 中 the range
+ *   [-1.0, 1.0]. Any 值 outside this range are beyond full volume level.
  *
- * - The data layout as used in av_samples_fill_arrays() and elsewhere in FFmpeg
- *   (such as AVFrame in libavcodec) is as follows:
+ * - data layout as used 中 av_采样s_fill_数组s() 和 elsewhere 中 FFmpeg
+ *   (such as AV帧 中 libavcodec) is as follows:
  *
  * @par
- * For planar sample formats, each audio channel is in a separate data plane,
- * and linesize is the buffer size, in bytes, for a single plane. All data
- * planes must be the same size. For packed sample formats, only the first data
- * plane is used, and samples for each channel are interleaved. In this case,
- * linesize is the buffer size, in bytes, for the 1 plane.
+ * For planar 采样格式s, each 音频 声道 is 中 a separate data plane,
+ * 和 line大小 is the 缓冲区 大小, 中 bytes, 用于 a single plane. All data
+ * planes must be the same 大小. For packed 采样格式s, only the first data
+ * plane is used, 和 采样s 用于 each 声道 are interleaved. In this case,
+ * line大小 is the 缓冲区 大小, 中 bytes, 用于 the 1 plane.
  *
  */
 enum AVSampleFormat {
@@ -72,86 +72,86 @@ enum AVSampleFormat {
 };
 
 /**
- * Return the name of sample_fmt, or NULL if sample_fmt is not
+ * 返回 the name 的 采样_fmt, 或 NULL 如果 采样_fmt is not
  * recognized.
  */
 const char *av_get_sample_fmt_name(enum AVSampleFormat sample_fmt);
 
 /**
- * Return a sample format corresponding to name, or AV_SAMPLE_FMT_NONE
- * on error.
+ * 返回 a 采样格式 corresponding 到 name, 或 AV_采样_FMT_NONE
+ * 上 error.
  */
 enum AVSampleFormat av_get_sample_fmt(const char *name);
 
 /**
- * Return the planar<->packed alternative form of the given sample format, or
- * AV_SAMPLE_FMT_NONE on error. If the passed sample_fmt is already in the
- * requested planar/packed format, the format returned is the same as the
- * input.
+ * 返回 the planar<->packed alternative form 的 the given 采样格式, or
+ * AV_采样_FMT_NONE 上 error. 如果 the passed 采样_fmt is already 中 the
+ * requested planar/packed 格式, the 格式 返回ed is the same as the
+ * 输入.
  */
 enum AVSampleFormat av_get_alt_sample_fmt(enum AVSampleFormat sample_fmt, int planar);
 
 /**
- * Get the packed alternative form of the given sample format.
+ * 获取 the packed alternative form 的 the given 采样格式.
  *
- * If the passed sample_fmt is already in packed format, the format returned is
- * the same as the input.
+ * 如果 the passed 采样_fmt is already 中 packed 格式, the 格式 返回ed is
+ * the same as the 输入.
  *
- * @return  the packed alternative form of the given sample format or
+ * @返回  the packed alternative form 的 the given 采样格式 or
             AV_SAMPLE_FMT_NONE on error.
  */
 enum AVSampleFormat av_get_packed_sample_fmt(enum AVSampleFormat sample_fmt);
 
 /**
- * Get the planar alternative form of the given sample format.
+ * 获取 the planar alternative form 的 the given 采样格式.
  *
- * If the passed sample_fmt is already in planar format, the format returned is
- * the same as the input.
+ * 如果 the passed 采样_fmt is already 中 planar 格式, the 格式 返回ed is
+ * the same as the 输入.
  *
- * @return  the planar alternative form of the given sample format or
+ * @返回  the planar alternative form 的 the given 采样格式 or
             AV_SAMPLE_FMT_NONE on error.
  */
 enum AVSampleFormat av_get_planar_sample_fmt(enum AVSampleFormat sample_fmt);
 
 /**
- * Generate a string corresponding to the sample format with
- * sample_fmt, or a header if sample_fmt is negative.
+ * Generate a string corresponding 到 the 采样格式 with
+ * 采样_fmt, 或 a header 如果 采样_fmt is negative.
  *
- * @param buf the buffer where to write the string
- * @param buf_size the size of buf
- * @param sample_fmt the number of the sample format to print the
- * corresponding info string, or a negative value to print the
+ * @param buf the 缓冲区 where 到 write the string
+ * @param buf_大小 the 大小 的 buf
+ * @param 采样_fmt the 数量 的 the 采样格式 到 print the
+ * corresponding info string, 或 a negative 值 到 print the
  * corresponding header.
- * @return the pointer to the filled buffer or NULL in case of other errors
+ * @返回 the 指针 到 the filled 缓冲区 或 NULL 中 case 的 other errors
  */
 char *av_get_sample_fmt_string(char *buf, int buf_size, enum AVSampleFormat sample_fmt);
 
 /**
- * Return number of bytes per sample.
+ * 返回 数量 的 bytes per 采样.
  *
- * @param sample_fmt the sample format
- * @return number of bytes per sample or zero if unknown for the given
- * sample format
+ * @param 采样_fmt the 采样格式
+ * @返回 数量 的 bytes per 采样 或 zero 如果 unknown 用于 the given
+ * 采样格式
  */
 int av_get_bytes_per_sample(enum AVSampleFormat sample_fmt);
 
 /**
- * Check if the sample format is planar.
+ * 检查 如果 the 采样格式 is planar.
  *
- * @param sample_fmt the sample format to inspect
- * @return 1 if the sample format is planar, 0 if it is interleaved
+ * @param 采样_fmt the 采样格式 到 inspect
+ * @返回 1 如果 the 采样格式 is planar, 0 如果 it is interleaved
  */
 int av_sample_fmt_is_planar(enum AVSampleFormat sample_fmt);
 
 /**
- * Get the required buffer size for the given audio parameters.
+ * 获取 the required 缓冲区 大小 用于 the given 音频 parameters.
  *
- * @param[out] linesize calculated linesize, may be NULL
- * @param nb_channels   the number of channels
- * @param nb_samples    the number of samples in a single channel
- * @param sample_fmt    the sample format
- * @param align         buffer size alignment (0 = default, 1 = no alignment)
- * @return              required buffer size, or negative error code on failure
+ * @param[out] line大小 计算d line大小, may be NULL
+ * @param nb_声道数   the 数量 的 声道数
+ * @param nb_采样s    the 数量 的 采样s 中 a single 声道
+ * @param 采样_fmt    the 采样格式
+ * @param align         缓冲区 大小 alignment (0 = 默认, 1 = no alignment)
+ * @返回              required 缓冲区 大小, 或 negative error code 上 failure
  */
 int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
                                enum AVSampleFormat sample_fmt, int align);
@@ -159,40 +159,40 @@ int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
 /**
  * @}
  *
- * @defgroup lavu_sampmanip Samples manipulation
+ * @defgroup lavu_sampmanip 采样s manipulation
  *
- * Functions that manipulate audio samples
+ * Functions that manipulate 音频 采样s
  * @{
  */
 
 /**
- * Fill plane data pointers and linesize for samples with sample
- * format sample_fmt.
+ * Fill plane data 指针s 和 line大小 用于 采样s，使用 采样
+ * 格式 采样_fmt.
  *
- * The audio_data array is filled with the pointers to the samples data planes:
- * for planar, set the start point of each channel's data within the buffer,
- * for packed, set the start point of the entire buffer only.
+ * 音频_data 数组 is filled，使用 the 指针s 到 the 采样s data planes:
+ * 用于 planar, 设置 the start point 的 each 声道's data within the 缓冲区,
+ * 用于 packed, 设置 the start point 的 the entire 缓冲区 only.
  *
- * The value pointed to by linesize is set to the aligned size of each
- * channel's data buffer for planar layout, or to the aligned size of the
- * buffer for all channels for packed layout.
+ * 值 pointed 到 by line大小 is 设置 到 the aligned 大小 的 each
+ * 声道's data 缓冲区 用于 planar layout, 或 到 the aligned 大小 的 the
+ * 缓冲区 用于 all 声道数 用于 packed layout.
  *
- * The buffer in buf must be big enough to contain all the samples
- * (use av_samples_get_buffer_size() to compute its minimum size),
- * otherwise the audio_data pointers will point to invalid data.
+ * 缓冲区 中 buf must be big enough 到 contain all the 采样s
+ * (use av_采样s_get_缓冲区_大小() 到 compute its minimum 大小),
+ * otherwise the 音频_data 指针s will point 到 invalid data.
  *
- * @see enum AVSampleFormat
- * The documentation for AVSampleFormat describes the data layout.
+ * @参见 enum AV采样格式
+ * documentation 用于 AV采样格式 describes the data layout.
  *
- * @param[out] audio_data  array to be filled with the pointer for each channel
- * @param[out] linesize    calculated linesize, may be NULL
- * @param buf              the pointer to a buffer containing the samples
- * @param nb_channels      the number of channels
- * @param nb_samples       the number of samples in a single channel
- * @param sample_fmt       the sample format
- * @param align            buffer size alignment (0 = default, 1 = no alignment)
- * @return                 minimum size in bytes required for the buffer on success,
- *                         or a negative error code on failure
+ * @param[out] 音频_data  数组 到 be filled，使用 the 指针 用于 each 声道
+ * @param[out] line大小    计算d line大小, may be NULL
+ * @param buf              the 指针 到 a 缓冲区 containing the 采样s
+ * @param nb_声道数      the 数量 的 声道数
+ * @param nb_采样s       the 数量 的 采样s 中 a single 声道
+ * @param 采样_fmt       the 采样格式
+ * @param align            缓冲区 大小 alignment (0 = 默认, 1 = no alignment)
+ * @返回                 minimum 大小 中 bytes required 用于 the 缓冲区 上 success,
+ *                         或 a negative error code 上 failure
  */
 int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
                            const uint8_t *buf,
@@ -200,63 +200,63 @@ int av_samples_fill_arrays(uint8_t **audio_data, int *linesize,
                            enum AVSampleFormat sample_fmt, int align);
 
 /**
- * Allocate a samples buffer for nb_samples samples, and fill data pointers and
- * linesize accordingly.
- * The allocated samples buffer can be freed by using av_freep(&audio_data[0])
- * Allocated data will be initialized to silence.
+ * 分配 a 采样s 缓冲区 用于 nb_采样s 采样s, 和 fill data 指针s and
+ * line大小 accordingly.
+ * 分配d 采样s 缓冲区 can be 释放d by using av_释放p(&音频_data[0])
+ * 分配d data will be 初始化d 到 silence.
  *
- * @see enum AVSampleFormat
- * The documentation for AVSampleFormat describes the data layout.
+ * @参见 enum AV采样格式
+ * documentation 用于 AV采样格式 describes the data layout.
  *
- * @param[out] audio_data  array to be filled with the pointer for each channel
- * @param[out] linesize    aligned size for audio buffer(s), may be NULL
- * @param nb_channels      number of audio channels
- * @param nb_samples       number of samples per channel
- * @param sample_fmt       the sample format
- * @param align            buffer size alignment (0 = default, 1 = no alignment)
- * @return                 >=0 on success or a negative error code on failure
- * @todo return the size of the allocated buffer in case of success at the next bump
- * @see av_samples_fill_arrays()
- * @see av_samples_alloc_array_and_samples()
+ * @param[out] 音频_data  数组 到 be filled，使用 the 指针 用于 each 声道
+ * @param[out] line大小    aligned 大小 用于 音频 缓冲区(s), may be NULL
+ * @param nb_声道数      数量 的 音频 声道数
+ * @param nb_采样s       数量 的 采样s per 声道
+ * @param 采样_fmt       the 采样格式
+ * @param align            缓冲区 大小 alignment (0 = 默认, 1 = no alignment)
+ * @返回                 >=0 上 success 或 a negative error code 上 failure
+ * @todo 返回 the 大小 的 the 分配d 缓冲区 中 case 的 success at the next bump
+ * @参见 av_采样s_fill_数组s()
+ * @参见 av_采样s_alloc_数组_and_采样s()
  */
 int av_samples_alloc(uint8_t **audio_data, int *linesize, int nb_channels,
                      int nb_samples, enum AVSampleFormat sample_fmt, int align);
 
 /**
- * Allocate a data pointers array, samples buffer for nb_samples
- * samples, and fill data pointers and linesize accordingly.
+ * 分配 a data 指针s 数组, 采样s 缓冲区 用于 nb_采样s
+ * 采样s, 和 fill data 指针s 和 line大小 accordingly.
  *
- * This is the same as av_samples_alloc(), but also allocates the data
- * pointers array.
+ * This is the same as av_采样s_alloc(), but also 分配s the data
+ * 指针s 数组.
  *
- * @see av_samples_alloc()
+ * @参见 av_采样s_alloc()
  */
 int av_samples_alloc_array_and_samples(uint8_t ***audio_data, int *linesize, int nb_channels,
                                        int nb_samples, enum AVSampleFormat sample_fmt, int align);
 
 /**
- * Copy samples from src to dst.
+ * 复制 采样s，来自 src 到 dst.
  *
- * @param dst destination array of pointers to data planes
- * @param src source array of pointers to data planes
- * @param dst_offset offset in samples at which the data will be written to dst
- * @param src_offset offset in samples at which the data will be read from src
- * @param nb_samples number of samples to be copied
- * @param nb_channels number of audio channels
- * @param sample_fmt audio sample format
+ * @param dst destination 数组 的 指针s 到 data planes
+ * @param src source 数组 的 指针s 到 data planes
+ * @param dst_off设置 off设置 中 采样s at which the data will be written 到 dst
+ * @param src_off设置 off设置 中 采样s at which the data will be read，来自 src
+ * @param nb_采样s 数量 的 采样s 到 be copied
+ * @param nb_声道数 数量 的 音频 声道数
+ * @param 采样_fmt 音频 采样格式
  */
 int av_samples_copy(uint8_t * const *dst, uint8_t * const *src, int dst_offset,
                     int src_offset, int nb_samples, int nb_channels,
                     enum AVSampleFormat sample_fmt);
 
 /**
- * Fill an audio buffer with silence.
+ * Fill an 音频 缓冲区，使用 silence.
  *
- * @param audio_data  array of pointers to data planes
- * @param offset      offset in samples at which to start filling
- * @param nb_samples  number of samples to fill
- * @param nb_channels number of audio channels
- * @param sample_fmt  audio sample format
+ * @param 音频_data  数组 的 指针s 到 data planes
+ * @param off设置      off设置 中 采样s at which 到 start filling
+ * @param nb_采样s  数量 的 采样s 到 fill
+ * @param nb_声道数 数量 的 音频 声道数
+ * @param 采样_fmt  音频 采样格式
  */
 int av_samples_set_silence(uint8_t * const *audio_data, int offset, int nb_samples,
                            int nb_channels, enum AVSampleFormat sample_fmt);

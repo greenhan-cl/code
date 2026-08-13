@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2003 Fabrice Bellard
  *
  * This file is part of FFmpeg.
@@ -21,7 +21,7 @@
 /**
  * @file
  * @ingroup lavu
- * Libavutil version macros
+ * Libavutil 版本宏
  */
 
 #ifndef AVUTIL_VERSION_H
@@ -32,23 +32,15 @@
 /**
  * @addtogroup version_utils
  *
- * Useful to check and match library version in order to maintain
- * backward compatibility.
+ * 用于检查和匹配库版本，以维持向后兼容性。
  *
- * The FFmpeg libraries follow a versioning scheme very similar to
- * Semantic Versioning (http://semver.org/)
- * The difference is that the component called PATCH is called MICRO in FFmpeg
- * and its value is reset to 100 instead of 0 to keep it above or equal to 100.
- * Also we do not increase MICRO for every bugfix or change in git master.
+ * FFmpeg 库遵循与语义化版本非常相似的版本方案。区别在于 PATCH 在 FFmpeg 中称为
+ * MICRO，重置为 100 而不是 0；也不会为 git master 中每个修复或变更增加 MICRO。
  *
- * Prior to FFmpeg 3.2 point releases did not change any lib version number to
- * avoid aliassing different git master checkouts.
- * Starting with FFmpeg 3.2, the released library versions will occupy
- * a separate MAJOR.MINOR that is not used on the master development branch.
- * That is if we branch a release of master 55.10.123 we will bump to 55.11.100
- * for the release and master will continue at 55.12.100 after it. Each new
- * point release will then bump the MICRO improving the usefulness of the lib
- * versions.
+ * FFmpeg 3.2 之前，补丁版本不更改库版本号，以免不同 git master 检出发生混淆。
+ * 从 FFmpeg 3.2 开始，发布库版本使用 master 开发分支不使用的独立 MAJOR.MINOR。
+ * 例如从 master 55.10.123 创建发布分支时，发布版升为 55.11.100，master 随后继续为
+ * 55.12.100。每个新补丁版本再提升 MICRO，从而增强库版本号的实用性。
  *
  * @{
  */
@@ -58,8 +50,8 @@
 #define AV_VERSION(a, b, c) AV_VERSION_DOT(a, b, c)
 
 /**
- * Extract version components from the full ::AV_VERSION_INT int as returned
- * by functions like ::avformat_version() and ::avcodec_version()
+ * 从 ::avformat_version()、::avcodec_version() 等返回的完整 ::AV_VERSION_INT
+ * 整数中提取版本组成部分。
  */
 #define AV_VERSION_MAJOR(a) ((a) >> 16)
 #define AV_VERSION_MINOR(a) (((a) & 0x00FF00) >> 8)
@@ -70,10 +62,9 @@
  */
 
 /**
- * @defgroup lavu_ver Version and Build diagnostics
+ * @defgroup lavu_ver 版本和构建诊断
  *
- * Macros and function useful to check at compile time and at runtime
- * which version of libavutil is in use.
+ * 用于在编译时和运行时检查所用 libavutil 版本的宏和函数。
  *
  * @{
  */
@@ -93,14 +84,12 @@
 #define LIBAVUTIL_IDENT         "Lavu" AV_STRINGIFY(LIBAVUTIL_VERSION)
 
 /**
- * @defgroup lavu_depr_guards Deprecation Guards
- * FF_API_* defines may be placed below to indicate public API that will be
- * dropped at a future version bump. The defines themselves are not part of
- * the public API and may change, break or disappear at any time.
+ * @defgroup lavu_depr_guards 弃用保护
+ * 可在下方放置 FF_API_* 定义，标识未来版本升级时将移除的公共 API。
+ * 这些定义本身不属于公共 API，可能随时改变、失效或消失。
  *
- * @note, when bumping the major version it is recommended to manually
- * disable each FF_API_* in its own commit instead of disabling them all
- * at once through the bump. This improves the git bisect-ability of the change.
+ * @note 升级主版本时，建议在独立提交中逐个手动禁用 FF_API_*，
+ * 而不是一次性全部禁用，以便使用 git bisect 定位变更。
  *
  * @{
  */

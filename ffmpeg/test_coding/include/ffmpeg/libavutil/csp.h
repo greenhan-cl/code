@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2015 Kevin Wheatley <kevin.j.wheatley@gmail.com>
  * Copyright (c) 2016 Ronald S. Bultje <rsbultje@gmail.com>
  * Copyright (c) 2023 Leo Izen <leo.izen@gmail.com>
@@ -28,7 +28,7 @@
 
 /**
  * @file
- * Colorspace value utility functions for libavutil.
+ * libavutil 的颜色空间值工具函数。
  * @ingroup lavu_math_csp
  * @author Ronald S. Bultje <rsbultje@gmail.com>
  * @author Leo Izen <leo.izen@gmail.com>
@@ -36,44 +36,39 @@
  */
 
 /**
- * @defgroup lavu_math_csp Colorspace Utility
+ * @defgroup lavu_math_csp 颜色空间工具
  * @ingroup lavu_math
  * @{
  */
 
 /**
- * Struct containing luma coefficients to be used for RGB to YUV/YCoCg, or similar
- * calculations.
+ * 包含用于 RGB 到 YUV/YCoCg 或类似计算的亮度系数的结构。
  */
 typedef struct AVLumaCoefficients {
     AVRational cr, cg, cb;
 } AVLumaCoefficients;
 
 /**
- * Struct containing chromaticity x and y values for the standard CIE 1931
- * chromaticity definition.
+ * 包含标准 CIE 1931 色度定义的 x、y 色度值的结构。
  */
 typedef struct AVCIExy {
     AVRational x, y;
 } AVCIExy;
 
 /**
- * Struct defining the red, green, and blue primary locations in terms of CIE
- * 1931 chromaticity x and y.
+ * 使用 CIE 1931 色度 x、y 定义红、绿、蓝原色位置的结构。
  */
 typedef struct AVPrimaryCoefficients {
     AVCIExy r, g, b;
 } AVPrimaryCoefficients;
 
 /**
- * Struct defining white point location in terms of CIE 1931 chromaticity x
- * and y.
+ * 使用 CIE 1931 色度 x、y 定义白点位置的结构。
  */
 typedef AVCIExy AVWhitepointCoefficients;
 
 /**
- * Struct that contains both white point location and primaries location, providing
- * the complete description of a color gamut.
+ * 同时包含白点位置和原色位置、用于完整描述色域的结构。
  */
 typedef struct AVColorPrimariesDesc {
     AVWhitepointCoefficients wp;
@@ -81,123 +76,99 @@ typedef struct AVColorPrimariesDesc {
 } AVColorPrimariesDesc;
 
 /**
- * Function pointer representing a double -> double transfer function that
- * performs either an OETF transfer function, or alternatively an inverse EOTF
- * function (in particular, for SMPTE ST 2084 / PQ). This function inputs
- * linear light, and outputs gamma encoded light.
+ * 表示 double -> double 传递函数的函数指针，该函数执行 OETF，或执行逆 EOTF
+ * （尤其用于 SMPTE ST 2084 / PQ）。此函数输入线性光，输出伽马编码光。
  *
- * See ITU-T H.273 for more information.
+ * 更多信息参见 ITU-T H.273。
  */
 typedef double (*av_csp_trc_function)(double);
 
 /**
- * Retrieves the Luma coefficients necessary to construct a conversion matrix
- * from an enum constant describing the colorspace.
- * @param csp An enum constant indicating YUV or similar colorspace.
- * @return The Luma coefficients associated with that colorspace, or NULL
- *     if the constant is unknown to libavutil.
+ * 根据描述颜色空间的枚举常量，获取构造转换矩阵所需的亮度系数。
+ * @param csp 表示 YUV 或类似颜色空间的枚举常量。
+ * @return 与该颜色空间关联的亮度系数；libavutil 不识别该常量时返回 NULL。
  */
 const AVLumaCoefficients *av_csp_luma_coeffs_from_avcsp(enum AVColorSpace csp);
 
 /**
- * Retrieves a complete gamut description from an enum constant describing the
- * color primaries.
- * @param prm An enum constant indicating primaries
- * @return A description of the colorspace gamut associated with that enum
- *     constant, or NULL if the constant is unknown to libavutil.
+ * 根据描述颜色原色的枚举常量获取完整色域描述。
+ * @param prm 表示原色的枚举常量
+ * @return 与该枚举常量关联的颜色空间色域描述；libavutil 不识别该常量时返回 NULL。
  */
 const AVColorPrimariesDesc *av_csp_primaries_desc_from_id(enum AVColorPrimaries prm);
 
 /**
- * Detects which enum AVColorPrimaries constant corresponds to the given complete
- * gamut description.
+ * 检测哪个 AVColorPrimaries 枚举常量对应给定的完整色域描述。
  * @see enum AVColorPrimaries
- * @param prm A description of the colorspace gamut
- * @return The enum constant associated with this gamut, or
- *     AVCOL_PRI_UNSPECIFIED if no clear match can be identified.
+ * @param prm 颜色空间色域描述
+ * @return 与此色域关联的枚举常量；无法识别明确匹配时返回 AVCOL_PRI_UNSPECIFIED。
  */
 enum AVColorPrimaries av_csp_primaries_id_from_desc(const AVColorPrimariesDesc *prm);
 
 /**
- * Determine a suitable 'gamma' value to match the supplied
- * AVColorTransferCharacteristic.
+ * 确定与所提供 AVColorTransferCharacteristic 匹配的合适“gamma”值。
  *
- * See Apple Technical Note TN2257 (https://developer.apple.com/library/mac/technotes/tn2257/_index.html)
+ * 参见 Apple 技术说明 TN2257（https://developer.apple.com/library/mac/technotes/tn2257/_index.html）
  *
- * This function returns the gamma exponent for the OETF. For example, sRGB is approximated
- * by gamma 2.2, not by gamma 0.45455.
+ * 此函数返回 OETF 的 gamma 指数。例如，sRGB 用 gamma 2.2 近似，而不是 0.45455。
  *
- * @return Will return an approximation to the simple gamma function matching
- *         the supplied Transfer Characteristic, Will return 0.0 for any
- *         we cannot reasonably match against.
+ * @return 返回与所提供传递特性匹配的简单 gamma 函数近似值；无法合理匹配时
+ *         返回 0.0。
  */
 double av_csp_approximate_trc_gamma(enum AVColorTransferCharacteristic trc);
 
 /**
- * Determine a suitable EOTF 'gamma' value to match the supplied
- * AVColorTransferCharacteristic.
+ * 确定与所提供 AVColorTransferCharacteristic 匹配的合适 EOTF“gamma”值。
  *
- * This function returns the gamma value (exponent) for a simple pure power
- * function approximation of the supplied AVColorTransferCharacteristic, or 0.
- * if no reasonable approximation exists.
+ * 此函数返回用于近似所提供 AVColorTransferCharacteristic 的简单纯幂函数 gamma
+ * 值（指数）；不存在合理近似时返回 0。
  *
  * EOTF(v) = (L_w - L_b) * v^gamma + L_b
  *
- * @return Will return an approximation to the simple gamma function matching
- *         the supplied Transfer Characteristic EOTF, Will return 0.0 for any
- *         we cannot reasonably match against.
+ * @return 返回与所提供传递特性 EOTF 匹配的简单 gamma 函数近似值；无法合理
+ *         匹配时返回 0.0。
  */
 double av_csp_approximate_eotf_gamma(enum AVColorTransferCharacteristic trc);
 
 /**
- * Determine the function needed to apply the given
- * AVColorTransferCharacteristic to linear input.
+ * 确定将给定 AVColorTransferCharacteristic 应用于线性输入所需的函数。
  *
- * The function returned should expect a nominal domain and range of [0.0-1.0]
- * values outside of this range maybe valid depending on the chosen
- * characteristic function.
+ * 返回函数的标称定义域和值域应为 [0.0-1.0]；此范围外的值是否有效取决于所选
+ * 特性函数。
  *
- * @return Will return pointer to the function matching the
- *         supplied Transfer Characteristic. If unspecified will
- *         return NULL:
+ * @return 返回与所提供传递特性匹配的函数指针；未指定时返回 NULL：
  */
 av_csp_trc_function av_csp_trc_func_from_id(enum AVColorTransferCharacteristic trc);
 
 /**
- * Returns the mathematical inverse of the corresponding TRC function.
+ * 返回对应 TRC 函数的数学逆函数。
  */
 av_csp_trc_function av_csp_trc_func_inv_from_id(enum AVColorTransferCharacteristic trc);
 
 /**
- * Function pointer representing an ITU EOTF transfer for a given reference
- * display configuration.
+ * 表示给定参考显示配置的 ITU EOTF 传递函数的函数指针。
  *
- * @param Lw The white point luminance of the display, in nits (cd/m^2).
- * @param Lb The black point luminance of the display, in nits (cd/m^2).
+ * @param Lw 显示器白点亮度，单位为 nit（cd/m^2）。
+ * @param Lb 显示器黑点亮度，单位为 nit（cd/m^2）。
  */
 typedef void (*av_csp_eotf_function)(double Lw, double Lb, double c[3]);
 
 /**
- * Returns the ITU EOTF corresponding to a given TRC. This converts from the
- * signal level [0,1] to the raw output display luminance in nits (cd/m^2).
- * This is done per channel in RGB space, except for AVCOL_TRC_SMPTE428, which
- * assumes CIE XYZ in- and output.
+ * 返回与给定 TRC 对应的 ITU EOTF。它把信号电平 [0,1] 转换为以 nit（cd/m^2）
+ * 表示的原始输出显示亮度。除假定输入输出均为 CIE XYZ 的 AVCOL_TRC_SMPTE428
+ * 外，此操作在 RGB 空间中按声道进行。
  *
- * @return A pointer to the function implementing the given TRC, or NULL if no
- *         such function is defined.
+ * @return 指向实现给定 TRC 的函数的指针；未定义此类函数时返回 NULL。
  *
- * @note In general, the resulting function is defined (wherever possible) for
- *       out-of-range values, even though these values do not have a physical
- *       meaning on the given display. Users should clamp inputs (or outputs)
- *       if this behavior is not desired.
+ * @note 通常，只要可能，结果函数也会为超出范围的值定义，即使这些值在给定
+ *       显示器上没有物理意义。如果不需要此行为，用户应钳制输入（或输出）。
  *
- *       This is also the case for functions like PQ, which are defined over an
- *       absolute signal range independent of the target display capabilities.
+ *       对 PQ 等在独立于目标显示能力的绝对信号范围上定义的函数也是如此。
  */
 av_csp_eotf_function av_csp_itu_eotf(enum AVColorTransferCharacteristic trc);
 
 /**
- * Returns the mathematical inverse of the corresponding EOTF.
+ * 返回对应 EOTF 的数学逆函数。
  */
 av_csp_eotf_function av_csp_itu_eotf_inv(enum AVColorTransferCharacteristic trc);
 

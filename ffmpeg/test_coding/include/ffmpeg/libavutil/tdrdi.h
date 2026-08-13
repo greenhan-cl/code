@@ -1,25 +1,25 @@
-/*
- * This file is part of FFmpeg.
+﻿/*
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 /**
  * @file
- * @ingroup lavu_video_3d_reference_displays_info
- * Spherical video
+ * @ingroup lavu_视频_3d_引用_displays_info
+ * Spherical 视频
  */
 
 #ifndef AVUTIL_TDRDI_H
@@ -31,112 +31,112 @@
 #include "libavutil/avassert.h"
 
 /**
- * @defgroup lavu_video_3d_reference_displays_info 3D Reference Displays Information
- * @ingroup lavu_video
+ * @defgroup lavu_视频_3d_引用_displays_info 3D 引用 Displays In格式ion
+ * @ingroup lavu_视频
  *
- * The 3D Reference Displays Information describes information about the reference display
- * width(s) and reference viewing distance(s) as well as information about the corresponding
- * reference stereo pair(s).
+ * 3D 引用 Displays In格式ion describes in格式ion about the 引用 display
+ * 宽度(s) 和 引用 viewing distance(s) as well as in格式ion about the corresponding
+ * 引用 stereo pair(s).
  * @{
  */
 
 #define AV_TDRDI_MAX_NUM_REF_DISPLAY 32
 
 /**
- * This structure describes information about the reference display width(s) and reference
- * viewing distance(s) as well as information about the corresponding reference stereo pair(s).
- * See section G.14.3.2.3 of ITU-T H.265 for more information.
+ * 此结构体 describes in格式ion about the 引用 display 宽度(s) 和 引用
+ * viewing distance(s) as well as in格式ion about the corresponding 引用 stereo pair(s).
+ * 参见 section G.14.3.2.3 的 ITU-T H.265 用于 more in格式ion.
  *
- * @note The struct must be allocated with av_tdrdi_alloc() and
- *       its size is not a part of the public ABI.
+ * @note struct must be 分配d，使用 av_tdrdi_alloc() and
+ *       its 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AV3DReferenceDisplaysInfo {
     /**
-     * The exponent of the maximum allowable truncation error for
-     * {exponent,mantissa}_ref_display_width as given by 2<sup>(-prec_ref_display_width)</sup>.
+     * exponent 的 the maximum allowable truncation error for
+     * {exponent,mantissa}_ref_display_宽度 as given by 2<sup>(-prec_ref_display_宽度)</sup>.
      */
     uint8_t prec_ref_display_width;
 
     /**
-     * A flag to indicate the presence of reference viewing distance.
-     * If false, the values of prec_ref_viewing_dist, exponent_ref_viewing_distance,
-     * and mantissa_ref_viewing_distance are undefined.
+     * 标志 到 indicate the presence 的 引用 viewing distance.
+     * 如果 false, the 值 的 prec_ref_viewing_dist, exponent_ref_viewing_distance,
+     * 和 mantissa_ref_viewing_distance are undefined.
      */
     uint8_t ref_viewing_distance_flag;
 
     /**
-     * The exponent of the maximum allowable truncation error for
+     * exponent 的 the maximum allowable truncation error for
      * {exponent,mantissa}_ref_viewing_distance as given by 2<sup>^(-prec_ref_viewing_dist)</sup>.
-     * The value of prec_ref_viewing_dist shall be in the range of 0 to 31, inclusive.
+     * 值 的 prec_ref_viewing_dist shall be 中 the range 的 0 到 31, inclusive.
      */
     uint8_t prec_ref_viewing_dist;
 
     /**
-     * The number of reference displays that are signalled in this struct.
-     * Allowed range is 1 to 32, inclusive.
+     * 数量 的 引用 displays that are signalled 中 this struct.
+     * Allowed range is 1 到 32, inclusive.
      */
     uint8_t num_ref_displays;
 
     /**
-     * Offset in bytes from the beginning of this structure at which the array
-     * of reference displays starts.
+     * Off设置 中 bytes，来自 the beginning 的 this 结构体 at which the 数组
+     * 的 引用 displays starts.
      */
     size_t entries_offset;
 
     /**
-     * Size of each entry in bytes. May not match sizeof(AV3DReferenceDisplay).
+     * 大小 的 each entry 中 bytes. May not match 大小of(AV3D引用Display).
      */
     size_t entry_size;
 } AV3DReferenceDisplaysInfo;
 
 /**
- * Data structure for single deference display information.
- * It is allocated as a part of AV3DReferenceDisplaysInfo and should be retrieved with
+ * Data 结构体 用于 single deference display in格式ion.
+ * It is 分配d as a part 的 AV3D引用DisplaysInfo 和 should be retrieved with
  * av_tdrdi_get_display().
  *
- * sizeof(AV3DReferenceDisplay) is not a part of the ABI and new fields may be
- * added to it.
+ * 大小of(AV3D引用Display) is not a part 的 the ABI 和 new fields may be
+ * added 到 it.
 */
 typedef struct AV3DReferenceDisplay {
     /**
-     * The ViewId of the left view of a stereo pair corresponding to the n-th reference display.
+     * ViewId 的 the left view 的 a stereo pair corresponding 到 the n-th 引用 display.
      */
     uint16_t left_view_id;
 
     /**
-     * The ViewId of the left view of a stereo pair corresponding to the n-th reference display.
+     * ViewId 的 the left view 的 a stereo pair corresponding 到 the n-th 引用 display.
      */
     uint16_t right_view_id;
 
     /**
-     * The exponent part of the reference display width of the n-th reference display.
+     * exponent part 的 the 引用 display 宽度 的 the n-th 引用 display.
      */
     uint8_t exponent_ref_display_width;
 
     /**
-     * The mantissa part of the reference display width of the n-th reference display.
+     * mantissa part 的 the 引用 display 宽度 的 the n-th 引用 display.
      */
     uint8_t mantissa_ref_display_width;
 
     /**
-     * The exponent part of the reference viewing distance of the n-th reference display.
+     * exponent part 的 the 引用 viewing distance 的 the n-th 引用 display.
      */
     uint8_t exponent_ref_viewing_distance;
 
     /**
-     * The mantissa part of the reference viewing distance of the n-th reference display.
+     * mantissa part 的 the 引用 viewing distance 的 the n-th 引用 display.
      */
     uint8_t mantissa_ref_viewing_distance;
 
     /**
-     * An array of flags to indicates that the information about additional horizontal shift of
-     * the left and right views for the n-th reference display is present.
+     * 数组 的 标志 到 indicates that the in格式ion about additional horizontal sh如果t of
+     * the left 和 right views 用于 the n-th 引用 display is present.
      */
     uint8_t additional_shift_present_flag;
 
     /**
-     * The recommended additional horizontal shift for a stereo pair corresponding to the n-th
-     * reference baseline and the n-th reference display.
+     * recommended additional horizontal sh如果t 用于 a stereo pair corresponding 到 the n-th
+     * 引用 baseline 和 the n-th 引用 display.
      */
     int16_t num_sample_shift;
 } AV3DReferenceDisplay;
@@ -150,10 +150,10 @@ av_tdrdi_get_display(AV3DReferenceDisplaysInfo *tdrdi, unsigned int idx)
 }
 
 /**
- * Allocate a AV3DReferenceDisplaysInfo structure and initialize its fields to default
- * values.
+ * 分配 a AV3D引用DisplaysInfo 结构体 和 初始化 its fields 到 默认
+ * 值.
  *
- * @return the newly allocated struct or NULL on failure
+ * @返回 the newly 分配d struct 或 NULL 上 failure
  */
 AV3DReferenceDisplaysInfo *av_tdrdi_alloc(unsigned int nb_displays, size_t *size);
 

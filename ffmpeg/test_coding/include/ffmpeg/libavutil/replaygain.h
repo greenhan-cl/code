@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -22,27 +22,25 @@
 #include <stdint.h>
 
 /**
- * ReplayGain information (see
+ * ReplayGain 信息（参见
  * http://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification).
- * The size of this struct is a part of the public ABI.
+ * 此结构体的大小属于公共 ABI。
  */
 typedef struct AVReplayGain {
     /**
-     * Track replay gain in microbels (divide by 100000 to get the value in dB).
-     * Should be set to INT32_MIN when unknown.
+     * 轨道回放增益，单位为微贝尔（除以 100000 得到 dB 值）。未知时应设为 INT32_MIN。
      */
     int32_t track_gain;
     /**
-     * Peak track amplitude, with 100000 representing full scale (but values
-     * may overflow). 0 when unknown.
+     * 轨道峰值幅度，100000 表示满量程（值可能溢出）。未知时为 0。
      */
     uint32_t track_peak;
     /**
-     * Same as track_gain, but for the whole album.
+     * 与 track_gain 相同，但适用于整张专辑。
      */
     int32_t album_gain;
     /**
-     * Same as track_peak, but for the whole album,
+     * 与 track_peak 相同，但适用于整张专辑。
      */
     uint32_t album_peak;
 } AVReplayGain;

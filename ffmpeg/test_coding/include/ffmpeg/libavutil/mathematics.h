@@ -1,27 +1,27 @@
-/*
- * copyright (c) 2005-2012 Michael Niedermayer <michaelni@gmx.at>
+﻿/*
+ * 复制right (c) 2005-2012 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 /**
  * @file
  * @addtogroup lavu_math
- * Mathematical utilities for working with timestamp and time base.
+ * Mathematical utilities 用于 working，使用 时间戳 和 时间基.
  */
 
 #ifndef AVUTIL_MATHEMATICS_H
@@ -134,104 +134,104 @@ enum AVRounding {
     AV_ROUND_UP       = 3, ///< Round toward +infinity.
     AV_ROUND_NEAR_INF = 5, ///< Round to nearest and halfway cases away from zero.
     /**
-     * Flag telling rescaling functions to pass `INT64_MIN`/`MAX` through
-     * unchanged, avoiding special cases for #AV_NOPTS_VALUE.
+     * 标志 telling rescaling functions 到 pass `INT64_MIN`/`MAX` through
+     * unchanged, avoiding special cases 用于 #AV_NOPTS_值.
      *
-     * Unlike other values of the enumeration AVRounding, this value is a
-     * bitmask that must be used in conjunction with another value of the
-     * enumeration through a bitwise OR, in order to set behavior for normal
+     * Unlike other 值 的 the enumeration AVRounding, this 值 is a
+     * bitmask that must be used 中 conjunction，使用 another 值 的 the
+     * enumeration through a bitwise OR, 中 order 到 设置 behavior 用于 normal
      * cases.
      *
      * @code{.c}
      * av_rescale_rnd(3, 1, 2, AV_ROUND_UP | AV_ROUND_PASS_MINMAX);
      * // Rescaling 3:
      * //     Calculating 3 * 1 / 2
-     * //     3 / 2 is rounded up to 2
+     * //     3 / 2 is rounded up 到 2
      * //     => 2
      *
-     * av_rescale_rnd(AV_NOPTS_VALUE, 1, 2, AV_ROUND_UP | AV_ROUND_PASS_MINMAX);
-     * // Rescaling AV_NOPTS_VALUE:
-     * //     AV_NOPTS_VALUE == INT64_MIN
-     * //     AV_NOPTS_VALUE is passed through
-     * //     => AV_NOPTS_VALUE
+     * av_rescale_rnd(AV_NOPTS_值, 1, 2, AV_ROUND_UP | AV_ROUND_PASS_MINMAX);
+     * // Rescaling AV_NOPTS_值:
+     * //     AV_NOPTS_值 == INT64_MIN
+     * //     AV_NOPTS_值 is passed through
+     * //     => AV_NOPTS_值
      * @endcode
      */
     AV_ROUND_PASS_MINMAX = 8192,
 };
 
 /**
- * Compute the greatest common divisor of two integer operands.
+ * Compute the greatest common divisor 的 two integer operands.
  *
  * @param a Operand
  * @param b Operand
- * @return GCD of a and b up to sign; if a >= 0 and b >= 0, return value is >= 0;
- * if a == 0 and b == 0, returns 0.
+ * @返回 GCD 的 a 和 b up 到 sign; 如果 a >= 0 和 b >= 0, 返回 值 is >= 0;
+ * 如果 a == 0 和 b == 0, 返回s 0.
  */
 int64_t av_const av_gcd(int64_t a, int64_t b);
 
 /**
- * Rescale a 64-bit integer with rounding to nearest.
+ * Rescale a 64-bit integer，使用 rounding 到 nearest.
  *
- * The operation is mathematically equivalent to `a * b / c`, but writing that
+ * operation is mathematically equivalent 到 `a * b / c`, but writing that
  * directly can overflow.
  *
- * This function is equivalent to av_rescale_rnd() with #AV_ROUND_NEAR_INF.
+ * 此函数 is equivalent 到 av_rescale_rnd()，使用 #AV_ROUND_NEAR_INF.
  *
- * @see av_rescale_rnd(), av_rescale_q(), av_rescale_q_rnd()
+ * @参见 av_rescale_rnd(), av_rescale_q(), av_rescale_q_rnd()
  */
 int64_t av_rescale(int64_t a, int64_t b, int64_t c) av_const;
 
 /**
- * Rescale a 64-bit integer with specified rounding.
+ * Rescale a 64-bit integer，使用 spec如果ied rounding.
  *
- * The operation is mathematically equivalent to `a * b / c`, but writing that
- * directly can overflow, and does not support different rounding methods.
- * If the result is not representable then INT64_MIN is returned.
+ * operation is mathematically equivalent 到 `a * b / c`, but writing that
+ * directly can overflow, 和 does not support d如果ferent rounding methods.
+ * 如果 the result is not representable then INT64_MIN is 返回ed.
  *
- * @see av_rescale(), av_rescale_q(), av_rescale_q_rnd()
+ * @参见 av_rescale(), av_rescale_q(), av_rescale_q_rnd()
  */
 int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, enum AVRounding rnd) av_const;
 
 /**
- * Rescale a 64-bit integer by 2 rational numbers.
+ * Rescale a 64-bit integer by 2 rational 数量s.
  *
- * The operation is mathematically equivalent to `a * bq / cq`.
+ * operation is mathematically equivalent 到 `a * bq / cq`.
  *
- * This function is equivalent to av_rescale_q_rnd() with #AV_ROUND_NEAR_INF.
+ * 此函数 is equivalent 到 av_rescale_q_rnd()，使用 #AV_ROUND_NEAR_INF.
  *
- * @see av_rescale(), av_rescale_rnd(), av_rescale_q_rnd()
+ * @参见 av_rescale(), av_rescale_rnd(), av_rescale_q_rnd()
  */
 int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq) av_const;
 
 /**
- * Rescale a 64-bit integer by 2 rational numbers with specified rounding.
+ * Rescale a 64-bit integer by 2 rational 数量s，使用 spec如果ied rounding.
  *
- * The operation is mathematically equivalent to `a * bq / cq`.
+ * operation is mathematically equivalent 到 `a * bq / cq`.
  *
- * @see av_rescale(), av_rescale_rnd(), av_rescale_q()
+ * @参见 av_rescale(), av_rescale_rnd(), av_rescale_q()
  */
 int64_t av_rescale_q_rnd(int64_t a, AVRational bq, AVRational cq,
                          enum AVRounding rnd) av_const;
 
 /**
- * Compare two timestamps each in its own time base.
+ * Compare two 时间戳s each 中 its own 时间基.
  *
- * @return One of the following values:
- *         - -1 if `ts_a` is before `ts_b`
- *         - 1 if `ts_a` is after `ts_b`
- *         - 0 if they represent the same position
+ * @返回 One 的 the following 值:
+ *         - -1 如果 `ts_a` is before `ts_b`
+ *         - 1 如果 `ts_a` is after `ts_b`
+ *         - 0 如果 they represent the same position
  *
  * @warning
- * The result of the function is undefined if one of the timestamps is outside
- * the `int64_t` range when represented in the other's timebase.
+ * result 的 the function is undefined 如果 one 的 the 时间戳s is outside
+ * the `int64_t` range 当 represented 中 the other's timebase.
  */
 int av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b);
 
 /**
- * Compare the remainders of two integer operands divided by a common divisor.
+ * Compare the remainders 的 two integer operands divided by a common divisor.
  *
- * In other words, compare the least significant `log2(mod)` bits of integers
- * `a` and `b`.
+ * In other words, compare the least sign如果icant `log2(mod)` bits 的 integers
+ * `a` 和 `b`.
  *
  * @code{.c}
  * av_compare_mod(0x11, 0x02, 0x10) < 0 // since 0x11 % 0x10  (0x1) < 0x02 % 0x10  (0x2)
@@ -240,56 +240,56 @@ int av_compare_ts(int64_t ts_a, AVRational tb_a, int64_t ts_b, AVRational tb_b);
  *
  * @param a Operand
  * @param b Operand
- * @param mod Divisor; must be a power of 2
- * @return
- *         - a negative value if `a % mod < b % mod`
- *         - a positive value if `a % mod > b % mod`
- *         - zero             if `a % mod == b % mod`
+ * @param mod Divisor; must be a power 的 2
+ * @返回
+ *         - a negative 值 如果 `a % mod < b % mod`
+ *         - a positive 值 如果 `a % mod > b % mod`
+ *         - zero             如果 `a % mod == b % mod`
  */
 int64_t av_compare_mod(uint64_t a, uint64_t b, uint64_t mod);
 
 /**
- * Rescale a timestamp while preserving known durations.
+ * Rescale a 时间戳 while preserving known 持续时间s.
  *
- * This function is designed to be called per audio packet to scale the input
- * timestamp to a different time base. Compared to a simple av_rescale_q()
- * call, this function is robust against possible inconsistent frame durations.
+ * 此函数 is designed 到 be called per 音频 packet 到 scale the 输入
+ * 时间戳 到 a d如果ferent 时间基. Compared 到 a simple av_rescale_q()
+ * call, this function is robust against possible inconsistent 帧 持续时间s.
  *
- * The `last` parameter is a state variable that must be preserved for all
- * subsequent calls for the same stream. For the first call, `*last` should be
- * initialized to #AV_NOPTS_VALUE.
+ * `last` parameter is a state variable that must be preserved 用于 all
+ * subsequent calls 用于 the same stream. For the first call, `*last` should be
+ * 初始化d 到 #AV_NOPTS_值.
  *
- * @param[in]     in_tb    Input time base
- * @param[in]     in_ts    Input timestamp
- * @param[in]     fs_tb    Duration time base; typically this is finer-grained
- *                         (greater) than `in_tb` and `out_tb`
- * @param[in]     duration Duration till the next call to this function (i.e.
- *                         duration of the current packet/frame)
- * @param[in,out] last     Pointer to a timestamp expressed in terms of
+ * @param[in]     in_tb    输入 时间基
+ * @param[in]     in_ts    输入 时间戳
+ * @param[in]     fs_tb    持续时间 时间基; typically this is finer-grained
+ *                         (greater) than `in_tb` 和 `out_tb`
+ * @param[in]     持续时间 持续时间 till the next call 到 this function (i.e.
+ *                         持续时间 的 the current packet/帧)
+ * @param[in,out] last     指针 到 a 时间戳 expressed 中 terms of
  *                         `fs_tb`, acting as a state variable
- * @param[in]     out_tb   Output timebase
- * @return        Timestamp expressed in terms of `out_tb`
+ * @param[in]     out_tb   输出 timebase
+ * @返回        时间戳 expressed 中 terms 的 `out_tb`
  *
- * @note In the context of this function, "duration" is in term of samples, not
+ * @note In the 上下文 的 this function, "持续时间" is 中 term 的 采样s, not
  *       seconds.
  */
 int64_t av_rescale_delta(AVRational in_tb, int64_t in_ts,  AVRational fs_tb, int duration, int64_t *last, AVRational out_tb);
 
 /**
- * Add a value to a timestamp.
+ * Add a 值 到 a 时间戳.
  *
- * This function guarantees that when the same value is repeatedly added that
- * no accumulation of rounding errors occurs.
+ * 此函数 guarantees that 当 the same 值 is repeatedly added that
+ * no accumulation 的 rounding errors occurs.
  *
- * @param[in] ts     Input timestamp
- * @param[in] ts_tb  Input timestamp time base
- * @param[in] inc    Value to be added
- * @param[in] inc_tb Time base of `inc`
+ * @param[in] ts     输入 时间戳
+ * @param[in] ts_tb  输入 时间戳 时间基
+ * @param[in] inc    值 到 be added
+ * @param[in] inc_tb 时间基 的 `inc`
  */
 int64_t av_add_stable(AVRational ts_tb, int64_t ts, AVRational inc_tb, int64_t inc);
 
 /**
- * 0th order modified bessel function of the first kind.
+ * 0th order mod如果ied bessel function 的 the first kind.
  */
 double av_bessel_i0(double x);
 

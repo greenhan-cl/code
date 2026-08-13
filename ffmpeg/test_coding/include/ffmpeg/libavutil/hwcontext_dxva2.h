@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -22,52 +22,49 @@
 
 /**
  * @file
- * An API-specific header for AV_HWDEVICE_TYPE_DXVA2.
+ * AV_HWDEVICE_TYPE_DXVA2 专用 API 头文件。
  *
- * Only fixed-size pools are supported.
+ * 仅支持固定大小的池。
  *
- * For user-allocated pools, AVHWFramesContext.pool must return AVBufferRefs
- * with the data pointer set to a pointer to IDirect3DSurface9.
+ * 对于用户分配的池，AVHWFramesContext.pool 必须返回数据指针设为
+ * IDirect3DSurface9 指针的 AVBufferRef。
  */
 
 #include <d3d9.h>
 #include <dxva2api.h>
 
 /**
- * This struct is allocated as AVHWDeviceContext.hwctx
+ * 此结构被分配为 AVHWDeviceContext.hwctx。
  */
 typedef struct AVDXVA2DeviceContext {
     IDirect3DDeviceManager9 *devmgr;
 } AVDXVA2DeviceContext;
 
 /**
- * This struct is allocated as AVHWFramesContext.hwctx
+ * 此结构被分配为 AVHWFramesContext.hwctx。
  */
 typedef struct AVDXVA2FramesContext {
     /**
-     * The surface type (e.g. DXVA2_VideoProcessorRenderTarget or
-     * DXVA2_VideoDecoderRenderTarget). Must be set by the caller.
+     * 表面类型（例如 DXVA2_VideoProcessorRenderTarget 或
+     * DXVA2_VideoDecoderRenderTarget）。必须由调用者设置。
      */
     DWORD               surface_type;
 
     /**
-     * The surface pool. When an external pool is not provided by the caller,
-     * this will be managed (allocated and filled on init, freed on uninit) by
-     * libavutil.
+     * 表面池。当调用者未提供外部池时，它由 libavutil 管理（初始化时分配和填充，
+     * 反初始化时释放）。
      */
     IDirect3DSurface9 **surfaces;
     int              nb_surfaces;
 
     /**
-     * Certain drivers require the decoder to be destroyed before the surfaces.
-     * To allow internally managed pools to work properly in such cases, this
-     * field is provided.
+     * 某些驱动程序要求先于表面销毁解码器。为使内部管理的池在此情况下正常工作，
+     * 提供了此字段。
      *
-     * If it is non-NULL, libavutil will call IDirectXVideoDecoder_Release() on
-     * it just before the internal surface pool is freed.
+     * 如果它非 NULL，libavutil 会在释放内部表面池之前对其调用
+     * IDirectXVideoDecoder_Release()。
      *
-     * This is for convenience only. Some code uses other methods to manage the
-     * decoder reference.
+     * 这只是为了方便。某些代码使用其他方法管理解码器引用。
      */
     IDirectXVideoDecoder *decoder_to_release;
 } AVDXVA2FramesContext;

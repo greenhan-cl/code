@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -21,7 +21,7 @@
 /**
  * @file
  * @ingroup lavu_md5
- * Public header for MD5 hash function implementation.
+ * MD5 哈希函数实现的公共头文件。
  */
 
 #ifndef AVUTIL_MD5_H
@@ -35,7 +35,7 @@
 /**
  * @defgroup lavu_md5 MD5
  * @ingroup lavu_hash
- * MD5 hash function implementation.
+ * MD5 哈希函数实现。
  *
  * @{
  */
@@ -45,40 +45,40 @@ extern const int av_md5_size;
 struct AVMD5;
 
 /**
- * Allocate an AVMD5 context.
+ * 分配 AVMD5 上下文。
  */
 struct AVMD5 *av_md5_alloc(void);
 
 /**
- * Initialize MD5 hashing.
+ * 初始化 MD5 哈希。
  *
- * @param ctx pointer to the function context (of size av_md5_size)
+ * @param ctx 指向函数上下文的指针（大小为 av_md5_size）
  */
 void av_md5_init(struct AVMD5 *ctx);
 
 /**
- * Update hash value.
+ * 更新哈希值。
  *
- * @param ctx hash function context
- * @param src input data to update hash with
- * @param len input data length
+ * @param ctx 哈希函数上下文
+ * @param src 用于更新哈希的输入数据
+ * @param len 输入数据长度
  */
 void av_md5_update(struct AVMD5 *ctx, const uint8_t *src, size_t len);
 
 /**
- * Finish hashing and output digest value.
+ * 完成哈希并输出摘要值。
  *
- * @param ctx hash function context
- * @param dst buffer where output digest value is stored
+ * @param ctx 哈希函数上下文
+ * @param dst 存储输出摘要值的缓冲区
  */
 void av_md5_final(struct AVMD5 *ctx, uint8_t *dst);
 
 /**
- * Hash an array of data.
+ * 对数据数组进行哈希。
  *
- * @param dst The output buffer to write the digest into
- * @param src The data to hash
- * @param len The length of the data, in bytes
+ * @param dst 写入摘要的输出缓冲区
+ * @param src 要进行哈希的数据
+ * @param len 数据长度，单位为字节
  */
 void av_md5_sum(uint8_t *dst, const uint8_t *src, size_t len);
 

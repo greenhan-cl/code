@@ -6,5 +6,5 @@
 int main(const int _argument_count, char* _arguments[]) {
     const std::string _input_path =
         _argument_count > 1 ? _arguments[1] : INPUT_PATH;
-	return ffmpeg_test_coding::runDemuxingDemo(_input_path);
+    return ffmpeg_test_coding::runSdlVideoDemo(_input_path);
 }

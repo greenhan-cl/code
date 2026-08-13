@@ -1,4 +1,4 @@
-/**
+﻿/**
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -23,181 +23,165 @@
 #include <stdint.h>
 
 typedef struct AVSubsampleEncryptionInfo {
-    /** The number of bytes that are clear. */
+    /** 明文字节数。 */
     unsigned int bytes_of_clear_data;
 
     /**
-     * The number of bytes that are protected.  If using pattern encryption,
-     * the pattern applies to only the protected bytes; if not using pattern
-     * encryption, all these bytes are encrypted.
+     * 受保护的字节数。使用模式加密时，该模式只应用于受保护字节；不使用模式
+     * 加密时，所有这些字节都会被加密。
      */
     unsigned int bytes_of_protected_data;
 } AVSubsampleEncryptionInfo;
 
 /**
- * This describes encryption info for a packet.  This contains frame-specific
- * info for how to decrypt the packet before passing it to the decoder.
+ * 描述数据包的加密信息，其中包含将数据包传给解码器前如何解密的帧特定信息。
  *
- * The size of this struct is not part of the public ABI.
+ * 此结构的大小不属于公共 ABI。
  */
 typedef struct AVEncryptionInfo {
-    /** The fourcc encryption scheme, in big-endian byte order. */
+    /** fourcc 加密方案，采用大端字节序。 */
     uint32_t scheme;
 
     /**
-     * Only used for pattern encryption.  This is the number of 16-byte blocks
-     * that are encrypted.
+     * 仅用于模式加密。这是被加密的 16 字节块数量。
      */
     uint32_t crypt_byte_block;
 
     /**
-     * Only used for pattern encryption.  This is the number of 16-byte blocks
-     * that are clear.
+     * 仅用于模式加密。这是明文的 16 字节块数量。
      */
     uint32_t skip_byte_block;
 
     /**
-     * The ID of the key used to encrypt the packet.  This should always be
-     * 16 bytes long, but may be changed in the future.
+     * 用于加密数据包的密钥 ID。它应始终为 16 字节长，但未来可能改变。
      */
     uint8_t *key_id;
     uint32_t key_id_size;
 
     /**
-     * The initialization vector.  This may have been zero-filled to be the
-     * correct block size.  This should always be 16 bytes long, but may be
-     * changed in the future.
+     * 初始化向量。它可能已经用零填充到正确的块大小。它应始终为 16 字节长，
+     * 但未来可能改变。
      */
     uint8_t *iv;
     uint32_t iv_size;
 
     /**
-     * An array of subsample encryption info specifying how parts of the sample
-     * are encrypted.  If there are no subsamples, then the whole sample is
-     * encrypted.
+     * 子样本加密信息数组，指定样本各部分如何加密。没有子样本时，整个样本都
+     * 被加密。
      */
     AVSubsampleEncryptionInfo *subsamples;
     uint32_t subsample_count;
 } AVEncryptionInfo;
 
 /**
- * This describes info used to initialize an encryption key system.
+ * 描述用于初始化加密密钥系统的信息。
  *
- * The size of this struct is not part of the public ABI.
+ * 此结构的大小不属于公共 ABI。
  */
 typedef struct AVEncryptionInitInfo {
     /**
-     * A unique identifier for the key system this is for, can be NULL if it
-     * is not known.  This should always be 16 bytes, but may change in the
-     * future.
+     * 此信息所对应密钥系统的唯一标识符；未知时可以为 NULL。它应始终为 16
+     * 字节，但未来可能改变。
      */
     uint8_t* system_id;
     uint32_t system_id_size;
 
     /**
-     * An array of key IDs this initialization data is for.  All IDs are the
-     * same length.  Can be NULL if there are no known key IDs.
+     * 此初始化数据对应的密钥 ID 数组。所有 ID 长度相同。没有已知密钥 ID 时
+     * 可以为 NULL。
      */
     uint8_t** key_ids;
-    /** The number of key IDs. */
+    /** 密钥 ID 的数量。 */
     uint32_t num_key_ids;
     /**
-     * The number of bytes in each key ID.  This should always be 16, but may
-     * change in the future.
+     * 每个密钥 ID 的字节数。它应始终为 16，但未来可能改变。
      */
     uint32_t key_id_size;
 
     /**
-     * Key-system specific initialization data.  This data is copied directly
-     * from the file and the format depends on the specific key system.  This
-     * can be NULL if there is no initialization data; in that case, there
-     * will be at least one key ID.
+     * 密钥系统特定的初始化数据。此数据直接从文件复制，格式取决于具体密钥系统。
+     * 没有初始化数据时可以为 NULL；此时至少会有一个密钥 ID。
      */
     uint8_t* data;
     uint32_t data_size;
 
     /**
-     * An optional pointer to the next initialization info in the list.
+     * 指向列表中下一项初始化信息的可选指针。
      */
     struct AVEncryptionInitInfo *next;
 } AVEncryptionInitInfo;
 
 /**
- * Allocates an AVEncryptionInfo structure and sub-pointers to hold the given
- * number of subsamples.  This will allocate pointers for the key ID, IV,
- * and subsample entries, set the size members, and zero-initialize the rest.
+ * 分配 AVEncryptionInfo 结构及其子指针，以容纳给定数量的子样本。这会为密钥
+ * ID、IV 和子样本条目分配指针，设置大小成员，并将其余部分清零初始化。
  *
- * @param subsample_count The number of subsamples.
- * @param key_id_size The number of bytes in the key ID, should be 16.
- * @param iv_size The number of bytes in the IV, should be 16.
+ * @param subsample_count 子样本数量。
+ * @param key_id_size 密钥 ID 的字节数，应为 16。
+ * @param iv_size IV 的字节数，应为 16。
  *
- * @return The new AVEncryptionInfo structure, or NULL on error.
+ * @return 新的 AVEncryptionInfo 结构；出错时返回 NULL。
  */
 AVEncryptionInfo *av_encryption_info_alloc(uint32_t subsample_count, uint32_t key_id_size, uint32_t iv_size);
 
 /**
- * Allocates an AVEncryptionInfo structure with a copy of the given data.
- * @return The new AVEncryptionInfo structure, or NULL on error.
+ * 分配 AVEncryptionInfo 结构，其中包含给定数据的副本。
+ * @return 新的 AVEncryptionInfo 结构；出错时返回 NULL。
  */
 AVEncryptionInfo *av_encryption_info_clone(const AVEncryptionInfo *info);
 
 /**
- * Frees the given encryption info object.  This MUST NOT be used to free the
- * side-data data pointer, that should use normal side-data methods.
+ * 释放给定的加密信息对象。绝不能用它释放侧数据的数据指针；后者应使用普通
+ * 侧数据方法释放。
  */
 void av_encryption_info_free(AVEncryptionInfo *info);
 
 /**
- * Creates a copy of the AVEncryptionInfo that is contained in the given side
- * data.  The resulting object should be passed to av_encryption_info_free()
- * when done.
+ * 创建给定侧数据中所含 AVEncryptionInfo 的副本。使用完结果对象后，应将其
+ * 传给 av_encryption_info_free()。
  *
- * @return The new AVEncryptionInfo structure, or NULL on error.
+ * @return 新的 AVEncryptionInfo 结构；出错时返回 NULL。
  */
 AVEncryptionInfo *av_encryption_info_get_side_data(const uint8_t *side_data, size_t side_data_size);
 
 /**
- * Allocates and initializes side data that holds a copy of the given encryption
- * info.  The resulting pointer should be either freed using av_free or given
- * to av_packet_add_side_data().
+ * 分配并初始化保存给定加密信息副本的侧数据。结果指针应使用 av_free 释放，
+ * 或传给 av_packet_add_side_data()。
  *
- * @return The new side-data pointer, or NULL.
+ * @return 新的侧数据指针，或 NULL。
  */
 uint8_t *av_encryption_info_add_side_data(
       const AVEncryptionInfo *info, size_t *side_data_size);
 
 
 /**
- * Allocates an AVEncryptionInitInfo structure and sub-pointers to hold the
- * given sizes.  This will allocate pointers and set all the fields.
+ * 分配 AVEncryptionInitInfo 结构及其子指针，以容纳给定大小。这会分配指针并
+ * 设置所有字段。
  *
- * @return The new AVEncryptionInitInfo structure, or NULL on error.
+ * @return 新的 AVEncryptionInitInfo 结构；出错时返回 NULL。
  */
 AVEncryptionInitInfo *av_encryption_init_info_alloc(
     uint32_t system_id_size, uint32_t num_key_ids, uint32_t key_id_size, uint32_t data_size);
 
 /**
- * Frees the given encryption init info object.  This MUST NOT be used to free
- * the side-data data pointer, that should use normal side-data methods.
+ * 释放给定的加密初始化信息对象。绝不能用它释放侧数据的数据指针；后者应使用
+ * 普通侧数据方法释放。
  */
 void av_encryption_init_info_free(AVEncryptionInitInfo* info);
 
 /**
- * Creates a copy of the AVEncryptionInitInfo that is contained in the given
- * side data.  The resulting object should be passed to
- * av_encryption_init_info_free() when done.
+ * 创建给定侧数据中所含 AVEncryptionInitInfo 的副本。使用完结果对象后，应将其
+ * 传给 av_encryption_init_info_free()。
  *
- * @return The new AVEncryptionInitInfo structure, or NULL on error.
+ * @return 新的 AVEncryptionInitInfo 结构；出错时返回 NULL。
  */
 AVEncryptionInitInfo *av_encryption_init_info_get_side_data(
     const uint8_t* side_data, size_t side_data_size);
 
 /**
- * Allocates and initializes side data that holds a copy of the given encryption
- * init info.  The resulting pointer should be either freed using av_free or
- * given to av_packet_add_side_data().
+ * 分配并初始化保存给定加密初始化信息副本的侧数据。结果指针应使用 av_free
+ * 释放，或传给 av_packet_add_side_data()。
  *
- * @return The new side-data pointer, or NULL.
+ * @return 新的侧数据指针，或 NULL。
  */
 uint8_t *av_encryption_init_info_add_side_data(
     const AVEncryptionInitInfo *info, size_t *side_data_size);

@@ -1,19 +1,19 @@
-/*
- * This file is part of FFmpeg.
+﻿/*
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 #ifndef AVUTIL_VIDEO_ENC_PARAMS_H
@@ -29,115 +29,115 @@ enum AVVideoEncParamsType {
     AV_VIDEO_ENC_PARAMS_NONE = -1,
     /**
      * VP9 stores:
-     * - per-frame base (luma AC) quantizer index, exported as AVVideoEncParams.qp
-     * - deltas for luma DC, chroma AC and chroma DC, exported in the
-     *   corresponding entries in AVVideoEncParams.delta_qp
-     * - per-segment delta, exported as for each block as AVVideoBlockParams.delta_qp
+     * - per-帧 base (luma AC) quantizer index, exported as AV视频EncParams.qp
+     * - deltas 用于 luma DC, chroma AC 和 chroma DC, exported 中 the
+     *   corresponding entries 中 AV视频EncParams.delta_qp
+     * - per-segment delta, exported as 用于 each block as AV视频BlockParams.delta_qp
      *
-     * To compute the resulting quantizer index for a block:
-     * - for luma AC, add the base qp and the per-block delta_qp, saturating to
+     * To compute the resulting quantizer index 用于 a block:
+     * - 用于 luma AC, add the base qp 和 the per-block delta_qp, saturating to
      *   unsigned 8-bit.
-     * - for luma DC and chroma AC/DC, add the corresponding
-     *   AVVideoBlockParams.delta_qp to the luma AC index, again saturating to
+     * - 用于 luma DC 和 chroma AC/DC, add the corresponding
+     *   AV视频BlockParams.delta_qp 到 the luma AC index, again saturating to
      *   unsigned 8-bit.
      */
     AV_VIDEO_ENC_PARAMS_VP9,
 
     /**
      * H.264 stores:
-     * - in PPS (per-picture):
-     *   * initial QP_Y (luma) value, exported as AVVideoEncParams.qp
-     *   * delta(s) for chroma QP values (same for both, or each separately),
-     *     exported as in the corresponding entries in AVVideoEncParams.delta_qp
-     * - per-slice QP delta, not exported directly, added to the per-MB value
+     * - 中 PPS (per-picture):
+     *   * initial QP_Y (luma) 值, exported as AV视频EncParams.qp
+     *   * delta(s) 用于 chroma QP 值 (same 用于 both, 或 each separately),
+     *     exported as 中 the corresponding entries 中 AV视频EncParams.delta_qp
+     * - per-slice QP delta, not exported directly, added 到 the per-MB 值
      * - per-MB delta; not exported directly; the final per-MB quantizer
-     *   parameter - QP_Y - minus the value in AVVideoEncParams.qp is exported
-     *   as AVVideoBlockParams.qp_delta.
+     *   parameter - QP_Y - minus the 值 中 AV视频EncParams.qp is exported
+     *   as AV视频BlockParams.qp_delta.
      */
     AV_VIDEO_ENC_PARAMS_H264,
 
     /*
      * MPEG-2-compatible quantizer.
      *
-     * Summing the frame-level qp with the per-block delta_qp gives the
-     * resulting quantizer for the block.
+     * Summing the 帧-level qp，使用 the per-block delta_qp gives the
+     * resulting quantizer 用于 the block.
      */
     AV_VIDEO_ENC_PARAMS_MPEG2,
 };
 
 /**
- * Video encoding parameters for a given frame. This struct is allocated along
- * with an optional array of per-block AVVideoBlockParams descriptors.
- * Must be allocated with av_video_enc_params_alloc().
+ * 视频 编码 parameters 用于 a given 帧. This struct is 分配d along
+ *，使用 an 可选 数组 的 per-block AV视频BlockParams 描述符s.
+ * Must be 分配d，使用 av_视频_enc_params_alloc().
  */
 typedef struct AVVideoEncParams {
     /**
-     * Number of blocks in the array.
+     * 数量 的 blocks 中 the 数组.
      *
-     * May be 0, in which case no per-block information is present. In this case
-     * the values of blocks_offset / block_size are unspecified and should not
+     * May be 0, 中 which case no per-block in格式ion is present. In this case
+     * the 值 的 blocks_off设置 / block_大小 are unspec如果ied 和 should not
      * be accessed.
      */
     unsigned int nb_blocks;
     /**
-     * Offset in bytes from the beginning of this structure at which the array
-     * of blocks starts.
+     * Off设置 中 bytes，来自 the beginning 的 this 结构体 at which the 数组
+     * 的 blocks starts.
      */
     size_t blocks_offset;
     /*
-     * Size of each block in bytes. May not match sizeof(AVVideoBlockParams).
+     * 大小 的 each block 中 bytes. May not match 大小of(AV视频BlockParams).
      */
     size_t block_size;
 
     /**
-     * Type of the parameters (the codec they are used with).
+     * Type 的 the parameters (the codec they are used with).
      */
     enum AVVideoEncParamsType type;
 
     /**
-     * Base quantisation parameter for the frame. The final quantiser for a
-     * given block in a given plane is obtained from this value, possibly
-     * combined with {@code delta_qp} and the per-block delta in a manner
-     * documented for each type.
+     * Base quantisation parameter 用于 the 帧. final quantiser 用于 a
+     * given block 中 a given plane is obtained，来自 this 值, possibly
+     * combined，使用 {@code delta_qp} 和 the per-block delta 中 a manner
+     * documented 用于 each type.
      */
     int32_t qp;
 
     /**
-     * Quantisation parameter offset from the base (per-frame) qp for a given
-     * plane (first index) and AC/DC coefficients (second index).
+     * Quantisation parameter off设置，来自 the base (per-帧) qp 用于 a given
+     * plane (first index) 和 AC/DC coefficients (second index).
      */
     int32_t delta_qp[4][2];
 } AVVideoEncParams;
 
 /**
- * Data structure for storing block-level encoding information.
- * It is allocated as a part of AVVideoEncParams and should be retrieved with
- * av_video_enc_params_block().
+ * Data 结构体 用于 storing block-level 编码 in格式ion.
+ * It is 分配d as a part 的 AV视频EncParams 和 should be retrieved with
+ * av_视频_enc_params_block().
  *
- * sizeof(AVVideoBlockParams) is not a part of the ABI and new fields may be
- * added to it.
+ * 大小of(AV视频BlockParams) is not a part 的 the ABI 和 new fields may be
+ * added 到 it.
  */
 typedef struct AVVideoBlockParams {
     /**
-     * Distance in luma pixels from the top-left corner of the visible frame
-     * to the top-left corner of the block.
-     * Can be negative if top/right padding is present on the coded frame.
+     * Distance 中 luma 像素s，来自 the top-left corner 的 the visible 帧
+     * 到 the top-left corner 的 the block.
+     * Can be negative 如果 top/right padding is present 上 the coded 帧.
      */
     int src_x, src_y;
     /**
-     * Width and height of the block in luma pixels.
+     * 宽度 和 高度 的 the block 中 luma 像素s.
      */
     int w, h;
 
     /**
-     * Difference between this block's final quantization parameter and the
-     * corresponding per-frame value.
+     * D如果ference between this block's final quantization parameter 和 the
+     * corresponding per-帧 值.
      */
     int32_t delta_qp;
 } AVVideoBlockParams;
 
 /**
- * Get the block at the specified {@code idx}. Must be between 0 and nb_blocks - 1.
+ * 获取 the block at the spec如果ied {@code idx}. Must be between 0 和 nb_blocks - 1.
  */
 static av_always_inline AVVideoBlockParams*
 av_video_enc_params_block(AVVideoEncParams *par, unsigned int idx)
@@ -148,21 +148,21 @@ av_video_enc_params_block(AVVideoEncParams *par, unsigned int idx)
 }
 
 /**
- * Allocates memory for AVVideoEncParams of the given type, plus an array of
- * {@code nb_blocks} AVVideoBlockParams and initializes the variables. Can be
- * freed with a normal av_free() call.
+ * 分配s 内存 用于 AV视频EncParams 的 the given type, plus an 数组 of
+ * {@code nb_blocks} AV视频BlockParams 和 初始化s the variables. Can be
+ * 释放d，使用 a normal av_释放() call.
  *
- * @param out_size if non-NULL, the size in bytes of the resulting data array is
+ * @param out_大小 如果 non-NULL, the 大小 中 bytes 的 the resulting data 数组 is
  * written here.
  */
 AVVideoEncParams *av_video_enc_params_alloc(enum AVVideoEncParamsType type,
                                             unsigned int nb_blocks, size_t *out_size);
 
 /**
- * Allocates memory for AVEncodeInfoFrame plus an array of
- * {@code nb_blocks} AVEncodeInfoBlock in the given AVFrame {@code frame}
- * as AVFrameSideData of type AV_FRAME_DATA_VIDEO_ENC_PARAMS
- * and initializes the variables.
+ * 分配s 内存 用于 AVEncodeInfo帧 plus an 数组 of
+ * {@code nb_blocks} AVEncodeInfoBlock 中 the given AV帧 {@code 帧}
+ * as AV帧SideData 的 type AV_帧_DATA_视频_ENC_PARAMS
+ * 和 初始化s the variables.
  */
 AVVideoEncParams*
 av_video_enc_params_create_side_data(AVFrame *frame, enum AVVideoEncParamsType type,

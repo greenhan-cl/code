@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -22,44 +22,39 @@
 #include <stddef.h>
 
 /**
- * AVContainerFifo is a FIFO for "containers" - dynamically allocated reusable
- * structs (e.g. AVFrame or AVPacket). AVContainerFifo uses an internal pool of
- * such containers to avoid allocating and freeing them repeatedly.
+ * AVContainerFifo 是用于“容器”的 FIFO——容器是动态分配、可复用的结构（例如
+ * AVFrame 或 AVPacket）。AVContainerFifo 使用此类容器的内部池，以避免重复
+ * 分配和释放。
  */
 typedef struct AVContainerFifo AVContainerFifo;
 
 enum AVContainerFifoFlags {
     /**
-     * Signal to av_container_fifo_write() that it should make a new reference
-     * to data in src rather than consume its contents.
+     * 通知 av_container_fifo_write() 应创建对 src 中数据的新引用，而不是消耗
+     * 其内容。
      *
-     * @note you must handle this flag manually in your own fifo_transfer()
-     *       callback
+     * @note 必须在自己的 fifo_transfer() 回调中手动处理此标志
      */
     AV_CONTAINER_FIFO_FLAG_REF  = (1 << 0),
 
     /**
-     * This and all higher bits in flags may be set to any value by the caller
-     * and are guaranteed to be passed through to the fifo_transfer() callback
-     * and not be interpreted by AVContainerFifo code.
+     * flags 中此位及所有更高位可由调用者设置为任意值，并保证原样传给
+     * fifo_transfer() 回调，而不会由 AVContainerFifo 代码解释。
      */
     AV_CONTAINER_FIFO_FLAG_USER = (1 << 16),
 };
 
 /**
- * Allocate a new AVContainerFifo for the container type defined by provided
- * callbacks.
+ * 为所提供回调定义的容器类型分配新的 AVContainerFifo。
  *
- * @param opaque user data that will be passed to the callbacks provided to this
- *               function
- * @param container_alloc allocate a new container instance and return a pointer
- *                        to it, or NULL on failure
- * @param container_reset reset the provided container instance to a clean state
- * @param container_free free the provided container instance
- * @param fifo_transfer Transfer the contents of container src to dst.
- * @param flags currently unused
+ * @param opaque 将传给此函数所提供回调的用户数据
+ * @param container_alloc 分配新的容器实例并返回其指针；失败时返回 NULL
+ * @param container_reset 将所提供的容器实例重置为干净状态
+ * @param container_free 释放所提供的容器实例
+ * @param fifo_transfer 将容器 src 的内容传输到 dst。
+ * @param flags 当前未使用
  *
- * @return newly allocated AVContainerFifo, or NULL on failure
+ * @return 新分配的 AVContainerFifo；失败时返回 NULL
  */
 AVContainerFifo*
 av_container_fifo_alloc(void *opaque,
@@ -70,60 +65,56 @@ av_container_fifo_alloc(void *opaque,
                         unsigned flags);
 
 /**
- * Allocate an AVContainerFifo instance for AVFrames.
+ * 为 AVFrame 分配 AVContainerFifo 实例。
  *
- * @param flags currently unused
+ * @param flags 当前未使用
  */
 AVContainerFifo *av_container_fifo_alloc_avframe(unsigned flags);
 
 /**
- * Free a AVContainerFifo and everything in it.
+ * 释放 AVContainerFifo 及其中的所有内容。
  */
 void av_container_fifo_free(AVContainerFifo **cf);
 
 /**
- * Write the contents of obj to the FIFO.
+ * 将 obj 的内容写入 FIFO。
  *
- * The fifo_transfer() callback previously provided to av_container_fifo_alloc()
- * will be called with obj as src in order to perform the actual transfer.
+ * 会调用之前提供给 av_container_fifo_alloc() 的 fifo_transfer() 回调，并将 obj
+ * 作为 src，以执行实际传输。
  */
 int av_container_fifo_write(AVContainerFifo *cf, void *obj, unsigned flags);
 
 /**
- * Read the next available object from the FIFO into obj.
+ * 从 FIFO 中读取下一个可用对象到 obj。
  *
- * The fifo_read() callback previously provided to av_container_fifo_alloc()
- * will be called with obj as dst in order to perform the actual transfer.
+ * 会调用之前提供给 av_container_fifo_alloc() 的 fifo_read() 回调，并将 obj
+ * 作为 dst，以执行实际传输。
  */
 int av_container_fifo_read(AVContainerFifo *cf, void *obj, unsigned flags);
 
 /**
- * Access objects stored in the FIFO without retrieving them. The
- * fifo_transfer() callback will NOT be invoked and the FIFO state will not be
- * modified.
+ * 访问 FIFO 中存储的对象但不取出。不会调用 fifo_transfer() 回调，也不会修改
+ * FIFO 状态。
  *
- * @param pobj Pointer to the object stored in the FIFO will be written here on
- *             success. The object remains owned by the FIFO and the caller may
- *             only access it as long as the FIFO is not modified.
- * @param offset Position of the object to retrieve - 0 is the next item that
- *               would be read, 1 the one after, etc. Must be smaller than
- *               av_container_fifo_can_read().
+ * @param pobj 成功时在此写入指向 FIFO 中所存对象的指针。对象仍由 FIFO 所有，
+ *             仅在 FIFO 未被修改期间，调用者才可访问它。
+ * @param offset 要获取对象的位置——0 表示下一个将读取的项，1 表示再下一个，
+ *               依此类推。必须小于 av_container_fifo_can_read()。
  *
- * @retval 0 success, a pointer was written into pobj
- * @retval AVERROR(EINVAL) invalid offset value
+ * @retval 0 成功，已将指针写入 pobj
+ * @retval AVERROR(EINVAL) offset 值无效
  */
 int av_container_fifo_peek(AVContainerFifo *cf, void **pobj, size_t offset);
 
 /**
- * Discard the specified number of elements from the FIFO.
+ * 从 FIFO 丢弃指定数量的元素。
  *
- * @param nb_elems number of elements to discard, MUST NOT be larger than
- *                 av_fifo_can_read(f)
+ * @param nb_elems 要丢弃的元素数，绝不能大于 av_fifo_can_read(f)
  */
 void av_container_fifo_drain(AVContainerFifo *cf, size_t nb_elems);
 
 /**
- * @return number of objects available for reading
+ * @return 可供读取的对象数量
  */
 size_t av_container_fifo_can_read(const AVContainerFifo *cf);
 

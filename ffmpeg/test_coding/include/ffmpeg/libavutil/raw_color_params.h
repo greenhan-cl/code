@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2026 Lynne <dev@lynne.ee>
  *
  * This file is part of FFmpeg.
@@ -31,97 +31,89 @@ enum AVRawColorParamsType {
     AV_RAW_COLOR_PARAMS_NONE = 0,
 
     /**
-     * The union is valid when interpreted as AVProResRawColorParams
-     * (codec.prores_raw).
+     * 将联合体解释为 AVProResRawColorParams（codec.prores_raw）时有效。
      */
     AV_RAW_COLOR_PARAMS_PRORES_RAW,
 };
 
 /**
- * ProRes RAW per-frame color transform, parsed from the prrf frame header.
+ * 从 prrf 帧头解析的 ProRes RAW 逐帧色彩变换。
  *
- * The correct rendering pipeline is:
+ * 正确的渲染流水线为：
  *  -> (sample - black_level) / (white_level - black_level)
  *  -> per-channel white balance (wb_red, 1.0 for G, wb_blue) pre-debayer
  *  -> debayer
  *  -> color_matrix (camera RGB -> CIE 1931 XYZ relative to D65)
  *  -> gain (scene-linear scale)
  *
- * Black/white levels live on the outer AVRawColorParams. The matrix output
- * is linear-light CIE XYZ D65; convert to a working RGB space downstream.
+ * 黑/白电平位于外层 AVRawColorParams。矩阵输出为线性光 CIE XYZ D65，
+ * 应在下游转换为工作 RGB 空间。
  *
- * @note The struct must be allocated as part of AVRawColorParams using
- *       av_raw_color_params_alloc(). Its size is not a part of the public ABI.
+ * @note 此结构体必须作为 AVRawColorParams 的一部分使用
+ *       av_raw_color_params_alloc() 分配。其大小不属于公共 ABI。
  */
 typedef struct AVProResRawColorParams {
     /**
-     * White balance multiplier for the red channel, applied pre-debayer.
+     * 红色通道的白平衡乘数，在去马赛克前应用。
      */
     AVRational wb_red;
 
     /**
-     * White balance multiplier for the blue channel, applied pre-debayer.
-     * (The green channel is implicit 1.0 for ProRes RAW)
+     * 蓝色通道的白平衡乘数，在去马赛克前应用。
+     * （ProRes RAW 的绿色通道隐含为 1.0）
      */
     AVRational wb_blue;
 
     /**
-     * 3x3 row-major color matrix from camera RGB to linear-light CIE 1931
-     * XYZ relative to the D65 illuminant, applied post-debayer.
+     * 从相机 RGB 到相对于 D65 光源的线性光 CIE 1931 XYZ 的 3x3 行主序色彩矩阵，
+     * 在去马赛克后应用。
      * out[i] = sum_j color_matrix[i][j] * in[j].
      */
     AVRational color_matrix[3][3];
 
     /**
-     * Post-matrix scene-linear scaling factor. Encodes highlight headroom the
-     * encoder reserved; multiply the matrixed values by this to recover
-     * scene-linear light.
+     * 矩阵后的场景线性缩放因子。编码器以此编码保留的高光余量；
+     * 将矩阵变换后的值乘以此因子可恢复场景线性光。
      */
     AVRational gain;
 } AVProResRawColorParams;
 
 /**
- * Per-frame color information for a RAW camera codec. Carried as side data of
- * type AV_FRAME_DATA_RAW_COLOR_PARAMS.
+ * RAW 相机编解码器的逐帧色彩信息，以 AV_FRAME_DATA_RAW_COLOR_PARAMS 类型侧数据携带。
  *
- * The outer struct carries the fields every RAW codec exposes: the sensor's
- * valid sample range and the white-balance correlated color temperature.
- * The codec union holds the codec-specific transform parameters; `type`
- * selects which member of the union is valid.
+ * 外层结构体包含每种 RAW 编解码器都公开的字段：传感器有效采样范围和白平衡相关色温。
+ * codec 联合体保存编解码器专用变换参数；`type` 选择联合体中的有效成员。
  *
- * The codec-specific transform (color_matrix or equivalent) always lands in
- * linear-light CIE 1931 XYZ relative to the D65 illuminant, cameras don't
- * have standard primaries, so XYZ is the only common target.
+ * 编解码器专用变换（color_matrix 或等效变换）始终输出相对于 D65 光源的线性光
+ * CIE 1931 XYZ。相机没有标准基色，因此 XYZ 是唯一通用目标。
  *
- * @note The struct must be allocated using av_raw_color_params_alloc() or
- *       av_raw_color_params_create_side_data(). Its size is not a part of the
- *       public ABI.
+ * @note 必须使用 av_raw_color_params_alloc() 或
+ *       av_raw_color_params_create_side_data() 分配此结构体。其大小不属于公共 ABI。
  */
 typedef struct AVRawColorParams {
     /**
-     * Selects which member of `codec` is valid.
+     * 选择 `codec` 中的有效成员。
      */
     enum AVRawColorParamsType type;
 
     /**
-     * Lowest valid raw sample code (sensor black point)
+     * 最低有效原始采样码（传感器黑点）
      */
     AVRational black_level;
 
     /**
-     * Highest valid raw sample code (sensor white point)
+     * 最高有效原始采样码（传感器白点）
      */
     AVRational white_level;
 
     /**
-     * Color temperature in Kelvin from with the camera's white balance.
-     * Informational; the math uses the codec-specific white-balance fields.
-     * 0 if not signaled.
+     * 相机白平衡的色温，单位为开尔文。仅供参考；计算使用编解码器专用白平衡字段。
+     * 未指示时为 0。
      */
     uint32_t wb_cct;
 
     /**
-     * Additional codec-specific fields.
+     * 其他编解码器专用字段。
      */
     union {
         AVProResRawColorParams prores_raw;
@@ -129,18 +121,18 @@ typedef struct AVRawColorParams {
 } AVRawColorParams;
 
 /**
- * Allocate an AVRawColorParams structure and zero-initialize it.
+ * 分配 AVRawColorParams 结构体并将其清零初始化。
  *
- * @param size if non-NULL, set to sizeof(AVRawColorParams)
- * @return the newly allocated struct or NULL on failure
+ * @param size 非 NULL 时，设为 sizeof(AVRawColorParams)
+ * @return 新分配的结构体，失败时返回 NULL
  */
 AVRawColorParams *av_raw_color_params_alloc(size_t *size);
 
 /**
- * Allocate and add an AVRawColorParams structure to an existing AVFrame as
- * AV_FRAME_DATA_RAW_COLOR_PARAMS side data.
+ * 分配 AVRawColorParams 结构体，并作为 AV_FRAME_DATA_RAW_COLOR_PARAMS 侧数据
+ * 添加到现有 AVFrame。
  *
- * @return the newly allocated struct, or NULL on failure
+ * @return 新分配的结构体，失败时返回 NULL
  */
 AVRawColorParams *av_raw_color_params_create_side_data(AVFrame *frame);
 

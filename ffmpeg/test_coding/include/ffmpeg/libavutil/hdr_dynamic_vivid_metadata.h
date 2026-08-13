@@ -1,21 +1,21 @@
-/*
- * Copyright (c) 2021 Limin Wang <lance.lmwang at gmail.com>
+﻿/*
+ * 复制right (c) 2021 Limin Wang <lance.lmwang at gmail.com>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 #ifndef AVUTIL_HDR_DYNAMIC_VIVID_METADATA_H
@@ -29,115 +29,115 @@
  */
 typedef struct AVHDRVivid3SplineParams {
     /**
-     * The mode of three Spline. the value shall be in the range
-     * of 0 to 3, inclusive.
+     * mode 的 three Spline. the 值 shall be 中 the range
+     * 的 0 到 3, inclusive.
      */
     int th_mode;
 
     /**
-     * three_Spline_TH_enable_MB is in the range of 0.0 to 1.0, inclusive
-     * and in multiples of 1.0/255.
+     * three_Spline_TH_enable_MB is 中 the range 的 0.0 到 1.0, inclusive
+     * 和 中 multiples 的 1.0/255.
      *
      */
     AVRational th_enable_mb;
 
     /**
-     * 3Spline_TH_enable of three Spline.
-     * The value shall be in the range of 0.0 to 1.0, inclusive.
-     * and in multiples of 1.0/4095.
+     * 3Spline_TH_enable 的 three Spline.
+     * 值 shall be 中 the range 的 0.0 到 1.0, inclusive.
+     * 和 中 multiples 的 1.0/4095.
      */
     AVRational th_enable;
 
     /**
-     * 3Spline_TH_Delta1 of three Spline.
-     * The value shall be in the range of 0.0 to 0.25, inclusive,
-     * and in multiples of 0.25/1023.
+     * 3Spline_TH_Delta1 的 three Spline.
+     * 值 shall be 中 the range 的 0.0 到 0.25, inclusive,
+     * 和 中 multiples 的 0.25/1023.
      */
     AVRational th_delta1;
 
     /**
-     * 3Spline_TH_Delta2 of three Spline.
-     * The value shall be in the range of 0.0 to 0.25, inclusive,
-     * and in multiples of 0.25/1023.
+     * 3Spline_TH_Delta2 的 three Spline.
+     * 值 shall be 中 the range 的 0.0 到 0.25, inclusive,
+     * 和 中 multiples 的 0.25/1023.
      */
     AVRational th_delta2;
 
     /**
-     * 3Spline_enable_Strength of three Spline.
-     * The value shall be in the range of 0.0 to 1.0, inclusive,
-     * and in multiples of 1.0/255.
+     * 3Spline_enable_Strength 的 three Spline.
+     * 值 shall be 中 the range 的 0.0 到 1.0, inclusive,
+     * 和 中 multiples 的 1.0/255.
      */
     AVRational enable_strength;
 } AVHDRVivid3SplineParams;
 
 /**
- * Color tone mapping parameters at a processing window in a dynamic metadata for
- * CUVA 005.1:2021.
+ * Color tone mapping parameters at a processing window 中 a dynamic 元数据 for
+ * CUV005.1:2021.
  */
 typedef struct AVHDRVividColorToneMappingParams {
     /**
-     * The nominal maximum display luminance of the targeted system display,
-     * in multiples of 1.0/4095 candelas per square metre. The value shall be in
-     * the range of 0.0 to 1.0, inclusive.
+     * nominal maximum display luminance 的 the targeted system display,
+     * 中 multiples 的 1.0/4095 candelas per square metre. 值 shall be in
+     * the range 的 0.0 到 1.0, inclusive.
      */
     AVRational targeted_system_display_maximum_luminance;
 
     /**
-     * This flag indicates that transfer the base parameter(for value of 1)
+     * This 标志 indicates that transfer the base parameter(for 值 的 1)
      */
     int base_enable_flag;
 
     /**
-     * base_param_m_p in the base parameter,
-     * in multiples of 1.0/16383. The value shall be in
-     * the range of 0.0 to 1.0, inclusive.
+     * base_param_m_p 中 the base parameter,
+     * 中 multiples 的 1.0/16383. 值 shall be in
+     * the range 的 0.0 到 1.0, inclusive.
      */
     AVRational base_param_m_p;
 
     /**
-     * base_param_m_m in the base parameter,
-     * in multiples of 1.0/10. The value shall be in
-     * the range of 0.0 to 6.3, inclusive.
+     * base_param_m_m 中 the base parameter,
+     * 中 multiples 的 1.0/10. 值 shall be in
+     * the range 的 0.0 到 6.3, inclusive.
      */
     AVRational base_param_m_m;
 
     /**
-     * base_param_m_a in the base parameter,
-     * in multiples of 1.0/1023. The value shall be in
-     * the range of 0.0 to 1.0 inclusive.
+     * base_param_m_a 中 the base parameter,
+     * 中 multiples 的 1.0/1023. 值 shall be in
+     * the range 的 0.0 到 1.0 inclusive.
      */
     AVRational base_param_m_a;
 
     /**
-     * base_param_m_b in the base parameter,
-     * in multiples of 1/1023. The value shall be in
-     * the range of 0.0 to 1.0, inclusive.
+     * base_param_m_b 中 the base parameter,
+     * 中 multiples 的 1/1023. 值 shall be in
+     * the range 的 0.0 到 1.0, inclusive.
      */
     AVRational base_param_m_b;
 
     /**
-     * base_param_m_n in the base parameter,
-     * in multiples of 1.0/10. The value shall be in
-     * the range of 0.0 to 6.3, inclusive.
+     * base_param_m_n 中 the base parameter,
+     * 中 multiples 的 1.0/10. 值 shall be in
+     * the range 的 0.0 到 6.3, inclusive.
      */
     AVRational base_param_m_n;
 
     /**
-     * indicates k1_0 in the base parameter,
+     * indicates k1_0 中 the base parameter,
      * base_param_k1 <= 1: k1_0 = base_param_k1
      * base_param_k1 > 1: reserved
      */
     int base_param_k1;
 
     /**
-     * indicates k2_0 in the base parameter,
+     * indicates k2_0 中 the base parameter,
      * base_param_k2 <= 1: k2_0 = base_param_k2
      * base_param_k2 > 1: reserved
      */
     int base_param_k2;
 
     /**
-     * indicates k3_0 in the base parameter,
+     * indicates k3_0 中 the base parameter,
      * base_param_k3 == 1: k3_0 = base_param_k3
      * base_param_k3 == 2: k3_0 = maximum_maxrgb
      * base_param_k3 > 2: reserved
@@ -145,26 +145,26 @@ typedef struct AVHDRVividColorToneMappingParams {
     int base_param_k3;
 
     /**
-     * This flag indicates that delta mode of base parameter(for value of 1)
+     * This 标志 indicates that delta mode 的 base parameter(for 值 的 1)
      */
     int base_param_Delta_enable_mode;
 
     /**
-     * base_param_Delta in the base parameter,
-     * in multiples of 1.0/127. The value shall be in
-     * the range of 0.0 to 1.0, inclusive.
+     * base_param_Delta 中 the base parameter,
+     * 中 multiples 的 1.0/127. 值 shall be in
+     * the range 的 0.0 到 1.0, inclusive.
      */
     AVRational base_param_Delta;
 
     /**
-     * indicates 3Spline_enable_flag in the base parameter,
-     * This flag indicates that transfer three Spline of base parameter(for value of 1)
+     * indicates 3Spline_enable_标志 中 the base parameter,
+     * This 标志 indicates that transfer three Spline 的 base parameter(for 值 的 1)
      */
     int three_Spline_enable_flag;
 
     /**
-     * The number of three Spline. The value shall be in the range
-     * of 1 to 2, inclusive.
+     * 数量 的 three Spline. 值 shall be 中 the range
+     * 的 1 到 2, inclusive.
      */
     int three_Spline_num;
 
@@ -173,119 +173,119 @@ typedef struct AVHDRVividColorToneMappingParams {
 
 
 /**
- * Color transform parameters at a processing window in a dynamic metadata for
- * CUVA 005.1:2021.
+ * Color transform parameters at a processing window 中 a dynamic 元数据 for
+ * CUV005.1:2021.
  */
 typedef struct AVHDRVividColorTransformParams {
     /**
-     * Indicates the minimum brightness of the displayed content.
-     * The values should be in the range of 0.0 to 1.0,
-     * inclusive and in multiples of 1/4095.
+     * Indicates the minimum brightness 的 the displayed content.
+     * 值 should be 中 the range 的 0.0 到 1.0,
+     * inclusive 和 中 multiples 的 1/4095.
      */
     AVRational minimum_maxrgb;
 
     /**
-     * Indicates the average brightness of the displayed content.
-     * The values should be in the range of 0.0 to 1.0,
-     * inclusive and in multiples of 1/4095.
+     * Indicates the average brightness 的 the displayed content.
+     * 值 should be 中 the range 的 0.0 到 1.0,
+     * inclusive 和 中 multiples 的 1/4095.
      */
     AVRational average_maxrgb;
 
     /**
-     * Indicates the variance brightness of the displayed content.
-     * The values should be in the range of 0.0 to 1.0,
-     * inclusive and in multiples of 1/4095.
+     * Indicates the variance brightness 的 the displayed content.
+     * 值 should be 中 the range 的 0.0 到 1.0,
+     * inclusive 和 中 multiples 的 1/4095.
      */
     AVRational variance_maxrgb;
 
     /**
-     * Indicates the maximum brightness of the displayed content.
-     * The values should be in the range of 0.0 to 1.0, inclusive
-     * and in multiples of 1/4095.
+     * Indicates the maximum brightness 的 the displayed content.
+     * 值 should be 中 the range 的 0.0 到 1.0, inclusive
+     * 和 中 multiples 的 1/4095.
      */
     AVRational maximum_maxrgb;
 
     /**
-     * This flag indicates that the metadata for the tone mapping function in
-     * the processing window is present (for value of 1).
+     * This 标志 indicates that the 元数据 用于 the tone mapping function in
+     * the processing window is present (for 值 的 1).
      */
     int tone_mapping_mode_flag;
 
     /**
-     * The number of tone mapping param. The value shall be in the range
-     * of 1 to 2, inclusive.
+     * 数量 的 tone mapping param. 值 shall be 中 the range
+     * 的 1 到 2, inclusive.
      */
     int tone_mapping_param_num;
 
     /**
-     * The color tone mapping parameters.
+     * color tone mapping parameters.
      */
     AVHDRVividColorToneMappingParams tm_params[2];
 
     /**
-     * This flag indicates that the metadata for the color saturation mapping in
-     * the processing window is present (for value of 1).
+     * This 标志 indicates that the 元数据 用于 the color saturation mapping in
+     * the processing window is present (for 值 的 1).
      */
     int color_saturation_mapping_flag;
 
     /**
-     * The number of color saturation param. The value shall be in the range
-     * of 0 to 7, inclusive.
+     * 数量 的 color saturation param. 值 shall be 中 the range
+     * 的 0 到 7, inclusive.
      */
     int color_saturation_num;
 
     /**
      * Indicates the color correction strength parameter.
-     * The values should be in the range of 0.0 to 2.0, inclusive
-     * and in multiples of 1/128.
+     * 值 should be 中 the range 的 0.0 到 2.0, inclusive
+     * 和 中 multiples 的 1/128.
      */
     AVRational color_saturation_gain[8];
 } AVHDRVividColorTransformParams;
 
 /**
- * This struct represents dynamic metadata for color volume transform -
- * CUVA 005.1:2021 standard
+ * This struct represents dynamic 元数据 用于 color volume transform -
+ * CUV005.1:2021 standard
  *
- * To be used as payload of a AVFrameSideData or AVPacketSideData with the
+ * To be used as payload 的 a AV帧SideData 或 AVPacketSideData，使用 the
  * appropriate type.
  *
- * @note The struct should be allocated with
- * av_dynamic_hdr_vivid_alloc() and its size is not a part of
- * the public ABI.
+ * @note struct should be 分配d with
+ * av_dynamic_hdr_vivid_alloc() 和 its 大小 is not a part of
+ * the 公共 ABI.
  */
 typedef struct AVDynamicHDRVivid {
     /**
-     * The system start code. The value shall be set to 0x01.
+     * system start code. 值 shall be 设置 到 0x01.
      */
     uint8_t system_start_code;
 
     /**
-     * The number of processing windows. The value shall be set to 0x01
-     * if the system_start_code is 0x01.
+     * 数量 的 processing windows. 值 shall be 设置 到 0x01
+     * 如果 the system_start_code is 0x01.
      */
     uint8_t num_windows;
 
     /**
-     * The color transform parameters for every processing window.
+     * color transform parameters 用于 every processing window.
      */
     AVHDRVividColorTransformParams params[3];
 } AVDynamicHDRVivid;
 
 /**
- * Allocate an AVDynamicHDRVivid structure and set its fields to
- * default values. The resulting struct can be freed using av_freep().
+ * 分配 an AVDynamicHDRVivid 结构体 和 设置 its fields to
+ * 默认 值. resulting struct can be 释放d using av_释放p().
  *
- * @return An AVDynamicHDRVivid filled with default values or NULL
- *         on failure.
+ * @返回 AVDynamicHDRVivid filled，使用 默认 值 或 NULL
+ *         上 failure.
  */
 AVDynamicHDRVivid *av_dynamic_hdr_vivid_alloc(size_t *size);
 
 /**
- * Allocate a complete AVDynamicHDRVivid and add it to the frame.
- * @param frame The frame which side data is added to.
+ * 分配 a complete AVDynamicHDRVivid 和 add it 到 the 帧.
+ * @param 帧 帧 which side data is added to.
  *
- * @return The AVDynamicHDRVivid structure to be filled by caller or NULL
- *         on failure.
+ * @返回 AVDynamicHDRVivid 结构体 到 be filled by caller 或 NULL
+ *         上 failure.
  */
 AVDynamicHDRVivid *av_dynamic_hdr_vivid_create_side_data(AVFrame *frame);
 

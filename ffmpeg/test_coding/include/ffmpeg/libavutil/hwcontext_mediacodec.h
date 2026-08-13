@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -20,39 +20,36 @@
 #define AVUTIL_HWCONTEXT_MEDIACODEC_H
 
 /**
- * MediaCodec details.
+ * MediaCodec 详情。
  *
- * Allocated as AVHWDeviceContext.hwctx
+ * 被分配为 AVHWDeviceContext.hwctx。
  */
 typedef struct AVMediaCodecDeviceContext {
     /**
-     * android/view/Surface handle, to be filled by the user.
+     * android/view/Surface 句柄，由用户填充。
      *
-     * This is the default surface used by decoders on this device.
+     * 这是此设备上的解码器使用的默认表面。
      */
     void *surface;
 
     /**
-     * Pointer to ANativeWindow.
+     * 指向 ANativeWindow 的指针。
      *
-     * It both surface and native_window is NULL, try to create it
-     * automatically if create_window is true and OS support
-     * createPersistentInputSurface.
+     * 如果 surface 和 native_window 均为 NULL，且 create_window 为 true、
+     * 操作系统支持 createPersistentInputSurface，则尝试自动创建它。
      *
-     * It can be used as output surface for decoder and input surface for
-     * encoder.
+     * 它可以用作解码器的输出表面和编码器的输入表面。
      */
     void *native_window;
 
     /**
-     * Enable createPersistentInputSurface automatically.
+     * 自动启用 createPersistentInputSurface。
      *
-     * Disabled by default.
+     * 默认禁用。
      *
-     * It can be enabled by setting this flag directly, or by setting
-     * AVDictionary of av_hwdevice_ctx_create(), with "create_window" as key.
-     * The second method is useful for ffmpeg cmdline, e.g., we can enable it
-     * via:
+     * 可以直接设置此标志启用，也可以设置 av_hwdevice_ctx_create() 的
+     * AVDictionary，并使用 "create_window" 作为键。第二种方法适用于 ffmpeg
+     * 命令行，例如可通过以下方式启用：
      *   -init_hw_device mediacodec=mediacodec,create_window=1
      */
     int create_window;

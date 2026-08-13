@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright 2023 Elias Carotti <eliascrt at amazon dot it>
  *
  * This file is part of FFmpeg.
@@ -32,31 +32,28 @@ typedef struct AVVideoRect {
 } AVVideoRect;
 
 typedef enum AVVideoHintType {
-    /* rectangled delimit the constant areas (unchanged), default is changed */
+    /* 矩形界定恒定（未改变）区域，默认区域为已改变 */
     AV_VIDEO_HINT_TYPE_CONSTANT,
 
-    /* rectangled delimit the constant areas (changed), default is not changed */
+    /* 矩形界定已改变区域，默认区域为未改变 */
     AV_VIDEO_HINT_TYPE_CHANGED,
 } AVVideoHintType;
 
 typedef struct AVVideoHint {
     /**
-     * Number of AVVideoRect present.
+     * 当前 AVVideoRect 的数量。
      *
-     * May be 0, in which case no per-rectangle information is present. In this
-     * case the values of rect_offset / rect_size are unspecified and should
-     * not be accessed.
+     * 可以为 0，此时不存在逐矩形信息；rect_offset / rect_size 的值未指定，不应访问。
      */
     size_t nb_rects;
 
     /**
-     * Offset in bytes from the beginning of this structure at which the array
-     * of AVVideoRect starts.
+     * AVVideoRect 数组相对此结构体起始位置的字节偏移。
      */
     size_t rect_offset;
 
     /**
-     * Size in bytes of AVVideoRect.
+     * AVVideoRect 的大小，单位为字节。
      */
     size_t rect_size;
 
@@ -74,31 +71,24 @@ av_video_hint_get_rect(const AVVideoHint *hints, size_t idx) {
 }
 
 /**
- * Allocate memory for the AVVideoHint struct along with an nb_rects-sized
- * arrays of AVVideoRect.
+ * 为 AVVideoHint 结构体及包含 nb_rects 个元素的 AVVideoRect 数组分配内存。
  *
- * The side data contains a list of rectangles for the portions of the frame
- * which changed from the last encoded one (and the remainder are assumed to be
- * changed), or, alternately (depending on the type parameter) the unchanged
- * ones (and the remaining ones are those which changed).
- * Macroblocks will thus be hinted either to be P_SKIP-ped or go through the
- * regular encoding procedure.
+ * 侧数据包含矩形列表，表示相对上一编码帧已改变或未改变的区域（取决于 type 参数），
+ * 其余区域则具有相反状态。宏块据此被提示使用 P_SKIP 或执行常规编码过程。
  *
- * It's responsibility of the caller to fill the AVRects accordingly, and to set
- * the proper AVVideoHintType field.
+ * 调用方负责相应填充 AVRect，并设置正确的 AVVideoHintType 字段。
  *
- * @param out_size if non-NULL, the size in bytes of the resulting data array is
- *                 written here
+ * @param out_size 非 NULL 时，在此写入结果数据数组的字节大小
  *
- * @return newly allocated AVVideoHint struct (must be freed by the caller using
- *         av_free()) on success, NULL on memory allocation failure
+ * @return 成功返回新分配的 AVVideoHint（调用方必须使用 av_free() 释放），
+ *         内存分配失败返回 NULL
  */
 AVVideoHint *av_video_hint_alloc(size_t nb_rects,
                                  size_t *out_size);
 
 /**
- * Same as av_video_hint_alloc(), except newly-allocated AVVideoHint is attached
- * as side data of type AV_FRAME_DATA_VIDEO_HINT_INFO to frame.
+ * 与 av_video_hint_alloc() 相同，但新分配的 AVVideoHint 会作为
+ * AV_FRAME_DATA_VIDEO_HINT_INFO 类型侧数据附加到 frame。
  */
 AVVideoHint *av_video_hint_create_side_data(AVFrame *frame,
                                             size_t nb_rects);

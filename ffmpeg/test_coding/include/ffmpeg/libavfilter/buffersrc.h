@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -21,14 +21,13 @@
 
 /**
  * @file
- * @ingroup lavfi_buffersrc
- * Memory buffer source API.
+ * @ingroup lavfi_buffersrc 内存缓冲区源 API。
  */
 
 #include "avfilter.h"
 
 /**
- * @defgroup lavfi_buffersrc Buffer source API
+ * @defgroup lavfi_buffersrc 缓冲区源 API
  * @ingroup lavfi
  * @{
  */
@@ -36,88 +35,77 @@
 enum {
 
     /**
-     * Do not check for format changes.
-     */
+ * 不检查格式更改。
+ */
     AV_BUFFERSRC_FLAG_NO_CHECK_FORMAT = 1 << 0,
 
     /**
-     * Immediately push the frame to the output.
-     */
+ * 立即将框架推至输出。
+ */
     AV_BUFFERSRC_FLAG_PUSH = 1 << 2,
 
     /**
-     * Keep a reference to the frame.
-     * If the frame if reference-counted, create a new reference; otherwise
-     * copy the frame data.
-     */
+ * 保留对框架的引用。如果该框架已引用计数，则创建一个新引用；否则复制帧数据。
+ */
     AV_BUFFERSRC_FLAG_KEEP_REF = 1 << 3,
 
 };
 
 /**
- * Get the number of failed requests.
+ * 获取失败请求数。
  *
- * A failed request is when the request_frame method is called while no
- * frame is present in the buffer.
- * The number is reset when a frame is added.
+ * 请求失败是指在缓冲区中不存在帧的情况下调用 request_frame 方法。添加帧时，该数字会重置。
  */
 unsigned av_buffersrc_get_nb_failed_requests(AVFilterContext *buffer_src);
 
 /**
- * This structure contains the parameters describing the frames that will be
- * passed to this filter.
+ * 该结构包含描述将传递给该过滤器的帧的参数。
  *
- * It should be allocated with av_buffersrc_parameters_alloc() and freed with
- * av_free(). All the allocated fields in it remain owned by the caller.
+ * 它应该用 av_buffersrc_parameters_alloc() 分配并用 av_free() 释放。其中所有分配的字段仍归调用者所有。
  */
 typedef struct AVBufferSrcParameters {
     /**
-     * video: the pixel format, value corresponds to enum AVPixelFormat
-     * audio: the sample format, value corresponds to enum AVSampleFormat
-     */
+ * 视频：像素格式，值对应于枚举 AVPixelFormat 音频：样本格式，值对应于枚举 AVSampleFormat
+ */
     int format;
     /**
-     * The timebase to be used for the timestamps on the input frames.
-     */
+ * 用于输入帧上的时间戳的时基。
+ */
     AVRational time_base;
 
     /**
-     * Video only, the display dimensions of the input frames.
-     */
+ * 仅视频，输入帧的显示尺寸。
+ */
     int width, height;
 
     /**
-     * Video only, the sample (pixel) aspect ratio.
-     */
+ * 仅视频，样本（像素）宽高比。
+ */
     AVRational sample_aspect_ratio;
 
     /**
-     * Video only, the frame rate of the input video. This field must only be
-     * set to a non-zero value if input stream has a known constant framerate
-     * and should be left at its initial value if the framerate is variable or
-     * unknown.
-     */
+ * 仅视频，输入视频的帧速率。如果输入流具有已知的恒定帧速率，则该字段只能设置为非零值；如果帧速率可变或未知，则应保留其初始值。
+ */
     AVRational frame_rate;
 
     /**
-     * Video with a hwaccel pixel format only. This should be a reference to an
-     * AVHWFramesContext instance describing the input frames.
-     */
+ * 仅具有 hwaccel 像素格式的视频。这应该是对描述输入帧的 AVHWFramesContext 实例的引用。
+ */
     AVBufferRef *hw_frames_ctx;
 
     /**
-     * Audio only, the audio sampling rate in samples per second.
-     */
+ * 仅音频，音频采样率（以每秒样本数为单位）。
+ */
     int sample_rate;
 
     /**
-     * Audio only, the audio channel layout
-     */
+ * 仅音频，音频通道布局
+ */
     AVChannelLayout ch_layout;
 
     /**
-     * Video only, the YUV colorspace and range.
-     */
+ * 仅视频，YUV 色彩空间和范围。
+ */
     enum AVColorSpace color_space;
     enum AVColorRange color_range;
 
@@ -125,102 +113,78 @@ typedef struct AVBufferSrcParameters {
     int nb_side_data;
 
     /**
-     * Video only, the alpha mode.
-     */
+ * 仅视频，alpha 模式。
+ */
     enum AVAlphaMode alpha_mode;
 } AVBufferSrcParameters;
 
 /**
- * Allocate a new AVBufferSrcParameters instance. It should be freed by the
- * caller with av_free().
+ * 分配一个新的 AVBufferSrcParameters 实例。它应该由调用者使用 av_free() 释放。
  */
 AVBufferSrcParameters *av_buffersrc_parameters_alloc(void);
 
 /**
- * Initialize the buffersrc or abuffersrc filter with the provided parameters.
- * This function may be called multiple times, the later calls override the
- * previous ones. Some of the parameters may also be set through AVOptions, then
- * whatever method is used last takes precedence.
+ * 使用提供的参数初始化 buffersrc 或 abuffersrc 过滤器。该函数可以被多次调用，后面的调用会覆盖前面的调用。有些参数也可以通过AVOptions设置，那么最后使用的方法优先。
  *
- * @param ctx an instance of the buffersrc or abuffersrc filter
- * @param param the stream parameters. The frames later passed to this filter
- *              must conform to those parameters. All the allocated fields in
- *              param remain owned by the caller, libavfilter will make internal
- *              copies or references when necessary.
- * @return 0 on success, a negative AVERROR code on failure.
+ * @param ctx buffersrc 或 abuffersrc 过滤器的实例
+ * @param param 流参数。随后传递给该过滤器的帧必须符合这些参数。 param 中所有分配的字段仍归调用者所有，libavfilter 将在必要时进行内部复制或引用。
+ * @return 成功时为 0，失败时为负 AVERROR 代码。
  */
 int av_buffersrc_parameters_set(AVFilterContext *ctx, AVBufferSrcParameters *param);
 
 /**
- * Add a frame to the buffer source.
+ * 将帧添加到缓冲区源。
  *
- * @param ctx   an instance of the buffersrc filter
- * @param frame frame to be added. If the frame is reference counted, this
- * function will make a new reference to it. Otherwise the frame data will be
- * copied.
+ * @param ctx 要添加的 buffersrc 过滤器
+ * @param frame 帧的实例。如果该帧是引用计数的，则该函数将对其进行新的引用。否则帧数据将被复制。
  *
- * @return 0 on success, a negative AVERROR on error
+ * @return 成功时为 0，错误时为负 AVERROR
  *
- * This function is equivalent to av_buffersrc_add_frame_flags() with the
- * AV_BUFFERSRC_FLAG_KEEP_REF flag.
+ * 此函数相当于带有 AV_BUFFERSRC_FLAG_KEEP_REF 标志的 av_buffersrc_add_frame_flags()。
  */
 av_warn_unused_result
 int av_buffersrc_write_frame(AVFilterContext *ctx, const AVFrame *frame);
 
 /**
- * Add a frame to the buffer source.
+ * 将帧添加到缓冲区源。
  *
- * @param ctx   an instance of the buffersrc filter
- * @param frame frame to be added. If the frame is reference counted, this
- * function will take ownership of the reference(s) and reset the frame.
- * Otherwise the frame data will be copied. If this function returns an error,
- * the input frame is not touched.
+ * @param ctx 要添加的 buffersrc 过滤器
+ * @param frame 帧的实例。如果帧是引用计数的，则该函数将取得引用的所有权并重置帧。否则帧数据将被复制。如果此函数返回错误，则不会触摸输入框。
  *
- * @return 0 on success, a negative AVERROR on error.
+ * @return 成功时为 0，错误时为负 AVERROR。
  *
- * @note the difference between this function and av_buffersrc_write_frame() is
- * that av_buffersrc_write_frame() creates a new reference to the input frame,
- * while this function takes ownership of the reference passed to it.
+ * @note 此函数和 av_buffersrc_write_frame() 之间的区别在于 av_buffersrc_write_frame() 创建对输入帧的新引用，而此函数获取传递给它的引用的所有权。
  *
- * This function is equivalent to av_buffersrc_add_frame_flags() without the
- * AV_BUFFERSRC_FLAG_KEEP_REF flag.
+ * 该函数相当于没有 AV_BUFFERSRC_FLAG_KEEP_REF 标志的 av_buffersrc_add_frame_flags()。
  */
 av_warn_unused_result
 int av_buffersrc_add_frame(AVFilterContext *ctx, AVFrame *frame);
 
 /**
- * Add a frame to the buffer source.
+ * 将帧添加到缓冲区源。
  *
- * By default, if the frame is reference-counted, this function will take
- * ownership of the reference(s) and reset the frame. This can be controlled
- * using the flags.
+ * 默认情况下，如果帧是引用计数的，则此函数将取得引用的所有权并重置帧。这可以使用标志来控制。
  *
- * If this function returns an error, the input frame is not touched.
+ * 如果此函数返回错误，则不会触摸输入框。
  *
- * @param buffer_src  pointer to a buffer source context
- * @param frame       a frame, or NULL to mark EOF
- * @param flags       a combination of AV_BUFFERSRC_FLAG_*
- * @return            >= 0 in case of success, a negative AVERROR code
- *                    in case of failure
+ * @param buffer_src 指向缓冲区源上下文的指针
+ * @param frame 一个帧，或 NULL 来标记 EOF
+ * @param flags AV_BUFFERSRC_FLAG_* 的组合
+ * @return >= 0 如果成功，则为负数失败时的 AVERROR 代码
  */
 av_warn_unused_result
 int av_buffersrc_add_frame_flags(AVFilterContext *buffer_src,
                                  AVFrame *frame, int flags);
 
 /**
- * Close the buffer source after EOF.
+ * EOF 后关闭缓冲源。
  *
- * This is similar to passing NULL to av_buffersrc_add_frame_flags()
- * except it takes the timestamp of the EOF, i.e. the timestamp of the end
- * of the last frame.
+ * 这与将 NULL 传递给 av_buffersrc_add_frame_flags() 类似，只不过它采用 EOF 的时间戳，即最后一帧结束的时间戳。
  */
 int av_buffersrc_close(AVFilterContext *ctx, int64_t pts, unsigned flags);
 
 /**
- * Returns 0 or a negative AVERROR code. Currently, this will only ever
- * return AVERROR(EOF), to indicate that the buffer source has been closed,
- * either as a result of av_buffersrc_close(), or because the downstream
- * filter is no longer accepting new data.
+ * 返回 0 或负 AVERROR 代码。目前，这只会返回 AVERROR(EOF)，以指示缓冲区源已关闭，无论是由于 av_buffersrc_close() 的结果，还是因为下游过滤器不再接受新数据。
  */
 int av_buffersrc_get_status(AVFilterContext *ctx);
 

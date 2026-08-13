@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -21,88 +21,55 @@
 
 /**
  * @file
- * @ingroup lavfi_buffersink
- * memory buffer sink API for audio and video
+ * @ingroup lavfi_buffersink 用于音频和视频的内存缓冲区接收器 API
  */
 
 #include "avfilter.h"
 
 /**
- * @defgroup lavfi_buffersink Buffer sink API
+ * @defgroup lavfi_buffersink 缓冲区接收器 API
  * @ingroup lavfi
  * @{
  *
- * The buffersink and abuffersink filters are there to connect filter graphs
- * to applications. They have a single input, connected to the graph, and no
- * output. Frames must be extracted using av_buffersink_get_frame() or
- * av_buffersink_get_samples().
+ * buffersink 和 abuffersink 过滤器用于将过滤器图连接到应用程序。它们只有一个输入，连接到图表，没有输出。必须使用 av_buffersink_get_frame() 或 av_buffersink_get_samples() 提取帧。
  *
- * The format negotiated by the graph during configuration can be obtained
- * using the accessor functions:
- * - av_buffersink_get_time_base(),
- * - av_buffersink_get_format(),
- * - av_buffersink_get_frame_rate(),
- * - av_buffersink_get_w(),
- * - av_buffersink_get_h(),
- * - av_buffersink_get_sample_aspect_ratio(),
- * - av_buffersink_get_channels(),
- * - av_buffersink_get_ch_layout(),
- * - av_buffersink_get_sample_rate().
- * - av_buffersink_get_side_data().
+ * 配置期间图形协商的格式可以使用访问器函数获取： - av_buffersink_get_time_base()、 - av_buffersink_get_format()、 - av_buffersink_get_frame_rate()、 - av_buffersink_get_w()、 - av_buffersink_get_h()、 - av_buffersink_get_sample_aspect_ratio()、- av_buffersink_get_channels()、- av_buffersink_get_ch_layout()、- av_buffersink_get_sample_rate()。 - av_buffersink_get_side_data()。
  *
- * The layout returned by av_buffersink_get_ch_layout() must de uninitialized
- * by the caller.
+ * av_buffersink_get_ch_layout() 返回的布局必须由调用者取消初始化。
  *
- * The format can be constrained by setting options, using av_opt_set() and
- * related functions with the AV_OPT_SEARCH_CHILDREN flag.
- *  - pixel_formats (array of pixel formats),
- *  - colorspaces (array of int),
- *  - colorranges (array of int),
- *  - alphamodes (array of int),
- *  - sample_formats (array of sample formats),
- *  - samplerates (array of int),
- *  - channel_layouts (array of channel layouts)
- * If an option is not set, all corresponding formats are accepted.
+ * 可以通过设置选项、使用 av_opt_set() 和带有 AV_OPT_SEARCH_CHILDREN 标志的相关函数来限制格式。 - Pixel_formats（像素格式数组）， - colorspaces（整数数组）， - colorranges（整数数组）， - alphamodes（整数数组）， - Sample_formats（样本格式数组）， - Samplerates（整数数组）， - Channel_layouts（通道布局数组） 如果未设置选项，则接受所有相应的格式。
  */
 
 /**
- * Get a frame with filtered data from sink and put it in frame.
+ * 从接收器中获取包含过滤数据的框架并将其放入框架中。
  *
- * @param ctx    pointer to a buffersink or abuffersink filter context.
- * @param frame  pointer to an allocated frame that will be filled with data.
- *               The data must be freed using av_frame_unref() / av_frame_free()
- * @param flags  a combination of AV_BUFFERSINK_FLAG_* flags
+ * @param ctx 指向 buffersink 或 buffersink 过滤器上下文的指针。
+ * @param frame 指向将填充数据的已分配帧的指针。必须使用 av_frame_unref() / av_frame_free()
+ * @param flags 释放数据，AV_BUFFERSINK_FLAG_* 标志的组合
  *
- * @return  >= 0 in for success, a negative AVERROR code for failure.
+ * @return >= 0 表示成功，负 AVERROR 代码表示失败。
  */
 int av_buffersink_get_frame_flags(AVFilterContext *ctx, AVFrame *frame, int flags);
 
 /**
- * Tell av_buffersink_get_buffer_ref() to read video/samples buffer
- * reference, but not remove it from the buffer. This is useful if you
- * need only to read a video/samples buffer, without to fetch it.
+ * 告诉 av_buffersink_get_buffer_ref() 读取视频/样本缓冲区引用，但不将其从缓冲区中删除。如果您只需要读取视频/样本缓冲区而不需要获取它，这非常有用。
  */
 #define AV_BUFFERSINK_FLAG_PEEK 1
 
 /**
- * Tell av_buffersink_get_buffer_ref() not to request a frame from its input.
- * If a frame is already buffered, it is read (and removed from the buffer),
- * but if no frame is present, return AVERROR(EAGAIN).
+ * 告诉 av_buffersink_get_buffer_ref() 不要从其输入请求帧。如果帧已被缓冲，则读取该帧（并从缓冲区中删除），但如果不存在帧，则返回 AVERROR(EAGAIN)。
  */
 #define AV_BUFFERSINK_FLAG_NO_REQUEST 2
 
 /**
- * Set the frame size for an audio buffer sink.
+ * 设置音频缓冲区接收器的帧大小。
  *
- * All calls to av_buffersink_get_buffer_ref will return a buffer with
- * exactly the specified number of samples, or AVERROR(EAGAIN) if there is
- * not enough. The last buffer at EOF will be padded with 0.
+ * 对 av_buffersink_get_buffer_ref 的所有调用都将返回一个具有指定数量样本的缓冲区，如果样本数量不够，则返回 AVERROR(EAGAIN)。 EOF 处的最后一个缓冲区将用 0 填充。
  */
 void av_buffersink_set_frame_size(AVFilterContext *ctx, unsigned frame_size);
 
 /**
- * @defgroup lavfi_buffersink_accessors Buffer sink accessors
- * Get the properties of the stream
+ * @defgroup lavfi_buffersink_accessors 缓冲区接收器访问器 获取流的属性
  * @{
  */
 
@@ -131,37 +98,24 @@ const AVFrameSideData *const *av_buffersink_get_side_data(const AVFilterContext 
 /** @} */
 
 /**
- * Get a frame with filtered data from sink and put it in frame.
+ * 获取包含来自接收器的已过滤数据的帧并将其放入帧中。
  *
- * @param ctx pointer to a context of a buffersink or abuffersink AVFilter.
- * @param frame pointer to an allocated frame that will be filled with data.
- *              The data must be freed using av_frame_unref() / av_frame_free()
+ * @param ctx 指向 buffersink 或 buffersink AVFilter 上下文的指针。
+ * @param frame 指向将填充数据的已分配帧的指针。如果成功返回帧，则必须使用 av_frame_unref() / av_frame_free() 释放数据
  *
- * @return
- *         - >= 0 if a frame was successfully returned.
- *         - AVERROR(EAGAIN) if no frames are available at this point; more
- *           input frames must be added to the filtergraph to get more output.
- *         - AVERROR_EOF if there will be no more output frames on this sink.
- *         - A different negative AVERROR code in other failure cases.
+ * @return - >= 0。 - AVERROR(EAGAIN) 如果此时没有可用的帧；必须将更多输入帧添加到过滤器图中才能获得更多输出。 - AVERROR_EOF 如果此接收器上不再有输出帧。 - 其他失败情况下的不同负 AVERROR 代码。
  */
 int av_buffersink_get_frame(AVFilterContext *ctx, AVFrame *frame);
 
 /**
- * Same as av_buffersink_get_frame(), but with the ability to specify the number
- * of samples read. This function is less efficient than
- * av_buffersink_get_frame(), because it copies the data around.
+ * 与 av_buffersink_get_frame() 相同，但能够指定读取的样本数。该函数的效率低于 av_buffersink_get_frame()，因为它会复制数据。
  *
- * @param ctx pointer to a context of the abuffersink AVFilter.
- * @param frame pointer to an allocated frame that will be filled with data.
- *              The data must be freed using av_frame_unref() / av_frame_free()
- *              frame will contain exactly nb_samples audio samples, except at
- *              the end of stream, when it can contain less than nb_samples.
+ * @param ctx 指向缓冲区接收器 AVFilter 上下文的指针。
+ * @param frame 指向将填充数据的已分配帧的指针。必须使用 av_frame_unref() 释放数据 / av_frame_free() 帧将恰好包含 nb_samples 个音频样本，但在流末尾除外，此时它可以包含少于 nb_samples 的音频样本。
  *
- * @return The return codes have the same meaning as for
- *         av_buffersink_get_frame().
+ * @return 返回码的含义与 av_buffersink_get_frame() 相同。
  *
- * @warning do not mix this function with av_buffersink_get_frame(). Use only one or
- * the other with a single sink, not both.
+ * @warning 请勿将此函数与 av_buffersink_get_frame() 混合使用。单个水槽只能使用其中之一，而不是同时使用。
  */
 int av_buffersink_get_samples(AVFilterContext *ctx, AVFrame *frame, int nb_samples);
 

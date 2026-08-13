@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2001 Fabrice Bellard
  *
  * This file is part of FFmpeg.
@@ -22,8 +22,7 @@
 
 /**
  * @file
- * @ingroup lavf_io
- * Buffered I/O operations
+ * @ingroup lavf_io 缓冲 I/O 操作
  */
 
 #include <stdint.h>
@@ -36,25 +35,19 @@
 #include "libavformat/version_major.h"
 
 /**
- * Seeking works like for a local file.
+ * 查找的工作方式类似于本地文件。
  */
 #define AVIO_SEEKABLE_NORMAL (1 << 0)
 
 /**
- * Seeking by timestamp with avio_seek_time() is possible.
+ * 可以使用 avio_seek_time() 按时间戳进行查找。
  */
 #define AVIO_SEEKABLE_TIME   (1 << 1)
 
 /**
- * Callback for checking whether to abort blocking functions.
- * AVERROR_EXIT is returned in this case by the interrupted
- * function. During blocking operations, callback is called with
- * opaque as parameter. If the callback returns 1, the
- * blocking operation will be aborted.
+ * 用于检查是否中止阻塞函数的回调。在这种情况下，中断函数会返回 AVERROR_EXIT。在阻塞操作期间，以 opaque 作为参数调用回调。如果回调返回1，则阻塞操作将被中止。
  *
- * No members can be added to this struct without a major bump, if
- * new elements have been added after this struct in AVFormatContext
- * or AVIOContext.
+ * 如果在 AVFormatContext 或 AVIOContext 中的该结构之后添加了新元素，则在没有重大影响的情况下，无法将任何成员添加到该结构中。
  */
 typedef struct AVIOInterruptCB {
     int (*callback)(void*);
@@ -62,7 +55,7 @@ typedef struct AVIOInterruptCB {
 } AVIOInterruptCB;
 
 /**
- * Directory entry types.
+ * 目录条目类型。
  */
 enum AVIODirEntryType {
     AVIO_ENTRY_UNKNOWN,
@@ -79,321 +72,264 @@ enum AVIODirEntryType {
 };
 
 /**
- * Describes single entry of the directory.
+ * 描述目录的单个条目。
  *
- * Only name and type fields are guaranteed be set.
- * Rest of fields are protocol or/and platform dependent and might be unknown.
+ * 仅保证设置名称和类型字段。其余字段取决于协议或/和平台，并且可能未知。
  */
 typedef struct AVIODirEntry {
-    char *name;                           /**< Filename */
-    int type;                             /**< Type of the entry */
-    int utf8;                             /**< Set to 1 when name is encoded with UTF-8, 0 otherwise.
-                                               Name can be encoded with UTF-8 even though 0 is set. */
-    int64_t size;                         /**< File size in bytes, -1 if unknown. */
-    int64_t modification_timestamp;       /**< Time of last modification in microseconds since unix
-                                               epoch, -1 if unknown. */
-    int64_t access_timestamp;             /**< Time of last access in microseconds since unix epoch,
-                                               -1 if unknown. */
-    int64_t status_change_timestamp;      /**< Time of last status change in microseconds since unix
-                                               epoch, -1 if unknown. */
-    int64_t user_id;                      /**< User ID of owner, -1 if unknown. */
-    int64_t group_id;                     /**< Group ID of owner, -1 if unknown. */
-    int64_t filemode;                     /**< Unix file mode, -1 if unknown. */
+    char *name;                           /**< 文件名 */
+    int type;                             /**< 条目类型 */
+    int utf8;                             /**
+ * < 当名称使用 UTF-8 编码时设置为 1，否则设置为 0。即使设置为 0，名称也可以使用 UTF-8 进行编码。
+ */
+    int64_t size;                         /**< 文件大小（以字节为单位），如果未知则为 -1。 */
+    int64_t modification_timestamp;       /**
+ * < 自 unix 纪元以来最后一次修改的时间（以微秒为单位），如果未知则为 -1。
+ */
+    int64_t access_timestamp;             /**
+ * < 自 unix 纪元以来上次访问的时间（以微秒为单位），如果未知则为 -1。
+ */
+    int64_t status_change_timestamp;      /**
+ * < 自 unix 纪元以来最后一次状态更改的时间（以微秒为单位），如果未知则为 -1。
+ */
+    int64_t user_id;                      /**< 所有者的用户 ID，如果未知则为 -1。 */
+    int64_t group_id;                     /**< 所有者的组 ID，如果未知则为 -1。 */
+    int64_t filemode;                     /**< Unix 文件模式，如果未知则为 -1。 */
 } AVIODirEntry;
 
 typedef struct AVIODirContext AVIODirContext;
 
 /**
- * Different data types that can be returned via the AVIO
- * write_data_type callback.
+ * 可以通过 AVIO write_data_type 回调返回的不同数据类型。
  */
 enum AVIODataMarkerType {
     /**
-     * Header data; this needs to be present for the stream to be decodeable.
-     */
+ * 标头数据；需要存在此信息才能使流可解码。
+ */
     AVIO_DATA_MARKER_HEADER,
     /**
-     * A point in the output bytestream where a decoder can start decoding
-     * (i.e. a keyframe). A demuxer/decoder given the data flagged with
-     * AVIO_DATA_MARKER_HEADER, followed by any AVIO_DATA_MARKER_SYNC_POINT,
-     * should give decodeable results.
-     */
+ * 输出字节流中解码器可以开始解码的点（即关键帧）。给定用 AVIO_DATA_MARKER_HEADER 标记的数据（后跟任何 AVIO_DATA_MARKER_SYNC_POINT）的解复用器/解码器应该给出可解码的结果。
+ */
     AVIO_DATA_MARKER_SYNC_POINT,
     /**
-     * A point in the output bytestream where a demuxer can start parsing
-     * (for non self synchronizing bytestream formats). That is, any
-     * non-keyframe packet start point.
-     */
+ * 输出字节流中解复用器可以开始解析的点（对于非自同步字节流格式）。即任何非关键帧数据包的起始点。
+ */
     AVIO_DATA_MARKER_BOUNDARY_POINT,
     /**
-     * This is any, unlabelled data. It can either be a muxer not marking
-     * any positions at all, it can be an actual boundary/sync point
-     * that the muxer chooses not to mark, or a later part of a packet/fragment
-     * that is cut into multiple write callbacks due to limited IO buffer size.
-     */
+ * 这是任何未标记的数据。它可以是根本不标记任何位置的复用器，也可以是复用器选择不标记的实际边界/同步点，也可以是由于 IO 缓冲区大小有限而被切割成多个写入回调的数据包/片段的后续部分。
+ */
     AVIO_DATA_MARKER_UNKNOWN,
     /**
-     * Trailer data, which doesn't contain actual content, but only for
-     * finalizing the output file.
-     */
+ * 预告片数据，不包含实际内容，仅用于最终确定输出文件。
+ */
     AVIO_DATA_MARKER_TRAILER,
     /**
-     * A point in the output bytestream where the underlying AVIOContext might
-     * flush the buffer depending on latency or buffering requirements. Typically
-     * means the end of a packet.
-     */
+ * 输出字节流中的一个点，底层 AVIOContext 可能会根据延迟或缓冲要求刷新缓冲区。通常意味着数据包的结束。
+ */
     AVIO_DATA_MARKER_FLUSH_POINT,
 };
 
 /**
- * Bytestream IO Context.
- * New public fields can be added with minor version bumps.
- * Removal, reordering and changes to existing public fields require
- * a major version bump.
- * sizeof(AVIOContext) must not be used outside libav*.
+ * 字节流 IO 上下文。可以通过较小的版本更新添加新的公共字段。对现有公共字段的删除、重新排序和更改需要主要版本更新。 sizeof(AVIOContext) 不得在 libav* 之外使用。
  *
- * @note None of the function pointers in AVIOContext should be called
- *       directly, they should only be set by the client application
- *       when implementing custom I/O. Normally these are set to the
- *       function pointers specified in avio_alloc_context()
+ * @note AVIOContext 中的任何函数指针都不应直接调用，它们只能由客户端应用程序在实现自定义 I/O 时设置。通常这些被设置为 avio_alloc_context() 中指定的函数指针
  */
 typedef struct AVIOContext {
     /**
-     * A class for private options.
-     *
-     * If this AVIOContext is created by avio_open2(), av_class is set and
-     * passes the options down to protocols.
-     *
-     * If this AVIOContext is manually allocated, then av_class may be set by
-     * the caller.
-     *
-     * warning -- this field can be NULL, be sure to not pass this AVIOContext
-     * to any av_opt_* functions in that case.
-     */
+ * 私人选项的类。
+ *
+ * 如果此 AVIOContext 是由 avio_open2() 创建的，则设置 av_class 并将选项传递给协议。
+ *
+ * 如果这个 AVIOContext 是手动分配的，那么 av_class 可以由调用者设置。
+ *
+ * 警告 - 该字段可以为 NULL，在这种情况下请确保不要将此 AVIOContext 传递给任何 av_opt_* 函数。
+ */
     const AVClass *av_class;
 
     /*
-     * The following shows the relationship between buffer, buf_ptr,
-     * buf_ptr_max, buf_end, buf_size, and pos, when reading and when writing
-     * (since AVIOContext is used for both):
-     *
-     **********************************************************************************
-     *                                   READING
-     **********************************************************************************
-     *
-     *                            |              buffer_size              |
-     *                            |---------------------------------------|
-     *                            |                                       |
-     *
-     *                         buffer          buf_ptr       buf_end
-     *                            +---------------+-----------------------+
-     *                            |/ / / / / / / /|/ / / / / / /|         |
-     *  read buffer:              |/ / consumed / | to be read /|         |
-     *                            |/ / / / / / / /|/ / / / / / /|         |
-     *                            +---------------+-----------------------+
-     *
-     *                                                         pos
-     *              +-------------------------------------------+-----------------+
-     *  input file: |                                           |                 |
-     *              +-------------------------------------------+-----------------+
-     *
-     *
-     **********************************************************************************
-     *                                   WRITING
-     **********************************************************************************
-     *
-     *                             |          buffer_size                 |
-     *                             |--------------------------------------|
-     *                             |                                      |
-     *
-     *                                                buf_ptr_max
-     *                          buffer                 (buf_ptr)       buf_end
-     *                             +-----------------------+--------------+
-     *                             |/ / / / / / / / / / / /|              |
-     *  write buffer:              | / / to be flushed / / |              |
-     *                             |/ / / / / / / / / / / /|              |
-     *                             +-----------------------+--------------+
-     *                               buf_ptr can be in this
-     *                               due to a backward seek
-     *
-     *                            pos
-     *               +-------------+----------------------------------------------+
-     *  output file: |             |                                              |
-     *               +-------------+----------------------------------------------+
-     *
-     */
-    unsigned char *buffer;  /**< Start of the buffer. */
-    int buffer_size;        /**< Maximum buffer size */
-    unsigned char *buf_ptr; /**< Current position in the buffer */
-    unsigned char *buf_end; /**< End of the data, may be less than
-                                 buffer+buffer_size if the read function returned
-                                 less data than requested, e.g. for streams where
-                                 no more data has been received yet. */
-    void *opaque;           /**< A private pointer, passed to the read/write/seek/...
-                                 functions. */
+ * 下面显示了读取和写入时 buffer、buf_ptr、buf_ptr_max、buf_end、buf_size 和 pos 之间的关系（因为两者都使用 AVIOContext）：
+ *
+ * *********************************************************************************
+ * 阅读
+ * *********************************************************************************
+ *
+ * |              缓冲区大小|
+ *                            |---------------------------------------|
+ * |                                       |
+ *
+ * 缓冲区 buf_ptr buf_end
+ *                            +---------------+-----------------------+
+ * |/ / / / / / / /|/ / / / / / /|         |读缓冲区：|//消耗/|待读/|         | |/ / / / / / / /|/ / / / / / /|         |
+ *                            +---------------+-----------------------+
+ *
+ * 位置
+ *              +-------------------------------------------+-----------------+
+ * 输入文件：|                                           |                 |
+ *              +-------------------------------------------+-----------------+
+ *
+ * *********************************************************************************
+ * 写作
+ * *********************************************************************************
+ *
+ * |          缓冲区大小|
+ *                             |--------------------------------------|
+ * |                                      |
+ *
+ * buf_ptr_max 缓冲区 (buf_ptr) buf_end
+ *                             +-----------------------+--------------+
+ * |/ / / / / / / / / / / /|              |写缓冲区：| // 待刷新 // |              | |/ / / / / / / / / / / /|              |
+ *                             +-----------------------+--------------+
+ * buf_ptr 可能位于此位置，因为向后查找
+ *
+ * pos
+ *               +-------------+----------------------------------------------+
+ * 输出文件： |             |                                              |
+ *               +-------------+----------------------------------------------+
+ */
+    unsigned char *buffer;  /**< 缓冲区的开始。 */
+    int buffer_size;        /**< 最大缓冲区大小 */
+    unsigned char *buf_ptr; /**< 缓冲区中的当前位置 */
+    unsigned char *buf_end; /**
+ * < 数据结束，如果读取函数返回的数据少于请求的数据，则可能小于 buffer+buffer_size，例如对于尚未收到更多数据的流。
+ */
+    void *opaque;           /**
+ * < 私有指针，传递给读/写/查找/...函数。
+ */
     int (*read_packet)(void *opaque, uint8_t *buf, int buf_size);
     int (*write_packet)(void *opaque, const uint8_t *buf, int buf_size);
     int64_t (*seek)(void *opaque, int64_t offset, int whence);
-    int64_t pos;            /**< position in the file of the current buffer */
-    int eof_reached;        /**< true if was unable to read due to error or eof */
-    int error;              /**< contains the error code or 0 if no error happened */
-    int write_flag;         /**< true if open for writing */
+    int64_t pos;            /**< 当前缓冲区文件中的位置 */
+    int eof_reached;        /**< 如果由于错误或 eof 而无法读取，则为 true */
+    int error;              /**< 包含错误代码，如果没有发生错误则为 0 */
+    int write_flag;         /**< 如果打开用于写入，则为 true */
     int max_packet_size;
-    int min_packet_size;    /**< Try to buffer at least this amount of data
-                                 before flushing it. */
+    int min_packet_size;    /**
+ * < 在刷新之前尝试缓冲至少这个数量的数据。
+ */
     unsigned long checksum;
     unsigned char *checksum_ptr;
     unsigned long (*update_checksum)(unsigned long checksum, const uint8_t *buf, unsigned int size);
     /**
-     * Pause or resume playback for network streaming protocols - e.g. MMS.
-     */
+ * 暂停或恢复网络流协议的播放 - 例如彩信。
+ */
     int (*read_pause)(void *opaque, int pause);
     /**
-     * Seek to a given timestamp in stream with the specified stream_index.
-     * Needed for some network streaming protocols which don't support seeking
-     * to byte position.
-     */
+ * 使用指定的stream_index查找流中的给定时间戳。某些不支持查找字节位置的网络流协议需要。
+ */
     int64_t (*read_seek)(void *opaque, int stream_index,
                          int64_t timestamp, int flags);
     /**
-     * A combination of AVIO_SEEKABLE_ flags or 0 when the stream is not seekable.
-     */
+ * AVIO_SEEKABLE_ 标志的组合，或者当流不可查找时为 0。
+ */
     int seekable;
 
     /**
-     * avio_read and avio_write should if possible be satisfied directly
-     * instead of going through a buffer, and avio_seek will always
-     * call the underlying seek function directly.
-     */
+ * avio_read 和 avio_write 如果可能的话应该直接满足而不是通过缓冲区，并且 avio_seek 将始终直接调用底层的查找函数。
+ */
     int direct;
 
     /**
-     * ',' separated list of allowed protocols.
-     */
+ * ',' 分隔的允许协议列表。
+ */
     const char *protocol_whitelist;
 
     /**
-     * ',' separated list of disallowed protocols.
-     */
+ * ',' 分隔的不允许的协议列表。
+ */
     const char *protocol_blacklist;
 
     /**
-     * A callback that is used instead of write_packet.
-     */
+ * 用于代替 write_packet 的回调。
+ */
     int (*write_data_type)(void *opaque, const uint8_t *buf, int buf_size,
                            enum AVIODataMarkerType type, int64_t time);
     /**
-     * If set, don't call write_data_type separately for AVIO_DATA_MARKER_BOUNDARY_POINT,
-     * but ignore them and treat them as AVIO_DATA_MARKER_UNKNOWN (to avoid needlessly
-     * small chunks of data returned from the callback).
-     */
+ * 如果设置，则不要为 AVIO_DATA_MARKER_BOUNDARY_POINT 单独调用 write_data_type，而是忽略它们并将它们视为 AVIO_DATA_MARKER_UNKNOWN （以避免从回调返回不必要的小数据块）。
+ */
     int ignore_boundary_point;
 
     /**
-     * Maximum reached position before a backward seek in the write buffer,
-     * used keeping track of already written data for a later flush.
-     */
+ * 在写入缓冲区中向后查找之前达到的最大位置，用于跟踪已写入的数据以供以后刷新。
+ */
     unsigned char *buf_ptr_max;
 
     /**
-     * Read-only statistic of bytes read for this AVIOContext.
-     */
+ * 为此 AVIOContext 读取的字节的只读统计信息。
+ */
     int64_t bytes_read;
 
     /**
-     * Read-only statistic of bytes written for this AVIOContext.
-     */
+ * 为此 AVIOContext 写入的字节的只读统计信息。
+ */
     int64_t bytes_written;
 } AVIOContext;
 
 /**
- * Return the name of the protocol that will handle the passed URL.
+ * 返回将处理给定 URL 的协议名称。
  *
- * NULL is returned if no protocol could be found for the given URL.
+ * 如果找不到给定 URL 的协议，则返回 NULL。
  *
- * @return Name of the protocol or NULL.
+ * @return 协议名称或 NULL。
  */
 const char *avio_find_protocol_name(const char *url);
 
 /**
- * Return AVIO_FLAG_* access flags corresponding to the access permissions
- * of the resource in url, or a negative value corresponding to an
- * AVERROR code in case of failure. The returned access flags are
- * masked by the value in flags.
+ * 返回与 url 中资源访问权限对应的 AVIO_FLAG_* 访问标志；失败时返回对应 AVERROR 代码的负值。返回的访问标志会与 flags 的值进行按位与掩码处理。
  *
- * @note This function is intrinsically unsafe, in the sense that the
- * checked resource may change its existence or permission status from
- * one call to another. Thus you should not trust the returned value,
- * unless you are sure that no other processes are accessing the
- * checked resource.
+ * @note 该函数本质上是不安全的，因为所检查的资源可能会从一次调用到另一次调用而改变其存在或权限状态。因此，您不应信任返回的值，除非您确定没有其他进程正在访问所检查的资源。
  */
 int avio_check(const char *url, int flags);
 
 /**
- * Open directory for reading.
+ * 打开目录进行读取。
  *
- * @param s       directory read context. Pointer to a NULL pointer must be passed.
- * @param url     directory to be listed.
- * @param options A dictionary filled with protocol-private options. On return
- *                this parameter will be destroyed and replaced with a dictionary
- *                containing options that were not found. May be NULL.
- * @return >=0 on success or negative on error.
+ * @param s 目录读取上下文。必须传递指向 NULL 指针的指针。
+ * @param url 要列出的目录。
+ * @param options 充满协议私有选项的字典。返回时，此参数将被销毁并替换为包含未找​​到的选项的字典。可能为 NULL。
+ * @return >=0 表示成功，负值表示错误。
  */
 int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options);
 
 /**
- * Get next directory entry.
+ * 获取下一个目录条目。
  *
- * Returned entry must be freed with avio_free_directory_entry(). In particular
- * it may outlive AVIODirContext.
+ * 返回的条目必须使用 avio_free_directory_entry() 释放。特别是它可能比 AVIODirContext 更长寿。
  *
- * @param s         directory read context.
- * @param[out] next next entry or NULL when no more entries.
- * @return >=0 on success or negative on error. End of list is not considered an
- *             error.
+ * @param s 目录读取上下文。
+ * @param[out] next 下一个条目或当没有更多条目时为 NULL。
+ * @return >=0 表示成功，负值表示错误。列表末尾不被视为错误。
  */
 int avio_read_dir(AVIODirContext *s, AVIODirEntry **next);
 
 /**
- * Close directory.
+ * 关闭目录。
  *
- * @note Entries created using avio_read_dir() are not deleted and must be
- * freeded with avio_free_directory_entry().
+ * @note 使用 avio_read_dir() 创建的条目不会被删除，必须使用 avio_free_directory_entry() 释放。
  *
- * @param s         directory read context.
- * @return >=0 on success or negative on error.
+ * @param s 目录读取上下文。
+ * @return >=0 表示成功，负值表示错误。
  */
 int avio_close_dir(AVIODirContext **s);
 
 /**
- * Free entry allocated by avio_read_dir().
+ * 由 avio_read_dir() 分配的空闲条目。
  *
- * @param entry entry to be freed.
+ * @param entry 条目被释放。
  */
 void avio_free_directory_entry(AVIODirEntry **entry);
 
 /**
- * Allocate and initialize an AVIOContext for buffered I/O. It must be later
- * freed with avio_context_free().
+ * 为缓冲 I/O 分配并初始化 AVIOContext。稍后必须使用 avio_context_free() 释放它。
  *
- * @param buffer Memory block for input/output operations via AVIOContext.
- *        The buffer must be allocated with av_malloc() and friends.
- *        It may be freed and replaced with a new buffer by libavformat.
- *        AVIOContext.buffer holds the buffer currently in use,
- *        which must be later freed with av_free().
- * @param buffer_size The buffer size is very important for performance.
- *        For protocols with fixed blocksize it should be set to this blocksize.
- *        For others a typical size is a cache page, e.g. 4kb.
- * @param write_flag Set to 1 if the buffer should be writable, 0 otherwise.
- * @param opaque An opaque pointer to user-specific data.
- * @param read_packet  A function for refilling the buffer, may be NULL.
- *                     For stream protocols, must never return 0 but rather
- *                     a proper AVERROR code.
- * @param write_packet A function for writing the buffer contents, may be NULL.
- *        The function may not change the input buffers content.
- * @param seek A function for seeking to specified byte position, may be NULL.
+ * @param buffer 通过 AVIOContext 进行输入/输出操作的内存块。缓冲区必须使用 av_malloc() 和朋友来分配。它可以被 libavformat 释放并替换为新的缓冲区。 AVIOContext.buffer 保存当前正在使用的缓冲区，稍后必须使用 av_free() 释放该缓冲区。
+ * @param buffer_size 缓冲区大小对于性能非常重要。对于具有固定块大小的协议，应将其设置为此块大小。对于其他人来说，典型的大小是缓存页面，例如4kb。
+ * @param write_flag 如果缓冲区应可写，则设置为 1，否则设置为 0。
+ * @param opaque 指向用户特定数据的不透明指针。
+ * @param read_packet 重新填充缓冲区的函数，可以为 NULL。对于流协议，绝不能返回 0，而是返回正确的 AVERROR 代码。
+ * @param write_packet 用于写入缓冲区内容的函数，可以为 NULL。该函数可能不会更改输入缓冲区的内容。
+ * @param seek 用于查找指定字节位置的函数，可以为 NULL。
  *
- * @return Allocated AVIOContext or NULL on failure.
+ * @return 已分配 AVIOContext 或失败时为 NULL。
  */
 AVIOContext *avio_alloc_context(
                   unsigned char *buffer,
@@ -405,10 +341,9 @@ AVIOContext *avio_alloc_context(
                   int64_t (*seek)(void *opaque, int64_t offset, int whence));
 
 /**
- * Free the supplied IO context and everything associated with it.
+ * 释放提供的 IO 上下文以及与其关联的所有内容。
  *
- * @param s Double pointer to the IO context. This function will write NULL
- * into s.
+ * @param s 指向 IO 上下文的双指针。该函数会将 NULL 写入 s。
  */
 void avio_context_free(AVIOContext **s);
 
@@ -424,72 +359,65 @@ void avio_wl16(AVIOContext *s, unsigned int val);
 void avio_wb16(AVIOContext *s, unsigned int val);
 
 /**
- * Write a NULL-terminated string.
- * @return number of bytes written.
+ * 写入 NULL 终止的字符串。
+ * @return 写入的字节数。
  */
 int avio_put_str(AVIOContext *s, const char *str);
 
 /**
- * Convert an UTF-8 string to UTF-16LE and write it.
- * @param s the AVIOContext
- * @param str NULL-terminated UTF-8 string
+ * 将 UTF-8 字符串转换为 UTF-16LE 并写入。
+ * @param s AVIOContext
+ * @param str 以 NULL 结尾的 UTF-8 字符串
  *
- * @return number of bytes written.
+ * @return 写入的字节数。
  */
 int avio_put_str16le(AVIOContext *s, const char *str);
 
 /**
- * Convert an UTF-8 string to UTF-16BE and write it.
- * @param s the AVIOContext
- * @param str NULL-terminated UTF-8 string
+ * 将 UTF-8 字符串转换为 UTF-16BE 并写入。
+ * @param s AVIOContext
+ * @param str 以 NULL 结尾的 UTF-8 字符串
  *
- * @return number of bytes written.
+ * @return 写入的字节数。
  */
 int avio_put_str16be(AVIOContext *s, const char *str);
 
 /**
- * Mark the written bytestream as a specific type.
+ * 将写入的字节流标记为特定类型。
  *
- * Zero-length ranges are omitted from the output.
+ * 输出中省略了零长度范围。
  *
- * @param s    the AVIOContext
- * @param time the stream time the current bytestream pos corresponds to
- *             (in AV_TIME_BASE units), or AV_NOPTS_VALUE if unknown or not
- *             applicable
- * @param type the kind of data written starting at the current pos
+ * @param s AVIOContext
+ * @param time 当前字节流 pos 对应的流时间（以 AV_TIME_BASE 为单位），或者 AV_NOPTS_VALUE（如果未知或不适用）
+ * @param type 从当前 pos 开始写入的数据类型
  */
 void avio_write_marker(AVIOContext *s, int64_t time, enum AVIODataMarkerType type);
 
 /**
- * Passing this as the "whence" parameter to a seek function causes it to
- * return the filesize without seeking anywhere. Supporting this is optional.
- * If it is not supported then the seek function will return <0.
+ * 将其作为“whence”参数传递给查找函数会导致它返回文件大小而不在任何地方查找。支持此功能是可选的。如果不支持，则查找函数将返回 <0。
  */
 #define AVSEEK_SIZE 0x10000
 
 /**
- * OR'ing this flag into the "whence" parameter to a seek function causes it to
- * seek by any means (like reopening and linear reading) or other normally unreasonable
- * means that can be extremely slow.
- * This is the default and therefore ignored by the seek code since 2010.
+ * 将此标志或“whence”参数插入到查找函数中会导致它通过任何方式（例如重新打开和线性读取）或其他通常不合理的方式进行查找，这可能会非常慢。这是默认值，因此自 2010 年以来被查找代码忽略。
  */
 #define AVSEEK_FORCE 0x20000
 
 /**
- * fseek() equivalent for AVIOContext.
- * @return new position or AVERROR.
+ * fseek() 相当于 AVIOContext。
+ * @return 新位置或 AVERROR。
  */
 int64_t avio_seek(AVIOContext *s, int64_t offset, int whence);
 
 /**
- * Skip given number of bytes forward
- * @return new position or AVERROR.
+ * 向前跳过给定数量的字节
+ * @return 新职位或 AVERROR。
  */
 int64_t avio_skip(AVIOContext *s, int64_t offset);
 
 /**
- * ftell() equivalent for AVIOContext.
- * @return position or AVERROR.
+ * ftell() 相当于 AVIOContext。
+ * @return 位置或 AVERROR。
  */
 static av_always_inline int64_t avio_tell(AVIOContext *s)
 {
@@ -497,79 +425,66 @@ static av_always_inline int64_t avio_tell(AVIOContext *s)
 }
 
 /**
- * Get the filesize.
- * @return filesize or AVERROR
+ * 获取文件大小。
+ * @return 文件大小或 AVERROR
  */
 int64_t avio_size(AVIOContext *s);
 
 /**
- * Similar to feof() but also returns nonzero on read errors.
- * @return non zero if and only if at end of file or a read error happened when reading.
+ * 与 feof() 类似，但在读取错误时也返回非零。
+ * @return 当且仅当在文件末尾或读取时发生读取错误时非零。
  */
 int avio_feof(AVIOContext *s);
 
 /**
- * Writes a formatted string to the context taking a va_list.
- * @return number of bytes written, < 0 on error.
+ * 将格式化字符串写入采用 va_list 的上下文。
+ * @return 写入的字节数，出错时 < 0。
  */
 int avio_vprintf(AVIOContext *s, const char *fmt, va_list ap);
 
 /**
- * Writes a formatted string to the context.
- * @return number of bytes written, < 0 on error.
+ * 将格式化字符串写入上下文。
+ * @return 写入的字节数，出错时 < 0。
  */
 int avio_printf(AVIOContext *s, const char *fmt, ...) av_printf_format(2, 3);
 
 /**
- * Write a NULL terminated array of strings to the context.
- * Usually you don't need to use this function directly but its macro wrapper,
- * avio_print.
+ * 将 NULL 终止的字符串数组写入上下文。通常您不需要直接使用该函数，而是需要使用它的宏包装器 avio_print。
  */
 void avio_print_string_array(AVIOContext *s, const char * const strings[]);
 
 /**
- * Write strings (const char *) to the context.
- * This is a convenience macro around avio_print_string_array and it
- * automatically creates the string array from the variable argument list.
- * For simple string concatenations this function is more performant than using
- * avio_printf since it does not need a temporary buffer.
+ * 将字符串 (const char *) 写入上下文。这是一个围绕 avio_print_string_array 的便捷宏，它会自动从变量参数列表创建字符串数组。对于简单的字符串连接，此函数比使用 avio_printf 性能更高，因为它不需要临时缓冲区。
  */
 #define avio_print(s, ...) \
     avio_print_string_array(s, (const char*[]){__VA_ARGS__, NULL})
 
 /**
- * Force flushing of buffered data.
+ * 强制刷新缓冲数据。
  *
- * For write streams, force the buffered data to be immediately written to the output,
- * without to wait to fill the internal buffer.
+ * 对于写入流，强制将缓冲数据立即写入输出，而无需等待填充内部缓冲区。
  *
- * For read streams, discard all currently buffered data, and advance the
- * reported file position to that of the underlying stream. This does not
- * read new data, and does not perform any seeks.
+ * 对于读取流，丢弃所有当前缓冲的数据，并将报告的文件位置前进到基础流的位置。这不会读取新数据，也不执行任何查找。
  */
 void avio_flush(AVIOContext *s);
 
 /**
- * Read size bytes from AVIOContext into buf.
- * @return number of bytes read or AVERROR
+ * 将 size 字节从 AVIOContext 读取到 buf 中。
+ * @return 读取的字节数或 AVERROR
  */
 int avio_read(AVIOContext *s, unsigned char *buf, int size);
 
 /**
- * Read size bytes from AVIOContext into buf. Unlike avio_read(), this is allowed
- * to read fewer bytes than requested. The missing bytes can be read in the next
- * call. This always tries to read at least 1 byte.
- * Useful to reduce latency in certain cases.
- * @return number of bytes read or AVERROR
+ * 将 size 字节从 AVIOContext 读取到 buf。与 avio_read() 不同，允许读取少于请求的字节数。可以在下一次调用中读取丢失的字节。它总是尝试读取至少 1 个字节。在某些情况下有助于减少延迟。
+ * @return 读取的字节数或 AVERROR
  */
 int avio_read_partial(AVIOContext *s, unsigned char *buf, int size);
 
 /**
- * @name Functions for reading from AVIOContext
+ * @name 从 AVIOContext 读取的函数
  * @{
  *
- * @note return 0 if EOF, so you cannot use it if EOF handling is
- *       necessary
+ * @note 如果 EOF 返回 0，因此如果需要 EOF 处理，则不能使用它
  */
 int          avio_r8  (AVIOContext *s);
 unsigned int avio_rl16(AVIOContext *s);
@@ -585,247 +500,174 @@ uint64_t     avio_rb64(AVIOContext *s);
  */
 
 /**
- * Read a string from pb into buf. The reading will terminate when either
- * a NULL character was encountered, maxlen bytes have been read, or nothing
- * more can be read from pb. The result is guaranteed to be NULL-terminated, it
- * will be truncated if buf is too small.
- * Note that the string is not interpreted or validated in any way, it
- * might get truncated in the middle of a sequence for multi-byte encodings.
+ * 将 pb 中的字符串读入 buf 中。当遇到 NULL 字符、已读取 maxlen 个字节或无法从 pb 读取更多内容时，读取将终止。结果保证以 NULL 终止，如果 buf 太小，结果将被截断。请注意，该字符串不会以任何方式解释或验证，它可能会在多字节编码序列的中间被截断。
  *
- * @return number of bytes read (is always <= maxlen).
- * If reading ends on EOF or error, the return value will be one more than
- * bytes actually read.
+ * @return 读取的字节数（始终 <= maxlen）。如果读取在 EOF 或错误时结束，则返回值将比实际读取的字节数多 1。
  */
 int avio_get_str(AVIOContext *pb, int maxlen, char *buf, int buflen);
 
 /**
- * Read a UTF-16 string from pb and convert it to UTF-8.
- * The reading will terminate when either a null or invalid character was
- * encountered or maxlen bytes have been read.
- * @return number of bytes read (is always <= maxlen)
+ * 从 pb 读取 UTF-16 字符串并将其转换为 UTF-8。当遇到空字符或无效字符或已读取 maxlen 字节时，读取将终止。
+ * @return 读取的字节数（始终 <= maxlen）
  */
 int avio_get_str16le(AVIOContext *pb, int maxlen, char *buf, int buflen);
 int avio_get_str16be(AVIOContext *pb, int maxlen, char *buf, int buflen);
 
 
 /**
- * @name URL open modes
- * The flags argument to avio_open must be one of the following
- * constants, optionally ORed with other flags.
+ * @name URL 打开模式 avio_open 的 flags 参数必须是以下常量之一，可以选择与其他标志进行或运算。
  * @{
  */
-#define AVIO_FLAG_READ  1                                      /**< read-only */
-#define AVIO_FLAG_WRITE 2                                      /**< write-only */
-#define AVIO_FLAG_READ_WRITE (AVIO_FLAG_READ|AVIO_FLAG_WRITE)  /**< read-write pseudo flag */
+#define AVIO_FLAG_READ  1                                      /**< 只读 */
+#define AVIO_FLAG_WRITE 2                                      /**< 只写 */
+#define AVIO_FLAG_READ_WRITE (AVIO_FLAG_READ|AVIO_FLAG_WRITE)  /**< 读写伪标志 */
 /**
  * @}
  */
 
 /**
- * Use non-blocking mode.
- * If this flag is set, operations on the context will return
- * AVERROR(EAGAIN) if they can not be performed immediately.
- * If this flag is not set, operations on the context will never return
- * AVERROR(EAGAIN).
- * Note that this flag does not affect the opening/connecting of the
- * context. Connecting a protocol will always block if necessary (e.g. on
- * network protocols) but never hang (e.g. on busy devices).
- * Warning: non-blocking protocols is work-in-progress; this flag may be
- * silently ignored.
+ * 使用非阻塞模式。如果设置了此标志，则上下文上的操作如果无法立即执行，将返回 AVERROR(EAGAIN)。如果未设置此标志，则对上下文的操作将永远不会返回 AVERROR(EAGAIN)。请注意，该标志不会影响上下文的打开/连接。如有必要，连接协议将始终阻塞（例如在网络协议上），但永远不会挂起（例如在繁忙的设备上）。警告：非阻塞协议正在开发中；该标志可能会被默默地忽略。
  */
 #define AVIO_FLAG_NONBLOCK 8
 
 /**
- * Use direct mode.
- * avio_read and avio_write should if possible be satisfied directly
- * instead of going through a buffer, and avio_seek will always
- * call the underlying seek function directly.
+ * 使用直接模式。如果可能的话，avio_read 和 avio_write 应该直接满足，而不是通过缓冲区，并且 avio_seek 将始终直接调用底层的查找函数。
  */
 #define AVIO_FLAG_DIRECT 0x8000
 
 /**
- * Create and initialize a AVIOContext for accessing the
- * resource indicated by url.
- * @note When the resource indicated by url has been opened in
- * read+write mode, the AVIOContext can be used only for writing.
+ * 创建并初始化一个 AVIOContext 用于访问 url 指示的资源。
+ * @note 当 url 指示的资源以读+写模式打开时，AVIOContext 只能用于写入。
  *
- * @param s Used to return the pointer to the created AVIOContext.
- * In case of failure the pointed to value is set to NULL.
- * @param url resource to access
- * @param flags flags which control how the resource indicated by url
- * is to be opened
- * @return >= 0 in case of success, a negative value corresponding to an
- * AVERROR code in case of failure
+ * @param s 用于返回指向创建的 AVIOContext 的指针。如果失败，指向的值将设置为 NULL。
+ * @param url 要访问的资源
+ * @param flags 控制如何打开 url 指示的资源的标志
+ * @return >= 0（成功时），对应于 AVERROR 代码（失败时）的负值
  */
 int avio_open(AVIOContext **s, const char *url, int flags);
 
 /**
- * Create and initialize a AVIOContext for accessing the
- * resource indicated by url.
- * @note When the resource indicated by url has been opened in
- * read+write mode, the AVIOContext can be used only for writing.
+ * 创建并初始化一个 AVIOContext，用于访问 url 指示的资源。
+ * @note 当 url 指示的资源以读+写模式打开时，AVIOContext 只能用于写入。
  *
- * @param s Used to return the pointer to the created AVIOContext.
- * In case of failure the pointed to value is set to NULL.
- * @param url resource to access
- * @param flags flags which control how the resource indicated by url
- * is to be opened
- * @param int_cb an interrupt callback to be used at the protocols level
- * @param options  A dictionary filled with protocol-private options. On return
- * this parameter will be destroyed and replaced with a dict containing options
- * that were not found. May be NULL.
- * @return >= 0 in case of success, a negative value corresponding to an
- * AVERROR code in case of failure
+ * @param s 用于返回指向创建的 AVIOContext 的指针。如果失败，指向的值将设置为 NULL。
+ * @param url 用于访问的资源
+ * @param flags 控制如何打开 url 指示的资源的标志
+ * @param int_cb 在协议级别使用的中断回调
+ * @param options 充满协议私有选项的字典。返回时，此参数将被销毁并替换为包含未找​​到的选项的字典。可能为 NULL。如果成功，则为
+ * @return >= 0；如果失败，则为对应于 AVERROR 代码的负值
  */
 int avio_open2(AVIOContext **s, const char *url, int flags,
                const AVIOInterruptCB *int_cb, AVDictionary **options);
 
 /**
- * Close the resource accessed by the AVIOContext s and free it.
- * This function can only be used if s was opened by avio_open().
+ * 关闭 AVIOContext 访问的资源并释放它。仅当 s 由 avio_open() 打开时才能使用此函数。
  *
- * The internal buffer is automatically flushed before closing the
- * resource.
+ * 在关闭资源之前，内部缓冲区会自动刷新。
  *
- * @return 0 on success, an AVERROR < 0 on error.
+ * @return 成功时为 0，错误时 AVERROR < 0。
  * @see avio_closep
  */
 int avio_close(AVIOContext *s);
 
 /**
- * Close the resource accessed by the AVIOContext *s, free it
- * and set the pointer pointing to it to NULL.
- * This function can only be used if s was opened by avio_open().
+ * 关闭 AVIOContext *s 访问的资源，释放它并将指向它的指针设置为 NULL。仅当 s 由 avio_open() 打开时才能使用此函数。
  *
- * The internal buffer is automatically flushed before closing the
- * resource.
+ * 在关闭资源之前，内部缓冲区会自动刷新。
  *
- * @return 0 on success, an AVERROR < 0 on error.
+ * @return 成功时为 0，错误时 AVERROR < 0。
  * @see avio_close
  */
 int avio_closep(AVIOContext **s);
 
 
 /**
- * Open a write only memory stream.
+ * 打开只写内存流。
  *
- * @param s new IO context
- * @return zero if no error.
+ * @param s 新 IO 上下文
+ * @return 如果没有错误则为零。
  */
 int avio_open_dyn_buf(AVIOContext **s);
 
 /**
- * Return the written size and a pointer to the buffer.
- * The AVIOContext stream is left intact.
- * The buffer must NOT be freed.
- * No padding is added to the buffer.
+ * 返回已写入的大小和指向缓冲区的指针。AVIOContext 流保持不变。不得释放该缓冲区，也不会向缓冲区添加填充。
  *
- * @param s IO context
- * @param pbuffer pointer to a byte buffer
- * @return the length of the byte buffer
+ * @param s IO 上下文
+ * @param pbuffer 指向字节缓冲区的指针
+ * @return 字节缓冲区的长度
  */
 int avio_get_dyn_buf(AVIOContext *s, uint8_t **pbuffer);
 
 /**
- * Return the written size and a pointer to the buffer. The buffer
- * must be freed with av_free().
- * Padding of AV_INPUT_BUFFER_PADDING_SIZE is added to the buffer.
+ * 返回已写入的大小和指向缓冲区的指针。必须使用 av_free() 释放该缓冲区。缓冲区会添加 AV_INPUT_BUFFER_PADDING_SIZE 大小的填充。
  *
- * @param s IO context
- * @param pbuffer pointer to a byte buffer
- * @return the length of the byte buffer
+ * @param s IO 上下文
+ * @param pbuffer 指向字节缓冲区的指针
+ * @return 字节缓冲区的长度
  */
 int avio_close_dyn_buf(AVIOContext *s, uint8_t **pbuffer);
 
 /**
- * Iterate through names of available protocols.
+ * 迭代可用协议的名称。
  *
- * @param opaque A private pointer representing current protocol.
- *        It must be a pointer to NULL on first iteration and will
- *        be updated by successive calls to avio_enum_protocols.
- * @param output If set to 1, iterate over output protocols,
- *               otherwise over input protocols.
+ * @param opaque 表示当前协议的私有指针。它在第一次迭代时必须是指向 NULL 的指针，并将通过连续调用 avio_enum_protocols 进行更新。
+ * @param output 如果设置为 1，则迭代输出协议，否则迭代输入协议。
  *
- * @return A static string containing the name of current protocol or NULL
+ * @return 包含当前协议名称的静态字符串或 NULL
  */
 const char *avio_enum_protocols(void **opaque, int output);
 
 /**
- * Get AVClass by names of available protocols.
+ * 通过可用协议名称获取 AVClass。
  *
- * @return A AVClass of input protocol name or NULL
+ * @return 输入协议名称的 AVClass 或 NULL
  */
 const AVClass *avio_protocol_get_class(const char *name);
 
 /**
- * Pause and resume playing - only meaningful if using a network streaming
- * protocol (e.g. MMS).
+ * 暂停和恢复播放 - 仅在使用网络流协议（例如 MMS）时才有意义。
  *
- * @param h     IO context from which to call the read_pause function pointer
- * @param pause 1 for pause, 0 for resume
+ * @param h 从中调用 read_pause 函数指针的 IO 上下文
+ * @param pause 1 表示暂停，0 表示恢复
  */
 int     avio_pause(AVIOContext *h, int pause);
 
 /**
- * Seek to a given timestamp relative to some component stream.
- * Only meaningful if using a network streaming protocol (e.g. MMS.).
+ * 查找相对于某个组件流的给定时间戳。仅在使用网络流协议（例如彩信）时才有意义。
  *
- * @param h IO context from which to call the seek function pointers
- * @param stream_index The stream index that the timestamp is relative to.
- *        If stream_index is (-1) the timestamp should be in AV_TIME_BASE
- *        units from the beginning of the presentation.
- *        If a stream_index >= 0 is used and the protocol does not support
- *        seeking based on component streams, the call will fail.
- * @param timestamp timestamp in AVStream.time_base units
- *        or if there is no stream specified then in AV_TIME_BASE units.
- * @param flags Optional combination of AVSEEK_FLAG_BACKWARD, AVSEEK_FLAG_BYTE
- *        and AVSEEK_FLAG_ANY. The protocol may silently ignore
- *        AVSEEK_FLAG_BACKWARD and AVSEEK_FLAG_ANY, but AVSEEK_FLAG_BYTE will
- *        fail if used and not supported.
- * @return >= 0 on success
+ * @param h 从中调用查找函数指针的 IO 上下文
+ * @param stream_index 时间戳相关的流索引。如果stream_index为(-1)，则时间戳应以AV_TIME_BASE为单位，从演示开始算起。如果使用stream_index >= 0并且协议不支持基于组件流的查找，则调用将失败。
+ * @param timestamp 时间戳，以 AVStream.time_base 为单位，或者如果没有指定流，则以 AV_TIME_BASE 为单位。
+ * @param flags AVSEEK_FLAG_BACKWARD、AVSEEK_FLAG_BYTE 和 AVSEEK_FLAG_ANY 的可选组合。该协议可能会默默地忽略 AVSEEK_FLAG_BACKWARD 和 AVSEEK_FLAG_ANY，但如果使用但不支持 AVSEEK_FLAG_BYTE 将失败。
+ * @return >= 0 成功
  * @see AVInputFormat::read_seek
  */
 int64_t avio_seek_time(AVIOContext *h, int stream_index,
                        int64_t timestamp, int flags);
 
-/* Avoid a warning. The header can not be included because it breaks c++. */
+/* 避免警告。无法包含标头，因为它破坏了 C++。 */
 struct AVBPrint;
 
 /**
- * Read contents of h into print buffer, up to max_size bytes, or up to EOF.
+ * 将 h 的内容读入打印缓冲区，最多为 max_size 字节，或最多为 EOF。
  *
- * @return 0 for success (max_size bytes read or EOF reached), negative error
- * code otherwise
+ * @return 0 表示成功（读取的 max_size 字节或达到 EOF），否则为负错误代码
  */
 int avio_read_to_bprint(AVIOContext *h, struct AVBPrint *pb, size_t max_size);
 
 /**
- * Accept and allocate a client context on a server context.
- * @param  s the server context
- * @param  c the client context, must be unallocated
- * @return   >= 0 on success or a negative value corresponding
- *           to an AVERROR on failure
+ * 接受并在服务器上下文上分配客户端上下文。
+ * @param  s 服务器上下文
+ * @param  c 客户端上下文，必须未分配
+ * @return >= 0（成功时）或对应于 AVERROR（失败时）的负值
  */
 int avio_accept(AVIOContext *s, AVIOContext **c);
 
 /**
- * Perform one step of the protocol handshake to accept a new client.
- * This function must be called on a client returned by avio_accept() before
- * using it as a read/write context.
- * It is separate from avio_accept() because it may block.
- * A step of the handshake is defined by places where the application may
- * decide to change the proceedings.
- * For example, on a protocol with a request header and a reply header, each
- * one can constitute a step because the application may use the parameters
- * from the request to change parameters in the reply; or each individual
- * chunk of the request can constitute a step.
- * If the handshake is already finished, avio_handshake() does nothing and
- * returns 0 immediately.
+ * 执行协议握手的一个步骤以接受新客户端。在将其用作读/写上下文之前，必须在 avio_accept() 返回的客户端上调用此函数。它与 avio_accept() 是分开的，因为它可能会阻塞。握手的步骤由应用程序可能决定改变进程的位置来定义。例如，在具有请求标头和答复标头的协议上，每个标头都可以构成一个步骤，因为应用程序可以使用请求中的参数来更改答复中的参数；或者请求的每个单独块都可以构成一个步骤。如果握手已经完成，avio_handshake() 不执行任何操作并立即返回 0。
  *
- * @param  c the client context to perform the handshake on
- * @return   0   on a complete and successful handshake
- *           > 0 if the handshake progressed, but is not complete
- *           < 0 for an AVERROR code
+ * @param  c 在
+ * @return 上执行握手的客户端上下文 0 一次完整且成功的握手 > 0 如果握手进行，但未完成 < 0 对于 AVERROR 代码
  */
 int avio_handshake(AVIOContext *c);
 #endif /* AVFORMAT_AVIO_H */

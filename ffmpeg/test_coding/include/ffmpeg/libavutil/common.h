@@ -1,26 +1,26 @@
-/*
- * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
+﻿/*
+ * 复制right (c) 2006 Michael Niedermayer <michaelni@gmx.at>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 /**
  * @file
- * common internal and external API header
+ * common internal 和 external API header
  */
 
 #ifndef AVUTIL_COMMON_H
@@ -52,11 +52,11 @@
 #   include "mem.h"
 #endif /* HAVE_AV_CONFIG_H */
 
-//rounded division & shift
+//rounded division & sh如果t
 #define RSHIFT(a,b) ((a) > 0 ? ((a) + ((1<<(b))>>1))>>(b) : ((a) + ((1<<(b))>>1)-1)>>(b))
 /* assume b>0 */
 #define ROUNDED_DIV(a,b) (((a)>=0 ? (a) + ((b)>>1) : (a) - ((b)>>1))/(b))
-/* Fast a/(1<<b) rounded toward +inf. Assume a>=0 and b>=0 */
+/* Fast a/(1<<b) rounded toward +inf. Assume a>=0 和 b>=0 */
 #define AV_CEIL_RSHIFT(a,b) (!av_builtin_constant_p(b) ? -((-(a)) >> (b)) \
                                                        : ((a) + (1<<(b)) - 1) >> (b))
 /* Backwards compat. */
@@ -66,27 +66,27 @@
 #define FFUMOD(a,b) ((a)-(b)*FFUDIV(a,b))
 
 /**
- * Absolute value, Note, INT_MIN / INT64_MIN result in undefined behavior as they
- * are not representable as absolute values of their type. This is the same
- * as with *abs()
- * @see FFNABS()
+ * Absolute 值, Note, INT_MIN / INT64_MIN result 中 undefined behavior as they
+ * are not representable as absolute 值 的 their type. This is the same
+ * as，使用 *abs()
+ * @参见 FFNABS()
  */
 #define FFABS(a) ((a) >= 0 ? (a) : (-(a)))
 #define FFSIGN(a) ((a) > 0 ? 1 : -1)
 
 /**
- * Negative Absolute value.
- * this works for all integers of all types.
- * As with many macros, this evaluates its argument twice, it thus must not have
+ * Negative Absolute 值.
+ * this works 用于 all integers 的 all types.
+ * As，使用 many macros, this evaluates its argument twice, it thus must not have
  * a sideeffect, that is FFNABS(x++) has undefined behavior.
  */
 #define FFNABS(a) ((a) <= 0 ? (a) : (-(a)))
 
 /**
- * Unsigned Absolute value.
- * This takes the absolute value of a signed int and returns it as a unsigned.
- * This also works with INT_MIN which would otherwise not be representable
- * As with many macros, this evaluates its argument twice.
+ * Unsigned Absolute 值.
+ * This takes the absolute 值 的 a signed int 和 返回s it as a unsigned.
+ * This also works，使用 INT_MIN which would otherwise not be representable
+ * As，使用 many macros, this evaluates its argument twice.
  */
 #define FFABSU(a) ((a) <= 0 ? -(unsigned)(a) : (unsigned)(a))
 #define FFABS64U(a) ((a) <= 0 ? -(uint64_t)(a) : (uint64_t)(a))
@@ -169,11 +169,11 @@ av_const int av_log2_16bit(unsigned v);
 #endif
 
 /**
- * Clip a signed integer value into the amin-amax range.
- * @param a value to clip
- * @param amin minimum value of the clip range
- * @param amax maximum value of the clip range
- * @return clipped value
+ * Clip a signed integer 值 into the amin-amax range.
+ * @param a 值 到 clip
+ * @param amin minimum 值 的 the clip range
+ * @param amax maximum 值 的 the clip range
+ * @返回 clipped 值
  */
 static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
 {
@@ -186,11 +186,11 @@ static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
 }
 
 /**
- * Clip a signed 64bit integer value into the amin-amax range.
- * @param a value to clip
- * @param amin minimum value of the clip range
- * @param amax maximum value of the clip range
- * @return clipped value
+ * Clip a signed 64bit integer 值 into the amin-amax range.
+ * @param a 值 到 clip
+ * @param amin minimum 值 的 the clip range
+ * @param amax maximum 值 的 the clip range
+ * @返回 clipped 值
  */
 static av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, int64_t amax)
 {
@@ -203,9 +203,9 @@ static av_always_inline av_const int64_t av_clip64_c(int64_t a, int64_t amin, in
 }
 
 /**
- * Clip a signed integer value into the 0-255 range.
- * @param a value to clip
- * @return clipped value
+ * Clip a signed integer 值 into the 0-255 range.
+ * @param a 值 到 clip
+ * @返回 clipped 值
  */
 static av_always_inline av_const uint8_t av_clip_uint8_c(int a)
 {
@@ -214,9 +214,9 @@ static av_always_inline av_const uint8_t av_clip_uint8_c(int a)
 }
 
 /**
- * Clip a signed integer value into the -128,127 range.
- * @param a value to clip
- * @return clipped value
+ * Clip a signed integer 值 into the -128,127 range.
+ * @param a 值 到 clip
+ * @返回 clipped 值
  */
 static av_always_inline av_const int8_t av_clip_int8_c(int a)
 {
@@ -225,9 +225,9 @@ static av_always_inline av_const int8_t av_clip_int8_c(int a)
 }
 
 /**
- * Clip a signed integer value into the 0-65535 range.
- * @param a value to clip
- * @return clipped value
+ * Clip a signed integer 值 into the 0-65535 range.
+ * @param a 值 到 clip
+ * @返回 clipped 值
  */
 static av_always_inline av_const uint16_t av_clip_uint16_c(int a)
 {
@@ -236,9 +236,9 @@ static av_always_inline av_const uint16_t av_clip_uint16_c(int a)
 }
 
 /**
- * Clip a signed integer value into the -32768,32767 range.
- * @param a value to clip
- * @return clipped value
+ * Clip a signed integer 值 into the -32768,32767 range.
+ * @param a 值 到 clip
+ * @返回 clipped 值
  */
 static av_always_inline av_const int16_t av_clip_int16_c(int a)
 {
@@ -247,9 +247,9 @@ static av_always_inline av_const int16_t av_clip_int16_c(int a)
 }
 
 /**
- * Clip a signed 64-bit integer value into the -2147483648,2147483647 range.
- * @param a value to clip
- * @return clipped value
+ * Clip a signed 64-bit integer 值 into the -2147483648,2147483647 range.
+ * @param a 值 到 clip
+ * @返回 clipped 值
  */
 static av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
 {
@@ -259,9 +259,9 @@ static av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
 
 /**
  * Clip a signed integer into the -(2^p),(2^p-1) range.
- * @param  a value to clip
- * @param  p bit position to clip at
- * @return clipped value
+ * @param  a 值 到 clip
+ * @param  p bit position 到 clip at
+ * @返回 clipped 值
  */
 static av_always_inline av_const int av_clip_intp2_c(int a, int p)
 {
@@ -272,10 +272,10 @@ static av_always_inline av_const int av_clip_intp2_c(int a, int p)
 }
 
 /**
- * Clip a signed integer to an unsigned power of two range.
- * @param  a value to clip
- * @param  p bit position to clip at
- * @return clipped value
+ * Clip a signed integer 到 an unsigned power 的 two range.
+ * @param  a 值 到 clip
+ * @param  p bit position 到 clip at
+ * @返回 clipped 值
  */
 static av_always_inline av_const unsigned av_clip_uintp2_c(int a, int p)
 {
@@ -284,10 +284,10 @@ static av_always_inline av_const unsigned av_clip_uintp2_c(int a, int p)
 }
 
 /**
- * Clear high bits from an unsigned integer starting with specific bit position
- * @param  a value to clip
- * @param  p bit position to clip at. Must be between 0 and 31.
- * @return clipped value
+ * Clear high bits，来自 an unsigned integer starting，使用 spec如果ic bit position
+ * @param  a 值 到 clip
+ * @param  p bit position 到 clip at. Must be between 0 和 31.
+ * @返回 clipped 值
  */
 static av_always_inline av_const unsigned av_zero_extend_c(unsigned a, unsigned p)
 {
@@ -298,11 +298,11 @@ static av_always_inline av_const unsigned av_zero_extend_c(unsigned a, unsigned 
 }
 
 /**
- * Add two signed 32-bit values with saturation.
+ * Add two signed 32-bit 值，使用 saturation.
  *
- * @param  a one value
- * @param  b another value
- * @return sum with signed saturation
+ * @param  a one 值
+ * @param  b another 值
+ * @返回 sum，使用 signed saturation
  */
 static av_always_inline int av_sat_add32_c(int a, int b)
 {
@@ -310,11 +310,11 @@ static av_always_inline int av_sat_add32_c(int a, int b)
 }
 
 /**
- * Add a doubled value to another value with saturation at both stages.
+ * Add a doubled 值 到 another 值，使用 saturation at both stages.
  *
- * @param  a first value
- * @param  b value doubled and added to a
- * @return sum sat(a + sat(2*b)) with signed saturation
+ * @param  a first 值
+ * @param  b 值 doubled 和 added 到 a
+ * @返回 sum sat(a + sat(2*b))，使用 signed saturation
  */
 static av_always_inline int av_sat_dadd32_c(int a, int b)
 {
@@ -322,11 +322,11 @@ static av_always_inline int av_sat_dadd32_c(int a, int b)
 }
 
 /**
- * Subtract two signed 32-bit values with saturation.
+ * Subtract two signed 32-bit 值，使用 saturation.
  *
- * @param  a one value
- * @param  b another value
- * @return difference with signed saturation
+ * @param  a one 值
+ * @param  b another 值
+ * @返回 d如果ference，使用 signed saturation
  */
 static av_always_inline int av_sat_sub32_c(int a, int b)
 {
@@ -334,11 +334,11 @@ static av_always_inline int av_sat_sub32_c(int a, int b)
 }
 
 /**
- * Subtract a doubled value from another value with saturation at both stages.
+ * Subtract a doubled 值，来自 another 值，使用 saturation at both stages.
  *
- * @param  a first value
- * @param  b value doubled and subtracted from a
- * @return difference sat(a - sat(2*b)) with signed saturation
+ * @param  a first 值
+ * @param  b 值 doubled 和 subtracted，来自 a
+ * @返回 d如果ference sat(a - sat(2*b))，使用 signed saturation
  */
 static av_always_inline int av_sat_dsub32_c(int a, int b)
 {
@@ -346,11 +346,11 @@ static av_always_inline int av_sat_dsub32_c(int a, int b)
 }
 
 /**
- * Add two signed 64-bit values with saturation.
+ * Add two signed 64-bit 值，使用 saturation.
  *
- * @param  a one value
- * @param  b another value
- * @return sum with signed saturation
+ * @param  a one 值
+ * @param  b another 值
+ * @返回 sum，使用 signed saturation
  */
 static av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
 #if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_add_overflow)
@@ -365,11 +365,11 @@ static av_always_inline int64_t av_sat_add64_c(int64_t a, int64_t b) {
 }
 
 /**
- * Subtract two signed 64-bit values with saturation.
+ * Subtract two signed 64-bit 值，使用 saturation.
  *
- * @param  a one value
- * @param  b another value
- * @return difference with signed saturation
+ * @param  a one 值
+ * @param  b another 值
+ * @返回 d如果ference，使用 signed saturation
  */
 static av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
 #if (!defined(__INTEL_COMPILER) && AV_GCC_VERSION_AT_LEAST(5,1)) || AV_HAS_BUILTIN(__builtin_sub_overflow)
@@ -385,13 +385,13 @@ static av_always_inline int64_t av_sat_sub64_c(int64_t a, int64_t b) {
 }
 
 /**
- * Clip a float value into the amin-amax range.
- * If a is nan or -inf amin will be returned.
- * If a is +inf amax will be returned.
- * @param a value to clip
- * @param amin minimum value of the clip range
- * @param amax maximum value of the clip range
- * @return clipped value
+ * Clip a float 值 into the amin-amax range.
+ * 如果 a is nan 或 -inf amin will be 返回ed.
+ * 如果 a is +inf amax will be 返回ed.
+ * @param a 值 到 clip
+ * @param amin minimum 值 的 the clip range
+ * @param amax maximum 值 的 the clip range
+ * @返回 clipped 值
  */
 static av_always_inline av_const float av_clipf_c(float a, float amin, float amax)
 {
@@ -402,13 +402,13 @@ static av_always_inline av_const float av_clipf_c(float a, float amin, float ama
 }
 
 /**
- * Clip a double value into the amin-amax range.
- * If a is nan or -inf amin will be returned.
- * If a is +inf amax will be returned.
- * @param a value to clip
- * @param amin minimum value of the clip range
- * @param amax maximum value of the clip range
- * @return clipped value
+ * Clip a double 值 into the amin-amax range.
+ * 如果 a is nan 或 -inf amin will be 返回ed.
+ * 如果 a is +inf amax will be 返回ed.
+ * @param a 值 到 clip
+ * @param amin minimum 值 的 the clip range
+ * @param amax maximum 值 的 the clip range
+ * @返回 clipped 值
  */
 static av_always_inline av_const double av_clipd_c(double a, double amin, double amax)
 {
@@ -419,8 +419,8 @@ static av_always_inline av_const double av_clipd_c(double a, double amin, double
 }
 
 /** Compute ceil(log2(x)).
- * @param x value used to compute ceil(log2(x))
- * @return computed ceiling of log2(x)
+ * @param x 值 用于 compute ceil(log2(x))
+ * @返回 computed ceiling 的 log2(x)
  */
 static av_always_inline av_const int av_ceil_log2_c(int x)
 {
@@ -428,9 +428,9 @@ static av_always_inline av_const int av_ceil_log2_c(int x)
 }
 
 /**
- * Count number of bits set to one in x
- * @param x value to count bits of
- * @return the number of bits set to one in x
+ * Count 数量 的 bits 设置 到 one 中 x
+ * @param x 值 到 count bits of
+ * @返回 the 数量 的 bits 设置 到 one 中 x
  */
 static av_always_inline av_const int av_popcount_c(uint32_t x)
 {
@@ -442,9 +442,9 @@ static av_always_inline av_const int av_popcount_c(uint32_t x)
 }
 
 /**
- * Count number of bits set to one in x
- * @param x value to count bits of
- * @return the number of bits set to one in x
+ * Count 数量 的 bits 设置 到 one 中 x
+ * @param x 值 到 count bits of
+ * @返回 the 数量 的 bits 设置 到 one 中 x
  */
 static av_always_inline av_const int av_popcount64_c(uint64_t x)
 {
@@ -457,22 +457,22 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
 }
 
 /**
- * Convert a UTF-8 character (up to 4 bytes) to its 32-bit UCS-4 encoded form.
+ * 转换 a UTF-8 character (up 到 4 bytes) 到 its 32-bit UCS-4 encoded form.
  *
- * @param val      Output value, must be an lvalue of type uint32_t.
- * @param GET_BYTE Expression reading one byte from the input.
- *                 Evaluated up to 7 times (4 for the currently
- *                 assigned Unicode range).  With a memory buffer
- *                 input, this could be *ptr++, or if you want to make sure
- *                 that *ptr stops at the end of a NULL terminated string then
+ * @param val      输出 值, must be an l值 的 type uint32_t.
+ * @param GET_BYTE Expression reading one byte，来自 the 输入.
+ *                 Evaluated up 到 7 times (4 用于 the currently
+ *                 assigned Unicode range).  With a 内存 缓冲区
+ *                 输入, this could be *ptr++, 或 如果 you want 到 make sure
+ *                 that *ptr stops at the end 的 a NULL terminated string then
  *                 *ptr ? *ptr++ : 0
- * @param ERROR    Expression to be evaluated on invalid input,
+ * @param ERROR    Expression 到 be evaluated 上 invalid 输入,
  *                 typically a goto statement.
  *
  * @warning ERROR should not contain a loop control statement which
- * could interact with the internal while loop, and should force an
- * exit from the macro code (e.g. through a goto or a return) in order
- * to prevent undefined results.
+ * could interact，使用 the internal while loop, 和 should force an
+ * exit，来自 the macro code (e.g. through a goto 或 a 返回) 中 order
+ * 到 prevent undefined results.
  */
 #define GET_UTF8(val, GET_BYTE, ERROR)\
     val= (uint8_t)(GET_BYTE);\
@@ -491,12 +491,12 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
     }
 
 /**
- * Convert a UTF-16 character (2 or 4 bytes) to its 32-bit UCS-4 encoded form.
+ * 转换 a UTF-16 character (2 或 4 bytes) 到 its 32-bit UCS-4 encoded form.
  *
- * @param val       Output value, must be an lvalue of type uint32_t.
- * @param GET_16BIT Expression returning two bytes of UTF-16 data converted
- *                  to native byte order.  Evaluated one or two times.
- * @param ERROR     Expression to be evaluated on invalid input,
+ * @param val       输出 值, must be an l值 的 type uint32_t.
+ * @param GET_16BIT Expression 返回ing two bytes 的 UTF-16 data 转换ed
+ *                  到 native byte order.  Evaluated one 或 two times.
+ * @param ERROR     Expression 到 be evaluated 上 invalid 输入,
  *                  typically a goto statement.
  */
 #define GET_UTF16(val, GET_16BIT, ERROR)\
@@ -513,18 +513,18 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
 
 /**
  * @def PUT_UTF8(val, tmp, PUT_BYTE)
- * Convert a 32-bit Unicode character to its UTF-8 encoded form (up to 4 bytes long).
- * @param val is an input-only argument and should be of type uint32_t. It holds
- * a UCS-4 encoded Unicode character that is to be converted to UTF-8. If
+ * 转换 a 32-bit Unicode character 到 its UTF-8 encoded form (up 到 4 bytes long).
+ * @param val is an 输入-only argument 和 should be 的 type uint32_t. It holds
+ * a UCS-4 encoded Unicode character that is 到 be 转换ed 到 UTF-8. 如果
  * val is given as a function it is executed only once.
- * @param tmp is a temporary variable and should be of type uint8_t. It
- * represents an intermediate value during conversion that is to be
- * output by PUT_BYTE.
- * @param PUT_BYTE writes the converted UTF-8 bytes to any proper destination.
- * It could be a function or a statement, and uses tmp as the input byte.
- * For example, PUT_BYTE could be "*output++ = tmp;" PUT_BYTE will be
- * executed up to 4 times for values in the valid UTF-8 range and up to
- * 7 times in the general case, depending on the length of the converted
+ * @param tmp is a temporary variable 和 should be 的 type uint8_t. It
+ * represents an intermediate 值 during conversion that is 到 be
+ * 输出 by PUT_BYTE.
+ * @param PUT_BYTE writes the 转换ed UTF-8 bytes 到 any proper destination.
+ * It could be a function 或 a statement, 和 uses tmp as the 输入 byte.
+ * For example, PUT_BYTE could be "*输出++ = tmp;" PUT_BYTE will be
+ * executed up 到 4 times 用于 值 中 the valid UTF-8 range 和 up to
+ * 7 times 中 the general case, depending 上 the length 的 the 转换ed
  * Unicode character.
  */
 #define PUT_UTF8(val, tmp, PUT_BYTE)\
@@ -549,17 +549,17 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
 
 /**
  * @def PUT_UTF16(val, tmp, PUT_16BIT)
- * Convert a 32-bit Unicode character to its UTF-16 encoded form (2 or 4 bytes).
- * @param val is an input-only argument and should be of type uint32_t. It holds
- * a UCS-4 encoded Unicode character that is to be converted to UTF-16. If
+ * 转换 a 32-bit Unicode character 到 its UTF-16 encoded form (2 或 4 bytes).
+ * @param val is an 输入-only argument 和 should be 的 type uint32_t. It holds
+ * a UCS-4 encoded Unicode character that is 到 be 转换ed 到 UTF-16. 如果
  * val is given as a function it is executed only once.
- * @param tmp is a temporary variable and should be of type uint16_t. It
- * represents an intermediate value during conversion that is to be
- * output by PUT_16BIT.
- * @param PUT_16BIT writes the converted UTF-16 data to any proper destination
- * in desired endianness. It could be a function or a statement, and uses tmp
- * as the input byte.  For example, PUT_BYTE could be "*output++ = tmp;"
- * PUT_BYTE will be executed 1 or 2 times depending on input character.
+ * @param tmp is a temporary variable 和 should be 的 type uint16_t. It
+ * represents an intermediate 值 during conversion that is 到 be
+ * 输出 by PUT_16BIT.
+ * @param PUT_16BIT writes the 转换ed UTF-16 data 到 any proper destination
+ * 中 desired endianness. It could be a function 或 a statement, 和 uses tmp
+ * as the 输入 byte.  For example, PUT_BYTE could be "*输出++ = tmp;"
+ * PUT_BYTE will be executed 1 或 2 times depending 上 输入 character.
  */
 #define PUT_UTF16(val, tmp, PUT_16BIT)\
     {\

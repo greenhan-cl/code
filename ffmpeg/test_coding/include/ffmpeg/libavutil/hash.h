@@ -1,21 +1,21 @@
-/*
- * Copyright (C) 2013 Reimar Döffinger <Reimar.Doeffinger@gmx.de>
+﻿/*
+ * 复制right (C) 2013 Reimar Döffinger <Reimar.Doeffinger@gmx.de>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 /**
@@ -33,226 +33,226 @@
 /**
  * @defgroup lavu_hash Hash Functions
  * @ingroup lavu_crypto
- * Hash functions useful in multimedia.
+ * Hash functions useful 中 multimedia.
  *
- * Hash functions are widely used in multimedia, from error checking and
- * concealment to internal regression testing. libavutil has efficient
- * implementations of a variety of hash functions that may be useful for
- * FFmpeg and other multimedia applications.
+ * Hash functions are widely used 中 multimedia,，来自 error 检查ing and
+ * concealment 到 internal regression testing. libavutil has efficient
+ * implementations 的 a variety 的 hash functions that may be useful for
+ * FFmpeg 和 other multimedia applications.
  *
  * @{
  *
  * @defgroup lavu_hash_generic Generic Hashing API
- * An abstraction layer for all hash functions supported by libavutil.
+ * abstraction layer 用于 all hash functions supported by libavutil.
  *
- * If your application needs to support a wide range of different hash
- * functions, then the Generic Hashing API is for you. It provides a generic,
- * reusable API for @ref lavu_hash "all hash functions" implemented in libavutil.
- * If you just need to use one particular hash function, use the @ref lavu_hash
+ * 如果 your application needs 到 support a wide range 的 d如果ferent hash
+ * functions, then the Generic Hashing API is 用于 you. It provides a generic,
+ * reusable API 用于 @ref lavu_hash "all hash functions" implemented 中 libavutil.
+ * 如果 you just need 到 use one particular hash function, use the @ref lavu_hash
  * "individual hash" directly.
  *
- * @section Sample Code
+ * @section 采样 Code
  *
- * A basic template for using the Generic Hashing API follows:
+ * basic template 用于 using the Generic Hashing API follows:
  *
  * @code
- * struct AVHashContext *ctx = NULL;
+ * struct AVHash上下文 *ctx = NULL;
  * const char *hash_name = NULL;
- * uint8_t *output_buf = NULL;
+ * uint8_t *输出_buf = NULL;
  *
- * // Select from a string returned by av_hash_names()
+ * // Select，来自 a string 返回ed by av_hash_names()
  * hash_name = ...;
  *
- * // Allocate a hash context
+ * // 分配 a hash 上下文
  * ret = av_hash_alloc(&ctx, hash_name);
- * if (ret < 0)
- *     return ret;
+ * 如果 (ret < 0)
+ *     返回 ret;
  *
- * // Initialize the hash context
+ * // 初始化 the hash 上下文
  * av_hash_init(ctx);
  *
- * // Update the hash context with data
+ * // Update the hash 上下文，使用 data
  * while (data_left) {
- *     av_hash_update(ctx, data, size);
+ *     av_hash_update(ctx, data, 大小);
  * }
  *
- * // Now we have no more data, so it is time to finalize the hash and get the
- * // output. But we need to first allocate an output buffer. Note that you can
- * // use any memory allocation function, including malloc(), not just
+ * // Now we have no more data, so it is time 到 finalize the hash 和 get the
+ * // 输出. But we need 到 first 分配 an 输出 缓冲区. Note that you can
+ * // use any 内存 allocation function, including malloc(), not just
  * // av_malloc().
- * output_buf = av_malloc(av_hash_get_size(ctx));
- * if (!output_buf)
- *     return AVERROR(ENOMEM);
+ * 输出_buf = av_malloc(av_hash_get_大小(ctx));
+ * 如果 (!输出_buf)
+ *     返回 AVERROR(ENOMEM);
  *
- * // Finalize the hash context.
- * // You can use any of the av_hash_final*() functions provided, for other
- * // output formats. If you do so, be sure to adjust the memory allocation
- * // above. See the function documentation below for the exact amount of extra
- * // memory needed.
- * av_hash_final(ctx, output_buffer);
+ * // Finalize the hash 上下文.
+ * // You can use any 的 the av_hash_final*() functions provided, 用于 other
+ * // 输出 格式s. 如果 you do so, be sure 到 adjust the 内存 allocation
+ * // above. 参见 the function documentation below 用于 the exact amount 的 extra
+ * // 内存 needed.
+ * av_hash_final(ctx, 输出_缓冲区);
  *
- * // Free the context
- * av_hash_freep(&ctx);
+ * // 释放 the 上下文
+ * av_hash_释放p(&ctx);
  * @endcode
  *
- * @section Hash Function-Specific Information
- * If the CRC32 hash is selected, the #AV_CRC_32_IEEE polynomial will be
+ * @section Hash Function-Spec如果ic In格式ion
+ * 如果 the CRC32 hash is selected, the #AV_CRC_32_IEEE polynomial will be
  * used.
  *
- * If the Murmur3 hash is selected, the default seed will be used. See @ref
- * lavu_murmur3_seedinfo "Murmur3" for more information.
+ * 如果 the Murmur3 hash is selected, the 默认 seed will be used. 参见 @ref
+ * lavu_murmur3_seedinfo "Murmur3" 用于 more in格式ion.
  *
  * @{
  */
 
 /**
  * @example ffhash.c
- * This example is a simple command line application that takes one or more
- * arguments. It demonstrates a typical use of the hashing API with allocation,
- * initialization, updating, and finalizing.
+ * This example is a simple command line application that takes one 或 more
+ * arguments. It demonstrates a typical use 的 the hashing API，使用 allocation,
+ * initialization, updating, 和 finalizing.
  */
 
 struct AVHashContext;
 
 /**
- * Allocate a hash context for the algorithm specified by name.
+ * 分配 a hash 上下文 用于 the algorithm spec如果ied by name.
  *
- * @return  >= 0 for success, a negative error code for failure
+ * @返回  >= 0 用于 success, a negative error code 用于 failure
  *
- * @note The context is not initialized after a call to this function; you must
- * call av_hash_init() to do so.
+ * @note 上下文 is not 初始化d after a call 到 this function; you must
+ * call av_hash_init() 到 do so.
  */
 int av_hash_alloc(struct AVHashContext **ctx, const char *name);
 
 /**
- * Get the names of available hash algorithms.
+ * 获取 the names 的 available hash algorithms.
  *
- * This function can be used to enumerate the algorithms.
+ * 此函数 可用于 到 enumerate the algorithms.
  *
- * @param[in] i  Index of the hash algorithm, starting from 0
- * @return       Pointer to a static string or `NULL` if `i` is out of range
+ * @param[in] i  Index 的 the hash algorithm, starting，来自 0
+ * @返回       指针 到 a static string 或 `NULL` 如果 `i` is out 的 range
  */
 const char *av_hash_names(int i);
 
 /**
- * Get the name of the algorithm corresponding to the given hash context.
+ * 获取 the name 的 the algorithm corresponding 到 the given hash 上下文.
  */
 const char *av_hash_get_name(const struct AVHashContext *ctx);
 
 /**
- * Maximum value that av_hash_get_size() will currently return.
+ * Maximum 值 that av_hash_get_大小() will currently 返回.
  *
- * You can use this if you absolutely want or need to use static allocation for
- * the output buffer and are fine with not supporting hashes newly added to
+ * You can use this 如果 you absolutely want 或 need 到 use static allocation for
+ * the 输出 缓冲区 和 are fine，使用 not supporting hashes newly added to
  * libavutil without recompilation.
  *
  * @warning
- * Adding new hashes with larger sizes, and increasing the macro while doing
+ * Adding new hashes，使用 larger 大小s, 和 increasing the macro while doing
  * so, will not be considered an ABI change. To prevent your code from
- * overflowing a buffer, either dynamically allocate the output buffer with
- * av_hash_get_size(), or limit your use of the Hashing API to hashes that are
- * already in FFmpeg during the time of compilation.
+ * overflowing a 缓冲区, either dynamically 分配 the 输出 缓冲区 with
+ * av_hash_get_大小(), 或 limit your use 的 the Hashing API 到 hashes that are
+ * already 中 FFmpeg during the time 的 compilation.
  */
 #define AV_HASH_MAX_SIZE 64
 
 /**
- * Get the size of the resulting hash value in bytes.
+ * 获取 the 大小 的 the resulting hash 值 中 bytes.
  *
- * The maximum value this function will currently return is available as macro
- * #AV_HASH_MAX_SIZE.
+ * maximum 值 this function will currently 返回 is available as macro
+ * #AV_HASH_MAX_大小.
  *
- * @param[in]     ctx Hash context
- * @return            Size of the hash value in bytes
+ * @param[in]     ctx Hash 上下文
+ * @返回            大小 的 the hash 值 中 bytes
  */
 int av_hash_get_size(const struct AVHashContext *ctx);
 
 /**
- * Initialize or reset a hash context.
+ * 初始化 或 re设置 a hash 上下文.
  *
- * @param[in,out] ctx Hash context
+ * @param[in,out] ctx Hash 上下文
  */
 void av_hash_init(struct AVHashContext *ctx);
 
 /**
- * Update a hash context with additional data.
+ * Update a hash 上下文，使用 additional data.
  *
- * @param[in,out] ctx Hash context
- * @param[in]     src Data to be added to the hash context
- * @param[in]     len Size of the additional data
+ * @param[in,out] ctx Hash 上下文
+ * @param[in]     src Data 到 be added 到 the hash 上下文
+ * @param[in]     len 大小 的 the additional data
  */
 void av_hash_update(struct AVHashContext *ctx, const uint8_t *src, size_t len);
 
 /**
- * Finalize a hash context and compute the actual hash value.
+ * Finalize a hash 上下文 和 compute the actual hash 值.
  *
- * The minimum size of `dst` buffer is given by av_hash_get_size() or
- * #AV_HASH_MAX_SIZE. The use of the latter macro is discouraged.
+ * minimum 大小 的 `dst` 缓冲区 is given by av_hash_get_大小() or
+ * #AV_HASH_MAX_大小. use 的 the latter macro is discouraged.
  *
- * It is not safe to update or finalize a hash context again, if it has already
+ * It is not safe 到 update 或 finalize a hash 上下文 again, 如果 it has already
  * been finalized.
  *
- * @param[in,out] ctx Hash context
- * @param[out]    dst Where the final hash value will be stored
+ * @param[in,out] ctx Hash 上下文
+ * @param[out]    dst Where the final hash 值 will be stored
  *
- * @see av_hash_final_bin() provides an alternative API
+ * @参见 av_hash_final_bin() provides an alternative API
  */
 void av_hash_final(struct AVHashContext *ctx, uint8_t *dst);
 
 /**
- * Finalize a hash context and store the actual hash value in a buffer.
+ * Finalize a hash 上下文 和 store the actual hash 值 中 a 缓冲区.
  *
- * It is not safe to update or finalize a hash context again, if it has already
+ * It is not safe 到 update 或 finalize a hash 上下文 again, 如果 it has already
  * been finalized.
  *
- * If `size` is smaller than the hash size (given by av_hash_get_size()), the
- * hash is truncated; if size is larger, the buffer is padded with 0.
+ * 如果 `大小` is smaller than the hash 大小 (given by av_hash_get_大小()), the
+ * hash is truncated; 如果 大小 is larger, the 缓冲区 is padded，使用 0.
  *
- * @param[in,out] ctx  Hash context
- * @param[out]    dst  Where the final hash value will be stored
- * @param[in]     size Number of bytes to write to `dst`
+ * @param[in,out] ctx  Hash 上下文
+ * @param[out]    dst  Where the final hash 值 will be stored
+ * @param[in]     大小 数量 的 bytes 到 write 到 `dst`
  */
 void av_hash_final_bin(struct AVHashContext *ctx, uint8_t *dst, int size);
 
 /**
- * Finalize a hash context and store the hexadecimal representation of the
- * actual hash value as a string.
+ * Finalize a hash 上下文 和 store the hexadecimal representation 的 the
+ * actual hash 值 as a string.
  *
- * It is not safe to update or finalize a hash context again, if it has already
+ * It is not safe 到 update 或 finalize a hash 上下文 again, 如果 it has already
  * been finalized.
  *
- * The string is always 0-terminated.
+ * string is always 0-terminated.
  *
- * If `size` is smaller than `2 * hash_size + 1`, where `hash_size` is the
- * value returned by av_hash_get_size(), the string will be truncated.
+ * 如果 `大小` is smaller than `2 * hash_大小 + 1`, where `hash_大小` is the
+ * 值 返回ed by av_hash_get_大小(), the string will be truncated.
  *
- * @param[in,out] ctx  Hash context
+ * @param[in,out] ctx  Hash 上下文
  * @param[out]    dst  Where the string will be stored
- * @param[in]     size Maximum number of bytes to write to `dst`
+ * @param[in]     大小 Maximum 数量 的 bytes 到 write 到 `dst`
  */
 void av_hash_final_hex(struct AVHashContext *ctx, uint8_t *dst, int size);
 
 /**
- * Finalize a hash context and store the Base64 representation of the
- * actual hash value as a string.
+ * Finalize a hash 上下文 和 store the Base64 representation 的 the
+ * actual hash 值 as a string.
  *
- * It is not safe to update or finalize a hash context again, if it has already
+ * It is not safe 到 update 或 finalize a hash 上下文 again, 如果 it has already
  * been finalized.
  *
- * The string is always 0-terminated.
+ * string is always 0-terminated.
  *
- * If `size` is smaller than AV_BASE64_SIZE(hash_size), where `hash_size` is
- * the value returned by av_hash_get_size(), the string will be truncated.
+ * 如果 `大小` is smaller than AV_BASE64_大小(hash_大小), where `hash_大小` is
+ * the 值 返回ed by av_hash_get_大小(), the string will be truncated.
  *
- * @param[in,out] ctx  Hash context
- * @param[out]    dst  Where the final hash value will be stored
- * @param[in]     size Maximum number of bytes to write to `dst`
+ * @param[in,out] ctx  Hash 上下文
+ * @param[out]    dst  Where the final hash 值 will be stored
+ * @param[in]     大小 Maximum 数量 的 bytes 到 write 到 `dst`
  */
 void av_hash_final_b64(struct AVHashContext *ctx, uint8_t *dst, int size);
 
 /**
- * Free hash context and set hash context pointer to `NULL`.
+ * 释放 hash 上下文 和 设置 hash 上下文 指针 到 `NULL`.
  *
- * @param[in,out] ctx  Pointer to hash context
+ * @param[in,out] ctx  指针 到 hash 上下文
  */
 void av_hash_freep(struct AVHashContext **ctx);
 

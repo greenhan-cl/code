@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Codec parameters public API
  *
  * This file is part of FFmpeg.
@@ -33,158 +33,150 @@
 #include "packet.h"
 
 /**
- * @defgroup lavc_codec_params Codec parameters
+ * @defgroup lavc_codec_params 编解码器参数
  * @ingroup lavc_core
  * @{
  */
 
 /**
- * This struct describes the properties of an encoded stream.
+ * 此结构体描述编码流的属性。
  *
  * @note
- * The `sizeof(AVCodecParameters)` is not a part of the public ABI,
- * therefore this struct must be allocated with ::avcodec_parameters_alloc()
- * and freed with ::avcodec_parameters_free().
+ * `sizeof(AVCodecParameters)` 不属于公共 ABI，因此必须使用
+ * ::avcodec_parameters_alloc() 分配此结构体，并使用
+ * ::avcodec_parameters_free() 释放。
  */
 typedef struct AVCodecParameters {
     /**
-     * General type of the encoded data.
+     * 编码数据的通用类型。
      */
     enum AVMediaType codec_type;
     /**
-     * Specific type of the encoded data (the codec used).
+     * 编码数据的具体类型（所使用的编解码器）。
      */
     enum AVCodecID   codec_id;
     /**
-     * Additional information about the codec (corresponds to the AVI FOURCC).
+     * 编解码器的附加信息（对应 AVI FOURCC）。
      */
     uint32_t         codec_tag;
 
     /**
-     * Extra binary data needed for initializing the decoder, codec-dependent.
+     * 初始化解码器所需的额外二进制数据，具体内容取决于编解码器。
      *
-     * Must be allocated with ::av_malloc() and will be freed by
-     * ::avcodec_parameters_free(). The allocated size of extradata must be at
-     * least #extradata_size + ::AV_INPUT_BUFFER_PADDING_SIZE, with the padding
-     * bytes zeroed.
+     * 必须使用 ::av_malloc() 分配，并由 ::avcodec_parameters_free() 释放。
+     * extradata 的分配大小必须至少为 #extradata_size +
+     * ::AV_INPUT_BUFFER_PADDING_SIZE，且填充字节必须清零。
      */
     uint8_t *extradata;
     /**
-     * Size of the extradata content in bytes.
+     * extradata 内容的大小，单位为字节。
      */
     int      extradata_size;
 
     /**
-     * Additional data associated with the entire stream.
+     * 与整个流关联的附加数据。
      *
-     * Should be allocated with ::av_packet_side_data_new() or
-     * ::av_packet_side_data_add(), and will be freed by ::avcodec_parameters_free().
+     * 应使用 ::av_packet_side_data_new() 或 ::av_packet_side_data_add() 分配，
+     * 并由 ::avcodec_parameters_free() 释放。
      */
     AVPacketSideData *coded_side_data;
 
     /**
-     * Amount of entries in #coded_side_data.
+     * #coded_side_data 中的条目数。
      */
     int nb_coded_side_data;
 
     /**
-     * - Video: the pixel format, the value corresponds to enum ::AVPixelFormat.
-     * - Audio: the sample format, the value corresponds to enum ::AVSampleFormat.
+     * - 视频：像素格式，值对应枚举 ::AVPixelFormat。
+     * - 音频：采样格式，值对应枚举 ::AVSampleFormat。
      */
     int format;
 
     /**
-     * The average bitrate of the encoded data (in bits per second).
+     * 编码数据的平均码率，单位为 bit/s。
      */
     int64_t bit_rate;
 
     /**
-     * The number of bits per sample in the codedwords.
+     * 码字中每个采样所占的位数。
      *
-     * This is basically the bitrate per sample. It is mandatory for a bunch of
-     * formats to actually decode them. It's the number of bits for one sample in
-     * the actual coded bitstream.
+     * 这基本上是每个采样的比特率。许多格式必须提供此值才能真正解码。
+     * 它表示实际编码比特流中一个采样所占的位数。
      *
-     * This could be, for example, 4, for ADPCM.
-     * For PCM formats this matches #bits_per_raw_sample.
+     * 例如，对 ADPCM 而言此值可以为 4。
+     * 对 PCM 格式而言，它与 #bits_per_raw_sample 相同。
      *
-     * Can be 0.
+     * 可以为 0。
      */
     int bits_per_coded_sample;
 
     /**
-     * The number of valid bits in each output sample.
+     * 每个输出采样中的有效位数。
      *
-     * If the sample format has more bits, the least significant bits are additional
-     * padding bits, which are always 0. Use right shifts to reduce the sample
-     * to its actual size.
+     * 如果采样格式具有更多位，则最低有效位是额外的填充位，并且始终为 0。
+     * 使用右移将采样缩减到其实际大小。
      *
-     * For example, audio formats with 24-bit samples will have #bits_per_raw_sample
-     * set to 24, and ::format set to ::AV_SAMPLE_FMT_S32. To get the original sample,
-     * use: `(int32_t)sample >> 8`.
+     * 例如，使用 24 位采样的音频格式会将 #bits_per_raw_sample 设为 24，
+     * 将 ::format 设为 ::AV_SAMPLE_FMT_S32。要获得原始采样，请使用：
+     * `(int32_t)sample >> 8`。
      *
-     * For ADPCM, this might be 12 or 16, or similar.
+     * 对 ADPCM 而言，此值可能是 12、16 或类似值。
      *
-     * Can be 0.
+     * 可以为 0。
      */
     int bits_per_raw_sample;
 
     /**
-     * Codec-specific bitstream restrictions that the stream conforms to.
+     * 该流遵循的编解码器特定比特流限制。
      */
     int profile;
     int level;
 
     /**
-     * The width of the video frame in pixels.
+     * 视频帧宽度，单位为像素。
      *
-     * Video only.
+     * 仅用于视频。
      */
     int width;
 
     /**
-     * The height of the video frame in pixels.
+     * 视频帧高度，单位为像素。
      *
-     * Video only.
+     * 仅用于视频。
      */
     int height;
 
     /**
-     * The aspect ratio (width/height) which a single pixel
-     * should have when displayed.
+     * 单个像素显示时应具有的宽高比（宽度/高度）。
      *
-     * When the aspect ratio is unknown or undefined, the numerator should be
-     * set to 0 (the denominator may have any value).
+     * 宽高比未知或未定义时，分子应设为 0（分母可以为任意值）。
      *
-     * Video only.
+     * 仅用于视频。
      */
     AVRational sample_aspect_ratio;
 
     /**
-     * Number of frames per second, for streams with constant frame
-     * durations. Should be set to `{ 0, 1 }` when some frames have differing
-     * durations or if the value is not known.
+     * 对帧时长恒定的流，表示每秒帧数。部分帧时长不同或该值未知时，
+     * 应设为 `{ 0, 1 }`。
      *
-     * @note This field corresponds to values that are stored in codec-level
-     * headers and is typically overridden by container/transport-layer
-     * timestamps, when available. It should thus be used only as a last resort,
-     * when no higher-level timing information is available.
+     * @note 此字段对应存储在编解码器级头信息中的值。存在容器/传输层时间戳时，
+     * 通常会被后者覆盖。因此仅当没有更高层时间信息时，才应将其作为最后手段使用。
      *
-     * Video only.
+     * 仅用于视频。
      */
     AVRational framerate;
 
     /**
-     * The order of the fields in interlaced video.
+     * 隔行视频中的场顺序。
      *
-     * Video only.
+     * 仅用于视频。
      */
     enum AVFieldOrder                  field_order;
 
     /**
-     * Additional colorspace characteristics.
+     * 额外的色彩空间特性。
      *
-     * Video only.
+     * 仅用于视频。
      */
     enum AVColorRange                  color_range;
     enum AVColorPrimaries              color_primaries;
@@ -193,70 +185,66 @@ typedef struct AVCodecParameters {
     enum AVChromaLocation              chroma_location;
 
     /**
-     * Number of delayed frames.
+     * 延迟帧数量。
      *
-     * Video only.
+     * 仅用于视频。
      */
     int video_delay;
 
     /**
-     * The channel layout and number of channels.
+     * 声道布局和声道数。
      *
-     * Audio only.
+     * 仅用于音频。
      */
     AVChannelLayout ch_layout;
     /**
-     * The number of audio samples per second.
+     * 每秒音频采样数。
      *
-     * Audio only.
+     * 仅用于音频。
      */
     int      sample_rate;
     /**
-     * The number of bytes per coded audio frame, required by some formats.
+     * 每个编码音频帧的字节数，某些格式需要此值。
      *
-     * Audio only.
+     * 仅用于音频。
      *
-     * Corresponds to nBlockAlign in WAVEFORMATEX.
+     * 对应 WAVEFORMATEX 中的 nBlockAlign。
      */
     int      block_align;
     /**
-     * Audio frame size, if known. Required by some formats to be static.
+     * 音频帧大小（如果已知）。某些格式要求此值固定。
      *
-     * Audio only.
+     * 仅用于音频。
      */
     int      frame_size;
 
     /**
-     * Number of padding audio samples at the start.
+     * 开头的音频填充采样数。
      *
-     * The amount of padding (in samples) inserted by the encoder at
-     * the beginning of the audio. I.e. this number of leading decoded samples
-     * must be discarded to get the original audio without leading
-     * padding.
+     * 编码器在音频开头插入的填充量（以采样数计）。也就是说，必须丢弃这么多
+     * 位于开头的解码采样，才能获得不含前导填充的原始音频。
      *
-     * Audio only.
+     * 仅用于音频。
      */
     int initial_padding;
     /**
-     * Number of padding audio samples at the end.
+     * 末尾的音频填充采样数。
      *
-     * The amount of padding (in samples) appended by the encoder to
-     * the end of the audio. I.e. this number of decoded samples must be
-     * discarded from the end of the stream to get the original
-     * audio without any trailing padding.
+     * 编码器附加到音频末尾的填充量（以采样数计）。也就是说，必须从流末尾
+     * 丢弃这么多解码采样，才能获得不含尾随填充的原始音频。
      *
-     * Audio only.
+     * 仅用于音频。
      */
     int trailing_padding;
     /**
-     * Number of audio samples to skip after a discontinuity.
+     * 发生不连续后要跳过的音频采样数。
      *
-     * Audio only.
+     * 仅用于音频。
      */
     int seek_preroll;
 
     /**
-     * Video with alpha channel only. Alpha channel handling
+     * 仅适用于带 alpha 通道的视频。alpha 通道处理方式。
      */
     enum AVAlphaMode alpha_mode;
 } AVCodecParameters;
@@ -267,29 +255,27 @@ typedef struct AVCodecParameters {
  */
 
 /**
- * Allocate a new AVCodecParameters and set its fields to default values
- * (unknown/invalid/0). The returned struct must be freed with
- * ::avcodec_parameters_free().
+ * 分配新的 AVCodecParameters，并将其字段设为默认值（未知/无效/0）。
+ * 返回的结构体必须使用 ::avcodec_parameters_free() 释放。
  */
 AVCodecParameters *avcodec_parameters_alloc(void);
 
 /**
- * Free an AVCodecParameters instance and everything associated with it and
- * write `NULL` to the supplied pointer.
+ * 释放 AVCodecParameters 实例及其关联的所有内容，并向提供的指针写入 `NULL`。
  */
 void avcodec_parameters_free(AVCodecParameters **par);
 
 /**
- * Copy the contents of \p src to \p dst. Any allocated fields in dst are freed and
- * replaced with newly allocated duplicates of the corresponding fields in src.
+ * 将 \p src 的内容复制到 \p dst。dst 中已分配的字段会被释放，
+ * 并替换为 src 对应字段的新分配副本。
  *
- * @return >= 0 on success, a negative AVERROR code on failure.
+ * @return 成功返回 >= 0，失败返回负的 AVERROR 错误码。
  */
 int avcodec_parameters_copy(AVCodecParameters *dst, const AVCodecParameters *src);
 
 /**
- * This function is the same as ::av_get_audio_frame_duration(), except it works
- * with ::AVCodecParameters instead of an ::AVCodecContext.
+ * 此函数与 ::av_get_audio_frame_duration() 相同，但它使用
+ * ::AVCodecParameters 而不是 ::AVCodecContext。
  */
 int av_get_audio_frame_duration2(AVCodecParameters *par, int frame_bytes);
 

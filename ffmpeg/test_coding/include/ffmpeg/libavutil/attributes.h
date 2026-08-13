@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -20,7 +20,7 @@
 
 /**
  * @file
- * Macro definitions for various function/variable attributes
+ * 各种函数/变量属性的宏定义
  */
 
 #ifndef AVUTIL_ATTRIBUTES_H
@@ -136,9 +136,8 @@
 #endif
 
 /**
- * Disable warnings about deprecated features
- * This is useful for sections of code kept for backward compatibility and
- * scheduled for removal.
+ * 禁用有关已弃用功能的警告。
+ * 这适用于为向后兼容而保留且计划移除的代码段。
  */
 #ifndef AV_NOWARN_DEPRECATED
 #if AV_GCC_VERSION_AT_LEAST(4,6) || defined(__clang__)
@@ -167,9 +166,8 @@
 #endif
 
 /**
- * Mark a variable as used and prevent the compiler from optimizing it
- * away.  This is useful for variables accessed only from inline
- * assembler without the compiler being aware.
+ * 将变量标记为已使用，防止编译器将其优化掉。这适用于仅从内联汇编访问、
+ * 而编译器并不知情的变量。
  */
 #if AV_GCC_VERSION_AT_LEAST(3,1) || defined(__clang__)
 #    define av_used __attribute__((used))
@@ -195,7 +193,7 @@
 #    define av_builtin_constant_p(x) 0
 #endif
 
-// for __MINGW_PRINTF_FORMAT and __MINGW_SCANF_FORMAT
+// 用于 __MINGW_PRINTF_FORMAT 和 __MINGW_SCANF_FORMAT
 #ifdef __MINGW32__
 #    include <stdio.h>
 #endif

@@ -1,5 +1,5 @@
-/*
- * Version macros.
+﻿/*
+ * 版本宏。
  *
  * This file is part of FFmpeg.
  *
@@ -23,23 +23,17 @@
 
 /**
  * @file
- * @ingroup libavf
- * Libavformat version macros
+ * @ingroup libavf Libavformat 版本宏
  */
 
-// Major bumping may affect Ticket5467, 5421, 5451(compatibility with Chromium)
-// Also please add any ticket numbers that you believe might be affected here
+// 主要碰撞可能会影响 Ticket5467、5421、5451（与 Chromium 的兼容性）
+// 另外，请在此处添加您认为可能受到影响的任何票号
 #define LIBAVFORMAT_VERSION_MAJOR  63
 
 /**
- * FF_API_* defines may be placed below to indicate public API that will be
- * dropped at a future version bump. The defines themselves are not part of
- * the public API and may change, break or disappear at any time.
+ * FF_API_* 定义可以放置在下面，以指示将在未来版本升级时删除的公共 API。定义本身不属于公共 API 的一部分，可能随时更改、中断或消失。
  *
- * @note, when bumping the major version it is recommended to manually
- * disable each FF_API_* in its own commit instead of disabling them all
- * at once through the bump. This improves the git bisect-ability of the change.
- *
+ * @note，在升级主要版本时，建议在其自己的提交中手动禁用每个 FF_API_*，而不是通过升级一次禁用它们。这提高了变更的 git 二分能力。
  */
 #define FF_API_COMPUTE_PKT_FIELDS2      (LIBAVFORMAT_VERSION_MAJOR < 64)
 

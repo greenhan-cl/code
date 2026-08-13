@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Codec IDs
  *
  * This file is part of FFmpeg.
@@ -30,26 +30,24 @@
  */
 
 /**
- * Identify the syntax and semantics of the bitstream.
- * The principle is roughly:
- * Two decoders with the same ID can decode the same streams.
- * Two encoders with the same ID can encode compatible streams.
- * There may be slight deviations from the principle due to implementation
- * details.
+ * 标识比特流的语法和语义。
+ * 原则大致如下：具有相同 ID 的两个解码器可以解码相同的流；
+ * 具有相同 ID 的两个编码器可以编码出兼容的流。
+ * 由于实现细节，可能会与此原则略有偏差。
  *
- * If you add a codec ID to this list, add it so that
- * 1. no value of an existing codec ID changes (that would break ABI),
- * 2. it is as close as possible to similar codecs
+ * 向此列表添加编解码器 ID 时，应确保：
+ * 1. 现有编解码器 ID 的值不会改变（否则会破坏 ABI）；
+ * 2. 新 ID 尽可能靠近相似的编解码器。
  *
- * After adding new codec IDs, do not forget to add an entry to the codec
- * descriptor list and bump libavcodec minor version.
+ * 添加新的编解码器 ID 后，不要忘记在编解码器描述符列表中添加条目，
+ * 并提升 libavcodec 的次版本号。
  */
 enum AVCodecID {
     AV_CODEC_ID_NONE,
 
-    /* video codecs */
+    /* 视频编解码器 */
     AV_CODEC_ID_MPEG1VIDEO,
-    AV_CODEC_ID_MPEG2VIDEO, ///< preferred ID for MPEG-1/2 video decoding
+    AV_CODEC_ID_MPEG2VIDEO, ///< MPEG-1/2 视频解码的首选 ID
     AV_CODEC_ID_H261,
     AV_CODEC_ID_H263,
     AV_CODEC_ID_RV10,
@@ -325,8 +323,8 @@ enum AVCodecID {
     AV_CODEC_ID_JPEGXS,
     AV_CODEC_ID_WEBP_ANIM,
 
-    /* various PCM "codecs" */
-    AV_CODEC_ID_FIRST_AUDIO = 0x10000,     ///< A dummy id pointing at the start of audio codecs
+    /* 各种 PCM“编解码器” */
+    AV_CODEC_ID_FIRST_AUDIO = 0x10000,     ///< 指向音频编解码器起始位置的虚拟 ID
     AV_CODEC_ID_PCM_S16LE = 0x10000,
     AV_CODEC_ID_PCM_S16BE,
     AV_CODEC_ID_PCM_U16LE,
@@ -366,7 +364,7 @@ enum AVCodecID {
     AV_CODEC_ID_PCM_SGA,
     AV_CODEC_ID_PCM_DVDA,
 
-    /* various ADPCM codecs */
+    /* 各种 ADPCM 编解码器 */
     AV_CODEC_ID_ADPCM_IMA_QT = 0x11000,
     AV_CODEC_ID_ADPCM_IMA_WAV,
     AV_CODEC_ID_ADPCM_IMA_DK3,
@@ -434,11 +432,11 @@ enum AVCodecID {
     AV_CODEC_ID_AMR_NB = 0x12000,
     AV_CODEC_ID_AMR_WB,
 
-    /* RealAudio codecs*/
+    /* RealAudio 编解码器 */
     AV_CODEC_ID_RA_144 = 0x13000,
     AV_CODEC_ID_RA_288,
 
-    /* various DPCM codecs */
+    /* 各种 DPCM 编解码器 */
     AV_CODEC_ID_ROQ_DPCM = 0x14000,
     AV_CODEC_ID_INTERPLAY_DPCM,
     AV_CODEC_ID_XAN_DPCM,
@@ -449,9 +447,9 @@ enum AVCodecID {
     AV_CODEC_ID_WADY_DPCM,
     AV_CODEC_ID_CBD2_DPCM,
 
-    /* audio codecs */
+    /* 音频编解码器 */
     AV_CODEC_ID_MP2 = 0x15000,
-    AV_CODEC_ID_MP3, ///< preferred ID for decoding MPEG audio layer 1, 2 or 3
+    AV_CODEC_ID_MP3, ///< 解码 MPEG 音频第 1、2 或 3 层的首选 ID
     AV_CODEC_ID_AAC,
     AV_CODEC_ID_AC3,
     AV_CODEC_ID_DTS,
@@ -468,7 +466,7 @@ enum AVCodecID {
     AV_CODEC_ID_SHORTEN,
     AV_CODEC_ID_ALAC,
     AV_CODEC_ID_WESTWOOD_SND1,
-    AV_CODEC_ID_GSM, ///< as in Berlin toast format
+    AV_CODEC_ID_GSM, ///< 与 Berlin toast 格式相同
     AV_CODEC_ID_QDM2,
     AV_CODEC_ID_COOK,
     AV_CODEC_ID_TRUESPEECH,
@@ -480,7 +478,7 @@ enum AVCodecID {
     AV_CODEC_ID_IMC,
     AV_CODEC_ID_MUSEPACK7,
     AV_CODEC_ID_MLP,
-    AV_CODEC_ID_GSM_MS, /* as found in WAV */
+    AV_CODEC_ID_GSM_MS, /* WAV 中使用的形式 */
     AV_CODEC_ID_ATRAC3,
     AV_CODEC_ID_APE,
     AV_CODEC_ID_NELLYMOSER,
@@ -561,11 +559,11 @@ enum AVCodecID {
     AV_CODEC_ID_AHX,
     AV_CODEC_ID_APPLE_APAC,
 
-    /* subtitle codecs */
-    AV_CODEC_ID_FIRST_SUBTITLE = 0x17000,          ///< A dummy ID pointing at the start of subtitle codecs.
+    /* 字幕编解码器 */
+    AV_CODEC_ID_FIRST_SUBTITLE = 0x17000,          ///< 指向字幕编解码器起始位置的虚拟 ID。
     AV_CODEC_ID_DVD_SUBTITLE = 0x17000,
     AV_CODEC_ID_DVB_SUBTITLE,
-    AV_CODEC_ID_TEXT,  ///< raw UTF-8 text
+    AV_CODEC_ID_TEXT,  ///< 原始 UTF-8 文本
     AV_CODEC_ID_XSUB,
     AV_CODEC_ID_SSA,
     AV_CODEC_ID_MOV_TEXT,
@@ -591,11 +589,11 @@ enum AVCodecID {
     AV_CODEC_ID_ARIB_CAPTION,
     AV_CODEC_ID_IVTV_VBI,
 
-    /* other specific kind of codecs (generally used for attachments) */
-    AV_CODEC_ID_FIRST_UNKNOWN = 0x18000,           ///< A dummy ID pointing at the start of various fake codecs.
+    /* 其他特定类型的编解码器（通常用于附件） */
+    AV_CODEC_ID_FIRST_UNKNOWN = 0x18000,           ///< 指向各种虚拟编解码器起始位置的虚拟 ID。
     AV_CODEC_ID_TTF = 0x18000,
 
-    AV_CODEC_ID_SCTE_35, ///< Contain timestamp estimated through PCR of program stream.
+    AV_CODEC_ID_SCTE_35, ///< 包含通过节目流 PCR 估算的时间戳。
     AV_CODEC_ID_EPG,
     AV_CODEC_ID_BINTEXT,
     AV_CODEC_ID_XBIN,
@@ -611,72 +609,69 @@ enum AVCodecID {
     AV_CODEC_ID_ITUT_T35,
 
 
-    AV_CODEC_ID_PROBE = 0x19000, ///< codec_id is not known (like AV_CODEC_ID_NONE) but lavf should attempt to identify it
+    AV_CODEC_ID_PROBE = 0x19000, ///< codec_id 未知（类似 AV_CODEC_ID_NONE），但 lavf 应尝试识别
 
-    AV_CODEC_ID_MPEG2TS = 0x20000, /**< _FAKE_ codec to indicate a raw MPEG-2 TS
-                                * stream (only used by libavformat) */
-    AV_CODEC_ID_MPEG4SYSTEMS = 0x20001, /**< _FAKE_ codec to indicate a MPEG-4 Systems
-                                * stream (only used by libavformat) */
-    AV_CODEC_ID_FFMETADATA = 0x21000,   ///< Dummy codec for streams containing only metadata information.
-    AV_CODEC_ID_WRAPPED_AVFRAME = 0x21001, ///< Passthrough codec, AVFrames wrapped in AVPacket
+    AV_CODEC_ID_MPEG2TS = 0x20000, /**< 表示原始 MPEG-2 TS 流的虚拟编解码器
+                                * （仅由 libavformat 使用） */
+    AV_CODEC_ID_MPEG4SYSTEMS = 0x20001, /**< 表示 MPEG-4 Systems 流的虚拟编解码器
+                                * （仅由 libavformat 使用） */
+    AV_CODEC_ID_FFMETADATA = 0x21000,   ///< 仅含元数据信息的流所使用的虚拟编解码器。
+    AV_CODEC_ID_WRAPPED_AVFRAME = 0x21001, ///< 直通编解码器，将 AVFrame 包装在 AVPacket 中
     /**
-     * Dummy null video codec, useful mainly for development and debugging.
-     * Null encoder/decoder discard all input and never return any output.
+     * 虚拟空视频编解码器，主要用于开发和调试。
+     * 空编码器/解码器丢弃所有输入，且从不返回任何输出。
      */
     AV_CODEC_ID_VNULL,
     /**
-     * Dummy null audio codec, useful mainly for development and debugging.
-     * Null encoder/decoder discard all input and never return any output.
+     * 虚拟空音频编解码器，主要用于开发和调试。
+     * 空编码器/解码器丢弃所有输入，且从不返回任何输出。
      */
     AV_CODEC_ID_ANULL,
 };
 
 /**
- * Get the type of the given codec.
+ * 获取给定编解码器的类型。
  */
 enum AVMediaType avcodec_get_type(enum AVCodecID codec_id);
 
 /**
- * Get the name of a codec.
- * @return  a static string identifying the codec; never NULL
+ * 获取编解码器名称。
+ * @return 标识该编解码器的静态字符串；永不为 NULL
  */
 const char *avcodec_get_name(enum AVCodecID id);
 
 /**
- * Return codec bits per sample.
+ * 返回编解码器的每采样位数。
  *
- * @param[in] codec_id the codec
- * @return Number of bits per sample or zero if unknown for the given codec.
+ * @param[in] codec_id 编解码器
+ * @return 每采样位数；给定编解码器未知时返回 0。
  */
 int av_get_bits_per_sample(enum AVCodecID codec_id);
 
 /**
- * Return codec bits per sample.
- * Only return non-zero if the bits per sample is exactly correct, not an
- * approximation.
+ * 返回编解码器的每采样位数。
+ * 只有每采样位数完全准确而非近似值时，才返回非零值。
  *
- * @param[in] codec_id the codec
- * @return Number of bits per sample or zero if unknown for the given codec.
+ * @param[in] codec_id 编解码器
+ * @return 每采样位数；给定编解码器未知时返回 0。
  */
 int av_get_exact_bits_per_sample(enum AVCodecID codec_id);
 
 /**
- * Return a name for the specified profile, if available.
+ * 如果可用，返回指定配置文件的名称。
  *
- * @param codec_id the ID of the codec to which the requested profile belongs
- * @param profile the profile value for which a name is requested
- * @return A name for the profile if found, NULL otherwise.
+ * @param codec_id 所请求配置文件所属编解码器的 ID
+ * @param profile 要获取名称的配置文件值
+ * @return 找到时返回配置文件名称，否则返回 NULL。
  *
- * @note unlike av_get_profile_name(), which searches a list of profiles
- *       supported by a specific decoder or encoder implementation, this
- *       function searches the list of profiles from the AVCodecDescriptor
+ * @note av_get_profile_name() 搜索特定解码器或编码器实现支持的配置文件列表，
+ *       与之不同，此函数搜索 AVCodecDescriptor 中的配置文件列表。
  */
 const char *avcodec_profile_name(enum AVCodecID codec_id, int profile);
 
 /**
- * Return the PCM codec associated with a sample format.
- * @param be  endianness, 0 for little, 1 for big,
- *            -1 (or anything else) for native
+ * 返回与采样格式关联的 PCM 编解码器。
+ * @param be 字节序：0 表示小端，1 表示大端，-1（或其他值）表示本机字节序
  * @return  AV_CODEC_ID_PCM_* or AV_CODEC_ID_NONE
  */
 enum AVCodecID av_get_pcm_codec(enum AVSampleFormat fmt, int be);

@@ -31,14 +31,17 @@ void freeDecoder(DecoderState* const _state) {
 
 int openDecoder(AVFormatContext* const _format_context, const AVMediaType _media_type,
                 DecoderState* const _state) {
+	// 查找指定类型的流索引
     const int _stream_index = av_find_best_stream(
         _format_context, _media_type, -1, -1, nullptr, 0);
     if (_stream_index < 0) {
         return _stream_index;
     }
 
+	// 查找对应流的解码器信息
     const AVCodecParameters* _codec_parameters =
         _format_context->streams[_stream_index]->codecpar;
+    //根据id找解码器
     const AVCodec* _decoder_by_id = avcodec_find_decoder(_codec_parameters->codec_id);
     if (_decoder_by_id == nullptr) {
         return AVERROR_DECODER_NOT_FOUND;
@@ -52,8 +55,10 @@ int openDecoder(AVFormatContext* const _format_context, const AVMediaType _media
         return AVERROR(ENOMEM);
     }
 
+	//将编解码器参数复制到编解码器上下文中
     int _result = avcodec_parameters_to_context(_codec_context, _codec_parameters);
     if (_result >= 0) {
+		// 打开解码器
         _result = avcodec_open2(_codec_context, _decoder, nullptr);
     }
     if (_result < 0) {
@@ -61,6 +66,7 @@ int openDecoder(AVFormatContext* const _format_context, const AVMediaType _media
         return _result;
     }
 
+	// 创建 AVFrame 用于存储解码后的帧数据
     AVFrame* _frame = av_frame_alloc();
     if (_frame == nullptr) {
         avcodec_free_context(&_codec_context);
@@ -98,6 +104,7 @@ void printDecodedFrame(const DecoderState& _state) {
 
 int receiveFrames(DecoderState* const _state) {
     while (_state->m_frame_count < max_frame_count) {
+		// 把数据从_state->m_codec_context解码到_state->m_frame中
         const int _result = avcodec_receive_frame(_state->m_codec_context, _state->m_frame);
         if (_result == AVERROR(EAGAIN) || _result == AVERROR_EOF) {
             return 0;
@@ -107,7 +114,9 @@ int receiveFrames(DecoderState* const _state) {
         }
 
         ++_state->m_frame_count;
+		// 打印解码后的帧信息
         printDecodedFrame(*_state);
+		// 释放 AVFrame 内部的引用计数数据
         av_frame_unref(_state->m_frame);
     }
 
@@ -121,6 +130,7 @@ int decodePacket(const AVPacket& _packet, DecoderState* const _state) {
         return 0;
     }
 
+	//读取到的压缩数据包发送给解码器进行解码
     const int _result = avcodec_send_packet(_state->m_codec_context, &_packet);
     if (_result < 0) {
         return _result;
@@ -151,12 +161,14 @@ bool decodingFinished(const DecoderState& _video_state, const DecoderState& _aud
 
 int decodeInput(AVFormatContext* const _format_context,
                 DecoderState* const _video_state, DecoderState* const _audio_state) {
+	//创建 AVPacket 用于存储读取的压缩数据包
     AVPacket* _packet = av_packet_alloc();
     if (_packet == nullptr) {
         return AVERROR(ENOMEM);
     }
 
     int _result = 0;
+	// 循环读取压缩数据包并解码，直到解码完成或读取结束
     while (!decodingFinished(*_video_state, *_audio_state) &&
            (_result = av_read_frame(_format_context, _packet)) >= 0) {
         _result = decodePacket(*_packet, _video_state);
@@ -183,8 +195,10 @@ int decodeInput(AVFormatContext* const _format_context,
 }
 
 int openInput(const std::string& _input_path, AVFormatContext** const _format_context) {
+	// 打开输入文件或 URL，并读取流信息
     int _result = avformat_open_input(_format_context, _input_path.c_str(), nullptr, nullptr);
     if (_result >= 0) {
+		// 读取流信息,填充 AVStream->codecpar
         _result = avformat_find_stream_info(*_format_context, nullptr);
     }
     return _result;
@@ -208,6 +222,7 @@ int runDecodingDemo(const std::string& _input_path) {
     }
 
     AVFormatContext* _format_context = nullptr;
+	// 分别保存视频解码器和音频解码器的状态。
     DecoderState _video_state;
     DecoderState _audio_state;
 

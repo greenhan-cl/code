@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 /**
  * @file
  * @ingroup lavu
- * Utility Preprocessor macros
+ * 实用预处理器宏
  */
 
 #ifndef AVUTIL_MACROS_H
@@ -34,13 +34,11 @@
 #endif
 
 /**
- * Comparator.
- * For two numerical expressions x and y, gives 1 if x > y, -1 if x < y, and 0
- * if x == y. This is useful for instance in a qsort comparator callback.
- * Furthermore, compilers are able to optimize this to branchless code, and
- * there is no risk of overflow with signed types.
- * As with many macros, this evaluates its argument multiple times, it thus
- * must not have a side-effect.
+ * 比较器。
+ * 对两个数值表达式 x 和 y，若 x > y 则给出 1，若 x < y 则给出 -1，若 x == y
+ * 则给出 0。例如，这在 qsort 比较器回调中很有用。此外，编译器能够将其优化为
+ * 无分支代码，并且有符号类型不存在溢出风险。与许多宏一样，它会多次求值参数，
+ * 因此参数不能有副作用。
  */
 #define FFDIFFSIGN(x,y) (((x)>(y)) - ((x)<(y)))
 
@@ -56,9 +54,9 @@
 #define MKBETAG(a,b,c,d) ((d) | ((c) << 8) | ((b) << 16) | ((unsigned)(a) << 24))
 
 /**
- * @addtogroup preproc_misc Preprocessor String Macros
+ * @addtogroup preproc_misc 预处理器字符串宏
  *
- * String manipulation macros
+ * 字符串操作宏
  *
  * @{
  */

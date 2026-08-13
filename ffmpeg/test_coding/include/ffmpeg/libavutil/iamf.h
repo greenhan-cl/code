@@ -1,21 +1,21 @@
-/*
- * Immersive Audio Model and Formats helper functions and defines
+﻿/*
+ * Immersive 音频 Model 和 格式s helper functions 和 defines
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 #ifndef AVUTIL_IAMF_H
@@ -23,8 +23,8 @@
 
 /**
  * @file
- * Immersive Audio Model and Formats API header
- * @see <a href="https://aomediacodec.github.io/iamf/">Immersive Audio Model and Formats</a>
+ * Immersive 音频 Model 和 格式s API header
+ * @参见 <a href="https://aomediacodec.github.io/iamf/">Immersive 音频 Model 和 格式s</a>
  */
 
 #include <stdint.h>
@@ -37,27 +37,27 @@
 #include "rational.h"
 
 /**
- * @defgroup lavu_iamf Immersive Audio Model and Formats
- * @ingroup lavu_audio
+ * @defgroup lavu_iamf Immersive 音频 Model 和 格式s
+ * @ingroup lavu_音频
  *
- * Immersive Audio Model and Formats related functions and defines
+ * Immersive 音频 Model 和 格式s related functions 和 defines
  *
  * @defgroup lavu_iamf_params Parameter Definition
  * @ingroup lavu_iamf
  * @{
- * Parameters as defined in section 3.6.1 and 3.8 of IAMF.
+ * Parameters as defined 中 section 3.6.1 和 3.8 的 IAMF.
  * @}
  *
- * @defgroup lavu_iamf_audio Audio Element
+ * @defgroup lavu_iamf_音频 音频 Element
  * @ingroup lavu_iamf
  * @{
- * Audio Elements as defined in section 3.6 of IAMF.
+ * 音频 Elements as defined 中 section 3.6 的 IAMF.
  * @}
  *
  * @defgroup lavu_iamf_mix Mix Presentation
  * @ingroup lavu_iamf
  * @{
- * Mix Presentations as defined in section 3.7 of IAMF.
+ * Mix Presentations as defined 中 section 3.7 的 IAMF.
  * @}
  *
  * @addtogroup lavu_iamf_params
@@ -70,170 +70,170 @@ enum AVIAMFAnimationType {
 };
 
 /**
- * Mix Gain Parameter Data as defined in section 3.8.1 of IAMF.
+ * Mix Gain Parameter Data as defined 中 section 3.8.1 的 IAMF.
  *
- * @note This struct's size is not a part of the public ABI.
+ * @note This struct's 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVIAMFMixGain {
     const AVClass *av_class;
 
     /**
-     * Duration for the given subblock, in units of
+     * 持续时间 用于 the given subblock, 中 units of
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
     unsigned int subblock_duration;
     /**
-     * The type of animation applied to the parameter values.
+     * type 的 animation applied 到 the parameter 值.
      */
     enum AVIAMFAnimationType animation_type;
     /**
-     * Parameter value that is applied at the start of the subblock.
-     * Applies to all defined Animation Types.
+     * Parameter 值 that is applied at the start 的 the subblock.
+     * Applies 到 all defined Animation Types.
      *
-     * Valid range of values is -128.0 to 128.0
+     * Valid range 的 值 is -128.0 到 128.0
      */
     AVRational start_point_value;
     /**
-     * Parameter value that is applied at the end of the subblock.
-     * Applies only to AV_IAMF_ANIMATION_TYPE_LINEAR and
+     * Parameter 值 that is applied at the end 的 the subblock.
+     * Applies only 到 AV_IAMF_ANIMATION_TYPE_LINEAR and
      * AV_IAMF_ANIMATION_TYPE_BEZIER Animation Types.
      *
-     * Valid range of values is -128.0 to 128.0
+     * Valid range 的 值 is -128.0 到 128.0
      */
     AVRational end_point_value;
     /**
-     * Parameter value of the middle control point of a quadratic Bezier
-     * curve, i.e., its y-axis value.
-     * Applies only to AV_IAMF_ANIMATION_TYPE_BEZIER Animation Type.
+     * Parameter 值 的 the middle control point 的 a quadratic Bezier
+     * curve, i.e., its y-axis 值.
+     * Applies only 到 AV_IAMF_ANIMATION_TYPE_BEZIER Animation Type.
      *
-     * Valid range of values is -128.0 to 128.0
+     * Valid range 的 值 is -128.0 到 128.0
      */
     AVRational control_point_value;
     /**
-     * Parameter value of the time of the middle control point of a
-     * quadratic Bezier curve, i.e., its x-axis value.
-     * Applies only to AV_IAMF_ANIMATION_TYPE_BEZIER Animation Type.
+     * Parameter 值 的 the time 的 the middle control point 的 a
+     * quadratic Bezier curve, i.e., its x-axis 值.
+     * Applies only 到 AV_IAMF_ANIMATION_TYPE_BEZIER Animation Type.
      *
-     * Valid range of values is 0.0 to 1.0
+     * Valid range 的 值 is 0.0 到 1.0
      */
     AVRational control_point_relative_time;
 } AVIAMFMixGain;
 
 /**
- * Demixing Info Parameter Data as defined in section 3.8.2 of IAMF.
+ * Demixing Info Parameter Data as defined 中 section 3.8.2 的 IAMF.
  *
- * @note This struct's size is not a part of the public ABI.
+ * @note This struct's 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVIAMFDemixingInfo {
     const AVClass *av_class;
 
     /**
-     * Duration for the given subblock, in units of
+     * 持续时间 用于 the given subblock, 中 units of
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
     unsigned int subblock_duration;
     /**
-     * Pre-defined combination of demixing parameters.
+     * Pre-defined combination 的 demixing parameters.
      */
     unsigned int dmixp_mode;
 } AVIAMFDemixingInfo;
 
 /**
- * Recon Gain Info Parameter Data as defined in section 3.8.3 of IAMF.
+ * Recon Gain Info Parameter Data as defined 中 section 3.8.3 的 IAMF.
  *
- * @note This struct's size is not a part of the public ABI.
+ * @note This struct's 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVIAMFReconGain {
     const AVClass *av_class;
 
     /**
-     * Duration for the given subblock, in units of
+     * 持续时间 用于 the given subblock, 中 units of
      * 1 / @ref AVIAMFParamDefinition.parameter_rate "parameter_rate".
      * It must not be 0.
      */
     unsigned int subblock_duration;
 
     /**
-     * Array of gain values to be applied to each channel for each layer
-     * defined in the Audio Element referencing the parent Parameter Definition.
-     * Values for layers where the AV_IAMF_LAYER_FLAG_RECON_GAIN flag is not set
+     * 数组 的 gain 值 到 be applied 到 each 声道 用于 each layer
+     * defined 中 the 音频 Element referencing the parent Parameter Definition.
+     * 值 用于 layers where the AV_IAMF_LAYER_标志_RECON_GAIN 标志 is not 设置
      * are undefined.
      *
-     * Channel order is: FL, C, FR, SL, SR, TFL, TFR, BL, BR, TBL, TBR, LFE
+     * 声道 order is: FL, C, FR, SL, SR, TFL, TFR, BL, BR, TBL, TBR, LFE
      */
     uint8_t recon_gain[6][12];
 } AVIAMFReconGain;
 
 enum AVIAMFParamDefinitionType {
    /**
-    * Subblocks are of struct type AVIAMFMixGain
+    * Subblocks are 的 struct type AVIAMFMixGain
     */
     AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN,
    /**
-    * Subblocks are of struct type AVIAMFDemixingInfo
+    * Subblocks are 的 struct type AVIAMFDemixingInfo
     */
     AV_IAMF_PARAMETER_DEFINITION_DEMIXING,
    /**
-    * Subblocks are of struct type AVIAMFReconGain
+    * Subblocks are 的 struct type AVIAMFReconGain
     */
     AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN,
 };
 
 /**
- * Parameters as defined in section 3.6.1 of IAMF.
+ * Parameters as defined 中 section 3.6.1 的 IAMF.
  *
- * The struct is allocated by av_iamf_param_definition_alloc() along with an
- * array of subblocks, its type depending on the value of type.
- * This array is placed subblocks_offset bytes after the start of this struct.
+ * struct is 分配d by av_iamf_param_definition_alloc() along，使用 an
+ * 数组 的 subblocks, its type depending 上 the 值 的 type.
+ * This 数组 is placed subblocks_off设置 bytes after the start 的 this struct.
  *
- * @note This struct's size is not a part of the public ABI.
+ * @note This struct's 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVIAMFParamDefinition {
     const AVClass *av_class;
 
     /**
-     * Offset in bytes from the start of this struct, at which the subblocks
-     * array is located.
+     * Off设置 中 bytes，来自 the start 的 this struct, at which the subblocks
+     * 数组 is located.
      */
     size_t subblocks_offset;
     /**
-     * Size in bytes of each element in the subblocks array.
+     * 大小 中 bytes 的 each element 中 the subblocks 数组.
      */
     size_t subblock_size;
     /**
-     * Number of subblocks in the array.
+     * 数量 的 subblocks 中 the 数组.
      */
     unsigned int nb_subblocks;
 
     /**
-     * Parameters type. Determines the type of the subblock elements.
+     * Parameters type. Determines the type 的 the subblock elements.
      */
     enum AVIAMFParamDefinitionType type;
 
     /**
-     * Identifier for the parameter substream.
+     * Ident如果ier 用于 the parameter substream.
      */
     unsigned int parameter_id;
     /**
-     * Sample rate for the parameter substream. It must not be 0.
+     * 采样率 用于 the parameter substream. It must not be 0.
      */
     unsigned int parameter_rate;
 
     /**
-     * The accumulated duration of all blocks in this parameter definition,
-     * in units of 1 / @ref parameter_rate.
+     * accumulated 持续时间 的 all blocks 中 this parameter definition,
+     * 中 units 的 1 / @ref parameter_rate.
      *
-     * May be 0, in which case all duration values should be specified in
+     * May be 0, 中 which case all 持续时间 值 should be spec如果ied in
      * another parameter definition referencing the same parameter_id.
      */
     unsigned int duration;
     /**
-     * The duration of every subblock in the case where all subblocks, with
-     * the optional exception of the last subblock, have equal durations.
+     * 持续时间 的 every subblock 中 the case where all subblocks, with
+     * the 可选 exception 的 the last subblock, have equal 持续时间s.
      *
-     * Must be 0 if subblocks have different durations.
+     * Must be 0 如果 subblocks have d如果ferent 持续时间s.
      */
     unsigned int constant_subblock_duration;
 } AVIAMFParamDefinition;
@@ -241,20 +241,20 @@ typedef struct AVIAMFParamDefinition {
 const AVClass *av_iamf_param_definition_get_class(void);
 
 /**
- * Allocates memory for AVIAMFParamDefinition, plus an array of {@code nb_subblocks}
- * amount of subblocks of the given type and initializes the variables. Can be
- * freed with a normal av_free() call.
+ * 分配s 内存 用于 AVIAMFParamDefinition, plus an 数组 的 {@code nb_subblocks}
+ * amount 的 subblocks 的 the given type 和 初始化s the variables. Can be
+ * 释放d，使用 a normal av_释放() call.
  *
- * @param size if non-NULL, the size in bytes of the resulting data array is written here.
+ * @param 大小 如果 non-NULL, the 大小 中 bytes 的 the resulting data 数组 is written here.
  */
 AVIAMFParamDefinition *av_iamf_param_definition_alloc(enum AVIAMFParamDefinitionType type,
                                                       unsigned int nb_subblocks, size_t *size);
 
 /**
- * Get the subblock at the specified {@code idx}. Must be between 0 and nb_subblocks - 1.
+ * 获取 the subblock at the spec如果ied {@code idx}. Must be between 0 和 nb_subblocks - 1.
  *
- * The @ref AVIAMFParamDefinition.type "param definition type" defines
- * the struct type of the returned pointer.
+ * @ref AVIAMFParamDefinition.type "param definition type" defines
+ * the struct type 的 the 返回ed 指针.
  */
 static av_always_inline void*
 av_iamf_param_definition_get_subblock(const AVIAMFParamDefinition *par, unsigned int idx)
@@ -265,7 +265,7 @@ av_iamf_param_definition_get_subblock(const AVIAMFParamDefinition *par, unsigned
 
 /**
  * @}
- * @addtogroup lavu_iamf_audio
+ * @addtogroup lavu_iamf_音频
  * @{
  */
 
@@ -275,21 +275,21 @@ enum AVIAMFAmbisonicsMode {
 };
 
 /**
- * Recon gain information for the layer is present in AVIAMFReconGain
+ * Recon gain in格式ion 用于 the layer is present 中 AVIAMFReconGain
  */
 #define AV_IAMF_LAYER_FLAG_RECON_GAIN (1 << 0)
 
 /**
- * A layer defining a Channel Layout in the Audio Element.
+ * layer defining a 声道布局 中 the 音频 Element.
  *
- * When @ref AVIAMFAudioElement.audio_element_type "the parent's Audio Element type"
- * is AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL, this corresponds to an Scalable Channel
- * Layout layer as defined in section 3.6.2 of IAMF.
- * For AV_IAMF_AUDIO_ELEMENT_TYPE_SCENE, it is an Ambisonics channel
- * layout as defined in section 3.6.3 of IAMF.
+ * 当 @ref AVIAMF音频Element.音频_element_type "the parent's 音频 Element type"
+ * is AV_IAMF_音频_ELEMENT_TYPE_声道, this corresponds 到 an Scalable 声道
+ * Layout layer as defined 中 section 3.6.2 的 IAMF.
+ * For AV_IAMF_音频_ELEMENT_TYPE_SCENE, it is an Ambisonics 声道
+ * layout as defined 中 section 3.6.3 的 IAMF.
  *
- * @note The struct should be allocated with av_iamf_audio_element_add_layer()
- *       and its size is not a part of the public ABI.
+ * @note struct should be 分配d，使用 av_iamf_音频_element_add_layer()
+ *       和 its 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVIAMFLayer {
     const AVClass *av_class;
@@ -297,47 +297,47 @@ typedef struct AVIAMFLayer {
     AVChannelLayout ch_layout;
 
     /**
-     * A bitmask which may contain a combination of AV_IAMF_LAYER_FLAG_* flags.
+     * bitmask which may contain a combination 的 AV_IAMF_LAYER_标志_* 标志.
      */
     unsigned int flags;
     /**
-     * Output gain channel flags as defined in section 3.6.2 of IAMF.
+     * 输出 gain 声道 标志 as defined 中 section 3.6.2 的 IAMF.
      *
-     * This field is defined only if @ref AVIAMFAudioElement.audio_element_type
-     * "the parent's Audio Element type" is AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL,
+     * This field is defined only 如果 @ref AVIAMF音频Element.音频_element_type
+     * "the parent's 音频 Element type" is AV_IAMF_音频_ELEMENT_TYPE_声道,
      * must be 0 otherwise.
      */
     unsigned int output_gain_flags;
     /**
-     * Output gain as defined in section 3.6.2 of IAMF.
+     * 输出 gain as defined 中 section 3.6.2 的 IAMF.
      *
-     * Must be 0 if @ref output_gain_flags is 0.
+     * Must be 0 如果 @ref 输出_gain_标志 is 0.
      */
     AVRational output_gain;
     /**
-     * Ambisonics mode as defined in section 3.6.3 of IAMF.
+     * Ambisonics mode as defined 中 section 3.6.3 的 IAMF.
      *
-     * This field is defined only if @ref AVIAMFAudioElement.audio_element_type
-     * "the parent's Audio Element type" is AV_IAMF_AUDIO_ELEMENT_TYPE_SCENE.
+     * This field is defined only 如果 @ref AVIAMF音频Element.音频_element_type
+     * "the parent's 音频 Element type" is AV_IAMF_音频_ELEMENT_TYPE_SCENE.
      *
-     * If AV_IAMF_AMBISONICS_MODE_MONO, channel_mapping is defined implicitly
-     * (Ambisonic Order) or explicitly (Custom Order with ambi channels) in
+     * 如果 AV_IAMF_AMBISONICS_MODE_MONO, 声道_mapping is defined implicitly
+     * (Ambisonic Order) 或 explicitly (Custom Order，使用 ambi 声道数) in
      * @ref ch_layout.
-     * If AV_IAMF_AMBISONICS_MODE_PROJECTION, @ref demixing_matrix must be set.
+     * 如果 AV_IAMF_AMBISONICS_MODE_PROJECTION, @ref demixing_matrix must be 设置.
      */
     enum AVIAMFAmbisonicsMode ambisonics_mode;
 
     /**
-     * Demixing matrix as defined in section 3.6.3 of IAMF.
+     * Demixing matrix as defined 中 section 3.6.3 的 IAMF.
      *
-     * May be set only if @ref ambisonics_mode == AV_IAMF_AMBISONICS_MODE_PROJECTION,
+     * May be 设置 only 如果 @ref ambisonics_mode == AV_IAMF_AMBISONICS_MODE_PROJECTION,
      * must be NULL otherwise.
      */
     AVRational *demixing_matrix;
 
     /**
-     * The length of the Demixing matrix array. Must be ch_layout.nb_channels multiplied
-     * by the sum of the amount of streams in the group plus the amount of streams in
+     * length 的 the Demixing matrix 数组. Must be ch_layout.nb_声道数 multiplied
+     * by the sum 的 the amount 的 streams 中 the group plus the amount 的 streams in
      * the group that are stereo.
      */
     unsigned int nb_demixing_matrix;
@@ -350,48 +350,48 @@ enum AVIAMFAudioElementType {
 };
 
 /**
- * Information on how to combine one or more audio streams, as defined in
- * section 3.6 of IAMF.
+ * In格式ion 上 how 到 combine one 或 more 音频 streams, as defined in
+ * section 3.6 的 IAMF.
  *
- * @note The struct should be allocated with av_iamf_audio_element_alloc()
- *       and its size is not a part of the public ABI.
+ * @note struct should be 分配d，使用 av_iamf_音频_element_alloc()
+ *       和 its 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVIAMFAudioElement {
     const AVClass *av_class;
 
     AVIAMFLayer **layers;
     /**
-     * Number of layers, or channel groups, in the Audio Element.
-     * There may be 6 layers at most, and for @ref audio_element_type
-     * AV_IAMF_AUDIO_ELEMENT_TYPE_SCENE, there may be exactly 1.
+     * 数量 的 layers, 或 声道 groups, 中 the 音频 Element.
+     * There may be 6 layers at most, 和 用于 @ref 音频_element_type
+     * AV_IAMF_音频_ELEMENT_TYPE_SCENE, there may be exactly 1.
      *
-     * Set by av_iamf_audio_element_add_layer(), must not be
-     * modified by any other code.
+     * 设置 by av_iamf_音频_element_add_layer(), must not be
+     * mod如果ied by any other code.
      */
     unsigned int nb_layers;
 
     /**
-     * Demixing information used to reconstruct a scalable channel audio
+     * Demixing in格式ion 用于 reconstruct a scalable 声道 音频
      * representation.
-     * The @ref AVIAMFParamDefinition.type "type" must be
+     * @ref AVIAMFParamDefinition.type "type" must be
      * AV_IAMF_PARAMETER_DEFINITION_DEMIXING.
      */
     AVIAMFParamDefinition *demixing_info;
     /**
-     * Recon gain information used to reconstruct a scalable channel audio
+     * Recon gain in格式ion 用于 reconstruct a scalable 声道 音频
      * representation.
-     * The @ref AVIAMFParamDefinition.type "type" must be
+     * @ref AVIAMFParamDefinition.type "type" must be
      * AV_IAMF_PARAMETER_DEFINITION_RECON_GAIN.
      */
     AVIAMFParamDefinition *recon_gain_info;
 
     /**
-     * Audio element type as defined in section 3.6 of IAMF.
+     * 音频 element type as defined 中 section 3.6 的 IAMF.
      */
     enum AVIAMFAudioElementType audio_element_type;
 
     /**
-     * Default weight value as defined in section 3.6 of IAMF.
+     * 默认 weight 值 as defined 中 section 3.6 的 IAMF.
      */
     unsigned int default_w;
 } AVIAMFAudioElement;
@@ -399,27 +399,27 @@ typedef struct AVIAMFAudioElement {
 const AVClass *av_iamf_audio_element_get_class(void);
 
 /**
- * Allocates a AVIAMFAudioElement, and initializes its fields with default values.
- * No layers are allocated. Must be freed with av_iamf_audio_element_free().
+ * 分配s a AVIAMF音频Element, 和 初始化s its fields，使用 默认 值.
+ * No layers are 分配d. Must be 释放d，使用 av_iamf_音频_element_释放().
  *
- * @see av_iamf_audio_element_add_layer()
+ * @参见 av_iamf_音频_element_add_layer()
  */
 AVIAMFAudioElement *av_iamf_audio_element_alloc(void);
 
 /**
- * Allocate a layer and add it to a given AVIAMFAudioElement.
- * It is freed by av_iamf_audio_element_free() alongside the rest of the parent
- * AVIAMFAudioElement.
+ * 分配 a layer 和 add it 到 a given AVIAMF音频Element.
+ * It is 释放d by av_iamf_音频_element_释放() alongside the rest 的 the parent
+ * AVIAMF音频Element.
  *
- * @return a pointer to the allocated layer.
+ * @返回 a 指针 到 the 分配d layer.
  */
 AVIAMFLayer *av_iamf_audio_element_add_layer(AVIAMFAudioElement *audio_element);
 
 /**
- * Free an AVIAMFAudioElement and all its contents.
+ * 释放 an AVIAMF音频Element 和 all its contents.
  *
- * @param audio_element pointer to pointer to an allocated AVIAMFAudioElement.
- *                      upon return, *audio_element will be set to NULL.
+ * @param 音频_element 指针 到 指针 到 an 分配d AVIAMF音频Element.
+ *                      upon 返回, *音频_element will be 设置 到 NULL.
  */
 void av_iamf_audio_element_free(AVIAMFAudioElement **audio_element);
 
@@ -431,88 +431,88 @@ void av_iamf_audio_element_free(AVIAMFAudioElement **audio_element);
 
 enum AVIAMFHeadphonesMode {
     /**
-     * The referenced Audio Element shall be rendered to stereo loudspeakers.
+     * 引用d 音频 Element shall be rendered 到 stereo loudspeakers.
      */
     AV_IAMF_HEADPHONES_MODE_STEREO,
     /**
-     * The referenced Audio Element shall be rendered with a binaural renderer.
+     * 引用d 音频 Element shall be rendered，使用 a binaural renderer.
      */
     AV_IAMF_HEADPHONES_MODE_BINAURAL,
 };
 
 /**
- * Submix element as defined in section 3.7 of IAMF.
+ * Submix element as defined 中 section 3.7 的 IAMF.
  *
- * @note The struct should be allocated with av_iamf_submix_add_element()
- *       and its size is not a part of the public ABI.
+ * @note struct should be 分配d，使用 av_iamf_submix_add_element()
+ *       和 its 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVIAMFSubmixElement {
     const AVClass *av_class;
 
     /**
-     * The id of the Audio Element this submix element references.
+     * id 的 the 音频 Element this submix element 引用s.
      */
     unsigned int audio_element_id;
 
     /**
-     * Information required required for applying any processing to the
-     * referenced and rendered Audio Element before being summed with other
-     * processed Audio Elements.
-     * The @ref AVIAMFParamDefinition.type "type" must be
+     * In格式ion required required 用于 applying any processing 到 the
+     * 引用d 和 rendered 音频 Element before being summed，使用 other
+     * processed 音频 Elements.
+     * @ref AVIAMFParamDefinition.type "type" must be
      * AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN.
      */
     AVIAMFParamDefinition *element_mix_config;
 
     /**
-     * Default mix gain value to apply when there are no AVIAMFParamDefinition
-     * with @ref element_mix_config "element_mix_config's"
-     * @ref AVIAMFParamDefinition.parameter_id "parameter_id" available for a
-     * given audio frame.
+     * 默认 mix gain 值 到 apply 当 there are no AVIAMFParamDefinition
+     *，使用 @ref element_mix_config "element_mix_config's"
+     * @ref AVIAMFParamDefinition.parameter_id "parameter_id" available 用于 a
+     * given 音频 帧.
      */
     AVRational default_mix_gain;
 
     /**
-     * A value that indicates whether the referenced channel-based Audio Element
-     * shall be rendered to stereo loudspeakers or spatialized with a binaural
-     * renderer when played back on headphones.
-     * If the Audio Element is not of @ref AVIAMFAudioElement.audio_element_type
-     * "type" AV_IAMF_AUDIO_ELEMENT_TYPE_CHANNEL, then this field is undefined.
+     * 值 that indicates 是否 the 引用d 声道-based 音频 Element
+     * shall be rendered 到 stereo loudspeakers 或 spatialized，使用 a binaural
+     * renderer 当 played back 上 headphones.
+     * 如果 the 音频 Element is not 的 @ref AVIAMF音频Element.音频_element_type
+     * "type" AV_IAMF_音频_ELEMENT_TYPE_声道, then this field is undefined.
      */
     enum AVIAMFHeadphonesMode headphones_rendering_mode;
 
     /**
-     * A dictionary of strings describing the submix in different languages.
-     * Must have the same amount of entries as
+     * dictionary 的 strings describing the submix 中 d如果ferent languages.
+     * Must have the same amount 的 entries as
      * @ref AVIAMFMixPresentation.annotations "the mix's annotations", stored
-     * in the same order, and with the same key strings.
+     * 中 the same order, and，使用 the same key strings.
      *
-     * @ref AVDictionaryEntry.key "key" is a string conforming to BCP-47 that
-     * specifies the language for the string stored in
-     * @ref AVDictionaryEntry.value "value".
+     * @ref AVDictionaryEntry.key "key" is a string conforming 到 BCP-47 that
+     * spec如果ies the language 用于 the string stored in
+     * @ref AVDictionaryEntry.值 "值".
      */
     AVDictionary *annotations;
 } AVIAMFSubmixElement;
 
 enum AVIAMFSubmixLayoutType {
     /**
-     * The layout follows the loudspeaker sound system convention of ITU-2051-3.
-     * @ref AVIAMFSubmixLayout.sound_system must be set.
+     * layout follows the loudspeaker sound system convention 的 ITU-2051-3.
+     * @ref AVIAMFSubmixLayout.sound_system must be 设置.
      */
     AV_IAMF_SUBMIX_LAYOUT_TYPE_LOUDSPEAKERS = 2,
     /**
-     * The layout is binaural.
+     * layout is binaural.
      *
-     * @note @ref AVIAMFSubmixLayout.sound_system may be set to
-     * AV_CHANNEL_LAYOUT_BINAURAL to simplify API usage, but it's not mandatory.
+     * @note @ref AVIAMFSubmixLayout.sound_system may be 设置 to
+     * AV_声道_LAYOUT_BINAURAL 到 simpl如果y API usage, but it's not mandatory.
      */
     AV_IAMF_SUBMIX_LAYOUT_TYPE_BINAURAL = 3,
 };
 
 /**
- * Submix layout as defined in section 3.7.6 of IAMF.
+ * Submix layout as defined 中 section 3.7.6 的 IAMF.
  *
- * @note The struct should be allocated with av_iamf_submix_add_layout()
- *       and its size is not a part of the public ABI.
+ * @note struct should be 分配d，使用 av_iamf_submix_add_layout()
+ *       和 its 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVIAMFSubmixLayout {
     const AVClass *av_class;
@@ -520,126 +520,126 @@ typedef struct AVIAMFSubmixLayout {
     enum AVIAMFSubmixLayoutType layout_type;
 
     /**
-     * Channel layout matching one of Sound Systems A to J of ITU-2051-3, plus
-     * 7.1.2ch, 3.1.2ch, and binaural.
-     * If layout_type is not AV_IAMF_SUBMIX_LAYOUT_TYPE_LOUDSPEAKERS or
+     * 声道布局 matching one 的 Sound Systems 到 J 的 ITU-2051-3, plus
+     * 7.1.2ch, 3.1.2ch, 和 binaural.
+     * 如果 layout_type is not AV_IAMF_SUBMIX_LAYOUT_TYPE_LOUDSPEAKERS or
      * AV_IAMF_SUBMIX_LAYOUT_TYPE_BINAURAL, this field is undefined.
      */
     AVChannelLayout sound_system;
     /**
-     * The program integrated loudness information, as defined in
+     * program integrated loudness in格式ion, as defined in
      * ITU-1770-4.
      */
     AVRational integrated_loudness;
     /**
-     * The digital (sampled) peak value of the audio signal, as defined
-     * in ITU-1770-4.
+     * digital (采样d) peak 值 的 the 音频 signal, as defined
+     * 中 ITU-1770-4.
      */
     AVRational digital_peak;
     /**
-     * The true peak of the audio signal, as defined in ITU-1770-4.
+     * true peak 的 the 音频 signal, as defined 中 ITU-1770-4.
      */
     AVRational true_peak;
     /**
-     * The Dialogue loudness information, as defined in ITU-1770-4.
+     * Dialogue loudness in格式ion, as defined 中 ITU-1770-4.
      */
     AVRational dialogue_anchored_loudness;
     /**
-     * The Album loudness information, as defined in ITU-1770-4.
+     * Album loudness in格式ion, as defined 中 ITU-1770-4.
      */
     AVRational album_anchored_loudness;
 } AVIAMFSubmixLayout;
 
 /**
- * Submix layout as defined in section 3.7 of IAMF.
+ * Submix layout as defined 中 section 3.7 的 IAMF.
  *
- * @note The struct should be allocated with av_iamf_mix_presentation_add_submix()
- *       and its size is not a part of the public ABI.
+ * @note struct should be 分配d，使用 av_iamf_mix_presentation_add_submix()
+ *       和 its 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVIAMFSubmix {
     const AVClass *av_class;
 
     /**
-     * Array of submix elements.
+     * 数组 的 submix elements.
      *
-     * Set by av_iamf_submix_add_element(), must not be modified by any
+     * 设置 by av_iamf_submix_add_element(), must not be mod如果ied by any
      * other code.
      */
     AVIAMFSubmixElement **elements;
     /**
-     * Number of elements in the submix.
+     * 数量 的 elements 中 the submix.
      *
-     * Set by av_iamf_submix_add_element(), must not be modified by any
+     * 设置 by av_iamf_submix_add_element(), must not be mod如果ied by any
      * other code.
      */
     unsigned int nb_elements;
 
     /**
-     * Array of submix layouts.
+     * 数组 的 submix layouts.
      *
-     * Set by av_iamf_submix_add_layout(), must not be modified by any
+     * 设置 by av_iamf_submix_add_layout(), must not be mod如果ied by any
      * other code.
      */
     AVIAMFSubmixLayout **layouts;
     /**
-     * Number of layouts in the submix.
+     * 数量 的 layouts 中 the submix.
      *
-     * Set by av_iamf_submix_add_layout(), must not be modified by any
+     * 设置 by av_iamf_submix_add_layout(), must not be mod如果ied by any
      * other code.
      */
     unsigned int nb_layouts;
 
     /**
-     * Information required for post-processing the mixed audio signal to
-     * generate the audio signal for playback.
-     * The @ref AVIAMFParamDefinition.type "type" must be
+     * In格式ion required 用于 post-processing the mixed 音频 signal to
+     * generate the 音频 signal 用于 playback.
+     * @ref AVIAMFParamDefinition.type "type" must be
      * AV_IAMF_PARAMETER_DEFINITION_MIX_GAIN.
      */
     AVIAMFParamDefinition *output_mix_config;
 
     /**
-     * Default mix gain value to apply when there are no AVIAMFParamDefinition
-     * with @ref output_mix_config "output_mix_config's"
-     * @ref AVIAMFParamDefinition.parameter_id "parameter_id" available for a
-     * given audio frame.
+     * 默认 mix gain 值 到 apply 当 there are no AVIAMFParamDefinition
+     *，使用 @ref 输出_mix_config "输出_mix_config's"
+     * @ref AVIAMFParamDefinition.parameter_id "parameter_id" available 用于 a
+     * given 音频 帧.
      */
     AVRational default_mix_gain;
 } AVIAMFSubmix;
 
 /**
- * Information on how to render and mix one or more AVIAMFAudioElement to generate
- * the final audio output, as defined in section 3.7 of IAMF.
+ * In格式ion 上 how 到 render 和 mix one 或 more AVIAMF音频Element 到 generate
+ * the final 音频 输出, as defined 中 section 3.7 的 IAMF.
  *
- * @note The struct should be allocated with av_iamf_mix_presentation_alloc()
- *       and its size is not a part of the public ABI.
+ * @note struct should be 分配d，使用 av_iamf_mix_presentation_alloc()
+ *       和 its 大小 is not a part 的 the 公共 ABI.
  */
 typedef struct AVIAMFMixPresentation {
     const AVClass *av_class;
 
     /**
-     * Array of submixes.
+     * 数组 的 submixes.
      *
-     * Set by av_iamf_mix_presentation_add_submix(), must not be modified
+     * 设置 by av_iamf_mix_presentation_add_submix(), must not be mod如果ied
      * by any other code.
      */
     AVIAMFSubmix **submixes;
     /**
-     * Number of submixes in the presentation.
+     * 数量 的 submixes 中 the presentation.
      *
-     * Set by av_iamf_mix_presentation_add_submix(), must not be modified
+     * 设置 by av_iamf_mix_presentation_add_submix(), must not be mod如果ied
      * by any other code.
      */
     unsigned int nb_submixes;
 
     /**
-     * A dictionary of strings describing the mix in different languages.
-     * Must have the same amount of entries as every
+     * dictionary 的 strings describing the mix 中 d如果ferent languages.
+     * Must have the same amount 的 entries as every
      * @ref AVIAMFSubmixElement.annotations "Submix element annotations",
-     * stored in the same order, and with the same key strings.
+     * stored 中 the same order, and，使用 the same key strings.
      *
-     * @ref AVDictionaryEntry.key "key" is a string conforming to BCP-47
-     * that specifies the language for the string stored in
-     * @ref AVDictionaryEntry.value "value".
+     * @ref AVDictionaryEntry.key "key" is a string conforming 到 BCP-47
+     * that spec如果ies the language 用于 the string stored in
+     * @ref AVDictionaryEntry.值 "值".
      */
     AVDictionary *annotations;
 } AVIAMFMixPresentation;
@@ -647,46 +647,46 @@ typedef struct AVIAMFMixPresentation {
 const AVClass *av_iamf_mix_presentation_get_class(void);
 
 /**
- * Allocates a AVIAMFMixPresentation, and initializes its fields with default
- * values. No submixes are allocated.
- * Must be freed with av_iamf_mix_presentation_free().
+ * 分配s a AVIAMFMixPresentation, 和 初始化s its fields，使用 默认
+ * 值. No submixes are 分配d.
+ * Must be 释放d，使用 av_iamf_mix_presentation_释放().
  *
- * @see av_iamf_mix_presentation_add_submix()
+ * @参见 av_iamf_mix_presentation_add_submix()
  */
 AVIAMFMixPresentation *av_iamf_mix_presentation_alloc(void);
 
 /**
- * Allocate a submix and add it to a given AVIAMFMixPresentation.
- * It is freed by av_iamf_mix_presentation_free() alongside the rest of the
+ * 分配 a submix 和 add it 到 a given AVIAMFMixPresentation.
+ * It is 释放d by av_iamf_mix_presentation_释放() alongside the rest 的 the
  * parent AVIAMFMixPresentation.
  *
- * @return a pointer to the allocated submix.
+ * @返回 a 指针 到 the 分配d submix.
  */
 AVIAMFSubmix *av_iamf_mix_presentation_add_submix(AVIAMFMixPresentation *mix_presentation);
 
 /**
- * Allocate a submix element and add it to a given AVIAMFSubmix.
- * It is freed by av_iamf_mix_presentation_free() alongside the rest of the
+ * 分配 a submix element 和 add it 到 a given AVIAMFSubmix.
+ * It is 释放d by av_iamf_mix_presentation_释放() alongside the rest 的 the
  * parent AVIAMFSubmix.
  *
- * @return a pointer to the allocated submix.
+ * @返回 a 指针 到 the 分配d submix.
  */
 AVIAMFSubmixElement *av_iamf_submix_add_element(AVIAMFSubmix *submix);
 
 /**
- * Allocate a submix layout and add it to a given AVIAMFSubmix.
- * It is freed by av_iamf_mix_presentation_free() alongside the rest of the
+ * 分配 a submix layout 和 add it 到 a given AVIAMFSubmix.
+ * It is 释放d by av_iamf_mix_presentation_释放() alongside the rest 的 the
  * parent AVIAMFSubmix.
  *
- * @return a pointer to the allocated submix.
+ * @返回 a 指针 到 the 分配d submix.
  */
 AVIAMFSubmixLayout *av_iamf_submix_add_layout(AVIAMFSubmix *submix);
 
 /**
- * Free an AVIAMFMixPresentation and all its contents.
+ * 释放 an AVIAMFMixPresentation 和 all its contents.
  *
- * @param mix_presentation pointer to pointer to an allocated AVIAMFMixPresentation.
- *                         upon return, *mix_presentation will be set to NULL.
+ * @param mix_presentation 指针 到 指针 到 an 分配d AVIAMFMixPresentation.
+ *                         upon 返回, *mix_presentation will be 设置 到 NULL.
  */
 void av_iamf_mix_presentation_free(AVIAMFMixPresentation **mix_presentation);
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -30,14 +30,14 @@
 #include "libavutil/mastering_display_metadata.h"
 
 /**
- * This struct is allocated as AVHWDeviceContext.hwctx
+ * 此结构被分配为 AVHWDeviceContext.hwctx。
  */
 typedef struct AVAMFDeviceContext {
     void *              library;
     AMFFactory         *factory;
     void               *trace_writer;
 
-    int64_t             version; ///< version of AMF runtime
+    int64_t             version; ///< AMF 运行时版本
     AMFContext         *context;
     AMF_MEMORY_TYPE     memory_type;
 

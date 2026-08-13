@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2023 Nuo Mi
  *
  * This file is part of FFmpeg.
@@ -33,34 +33,34 @@ typedef struct AVTaskCallbacks {
 
     int local_context_size;
 
-    // return 1 if a's priority > b's priority
+    // 如果 a 的优先级高于 b，则返回 1
     int (*priority_higher)(const AVTask *a, const AVTask *b);
 
-    // task is ready for run
+    // 任务已准备好运行
     int (*ready)(const AVTask *t, void *user_data);
 
-    // run the task
+    // 运行任务
     int (*run)(AVTask *t, void *local_context, void *user_data);
 } AVTaskCallbacks;
 
 /**
- * Alloc executor
- * @param callbacks callback structure for executor
- * @param thread_count worker thread number, 0 for run on caller's thread directly
- * @return return the executor
+ * 分配执行器。
+ * @param callbacks 执行器的回调结构
+ * @param thread_count 工作线程数量；0 表示直接在调用者线程上运行
+ * @return 返回执行器
  */
 AVExecutor* av_executor_alloc(const AVTaskCallbacks *callbacks, int thread_count);
 
 /**
- * Free executor
- * @param e  pointer to executor
+ * 释放执行器。
+ * @param e 指向执行器的指针
  */
 void av_executor_free(AVExecutor **e);
 
 /**
- * Add task to executor
- * @param e pointer to executor
- * @param t pointer to task. If NULL, it will wakeup one work thread
+ * 向执行器添加任务。
+ * @param e 指向执行器的指针
+ * @param t 指向任务的指针。为 NULL 时会唤醒一个工作线程
  */
 void av_executor_execute(AVExecutor *e, AVTask *t);
 

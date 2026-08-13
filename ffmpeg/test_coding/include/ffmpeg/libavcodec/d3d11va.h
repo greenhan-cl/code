@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Direct3D11 HW acceleration
  *
  * copyright (c) 2009 Laurent Aimar
@@ -27,7 +27,7 @@
 /**
  * @file
  * @ingroup lavc_codec_hwaccel_d3d11va
- * Public libavcodec D3D11VA header.
+ * libavcodec 的公共 D3D11VA 头文件。
  */
 
 #if !defined(_WIN32_WINNT) || _WIN32_WINNT < 0x0602
@@ -46,16 +46,15 @@
  */
 
 /**
- * This structure is used to provides the necessary configurations and data
- * to the Direct3D11 FFmpeg HWAccel implementation.
+ * 此结构体用于向 FFmpeg 的 Direct3D11 HWAccel 实现提供必要的配置和数据。
  *
- * The application must make it available as AVCodecContext.hwaccel_context.
+ * 应用程序必须通过 AVCodecContext.hwaccel_context 提供此结构体。
  *
- * Use av_d3d11va_alloc_context() exclusively to allocate an AVD3D11VAContext.
+ * 必须仅使用 av_d3d11va_alloc_context() 分配 AVD3D11VAContext。
  */
 typedef struct AVD3D11VAContext {
     /**
-     * D3D11 decoder object
+     * D3D11 解码器对象
      */
     ID3D11VideoDecoder *decoder;
 
@@ -65,40 +64,40 @@ typedef struct AVD3D11VAContext {
     ID3D11VideoContext *video_context;
 
     /**
-     * D3D11 configuration used to create the decoder
+     * 用于创建解码器的 D3D11 配置
      */
     D3D11_VIDEO_DECODER_CONFIG *cfg;
 
     /**
-     * The number of surface in the surface array
+     * surface 数组中的表面数量
      */
     unsigned surface_count;
 
     /**
-     * The array of Direct3D surfaces used to create the decoder
+     * 用于创建解码器的 Direct3D 表面数组
      */
     ID3D11VideoDecoderOutputView **surface;
 
     /**
-     * A bit field configuring the workarounds needed for using the decoder
+     * 配置使用解码器所需规避措施的位字段
      */
     uint64_t workaround;
 
     /**
-     * Private to the FFmpeg AVHWAccel implementation
+     * FFmpeg AVHWAccel 实现的私有字段
      */
     unsigned report_id;
 
     /**
-      * Mutex to access video_context
+      * 访问 video_context 的互斥锁
       */
     HANDLE  context_mutex;
 } AVD3D11VAContext;
 
 /**
- * Allocate an AVD3D11VAContext.
+ * 分配 AVD3D11VAContext。
  *
- * @return Newly-allocated AVD3D11VAContext or NULL on failure.
+ * @return 新分配的 AVD3D11VAContext，失败时返回 NULL。
  */
 AVD3D11VAContext *av_d3d11va_alloc_context(void);
 

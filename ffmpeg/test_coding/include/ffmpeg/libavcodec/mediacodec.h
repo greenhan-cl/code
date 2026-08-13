@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Android MediaCodec public API
  *
  * Copyright (c) 2016 Matthieu Bouron <matthieu.bouron stupeflix.com>
@@ -26,75 +26,70 @@
 #include "libavcodec/avcodec.h"
 
 /**
- * This structure holds a reference to a android/view/Surface object that will
- * be used as output by the decoder.
+ * 此结构体保存对 android/view/Surface 对象的引用，解码器将其用作输出。
  *
  */
 typedef struct AVMediaCodecContext {
 
     /**
-     * android/view/Surface object reference.
+     * android/view/Surface 对象引用。
      */
     void *surface;
 
 } AVMediaCodecContext;
 
 /**
- * Allocate and initialize a MediaCodec context.
+ * 分配并初始化 MediaCodec 上下文。
  *
- * When decoding with MediaCodec is finished, the caller must free the
- * MediaCodec context with av_mediacodec_default_free.
+ * MediaCodec 解码结束后，调用方必须使用 av_mediacodec_default_free
+ * 释放 MediaCodec 上下文。
  *
- * @return a pointer to a newly allocated AVMediaCodecContext on success, NULL otherwise
+ * @return 成功时返回指向新分配 AVMediaCodecContext 的指针，否则返回 NULL
  */
 AVMediaCodecContext *av_mediacodec_alloc_context(void);
 
 /**
- * Convenience function that sets up the MediaCodec context.
+ * 用于设置 MediaCodec 上下文的便捷函数。
  *
- * @param avctx codec context
- * @param ctx MediaCodec context to initialize
- * @param surface reference to an android/view/Surface
- * @return 0 on success, < 0 otherwise
+ * @param avctx 编解码器上下文
+ * @param ctx 要初始化的 MediaCodec 上下文
+ * @param surface android/view/Surface 的引用
+ * @return 成功返回 0，否则返回 < 0
  */
 int av_mediacodec_default_init(AVCodecContext *avctx, AVMediaCodecContext *ctx, void *surface);
 
 /**
- * This function must be called to free the MediaCodec context initialized with
- * av_mediacodec_default_init().
+ * 必须调用此函数释放由 av_mediacodec_default_init() 初始化的 MediaCodec 上下文。
  *
- * @param avctx codec context
+ * @param avctx 编解码器上下文
  */
 void av_mediacodec_default_free(AVCodecContext *avctx);
 
 /**
- * Opaque structure representing a MediaCodec buffer to render.
+ * 表示待渲染 MediaCodec 缓冲区的不透明结构体。
  */
 typedef struct MediaCodecBuffer AVMediaCodecBuffer;
 
 /**
- * Release a MediaCodec buffer and render it to the surface that is associated
- * with the decoder. This function should only be called once on a given
- * buffer, once released the underlying buffer returns to the codec, thus
- * subsequent calls to this function will have no effect.
+ * 释放 MediaCodec 缓冲区，并将其渲染到与解码器关联的 surface。
+ * 对给定缓冲区只能调用此函数一次；释放后，底层缓冲区会返回编解码器，
+ * 因此后续调用不会产生任何效果。
  *
- * @param buffer the buffer to render
- * @param render 1 to release and render the buffer to the surface or 0 to
- * discard the buffer
- * @return 0 on success, < 0 otherwise
+ * @param buffer 要渲染的缓冲区
+ * @param render 为 1 时释放缓冲区并渲染到 surface，为 0 时丢弃缓冲区
+ * @return 成功返回 0，否则返回 < 0
  */
 int av_mediacodec_release_buffer(AVMediaCodecBuffer *buffer, int render);
 
 /**
- * Release a MediaCodec buffer and render it at the given time to the surface
- * that is associated with the decoder. The timestamp must be within one second
- * of the current `java/lang/System#nanoTime()` (which is implemented using
- * `CLOCK_MONOTONIC` on Android). See the Android MediaCodec documentation
- * of [`android/media/MediaCodec#releaseOutputBuffer(int,long)`][0] for more details.
+ * 释放 MediaCodec 缓冲区，并在给定时间将其渲染到与解码器关联的 surface。
+ * 时间戳与当前 `java/lang/System#nanoTime()` 的差值必须在一秒以内
+ * （Android 上使用 `CLOCK_MONOTONIC` 实现）。详情参见 Android MediaCodec 文档
+ * [`android/media/MediaCodec#releaseOutputBuffer(int,long)`][0]。
  *
- * @param buffer the buffer to render
- * @param time timestamp in nanoseconds of when to render the buffer
- * @return 0 on success, < 0 otherwise
+ * @param buffer 要渲染的缓冲区
+ * @param time 渲染缓冲区的时间戳，单位为纳秒
+ * @return 成功返回 0，否则返回 < 0
  *
  * [0]: https://developer.android.com/reference/android/media/MediaCodec#releaseOutputBuffer(int,%20long)
  */

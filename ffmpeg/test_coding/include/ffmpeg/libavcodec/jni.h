@@ -1,4 +1,4 @@
-/*
+﻿/*
  * JNI public API functions
  *
  * Copyright (c) 2015-2016 Matthieu Bouron <matthieu.bouron stupeflix.com>
@@ -24,43 +24,40 @@
 #define AVCODEC_JNI_H
 
 /*
- * Manually set a Java virtual machine which will be used to retrieve the JNI
- * environment. Once a Java VM is set it cannot be changed afterwards, meaning
- * you can call multiple times av_jni_set_java_vm with the same Java VM pointer
- * however it will error out if you try to set a different Java VM.
+ * 手动设置用于获取 JNI 环境的 Java 虚拟机。Java VM 一旦设置便不能更改，
+ * 因此可以使用同一个 Java VM 指针多次调用 av_jni_set_java_vm，
+ * 但尝试设置不同的 Java VM 时会返回错误。
  *
- * @param vm Java virtual machine
- * @param log_ctx context used for logging, can be NULL
- * @return 0 on success, < 0 otherwise
+ * @param vm Java 虚拟机
+ * @param log_ctx 用于日志记录的上下文，可以为 NULL
+ * @return 成功返回 0，否则返回 < 0
  */
 int av_jni_set_java_vm(void *vm, void *log_ctx);
 
 /*
- * Get the Java virtual machine which has been set with av_jni_set_java_vm.
+ * 获取通过 av_jni_set_java_vm 设置的 Java 虚拟机。
  *
- * @param vm Java virtual machine
- * @return a pointer to the Java virtual machine
+ * @param vm Java 虚拟机
+ * @return 指向 Java 虚拟机的指针
  */
 void *av_jni_get_java_vm(void *log_ctx);
 
 /*
- * Set the Android application context which will be used to retrieve the Android
- * content resolver to handle content uris.
+ * 设置 Android 应用上下文，该上下文用于获取处理内容 URI 的 Android 内容解析器。
  *
- * This function is only available on Android.
+ * 此函数仅在 Android 上可用。
  *
- * @param app_ctx global JNI reference to the Android application context
- * @return 0 on success, < 0 otherwise
+ * @param app_ctx Android 应用上下文的全局 JNI 引用
+ * @return 成功返回 0，否则返回 < 0
  */
 int av_jni_set_android_app_ctx(void *app_ctx, void *log_ctx);
 
 /*
- * Get the Android application context that has been set with
- * av_jni_set_android_app_ctx.
+ * 获取通过 av_jni_set_android_app_ctx 设置的 Android 应用上下文。
  *
- * This function is only available on Android.
+ * 此函数仅在 Android 上可用。
  *
- * @return a pointer the the Android application context
+ * @return 指向 Android 应用上下文的指针
  */
 void *av_jni_get_android_app_ctx(void);
 

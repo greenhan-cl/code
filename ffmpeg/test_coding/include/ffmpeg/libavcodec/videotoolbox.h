@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Videotoolbox hardware acceleration
  *
  * copyright (c) 2012 Sebastien Zwickert
@@ -26,14 +26,14 @@
 /**
  * @file
  * @ingroup lavc_codec_hwaccel_videotoolbox
- * Public libavcodec Videotoolbox header.
+ * libavcodec 的公共 Videotoolbox 头文件。
  */
 
 /**
  * @defgroup lavc_codec_hwaccel_videotoolbox VideoToolbox Decoder
  * @ingroup lavc_codec_hwaccel
  *
- * Hardware accelerated decoding using VideoToolbox on Apple Platforms
+ * 在 Apple 平台上使用 VideoToolbox 进行硬件加速解码
  *
  * @{
  */
@@ -49,31 +49,29 @@
 #include "libavutil/attributes.h"
 
 /**
- * This struct holds all the information that needs to be passed
- * between the caller and libavcodec for initializing Videotoolbox decoding.
- * Its size is not a part of the public ABI, it must be allocated with
- * av_videotoolbox_alloc_context() and freed with av_free().
+ * 此结构体保存初始化 Videotoolbox 解码时调用方与 libavcodec 之间需要传递的所有信息。
+ * 它的大小不属于公共 ABI，必须使用 av_videotoolbox_alloc_context() 分配，
+ * 并使用 av_free() 释放。
  */
 typedef struct AVVideotoolboxContext {
     /**
-     * Videotoolbox decompression session object.
+     * Videotoolbox 解压会话对象。
      */
     VTDecompressionSessionRef session;
 
     /**
-     * CVPixelBuffer Format Type that Videotoolbox will use for decoded frames.
-     * set by the caller. If this is set to 0, then no specific format is
-     * requested from the decoder, and its native format is output.
+     * Videotoolbox 用于解码帧的 CVPixelBuffer 格式类型，由调用方设置。
+     * 如果设置为 0，则不向解码器请求特定格式，而是输出其原生格式。
      */
     OSType cv_pix_fmt_type;
 
     /**
-     * CoreMedia Format Description that Videotoolbox will use to create the decompression session.
+     * Videotoolbox 用于创建解压会话的 CoreMedia 格式描述。
      */
     CMVideoFormatDescriptionRef cm_fmt_desc;
 
     /**
-     * CoreMedia codec type that Videotoolbox will use to create the decompression session.
+     * Videotoolbox 用于创建解压会话的 CoreMedia 编解码器类型。
      */
     int cm_codec_type;
 } AVVideotoolboxContext;

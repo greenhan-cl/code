@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2012 Nicolas George
  *
  * This file is part of FFmpeg.
@@ -21,7 +21,7 @@
 /**
  * @file
  * @ingroup lavu_avbprint
- * AVBPrint public header
+ * AVBPrint 公共头文件
  */
 
 #ifndef AVUTIL_BPRINT_H
@@ -36,13 +36,12 @@
  * @defgroup lavu_avbprint AVBPrint
  * @ingroup lavu_data
  *
- * A buffer to print data progressively
+ * 用于逐步打印数据的缓冲区
  * @{
  */
 
 /**
- * Define a structure with extra padding to a fixed size
- * This helps ensuring binary compatibility with future versions.
+ * 定义带额外填充、具有固定大小的结构。这有助于确保与未来版本二进制兼容。
  */
 
 #define FF_PAD_STRUCTURE(name, size, ...) \
@@ -53,167 +52,147 @@ typedef struct name { \
 } name;
 
 /**
- * Buffer to print data progressively
+ * 用于逐步打印数据的缓冲区
  *
- * The string buffer grows as necessary and is always 0-terminated.
- * The content of the string is never accessed, and thus is
- * encoding-agnostic and can even hold binary data.
+ * 字符串缓冲区会按需增长，并始终以 0 结尾。字符串内容从不被访问，因此与编码
+ * 无关，甚至可以保存二进制数据。
  *
- * Small buffers are kept in the structure itself, and thus require no
- * memory allocation at all (unless the contents of the buffer is needed
- * after the structure goes out of scope). This is almost as lightweight as
- * declaring a local `char buf[512]`.
+ * 小缓冲区保存在结构本身中，因此完全无需分配内存（除非结构离开作用域后仍需
+ * 使用缓冲区内容）。这几乎和声明局部 `char buf[512]` 一样轻量。
  *
- * The length of the string can go beyond the allocated size: the buffer is
- * then truncated, but the functions still keep account of the actual total
- * length.
+ * 字符串长度可以超过已分配大小：此时缓冲区会被截断，但函数仍会记录实际总长度。
  *
- * In other words, AVBPrint.len can be greater than AVBPrint.size and records
- * the total length of what would have been to the buffer if there had been
- * enough memory.
+ * 换言之，AVBPrint.len 可以大于 AVBPrint.size，它记录内存足够时本应写入缓冲区
+ * 的总长度。
  *
- * Append operations do not need to be tested for failure: if a memory
- * allocation fails, data stop being appended to the buffer, but the length
- * is still updated. This situation can be tested with
- * av_bprint_is_complete().
+ * 无需测试追加操作是否失败：内存分配失败时，数据停止追加到缓冲区，但长度仍会
+ * 更新。可使用 av_bprint_is_complete() 测试这种情况。
  *
- * The AVBPrint.size_max field determines several possible behaviours:
- * - `size_max = -1` (= `UINT_MAX`) or any large value will let the buffer be
- *   reallocated as necessary, with an amortized linear cost.
- * - `size_max = 0` prevents writing anything to the buffer: only the total
- *   length is computed. The write operations can then possibly be repeated in
- *   a buffer with exactly the necessary size
- *   (using `size_init = size_max = len + 1`).
- * - `size_max = 1` is automatically replaced by the exact size available in the
- *   structure itself, thus ensuring no dynamic memory allocation. The
- *   internal buffer is large enough to hold a reasonable paragraph of text,
- *   such as the current paragraph.
+ * AVBPrint.size_max 字段决定以下行为：
+ * - `size_max = -1`（即 `UINT_MAX`）或任意大值允许缓冲区按需重新分配，
+ *   摊销成本为线性。
+ * - `size_max = 0` 禁止向缓冲区写入，只计算总长度。随后可在大小恰好满足要求的
+ *   缓冲区中重复写操作（使用 `size_init = size_max = len + 1`）。
+ * - `size_max = 1` 会自动替换为结构本身可用的确切大小，从而保证不动态分配
+ *   内存。内部缓冲区足以保存一段合理长度的文本，例如当前段落。
  */
 
 FF_PAD_STRUCTURE(AVBPrint, 1024,
-    char *str;         /**< string so far */
-    unsigned len;      /**< length so far */
-    unsigned size;     /**< allocated memory */
-    unsigned size_max; /**< maximum allocated memory */
+    char *str;         /**< 当前字符串 */
+    unsigned len;      /**< 当前长度 */
+    unsigned size;     /**< 已分配内存 */
+    unsigned size_max; /**< 最大分配内存 */
     char reserved_internal_buffer[1];
 )
 
 /**
- * @name Max size special values
- * Convenience macros for special values for av_bprint_init() size_max
- * parameter.
+ * @name 最大大小特殊值
+ * av_bprint_init() 的 size_max 参数特殊值便捷宏。
  * @{
  */
 
 /**
- * Buffer will be reallocated as necessary, with an amortized linear cost.
+ * 缓冲区将按需重新分配，摊销成本为线性。
  */
 #define AV_BPRINT_SIZE_UNLIMITED  ((unsigned)-1)
 /**
- * Use the exact size available in the AVBPrint structure itself.
+ * 使用 AVBPrint 结构本身可用的确切大小。
  *
- * Thus ensuring no dynamic memory allocation. The internal buffer is large
- * enough to hold a reasonable paragraph of text, such as the current paragraph.
+ * 从而确保不动态分配内存。内部缓冲区足以保存一段合理长度的文本，例如当前段落。
  */
 #define AV_BPRINT_SIZE_AUTOMATIC  1
 /**
- * Do not write anything to the buffer, only calculate the total length.
+ * 不向缓冲区写入任何内容，只计算总长度。
  *
- * The write operations can then possibly be repeated in a buffer with
- * exactly the necessary size (using `size_init = size_max = AVBPrint.len + 1`).
+ * 随后可在大小恰好满足要求的缓冲区中重复写操作
+ * （使用 `size_init = size_max = AVBPrint.len + 1`）。
  */
 #define AV_BPRINT_SIZE_COUNT_ONLY 0
 /** @} */
 
 /**
- * Init a print buffer.
+ * 初始化打印缓冲区。
  *
- * @param buf        buffer to init
- * @param size_init  initial size (including the final 0)
- * @param size_max   maximum size;
- *                   - `0` means do not write anything, just count the length
- *                   - `1` is replaced by the maximum value for automatic storage
- *                       any large value means that the internal buffer will be
- *                       reallocated as needed up to that limit
- *                   - `-1` is converted to `UINT_MAX`, the largest limit possible.
- *                   Check also `AV_BPRINT_SIZE_*` macros.
+ * @param buf        要初始化的缓冲区
+ * @param size_init  初始大小（包含末尾的 0）
+ * @param size_max   最大大小：
+ *                   - `0` 表示不写入，只计算长度
+ *                   - `1` 替换为自动存储的最大值；任意大值表示内部缓冲区可按需
+ *                     重新分配，最大到该限制
+ *                   - `-1` 转换为 `UINT_MAX`，即最大可能限制。
+ *                   另请参见 `AV_BPRINT_SIZE_*` 宏。
  */
 void av_bprint_init(AVBPrint *buf, unsigned size_init, unsigned size_max);
 
 /**
- * Init a print buffer using a pre-existing buffer.
+ * 使用预先存在的缓冲区初始化打印缓冲区。
  *
- * The buffer will not be reallocated.
- * In case size equals zero, the AVBPrint will be initialized to use
- * the internal buffer as if using AV_BPRINT_SIZE_COUNT_ONLY with
- * av_bprint_init().
+ * 缓冲区不会重新分配。size 为零时，AVBPrint 会初始化为使用内部缓冲区，
+ * 等同于以 AV_BPRINT_SIZE_COUNT_ONLY 调用 av_bprint_init()。
  *
- * @param buf     buffer structure to init
- * @param buffer  byte buffer to use for the string data
- * @param size    size of buffer
+ * @param buf     要初始化的缓冲区结构
+ * @param buffer  用于字符串数据的字节缓冲区
+ * @param size    缓冲区大小
  */
 void av_bprint_init_for_buffer(AVBPrint *buf, char *buffer, unsigned size);
 
 /**
- * Append a formatted string to a print buffer.
+ * 将格式化字符串追加到打印缓冲区。
  */
 void av_bprintf(AVBPrint *buf, const char *fmt, ...) av_printf_format(2, 3);
 
 /**
- * Append a formatted string to a print buffer.
+ * 将格式化字符串追加到打印缓冲区。
  */
 void av_vbprintf(AVBPrint *buf, const char *fmt, va_list vl_arg);
 
 /**
- * Append char c n times to a print buffer.
+ * 将字符 c 追加 n 次到打印缓冲区。
  */
 void av_bprint_chars(AVBPrint *buf, char c, unsigned n);
 
 /**
- * Append data to a print buffer.
+ * 将数据追加到打印缓冲区。
  *
- * @param buf  bprint buffer to use
- * @param data pointer to data
- * @param size size of data
+ * @param buf  要使用的 bprint 缓冲区
+ * @param data 指向数据的指针
+ * @param size 数据大小
  */
 void av_bprint_append_data(AVBPrint *buf, const char *data, unsigned size);
 
 struct tm;
 /**
- * Append a formatted date and time to a print buffer.
+ * 将格式化日期和时间追加到打印缓冲区。
  *
- * @param buf  bprint buffer to use
- * @param fmt  date and time format string, see strftime()
- * @param tm   broken-down time structure to translate
+ * @param buf  要使用的 bprint 缓冲区
+ * @param fmt  日期和时间格式字符串，参见 strftime()
+ * @param tm   要转换的分解时间结构
  *
- * @note due to poor design of the standard strftime function, it may
- * produce poor results if the format string expands to a very long text and
- * the bprint buffer is near the limit stated by the size_max option.
+ * @note 由于标准 strftime 函数设计不佳，如果格式字符串展开为很长文本，且
+ * bprint 缓冲区接近 size_max 选项规定的限制，可能产生不理想的结果。
  */
 void av_bprint_strftime(AVBPrint *buf, const char *fmt, const struct tm *tm);
 
 /**
- * Allocate bytes in the buffer for external use.
+ * 在缓冲区中分配字节供外部使用。
  *
- * @param[in]  buf          buffer structure
- * @param[in]  size         required size
- * @param[out] mem          pointer to the memory area
- * @param[out] actual_size  size of the memory area after allocation;
- *                          can be larger or smaller than size
+ * @param[in]  buf          缓冲区结构
+ * @param[in]  size         所需大小
+ * @param[out] mem          指向内存区域的指针
+ * @param[out] actual_size  分配后内存区域的大小，可以大于或小于 size
  */
 void av_bprint_get_buffer(AVBPrint *buf, unsigned size,
                           unsigned char **mem, unsigned *actual_size);
 
 /**
- * Reset the string to "" but keep internal allocated data.
+ * 将字符串重置为 ""，但保留内部已分配数据。
  */
 void av_bprint_clear(AVBPrint *buf);
 
 /**
- * Test if the print buffer is complete (not truncated).
+ * 测试打印缓冲区是否完整（未截断）。
  *
- * It may have been truncated due to a memory allocation failure
- * or the size_max limit (compare size and size_max if necessary).
+ * 它可能因内存分配失败或 size_max 限制而被截断（必要时比较 size 和 size_max）。
  */
 static inline int av_bprint_is_complete(const AVBPrint *buf)
 {
@@ -221,30 +200,25 @@ static inline int av_bprint_is_complete(const AVBPrint *buf)
 }
 
 /**
- * Finalize a print buffer.
+ * 完成打印缓冲区。
  *
- * The print buffer can no longer be used afterwards,
- * but the len and size fields are still valid.
+ * 此后不能再使用打印缓冲区，但 len 和 size 字段仍有效。
  *
- * @arg[out] ret_str  if not NULL, used to return a permanent copy of the
- *                    buffer contents, or NULL if memory allocation fails;
- *                    if NULL, the buffer is discarded and freed
- * @return  0 for success or error code (probably AVERROR(ENOMEM))
+ * @arg[out] ret_str  非 NULL 时用于返回缓冲区内容的持久副本；内存分配失败时
+ *                    返回 NULL。其本身为 NULL 时，缓冲区会被丢弃并释放
+ * @return 成功时返回 0，否则返回错误码（可能是 AVERROR(ENOMEM)）
  */
 int av_bprint_finalize(AVBPrint *buf, char **ret_str);
 
 /**
- * Escape the content in src and append it to dstbuf.
+ * 转义 src 中的内容并追加到 dstbuf。
  *
- * @param dstbuf        already inited destination bprint buffer
- * @param src           string containing the text to escape
- * @param special_chars string containing the special characters which
- *                      need to be escaped, can be NULL
- * @param mode          escape mode to employ, see AV_ESCAPE_MODE_* macros.
- *                      Any unknown value for mode will be considered equivalent to
- *                      AV_ESCAPE_MODE_BACKSLASH, but this behaviour can change without
- *                      notice.
- * @param flags         flags which control how to escape, see AV_ESCAPE_FLAG_* macros
+ * @param dstbuf        已初始化的目标 bprint 缓冲区
+ * @param src           包含待转义文本的字符串
+ * @param special_chars 包含需要转义特殊字符的字符串，可以为 NULL
+ * @param mode          使用的转义模式，参见 AV_ESCAPE_MODE_* 宏。任何未知值均
+ *                      视同 AV_ESCAPE_MODE_BACKSLASH，但此行为可能不经通知而改变。
+ * @param flags         控制转义方式的标志，参见 AV_ESCAPE_FLAG_* 宏
  */
 void av_bprint_escape(AVBPrint *dstbuf, const char *src, const char *special_chars,
                       enum AVEscapeMode mode, int flags);

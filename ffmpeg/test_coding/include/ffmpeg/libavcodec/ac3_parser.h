@@ -1,4 +1,4 @@
-/*
+﻿/*
  * AC-3 parser prototypes
  * Copyright (c) 2003 Fabrice Bellard
  * Copyright (c) 2003 Michael Niedermayer
@@ -27,7 +27,7 @@
 #include <stdint.h>
 
 /**
- * Extract the bitstream ID and the frame size from AC-3 data.
+ * 从 AC-3 数据中提取比特流 ID 和帧大小。
  */
 int av_ac3_parse_header(const uint8_t *buf, size_t size,
                         uint8_t *bitstream_id, uint16_t *frame_size);

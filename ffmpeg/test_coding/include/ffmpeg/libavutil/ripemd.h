@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2007 Michael Niedermayer <michaelni@gmx.at>
  * Copyright (C) 2013 James Almer <jamrial@gmail.com>
  *
@@ -22,7 +22,7 @@
 /**
  * @file
  * @ingroup lavu_ripemd
- * Public header for RIPEMD hash function implementation.
+ * RIPEMD 哈希函数实现的公共头文件。
  */
 
 #ifndef AVUTIL_RIPEMD_H
@@ -36,7 +36,7 @@
 /**
  * @defgroup lavu_ripemd RIPEMD
  * @ingroup lavu_hash
- * RIPEMD hash function implementation.
+ * RIPEMD 哈希函数实现。
  *
  * @{
  */
@@ -46,33 +46,33 @@ extern const int av_ripemd_size;
 struct AVRIPEMD;
 
 /**
- * Allocate an AVRIPEMD context.
+ * 分配 AVRIPEMD 上下文。
  */
 struct AVRIPEMD *av_ripemd_alloc(void);
 
 /**
- * Initialize RIPEMD hashing.
+ * 初始化 RIPEMD 哈希计算。
  *
- * @param context pointer to the function context (of size av_ripemd_size)
- * @param bits    number of bits in digest (128, 160, 256 or 320 bits)
- * @return        zero if initialization succeeded, -1 otherwise
+ * @param context 指向函数上下文的指针（大小为 av_ripemd_size）
+ * @param bits    摘要位数（128、160、256 或 320 位）
+ * @return        初始化成功返回 0，否则返回 -1
  */
 int av_ripemd_init(struct AVRIPEMD* context, int bits);
 
 /**
- * Update hash value.
+ * 更新哈希值。
  *
- * @param context hash function context
- * @param data    input data to update hash with
- * @param len     input data length
+ * @param context 哈希函数上下文
+ * @param data    用于更新哈希的输入数据
+ * @param len     输入数据长度
  */
 void av_ripemd_update(struct AVRIPEMD* context, const uint8_t* data, size_t len);
 
 /**
- * Finish hashing and output digest value.
+ * 完成哈希计算并输出摘要值。
  *
- * @param context hash function context
- * @param digest  buffer where output digest value is stored
+ * @param context 哈希函数上下文
+ * @param digest  存储输出摘要值的缓冲区
  */
 void av_ripemd_final(struct AVRIPEMD* context, uint8_t *digest);
 

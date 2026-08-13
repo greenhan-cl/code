@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Direct3D 12 HW acceleration.
  *
  * copyright (c) 2022-2023 Wu Jianhua <toqsxw@outlook.com>
@@ -25,10 +25,9 @@
 
 /**
  * @file
- * An API-specific header for AV_HWDEVICE_TYPE_D3D12VA.
+ * AV_HWDEVICE_TYPE_D3D12VA 专用 API 头文件。
  *
- * AVHWFramesContext.pool must contain AVBufferRefs whose
- * data pointer points to an AVD3D12VAFrame struct.
+ * AVHWFramesContext.pool 必须包含 data 指针指向 AVD3D12VAFrame 结构体的 AVBufferRef。
  */
 #include <stdint.h>
 #include <initguid.h>
@@ -37,171 +36,152 @@
 #include <d3d12video.h>
 
 /**
- * @brief This struct is allocated as AVHWDeviceContext.hwctx
+ * @brief 此结构体作为 AVHWDeviceContext.hwctx 分配
  *
  */
 typedef struct AVD3D12VADeviceContext {
     /**
-     * Device used for objects creation and access. This can also be
-     * used to set the libavcodec decoding device.
+     * 用于创建和访问对象的设备，也可用于设置 libavcodec 解码设备。
      *
-     * Can be set by the user. This is the only mandatory field - the other
-     * device context fields are set from this and are available for convenience.
+     * 可由用户设置。这是唯一必填字段，其他设备上下文字段由此设置，仅为方便使用。
      *
-     * Deallocating the AVHWDeviceContext will always release this interface,
-     * and it does not matter whether it was user-allocated.
+     * 释放 AVHWDeviceContext 时始终释放此接口，无论它是否由用户分配。
      */
     ID3D12Device *device;
 
     /**
-     * If unset, this will be set from the device field on init.
+     * 未设置时，将在初始化时根据 device 字段设置。
      *
-     * Deallocating the AVHWDeviceContext will always release this interface,
-     * and it does not matter whether it was user-allocated.
+     * 释放 AVHWDeviceContext 时始终释放此接口，无论它是否由用户分配。
      */
     ID3D12VideoDevice *video_device;
 
     /**
-     * Callbacks for locking. They protect access to the internal staging
-     * texture (for av_hwframe_transfer_data() calls). They do NOT protect
-     * access to hwcontext or decoder state in general.
+     * 加锁回调。用于保护对内部暂存纹理的访问（供 av_hwframe_transfer_data() 调用），
+     * 但不保护对 hwcontext 或一般解码器状态的访问。
      *
-     * If unset on init, the hwcontext implementation will set them to use an
-     * internal mutex.
+     * 初始化时未设置，则 hwcontext 实现会将其设为使用内部互斥锁。
      *
-     * The underlying lock must be recursive. lock_ctx is for free use by the
-     * locking implementation.
+     * 底层锁必须可递归。locking 实现可自由使用 lock_ctx。
      */
     void (*lock)(void *lock_ctx);
     void (*unlock)(void *lock_ctx);
     void *lock_ctx;
 
     /**
-     * Resource flags to be applied to D3D12 resources allocated
-     * for frames using this device context.
+     * 应用于使用此设备上下文为帧分配的 D3D12 资源的资源标志。
      *
-     * If unset, this will be D3D12_RESOURCE_FLAG_NONE.
+     * 未设置时为 D3D12_RESOURCE_FLAG_NONE。
      *
-     * It applies globally to all AVD3D12VAFramesContext allocated from this device context.
+     * 全局应用于从此设备上下文分配的所有 AVD3D12VAFramesContext。
      */
     D3D12_RESOURCE_FLAGS resource_flags;
 
     /**
-     * Heap flags to be applied to D3D12 resources allocated
-     * for frames using this device context.
+     * 应用于使用此设备上下文为帧分配的 D3D12 资源的堆标志。
      *
-     * If unset, this will be D3D12_HEAP_FLAG_NONE.
+     * 未设置时为 D3D12_HEAP_FLAG_NONE。
      *
-     * It applies globally to all AVD3D12VAFramesContext allocated from this device context.
+     * 全局应用于从此设备上下文分配的所有 AVD3D12VAFramesContext。
      */
     D3D12_HEAP_FLAGS heap_flags;
 } AVD3D12VADeviceContext;
 
 /**
- * @brief This struct is used to sync d3d12 execution
+ * @brief 此结构体用于同步 D3D12 执行
  *
  */
 typedef struct AVD3D12VASyncContext {
     /**
-     * D3D12 fence object
+     * D3D12 fence 对象
      */
     ID3D12Fence *fence;
 
     /**
-     * A handle to the event object that's raised when the fence
-     * reaches a certain value.
+     * fence 达到特定值时触发的事件对象句柄。
      */
     HANDLE event;
 
     /**
-     * The fence value used for sync
+     * 用于同步的 fence 值
      */
     uint64_t fence_value;
 } AVD3D12VASyncContext;
 
 /**
- * Define the behaviours of frame allocation.
+ * 定义帧分配行为。
  */
 typedef enum AVD3D12VAFrameFlags {
     AV_D3D12VA_FRAME_FLAG_NONE = 0,
 
     /**
-     * Indicates that frame data should be allocated using a texture array resource.
+     * 表示应使用纹理数组资源分配帧数据。
      */
     AV_D3D12VA_FRAME_FLAG_TEXTURE_ARRAY = (1 << 1),
 } AVD3D12VAFrameFlags;
 
 /**
- * @brief D3D12VA frame descriptor for pool allocation.
+ * @brief 用于池分配的 D3D12VA 帧描述符。
  *
  */
 typedef struct AVD3D12VAFrame {
     /**
-     * The texture in which the frame is located. The reference count is
-     * managed by the AVBufferRef, and destroying the reference will release
-     * the interface.
+     * 帧所在的纹理。引用计数由 AVBufferRef 管理，销毁引用会释放接口。
      */
     ID3D12Resource *texture;
 
     /**
-     * Index of the subresource within the texture.
+     * 纹理内子资源的索引。
      *
-     * In texture array mode, this specifies the array slice index.
-     * When texture array mode is not used, this value is always 0.
+     * 纹理数组模式下指定数组切片索引；不使用纹理数组模式时始终为 0。
      */
     int subresource_index;
 
     /**
-     * The sync context for the texture
+     * 纹理的同步上下文
      *
      * @see: https://learn.microsoft.com/en-us/windows/win32/medfound/direct3d-12-video-overview#directx-12-fences
      */
     AVD3D12VASyncContext sync_ctx;
 
     /**
-     * A combination of AVD3D12VAFrameFlags.
-     * Set by AVD3D12VAFramesContext.
+     * AVD3D12VAFrameFlags 的组合。由 AVD3D12VAFramesContext 设置。
      */
     AVD3D12VAFrameFlags flags;
 } AVD3D12VAFrame;
 
 /**
- * @brief This struct is allocated as AVHWFramesContext.hwctx
+ * @brief 此结构体作为 AVHWFramesContext.hwctx 分配
  *
  */
 typedef struct AVD3D12VAFramesContext {
     /**
-     * DXGI_FORMAT format. MUST be compatible with the pixel format.
-     * If unset, will be automatically set.
+     * DXGI_FORMAT 格式。必须与像素格式兼容；未设置时自动设置。
      */
     DXGI_FORMAT format;
 
     /**
-     * Options for working with resources.
-     * If unset, this will be D3D12_RESOURCE_FLAG_NONE.
+     * 处理资源的选项。未设置时为 D3D12_RESOURCE_FLAG_NONE。
      *
      * @see https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_flags
      */
     D3D12_RESOURCE_FLAGS resource_flags;
 
     /**
-     * Options for working with heaps allocation when creating resources.
-     * If unset, this will be D3D12_HEAP_FLAG_NONE.
+     * 创建资源时处理堆分配的选项。未设置时为 D3D12_HEAP_FLAG_NONE。
      *
      * @see https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_flags
      */
     D3D12_HEAP_FLAGS heap_flags;
 
     /**
-     * In texture array mode, the D3D12 uses the same texture array (resource)for all
-     * pictures.
+     * 纹理数组模式下，D3D12 对所有图像使用同一个纹理数组（资源）。
      */
     ID3D12Resource *texture_array;
 
     /**
-     * A combination of AVD3D12VAFrameFlags. Unless AV_D3D12VA_FRAME_FLAG_NONE is set,
-     * autodetected flags will be OR'd based on the device and frame features during
-     * av_hwframe_ctx_init().
+     * AVD3D12VAFrameFlags 的组合。除非设置 AV_D3D12VA_FRAME_FLAG_NONE，
+     * av_hwframe_ctx_init() 期间会根据设备和帧特征按位 OR 自动检测的标志。
      */
     AVD3D12VAFrameFlags flags;
 } AVD3D12VAFramesContext;

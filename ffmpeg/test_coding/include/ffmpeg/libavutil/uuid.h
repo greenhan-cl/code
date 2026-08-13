@@ -1,30 +1,30 @@
-/*
- * Copyright (c) 2022 Pierre-Anthony Lemieux <pal@palemieux.com>
+﻿/*
+ * 复制right (c) 2022 Pierre-Anthony Lemieux <pal@palemieux.com>
  *                    Zane van Iperen <zane@zanevaniperen.com>
  *
- * This file is part of FFmpeg.
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 /**
  * @file
- * UUID parsing and serialization utilities.
- * The library treats the UUID as an opaque sequence of 16 unsigned bytes,
- * i.e. ignoring the internal layout of the UUID, which depends on the type
- * of the UUID.
+ * UUID parsing 和 serialization utilities.
+ * library treats the UUID as an opaque sequence 的 16 unsigned bytes,
+ * i.e. ignoring the internal layout 的 the UUID, which depends 上 the type
+ * 的 the UUID.
  *
  * @author Pierre-Anthony Lemieux <pal@palemieux.com>
  * @author Zane van Iperen <zane@zanevaniperen.com>
@@ -44,8 +44,8 @@
     "urn:uuid:%02hhx%02hhx%02hhx%02hhx-%02hhx%02hhx-" \
     "%02hhx%02hhx-%02hhx%02hhx-%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx"
 
-/* AV_UUID_ARG() is used together with AV_PRI_UUID() or AV_PRI_URN_UUID
- * to print UUIDs, e.g.
+/* AV_UUID_ARG() is 用于gether，使用 AV_PRI_UUID() 或 AV_PRI_URN_UUID
+ * 到 print UUIDs, e.g.
  * av_log(NULL, AV_LOG_DEBUG, "UUID: " AV_PRI_UUID, AV_UUID_ARG(uuid));
  */
 #define AV_UUID_ARG(x)                  \
@@ -56,65 +56,65 @@
 
 #define AV_UUID_LEN 16
 
-/* Binary representation of a UUID */
+/* Binary representation 的 a UUID */
 typedef uint8_t AVUUID[AV_UUID_LEN];
 
 /**
- * Parses a string representation of a UUID formatted according to IETF RFC 4122
- * into an AVUUID. The parsing is case-insensitive. The string must be 37
+ * 解析s a string representation 的 a UUID 格式ted according 到 IETF RFC 4122
+ * into an AVUUID. parsing is case-insensitive. string must be 37
  * characters long, including the terminating NUL character.
  *
  * Example string representation: "2fceebd0-7017-433d-bafb-d073a7116696"
  *
- * @param[in]  in  String representation of a UUID,
+ * @param[in]  中  String representation 的 a UUID,
  *                 e.g. 2fceebd0-7017-433d-bafb-d073a7116696
  * @param[out] uu  AVUUID
- * @return         A non-zero value in case of an error.
+ * @返回         non-zero 值 中 case 的 an error.
  */
 int av_uuid_parse(const char *in, AVUUID uu);
 
 /**
- * Parses a URN representation of a UUID, as specified at IETF RFC 4122,
- * into an AVUUID. The parsing is case-insensitive. The string must be 46
+ * 解析s a URN representation 的 a UUID, as spec如果ied at IETF RFC 4122,
+ * into an AVUUID. parsing is case-insensitive. string must be 46
  * characters long, including the terminating NUL character.
  *
  * Example string representation: "urn:uuid:2fceebd0-7017-433d-bafb-d073a7116696"
  *
- * @param[in]  in  URN UUID
+ * @param[in]  中  URN UUID
  * @param[out] uu  AVUUID
- * @return         A non-zero value in case of an error.
+ * @返回         non-zero 值 中 case 的 an error.
  */
 int av_uuid_urn_parse(const char *in, AVUUID uu);
 
 /**
- * Parses a string representation of a UUID formatted according to IETF RFC 4122
- * into an AVUUID. The parsing is case-insensitive.
+ * 解析s a string representation 的 a UUID 格式ted according 到 IETF RFC 4122
+ * into an AVUUID. parsing is case-insensitive.
  *
- * @param[in]  in_start Pointer to the first character of the string representation
- * @param[in]  in_end   Pointer to the character after the last character of the
- *                      string representation. That memory location is never
- *                      accessed. It is an error if `in_end - in_start != 36`.
+ * @param[in]  in_start 指针 到 the first character 的 the string representation
+ * @param[in]  in_end   指针 到 the character after the last character 的 the
+ *                      string representation. That 内存 location is never
+ *                      accessed. It is an error 如果 `in_end - in_start != 36`.
  * @param[out] uu       AVUUID
- * @return              A non-zero value in case of an error.
+ * @返回              non-zero 值 中 case 的 an error.
  */
 int av_uuid_parse_range(const char *in_start, const char *in_end, AVUUID uu);
 
 /**
- * Serializes a AVUUID into a string representation according to IETF RFC 4122.
- * The string is lowercase and always 37 characters long, including the
+ * Serializes a AVUUID into a string representation according 到 IETF RFC 4122.
+ * string is lowercase 和 always 37 characters long, including the
  * terminating NUL character.
  *
  * @param[in]  uu  AVUUID
- * @param[out] out Pointer to an array of no less than 37 characters.
+ * @param[out] out 指针 到 an 数组 的 no less than 37 characters.
  */
 void av_uuid_unparse(const AVUUID uu, char *out);
 
 /**
- * Compares two UUIDs for equality.
+ * Compares two UUIDs 用于 equality.
  *
  * @param[in]  uu1  AVUUID
  * @param[in]  uu2  AVUUID
- * @return          Nonzero if uu1 and uu2 are identical, 0 otherwise
+ * @返回          Nonzero 如果 uu1 和 uu2 are identical, 0 otherwise
  */
 static inline int av_uuid_equal(const AVUUID uu1, const AVUUID uu2)
 {
@@ -122,7 +122,7 @@ static inline int av_uuid_equal(const AVUUID uu1, const AVUUID uu2)
 }
 
 /**
- * Copies the bytes of src into dest.
+ * Copies the bytes 的 src into dest.
  *
  * @param[out]  dest  AVUUID
  * @param[in]   src   AVUUID
@@ -133,10 +133,10 @@ static inline void av_uuid_copy(AVUUID dest, const AVUUID src)
 }
 
 /**
- * Sets a UUID to the nil UUID, i.e. a UUID with have all
- * its 128 bits set to zero.
+ * 设置s a UUID 到 the nil UUID, i.e. a UUID，使用 have all
+ * its 128 bits 设置 到 zero.
  *
- * @param[in,out]  uu  UUID to be set to the nil UUID
+ * @param[in,out]  uu  UUID 到 be 设置 到 the nil UUID
  */
 static inline void av_uuid_nil(AVUUID uu)
 {

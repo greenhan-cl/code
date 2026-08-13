@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2007 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -21,7 +21,7 @@
 /**
  * @file
  * @ingroup lavu_sha
- * Public header for SHA-1 & SHA-256 hash function implementations.
+ * SHA-1 和 SHA-256 哈希函数实现的公共头文件。
  */
 
 #ifndef AVUTIL_SHA_H
@@ -35,15 +35,15 @@
 /**
  * @defgroup lavu_sha SHA
  * @ingroup lavu_hash
- * SHA-1 and SHA-256 (Secure Hash Algorithm) hash function implementations.
+ * SHA-1 和 SHA-256（安全哈希算法）哈希函数实现。
  *
- * This module supports the following SHA hash functions:
+ * 此模块支持以下 SHA 哈希函数：
  *
  * - SHA-1: 160 bits
  * - SHA-224: 224 bits, as a variant of SHA-2
  * - SHA-256: 256 bits, as a variant of SHA-2
  *
- * @see For SHA-384, SHA-512, and variants thereof, see @ref lavu_sha512.
+ * @see SHA-384、SHA-512 及其变体参见 @ref lavu_sha512 。
  *
  * @{
  */
@@ -53,33 +53,33 @@ extern const int av_sha_size;
 struct AVSHA;
 
 /**
- * Allocate an AVSHA context.
+ * 分配 AVSHA 上下文。
  */
 struct AVSHA *av_sha_alloc(void);
 
 /**
- * Initialize SHA-1 or SHA-2 hashing.
+ * 初始化 SHA-1 或 SHA-2 哈希计算。
  *
- * @param context pointer to the function context (of size av_sha_size)
- * @param bits    number of bits in digest (SHA-1 - 160 bits, SHA-2 224 or 256 bits)
- * @return        zero if initialization succeeded, -1 otherwise
+ * @param context 指向函数上下文的指针（大小为 av_sha_size）
+ * @param bits    摘要位数（SHA-1 为 160 位，SHA-2 为 224 或 256 位）
+ * @return        初始化成功返回 0，否则返回 -1
  */
 int av_sha_init(struct AVSHA* context, int bits);
 
 /**
- * Update hash value.
+ * 更新哈希值。
  *
- * @param ctx     hash function context
- * @param data    input data to update hash with
- * @param len     input data length
+ * @param ctx     哈希函数上下文
+ * @param data    用于更新哈希的输入数据
+ * @param len     输入数据长度
  */
 void av_sha_update(struct AVSHA *ctx, const uint8_t *data, size_t len);
 
 /**
- * Finish hashing and output digest value.
+ * 完成哈希计算并输出摘要值。
  *
- * @param context hash function context
- * @param digest  buffer where output digest value is stored
+ * @param context 哈希函数上下文
+ * @param digest  存储输出摘要值的缓冲区
  */
 void av_sha_final(struct AVSHA* context, uint8_t *digest);
 

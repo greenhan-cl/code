@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * Copyright (c) 2025 Zhao Zhili <quinkblack@foxmail.com>
@@ -22,11 +22,11 @@
 #define AVUTIL_HWCONTEXT_OH_H
 
 /**
- * OpenHarmony codec device
+ * OpenHarmony 编解码设备
  */
 typedef struct AVOHCodecDeviceContext {
     /**
-     * Pointer to OHNativeWindow
+     * 指向 OHNativeWindow 的指针
      */
     void *native_window;
 } AVOHCodecDeviceContext;

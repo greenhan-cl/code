@@ -1,25 +1,25 @@
-/*
- * This file is part of FFmpeg.
+﻿/*
+ * This file is part 的 FFmpeg.
  *
- * FFmpeg is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * FFmpeg is 释放 software; you can redistribute it and/or
+ * mod如果y it under the terms 的 the GNU Lesser General 公共
+ * License as published by the 释放 Software Foundation; either
+ * version 2.1 的 the License, 或 (at your 选项) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * FFmpeg is distributed 中 the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY 或 FITNESS FOR PARTICULAR PURPOSE.  参见 the GNU
+ * Lesser General 公共 License 用于 more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a 复制 的 the GNU Lesser General 公共
+ * License along，使用 FFmpeg; 如果 not, write 到 the 释放 Software
+ * Foundation, Inc., 51 Franklin Street, F如果th Floor, Boston, M02110-1301 USA
  */
 
 /**
  * @file
- * @ingroup lavu_frame
- * reference-counted frame API
+ * @ingroup lavu_帧
+ * 引用-counted 帧 API
  */
 
 #ifndef AVUTIL_FRAME_H
@@ -39,270 +39,270 @@
 
 
 /**
- * @defgroup lavu_frame AVFrame
+ * @defgroup lavu_帧 AV帧
  * @ingroup lavu_data
  *
  * @{
- * AVFrame is an abstraction for reference-counted raw multimedia data.
+ * AV帧 is an abstraction 用于 引用-counted raw multimedia data.
  */
 
 enum AVFrameSideDataType {
     /**
-     * The data is the AVPanScan struct defined in libavcodec.
+     * data is the AVPanScan struct defined 中 libavcodec.
      */
     AV_FRAME_DATA_PANSCAN,
     /**
      * ATSC A53 Part 4 Closed Captions.
-     * A53 CC bitstream is stored as uint8_t in AVFrameSideData.data.
-     * The number of bytes of CC data is AVFrameSideData.size.
+     * A53 CC bitstream is stored as uint8_t 中 AV帧SideData.data.
+     * 数量 的 bytes 的 CC data is AV帧SideData.大小.
      */
     AV_FRAME_DATA_A53_CC,
     /**
-     * Stereoscopic 3d metadata.
-     * The data is the AVStereo3D struct defined in libavutil/stereo3d.h.
+     * Stereoscopic 3d 元数据.
+     * data is the AVStereo3D struct defined 中 libavutil/stereo3d.h.
      */
     AV_FRAME_DATA_STEREO3D,
     /**
-     * The data is the AVMatrixEncoding enum defined in libavutil/channel_layout.h.
+     * data is the AVMatrix编码 enum defined 中 libavutil/声道_layout.h.
      */
     AV_FRAME_DATA_MATRIXENCODING,
     /**
-     * Metadata relevant to a downmix procedure.
-     * The data is the AVDownmixInfo struct defined in libavutil/downmix_info.h.
+     * 元数据 relevant 到 a downmix procedure.
+     * data is the AVDownmixInfo struct defined 中 libavutil/downmix_info.h.
      */
     AV_FRAME_DATA_DOWNMIX_INFO,
     /**
-     * ReplayGain information in the form of the AVReplayGain struct.
+     * ReplayGain in格式ion 中 the form 的 the AVReplayGain struct.
      */
     AV_FRAME_DATA_REPLAYGAIN,
     /**
-     * This side data contains a 3x3 transformation matrix describing an affine
-     * transformation that needs to be applied to the frame for correct
+     * This side data 包含 a 3x3 trans格式ion matrix describing an affine
+     * trans格式ion that needs 到 be applied 到 the 帧 用于 correct
      * presentation.
      *
-     * See libavutil/display.h for a detailed description of the data.
+     * 参见 libavutil/display.h 用于 a detailed 描述 的 the data.
      */
     AV_FRAME_DATA_DISPLAYMATRIX,
     /**
-     * Active Format Description data consisting of a single byte as specified
-     * in ETSI TS 101 154 using AVActiveFormatDescription enum.
+     * Active 格式 描述 data consisting 的 a single byte as spec如果ied
+     * 中 ETSI TS 101 154 using AVActive格式描述 enum.
      */
     AV_FRAME_DATA_AFD,
     /**
      * Motion vectors exported by some codecs (on demand through the export_mvs
-     * flag set in the libavcodec AVCodecContext flags2 option).
-     * The data is the AVMotionVector struct defined in
+     * 标志 设置 中 the libavcodec AVCodec上下文 标志2 选项).
+     * data is the AVMotionVector struct defined in
      * libavutil/motion_vector.h.
      */
     AV_FRAME_DATA_MOTION_VECTORS,
     /**
-     * Recommends skipping the specified number of samples. This is exported
-     * only if the "skip_manual" AVOption is set in libavcodec.
-     * This has the same format as AV_PKT_DATA_SKIP_SAMPLES.
+     * Recommends skipping the spec如果ied 数量 的 采样s. This is exported
+     * only 如果 the "skip_manual" AV选项 is 设置 中 libavcodec.
+     * This has the same 格式 as AV_PKT_DATA_SKIP_采样S.
      * @code
-     * u32le number of samples to skip from start of this packet
-     * u32le number of samples to skip from end of this packet
-     * u8    reason for start skip
-     * u8    reason for end   skip (0=padding silence, 1=convergence)
+     * u32le 数量 的 采样s 到 skip，来自 start 的 this packet
+     * u32le 数量 的 采样s 到 skip，来自 end 的 this packet
+     * u8    reason 用于 start skip
+     * u8    reason 用于 end   skip (0=padding silence, 1=convergence)
      * @endcode
      */
     AV_FRAME_DATA_SKIP_SAMPLES,
     /**
-     * This side data must be associated with an audio frame and corresponds to
-     * enum AVAudioServiceType defined in avcodec.h.
+     * This side data must be associated，使用 an 音频 帧 和 corresponds to
+     * enum AV音频ServiceType defined 中 avcodec.h.
      */
     AV_FRAME_DATA_AUDIO_SERVICE_TYPE,
     /**
-     * Mastering display metadata associated with a video frame. The payload is
-     * an AVMasteringDisplayMetadata type and contains information about the
+     * Mastering display 元数据 associated，使用 a 视频 帧. payload is
+     * an AVMasteringDisplay元数据 type 和 包含 in格式ion about the
      * mastering display color volume.
      */
     AV_FRAME_DATA_MASTERING_DISPLAY_METADATA,
     /**
-     * The GOP timecode in 25 bit timecode format. Data format is 64-bit integer.
-     * This is set on the first frame of a GOP that has a temporal reference of 0.
+     * GOP timecode 中 25 bit timecode 格式. Data 格式 is 64-bit integer.
+     * This is 设置 上 the first 帧 的 a GOP that has a temporal 引用 的 0.
      */
     AV_FRAME_DATA_GOP_TIMECODE,
 
     /**
-     * The data represents the AVSphericalMapping structure defined in
+     * data represents the AVSphericalMapping 结构体 defined in
      * libavutil/spherical.h.
      */
     AV_FRAME_DATA_SPHERICAL,
 
     /**
-     * Content light level (based on CTA-861.3). This payload contains data in
-     * the form of the AVContentLightMetadata struct.
+     * Content light level (based 上 CTA-861.3). This payload 包含 data in
+     * the form 的 the AVContentLight元数据 struct.
      */
     AV_FRAME_DATA_CONTENT_LIGHT_LEVEL,
 
     /**
-     * The data contains an ICC profile as an opaque octet buffer following the
-     * format described by ISO 15076-1 with an optional name defined in the
-     * metadata key entry "name".
+     * data 包含 an ICC profile as an opaque octet 缓冲区 following the
+     * 格式 described by ISO 15076-1，使用 an 可选 name defined 中 the
+     * 元数据 key entry "name".
      */
     AV_FRAME_DATA_ICC_PROFILE,
 
     /**
-     * Timecode which conforms to SMPTE ST 12-1. The data is an array of 4 uint32_t
-     * where the first uint32_t describes how many (1-3) of the other timecodes are used.
-     * The timecode format is described in the documentation of av_timecode_get_smpte_from_framenum()
-     * function in libavutil/timecode.h.
+     * Timecode which conforms 到 SMPTE ST 12-1. data is an 数组 的 4 uint32_t
+     * where the first uint32_t describes how many (1-3) 的 the other timecodes are used.
+     * timecode 格式 is described 中 the documentation 的 av_timecode_get_smpte_from_帧num()
+     * function 中 libavutil/timecode.h.
      */
     AV_FRAME_DATA_S12M_TIMECODE,
 
     /**
-     * HDR dynamic metadata associated with a video frame. The payload is
-     * an AVDynamicHDRPlus type and contains information for color
-     * volume transform - application 4 of SMPTE 2094-40:2016 standard.
+     * HDR dynamic 元数据 associated，使用 a 视频 帧. payload is
+     * an AVDynamicHDRPlus type 和 包含 in格式ion 用于 color
+     * volume transform - application 4 的 SMPTE 2094-40:2016 standard.
      */
     AV_FRAME_DATA_DYNAMIC_HDR_PLUS,
 
     /**
-     * Regions Of Interest, the data is an array of AVRegionOfInterest type, the number of
-     * array element is implied by AVFrameSideData.size / AVRegionOfInterest.self_size.
+     * Regions Of Interest, the data is an 数组 的 AVRegionOfInterest type, the 数量 of
+     * 数组 element is implied by AV帧SideData.大小 / AVRegionOfInterest.self_大小.
      */
     AV_FRAME_DATA_REGIONS_OF_INTEREST,
 
     /**
-     * Encoding parameters for a video frame, as described by AVVideoEncParams.
+     * 编码 parameters 用于 a 视频 帧, as described by AV视频EncParams.
      */
     AV_FRAME_DATA_VIDEO_ENC_PARAMS,
 
     /**
-     * User data unregistered metadata associated with a video frame.
-     * This is the H.26[45] UDU SEI message, and shouldn't be used for any other purpose
-     * The data is stored as uint8_t in AVFrameSideData.data which is 16 bytes of
-     * uuid_iso_iec_11578 followed by AVFrameSideData.size - 16 bytes of user_data_payload_byte.
+     * User data unregistered 元数据 associated，使用 a 视频 帧.
+     * This is the H.26[45] UDU SEI message, 和 shouldn't be 用于 any other purpose
+     * data is stored as uint8_t 中 AV帧SideData.data which is 16 bytes of
+     * uuid_iso_iec_11578 followed by AV帧SideData.大小 - 16 bytes 的 user_data_payload_byte.
      */
     AV_FRAME_DATA_SEI_UNREGISTERED,
 
     /**
-     * Film grain parameters for a frame, described by AVFilmGrainParams.
-     * Must be present for every frame which should have film grain applied.
+     * Film grain parameters 用于 a 帧, described by AVFilmGrainParams.
+     * Must be present 用于 every 帧 which should have film grain applied.
      *
-     * May be present multiple times, for example when there are multiple
-     * alternative parameter sets for different video signal characteristics.
-     * The user should select the most appropriate set for the application.
+     * May be present multiple times, 用于 example 当 there are multiple
+     * alternative parameter 设置s 用于 d如果ferent 视频 signal characteristics.
+     * user should select the most appropriate 设置 用于 the application.
      */
     AV_FRAME_DATA_FILM_GRAIN_PARAMS,
 
     /**
-     * Bounding boxes for object detection and classification,
+     * Bounding boxes 用于 object detection 和 class如果ication,
      * as described by AVDetectionBBoxHeader.
      */
     AV_FRAME_DATA_DETECTION_BBOXES,
 
     /**
-     * Dolby Vision RPU raw data, suitable for passing to x265
-     * or other libraries. Array of uint8_t, with NAL emulation
+     * Dolby Vision RPU raw data, suitable 用于 passing 到 x265
+     * 或 other libraries. 数组 的 uint8_t,，使用 NAL emulation
      * bytes intact.
      */
     AV_FRAME_DATA_DOVI_RPU_BUFFER,
 
     /**
-     * Parsed Dolby Vision metadata, suitable for passing to a software
-     * implementation. The payload is the AVDOVIMetadata struct defined in
+     * 解析d Dolby Vision 元数据, suitable 用于 passing 到 a software
+     * implementation. payload is the AVDOVI元数据 struct defined in
      * libavutil/dovi_meta.h.
      */
     AV_FRAME_DATA_DOVI_METADATA,
 
     /**
-     * HDR Vivid dynamic metadata associated with a video frame. The payload is
-     * an AVDynamicHDRVivid type and contains information for color
-     * volume transform - CUVA 005.1-2021.
+     * HDR Vivid dynamic 元数据 associated，使用 a 视频 帧. payload is
+     * an AVDynamicHDRVivid type 和 包含 in格式ion 用于 color
+     * volume transform - CUV005.1-2021.
      */
     AV_FRAME_DATA_DYNAMIC_HDR_VIVID,
 
     /**
-     * Ambient viewing environment metadata, as defined by H.274.
+     * Ambient viewing environment 元数据, as defined by H.274.
      */
     AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT,
 
     /**
-     * Provide encoder-specific hinting information about changed/unchanged
-     * portions of a frame.  It can be used to pass information about which
-     * macroblocks can be skipped because they didn't change from the
-     * corresponding ones in the previous frame. This could be useful for
-     * applications which know this information in advance to speed up
-     * encoding.
+     * Provide 编码器-spec如果ic hinting in格式ion about changed/unchanged
+     * portions 的 a 帧.  It 可用于 到 pass in格式ion about which
+     * macroblocks can be skipped because they didn't change，来自 the
+     * corresponding ones 中 the previous 帧. This could be useful for
+     * applications which know this in格式ion 中 advance 到 speed up
+     * 编码.
      */
     AV_FRAME_DATA_VIDEO_HINT,
 
     /**
-     * Raw LCEVC payload data, as a uint8_t array, with NAL emulation
+     * Raw LCEVC payload data, as a uint8_t 数组,，使用 NAL emulation
      * bytes intact.
      */
     AV_FRAME_DATA_LCEVC,
 
     /**
-     * This side data must be associated with a video frame.
-     * The presence of this side data indicates that the video stream is
-     * composed of multiple views (e.g. stereoscopic 3D content,
-     * cf. H.264 Annex H or H.265 Annex G).
-     * The data is an int storing the view ID.
+     * This side data must be associated，使用 a 视频 帧.
+     * presence 的 this side data indicates that the 视频 stream is
+     * composed 的 multiple views (e.g. stereoscopic 3D content,
+     * cf. H.264 Annex H 或 H.265 Annex G).
+     * data is an int storing the view ID.
      */
     AV_FRAME_DATA_VIEW_ID,
 
     /**
-     * This side data contains information about the reference display width(s)
-     * and reference viewing distance(s) as well as information about the
-     * corresponding reference stereo pair(s), i.e., the pair(s) of views to be
-     * displayed for the viewer's left and right eyes on the reference display
-     * at the reference viewing distance.
-     * The payload is the AV3DReferenceDisplaysInfo struct defined in
+     * This side data 包含 in格式ion about the 引用 display 宽度(s)
+     * 和 引用 viewing distance(s) as well as in格式ion about the
+     * corresponding 引用 stereo pair(s), i.e., the pair(s) 的 views 到 be
+     * displayed 用于 the viewer's left 和 right eyes 上 the 引用 display
+     * at the 引用 viewing distance.
+     * payload is the AV3D引用DisplaysInfo struct defined in
      * libavutil/tdrdi.h.
      */
     AV_FRAME_DATA_3D_REFERENCE_DISPLAYS,
 
     /**
-     * Exchangeable image file format metadata. The payload is a buffer containing
-     * EXIF metadata, starting with either 49 49 2a 00, or 4d 4d 00 2a. These four
-     * bytes signify the endianness, and occur as the first part of the TIFF header.
+     * Exchangeable image file 格式 元数据. payload is a 缓冲区 containing
+     * EX如果 元数据, starting，使用 either 49 49 2a 00, 或 4d 4d 00 2a. These four
+     * bytes sign如果y the endianness, 和 occur as the first part 的 the T如果F header.
      */
     AV_FRAME_DATA_EXIF,
 
     /**
-     * HDR dynamic metadata associated with a video frame. The payload is
-     * an AVDynamicHDRSmpte2094App5 type and contains information for color
-     * volume transform as specified in the SMPTE 2094-50 standard.
+     * HDR dynamic 元数据 associated，使用 a 视频 帧. payload is
+     * an AVDynamicHDRSmpte2094App5 type 和 包含 in格式ion 用于 color
+     * volume transform as spec如果ied 中 the SMPTE 2094-50 standard.
      */
     AV_FRAME_DATA_DYNAMIC_HDR_SMPTE_2094_APP5,
 
     /**
-     * IAMF Mix Gain Parameter Data associated with the audio frame. This metadata
-     * is in the form of the AVIAMFParamDefinition struct and contains information
-     * defined in sections 3.6.1 and 3.8.1 of the Immersive Audio Model and
-     * Formats standard.
+     * IAMF Mix Gain Parameter Data associated，使用 the 音频 帧. This 元数据
+     * is 中 the form 的 the AVIAMFParamDefinition struct 和 包含 in格式ion
+     * defined 中 sections 3.6.1 和 3.8.1 的 the Immersive 音频 Model and
+     * 格式s standard.
      */
     AV_FRAME_DATA_IAMF_MIX_GAIN_PARAM,
 
     /**
-    * IAMF Demixing Info Parameter Data associated with the audio frame. This
-    * metadata is in the form of the AVIAMFParamDefinition struct and contains
-    * information defined in sections 3.6.1 and 3.8.2 of the Immersive Audio Model
-    * and Formats standard.
+    * IAMF Demixing Info Parameter Data associated，使用 the 音频 帧. This
+    * 元数据 is 中 the form 的 the AVIAMFParamDefinition struct 和 包含
+    * in格式ion defined 中 sections 3.6.1 和 3.8.2 的 the Immersive 音频 Model
+    * 和 格式s standard.
     */
     AV_FRAME_DATA_IAMF_DEMIXING_INFO_PARAM,
 
     /**
-    * IAMF Recon Gain Info Parameter Data associated with the audio frame. This
-    * metadata is in the form of the AVIAMFParamDefinition struct and contains
-    * information defined in sections 3.6.1 and 3.8.3 of the Immersive Audio Model
-    * and Formats standard.
+    * IAMF Recon Gain Info Parameter Data associated，使用 the 音频 帧. This
+    * 元数据 is 中 the form 的 the AVIAMFParamDefinition struct 和 包含
+    * in格式ion defined 中 sections 3.6.1 和 3.8.3 的 the Immersive 音频 Model
+    * 和 格式s standard.
     */
     AV_FRAME_DATA_IAMF_RECON_GAIN_INFO_PARAM,
 
     /**
-     * Color information from a RAW camera codecs, needed to correctly process
-     * the video data. The payload is an AVRawColorParams struct defined in
+     * Color in格式ion，来自 a RAW camera codecs, needed 到 correctly process
+     * the 视频 data. payload is an AVRawColorParams struct defined in
      * libavutil/raw_color_params.h.
      */
     AV_FRAME_DATA_RAW_COLOR_PARAMS,
 
     /**
-     * Metadata relevant to a downmix procedure in the form of a remixig matrix.
-     * The data is the AVDownmixMatrix struct defined in libavutil/downmix_info.h.
+     * 元数据 relevant 到 a downmix procedure 中 the form 的 a remixig matrix.
+     * data is the AVDownmixMatrix struct defined 中 libavutil/downmix_info.h.
      */
     AV_FRAME_DATA_DOWNMIX_MATRIX,
 };
@@ -319,10 +319,10 @@ enum AVActiveFormatDescription {
 
 
 /**
- * Structure to hold side data for an AVFrame.
+ * 结构体 到 hold side data 用于 an AV帧.
  *
- * sizeof(AVFrameSideData) is not a part of the public ABI, so new fields may be added
- * to the end with a minor bump.
+ * 大小of(AV帧SideData) is not a part 的 the 公共 ABI, so new fields may be added
+ * 到 the end，使用 a minor bump.
  */
 typedef struct AVFrameSideData {
     enum AVFrameSideDataType type;
@@ -334,80 +334,80 @@ typedef struct AVFrameSideData {
 
 enum AVSideDataProps {
     /**
-     * The side data type can be used in stream-global structures.
-     * Side data types without this property are only meaningful on per-frame
+     * side data type 可用于 中 stream-global 结构体s.
+     * Side data types without this property are only meaningful 上 per-帧
      * basis.
      */
     AV_SIDE_DATA_PROP_GLOBAL = (1 << 0),
 
     /**
-     * Multiple instances of this side data type can be meaningfully present in
-     * a single side data array.
+     * Multiple instances 的 this side data type can be meaningfully present in
+     * a single side data 数组.
      */
     AV_SIDE_DATA_PROP_MULTI  = (1 << 1),
 
     /**
-     * Side data depends on the video dimensions. Side data with this property
-     * loses its meaning when rescaling or cropping the image, unless
-     * either recomputed or adjusted to the new resolution.
+     * Side data depends 上 the 视频 dimensions. Side data，使用 this property
+     * loses its meaning 当 rescaling 或 cropping the image, unless
+     * either recomputed 或 adjusted 到 the new resolution.
      */
     AV_SIDE_DATA_PROP_SIZE_DEPENDENT = (1 << 2),
 
     /**
-     * Side data depends on the video color space. Side data with this property
-     * loses its meaning when changing the video color encoding, e.g. by
-     * adapting to a different set of primaries or transfer characteristics.
+     * Side data depends 上 the 视频 color space. Side data，使用 this property
+     * loses its meaning 当 changing the 视频 color 编码, e.g. by
+     * adapting 到 a d如果ferent 设置 的 primaries 或 transfer characteristics.
      */
     AV_SIDE_DATA_PROP_COLOR_DEPENDENT = (1 << 3),
 
     /**
-     * Side data depends on the channel layout. Side data with this property
-     * loses its meaning when downmixing or upmixing, unless either recomputed
-     * or adjusted to the new layout.
+     * Side data depends 上 the 声道布局. Side data，使用 this property
+     * loses its meaning 当 downmixing 或 upmixing, unless either recomputed
+     * 或 adjusted 到 the new layout.
      */
     AV_SIDE_DATA_PROP_CHANNEL_DEPENDENT = (1 << 4),
 };
 
 /**
- * This struct describes the properties of a side data type. Its instance
- * corresponding to a given type can be obtained from av_frame_side_data_desc().
+ * This struct describes the properties 的 a side data type. Its instance
+ * corresponding 到 a given type can be obtained，来自 av_帧_side_data_desc().
  */
 typedef struct AVSideDataDescriptor {
     /**
-     * Human-readable side data description.
+     * Human-readable side data 描述.
      */
     const char      *name;
 
     /**
-     * Side data property flags, a combination of AVSideDataProps values.
+     * Side data property 标志, a combination 的 AVSideDataProps 值.
      */
     unsigned         props;
 } AVSideDataDescriptor;
 
 /**
- * Structure describing a single Region Of Interest.
+ * 结构体 describing a single Region Of Interest.
  *
- * When multiple regions are defined in a single side-data block, they
- * should be ordered from most to least important - some encoders are only
- * capable of supporting a limited number of distinct regions, so will have
- * to truncate the list.
+ * 当 multiple regions are defined 中 a single side-data block, they
+ * should be ordered，来自 most 到 least important - some 编码器s are only
+ * capable 的 supporting a limited 数量 的 distinct regions, so will have
+ * 到 truncate the 列表.
  *
- * When overlapping regions are defined, the first region containing a given
- * area of the frame applies.
+ * 当 overlapping regions are defined, the first region containing a given
+ * area 的 the 帧 applies.
  */
 typedef struct AVRegionOfInterest {
     /**
-     * Must be set to the size of this data structure (that is,
-     * sizeof(AVRegionOfInterest)).
+     * Must be 设置 到 the 大小 的 this data 结构体 (that is,
+     * 大小of(AVRegionOfInterest)).
      */
     uint32_t self_size;
     /**
-     * Distance in pixels from the top edge of the frame to the top and
-     * bottom edges and from the left edge of the frame to the left and
-     * right edges of the rectangle defining this region of interest.
+     * Distance 中 像素s，来自 the top edge 的 the 帧 到 the top and
+     * bottom edges and，来自 the left edge 的 the 帧 到 the left and
+     * right edges 的 the rectangle defining this region 的 interest.
      *
-     * The constraints on a region are encoder dependent, so the region
-     * actually affected may be slightly larger for alignment or other
+     * constraints 上 a region are 编码器 dependent, so the region
+     * actually affected may be slightly larger 用于 alignment 或 other
      * reasons.
      */
     int top;
@@ -415,129 +415,129 @@ typedef struct AVRegionOfInterest {
     int left;
     int right;
     /**
-     * Quantisation offset.
+     * Quantisation off设置.
      *
-     * Must be in the range -1 to +1.  A value of zero indicates no quality
-     * change.  A negative value asks for better quality (less quantisation),
-     * while a positive value asks for worse quality (greater quantisation).
+     * Must be 中 the range -1 到 +1.  值 的 zero indicates no quality
+     * change.  negative 值 asks 用于 better quality (less quantisation),
+     * while a positive 值 asks 用于 worse quality (greater quantisation).
      *
-     * The range is calibrated so that the extreme values indicate the
-     * largest possible offset - if the rest of the frame is encoded with the
-     * worst possible quality, an offset of -1 indicates that this region
-     * should be encoded with the best possible quality anyway.  Intermediate
-     * values are then interpolated in some codec-dependent way.
+     * range is calibrated so that the extreme 值 indicate the
+     * largest possible off设置 - 如果 the rest 的 the 帧 is encoded，使用 the
+     * worst possible quality, an off设置 的 -1 indicates that this region
+     * should be encoded，使用 the best possible quality anyway.  Intermediate
+     * 值 are then interpolated 中 some codec-dependent way.
      *
-     * For example, in 10-bit H.264 the quantisation parameter varies between
-     * -12 and 51.  A typical qoffset value of -1/10 therefore indicates that
-     * this region should be encoded with a QP around one-tenth of the full
-     * range better than the rest of the frame.  So, if most of the frame
-     * were to be encoded with a QP of around 30, this region would get a QP
-     * of around 24 (an offset of approximately -1/10 * (51 - -12) = -6.3).
-     * An extreme value of -1 would indicate that this region should be
-     * encoded with the best possible quality regardless of the treatment of
-     * the rest of the frame - that is, should be encoded at a QP of -12.
+     * For example, 中 10-bit H.264 the quantisation parameter varies between
+     * -12 和 51.  typical qoff设置 值 的 -1/10 therefore indicates that
+     * this region should be encoded，使用 a QP around one-tenth 的 the full
+     * range better than the rest 的 the 帧.  So, 如果 most 的 the 帧
+     * were 到 be encoded，使用 a QP 的 around 30, this region would get a QP
+     * 的 around 24 (an off设置 的 approximately -1/10 * (51 - -12) = -6.3).
+     * extreme 值 的 -1 would indicate that this region should be
+     * encoded，使用 the best possible quality regardless 的 the treatment of
+     * the rest 的 the 帧 - that is, should be encoded at a QP 的 -12.
      */
     AVRational qoffset;
 } AVRegionOfInterest;
 
 /**
- * This structure describes decoded (raw) audio or video data.
+ * 此结构体 describes decoded (raw) 音频 或 视频 data.
  *
- * AVFrame must be allocated using av_frame_alloc(). Note that this only
- * allocates the AVFrame itself, the buffers for the data must be managed
- * through other means (see below).
- * AVFrame must be freed with av_frame_free().
+ * AV帧 must be 分配d using av_帧_alloc(). Note that this only
+ * 分配s the AV帧 itself, the 缓冲区 用于 the data must be managed
+ * through other means (参见 below).
+ * AV帧 must be 释放d，使用 av_帧_释放().
  *
- * AVFrame is typically allocated once and then reused multiple times to hold
- * different data (e.g. a single AVFrame to hold frames received from a
- * decoder). In such a case, av_frame_unref() will free any references held by
- * the frame and reset it to its original clean state before it
+ * AV帧 is typically 分配d once 和 then reused multiple times 到 hold
+ * d如果ferent data (e.g. a single AV帧 到 hold 帧s received，来自 a
+ * 解码器). In such a case, av_帧_unref() will 释放 any 引用s held by
+ * the 帧 和 re设置 it 到 its original clean state before it
  * is reused again.
  *
- * The data described by an AVFrame is usually reference counted through the
- * AVBuffer API. The underlying buffer references are stored in AVFrame.buf /
- * AVFrame.extended_buf. An AVFrame is considered to be reference counted if at
- * least one reference is set, i.e. if AVFrame.buf[0] != NULL. In such a case,
- * every single data plane must be contained in one of the buffers in
- * AVFrame.buf or AVFrame.extended_buf.
- * There may be a single buffer for all the data, or one separate buffer for
- * each plane, or anything in between.
+ * data described by an AV帧 is usually 引用 counted through the
+ * AV缓冲区 API. underlying 缓冲区 引用s are stored 中 AV帧.buf /
+ * AV帧.extended_buf. AV帧 is considered 到 be 引用 counted 如果 at
+ * least one 引用 is 设置, i.e. 如果 AV帧.buf[0] != NULL. In such a case,
+ * every single data plane must be contained 中 one 的 the 缓冲区 in
+ * AV帧.buf 或 AV帧.extended_buf.
+ * There may be a single 缓冲区 用于 all the data, 或 one separate 缓冲区 for
+ * each plane, 或 anything 中 between.
  *
- * sizeof(AVFrame) is not a part of the public ABI, so new fields may be added
- * to the end with a minor bump.
+ * 大小of(AV帧) is not a part 的 the 公共 ABI, so new fields may be added
+ * 到 the end，使用 a minor bump.
  *
- * Fields can be accessed through AVOptions, the name string used, matches the
- * C structure field name for fields accessible through AVOptions.
+ * Fields can be accessed through AV选项, the name string used, matches the
+ * C 结构体 field name 用于 fields accessible through AV选项.
  */
 typedef struct AVFrame {
 #define AV_NUM_DATA_POINTERS 8
     /**
-     * pointer to the picture/channel planes.
-     * This might be different from the first allocated byte. For video,
-     * it could even point to the end of the image data.
+     * 指针 到 the picture/声道 planes.
+     * This might be d如果ferent，来自 the first 分配d byte. For 视频,
+     * it could even point 到 the end 的 the image data.
      *
-     * All pointers in data and extended_data must point into one of the
-     * AVBufferRef in buf or extended_buf.
+     * All 指针s 中 data 和 extended_data must point into one 的 the
+     * AV缓冲区Ref 中 buf 或 extended_buf.
      *
-     * Some decoders access areas outside 0,0 - width,height, please
-     * see avcodec_align_dimensions2(). Some filters and swscale can read
-     * up to 16 bytes beyond the planes, if these filters are to be used,
-     * then 16 extra bytes must be allocated.
+     * Some 解码器s access areas outside 0,0 - 宽度,高度, please
+     * 参见 avcodec_align_dimensions2(). Some filters 和 swscale can read
+     * up 到 16 bytes beyond the planes, 如果 these filters are 到 be used,
+     * then 16 extra bytes must be 分配d.
      *
-     * NOTE: Pointers not needed by the format MUST be set to NULL.
+     * NOTE: 指针s not needed by the 格式 MUST be 设置 到 NULL.
      *
-     * @attention In case of video, the data[] pointers can point to the
-     * end of image data in order to reverse line order, when used in
-     * combination with negative values in the linesize[] array.
+     * @attention In case 的 视频, the data[] 指针s can point 到 the
+     * end 的 image data 中 order 到 reverse line order, 当 used in
+     * combination，使用 negative 值 中 the line大小[] 数组.
      */
     uint8_t *data[AV_NUM_DATA_POINTERS];
 
     /**
-     * For video, a positive or negative value, which is typically indicating
-     * the size in bytes of each picture line, but it can also be:
-     * - the negative byte size of lines for vertical flipping
-     *   (with data[n] pointing to the end of the data
-     * - a positive or negative multiple of the byte size as for accessing
-     *   even and odd fields of a frame (possibly flipped)
+     * For 视频, a positive 或 negative 值, which is typically indicating
+     * the 大小 中 bytes 的 each picture line, but it can also be:
+     * - the negative byte 大小 的 lines 用于 vertical flipping
+     *   (with data[n] pointing 到 the end 的 the data
+     * - a positive 或 negative multiple 的 the byte 大小 as 用于 accessing
+     *   even 和 odd fields 的 a 帧 (possibly flipped)
      *
-     * For audio, only linesize[0] may be set. For planar audio, each channel
-     * plane must be the same size.
+     * For 音频, only line大小[0] may be 设置. For planar 音频, each 声道
+     * plane must be the same 大小.
      *
-     * For video the linesizes should be multiples of the CPUs alignment
-     * preference, this is 16 or 32 for modern desktop CPUs.
+     * For 视频 the line大小s should be multiples 的 the CPUs alignment
+     * p引用, this is 16 或 32 用于 modern desktop CPUs.
      * Some code requires such alignment other code can be slower without
-     * correct alignment, for yet other it makes no difference.
+     * correct alignment, 用于 yet other it makes no d如果ference.
      *
-     * @note The linesize may be larger than the size of usable data -- there
-     * may be extra padding present for performance reasons.
+     * @note line大小 may be larger than the 大小 的 usable data -- there
+     * may be extra padding present 用于 performance reasons.
      *
-     * @attention In case of video, line size values can be negative to achieve
+     * @attention In case 的 视频, line 大小 值 can be negative 到 achieve
      * a vertically inverted iteration over image lines.
      */
     int linesize[AV_NUM_DATA_POINTERS];
 
     /**
-     * pointers to the data planes/channels.
+     * 指针s 到 the data planes/声道数.
      *
-     * For video, this should simply point to data[].
+     * For 视频, this should simply point 到 data[].
      *
-     * For planar audio, each channel has a separate data pointer, and
-     * linesize[0] contains the size of each channel buffer.
-     * For packed audio, there is just one data pointer, and linesize[0]
-     * contains the total size of the buffer for all channels.
+     * For planar 音频, each 声道 has a separate data 指针, and
+     * line大小[0] 包含 大小 的 each 声道 缓冲区.
+     * For packed 音频, there is just one data 指针, 和 line大小[0]
+     * 包含 total 大小 的 the 缓冲区 用于 all 声道数.
      *
-     * Note: Both data and extended_data should always be set in a valid frame,
-     * but for planar audio with more channels that can fit in data,
-     * extended_data must be used in order to access all channels.
+     * 注意： Both data 和 extended_data should always be 设置 中 a valid 帧,
+     * but 用于 planar 音频，使用 more 声道数 that can fit 中 data,
+     * extended_data must be used 中 order 到 access all 声道数.
      */
     uint8_t **extended_data;
 
     /**
-     * @name Video dimensions
-     * Video frames only. The coded dimensions (in pixels) of the video frame,
-     * i.e. the size of the rectangle that contains some well-defined values.
+     * @name 视频 dimensions
+     * 视频 帧s only. coded dimensions (in 像素s) 的 the 视频 帧,
+     * i.e. the 大小 的 the rectangle that 包含 some well-defined 值.
      *
-     * @note The part of the frame intended for display/presentation is further
+     * @note part 的 the 帧 intended 用于 display/presentation is further
      * restricted by the @ref cropping "Cropping rectangle".
      * @{
      */
@@ -547,122 +547,122 @@ typedef struct AVFrame {
      */
 
     /**
-     * number of audio samples (per channel) described by this frame
+     * 数量 的 音频 采样s (per 声道) described by this 帧
      */
     int nb_samples;
 
     /**
-     * format of the frame, -1 if unknown or unset
-     * Values correspond to enum AVPixelFormat for video frames,
-     * enum AVSampleFormat for audio)
+     * 格式 的 the 帧, -1 如果 unknown 或 un设置
+     * 值 correspond 到 enum AV像素格式 用于 视频 帧s,
+     * enum AV采样格式 用于 音频)
      */
     int format;
 
     /**
-     * Picture type of the frame.
+     * Picture type 的 the 帧.
      */
     enum AVPictureType pict_type;
 
     /**
-     * Sample aspect ratio for the video frame, 0/1 if unknown/unspecified.
+     * 采样 aspect ratio 用于 the 视频 帧, 0/1 如果 unknown/unspec如果ied.
      */
     AVRational sample_aspect_ratio;
 
     /**
-     * Presentation timestamp in time_base units (time when frame should be shown to user).
+     * Presentation 时间戳 中 time_base units (time 当 帧 should be shown 到 user).
      */
     int64_t pts;
 
     /**
-     * DTS copied from the AVPacket that triggered returning this frame. (if frame threading isn't used)
-     * This is also the Presentation time of this AVFrame calculated from
-     * only AVPacket.dts values without pts values.
+     * DTS copied，来自 the AVPacket that triggered 返回ing this 帧. (如果 帧 threading isn't used)
+     * This is also the Presentation time 的 this AV帧 计算d from
+     * only AVPacket.dts 值 without pts 值.
      */
     int64_t pkt_dts;
 
     /**
-     * Time base for the timestamps in this frame.
-     * In the future, this field may be set on frames output by decoders or
-     * filters, but its value will be by default ignored on input to encoders
-     * or filters.
+     * 时间基 用于 the 时间戳s 中 this 帧.
+     * In the future, this field may be 设置 上 帧s 输出 by 解码器s or
+     * filters, but its 值 will be by 默认 ignored 上 输入 到 编码器s
+     * 或 filters.
      */
     AVRational time_base;
 
     /**
-     * quality (between 1 (good) and FF_LAMBDA_MAX (bad))
+     * quality (between 1 (good) 和 FF_LAMBDA_MAX (bad))
      */
     int quality;
 
     /**
-     * Frame owner's private data.
+     * 帧 owner's 私有 data.
      *
-     * This field may be set by the code that allocates/owns the frame data.
+     * This field may be 设置 by the code that 分配s/owns the 帧 data.
      * It is then not touched by any library functions, except:
-     * - it is copied to other references by av_frame_copy_props() (and hence by
-     *   av_frame_ref());
-     * - it is set to NULL when the frame is cleared by av_frame_unref()
-     * - on the caller's explicit request. E.g. libavcodec encoders/decoders
-     *   will copy this field to/from @ref AVPacket "AVPackets" if the caller sets
-     *   @ref AV_CODEC_FLAG_COPY_OPAQUE.
+     * - it is copied 到 other 引用s by av_帧_复制_props() (and hence by
+     *   av_帧_ref());
+     * - it is 设置 到 NULL 当 the 帧 is cleared by av_帧_unref()
+     * - 上 the caller's explicit request. E.g. libavcodec 编码器s/解码器s
+     *   will 复制 this field to/from @ref AVPacket "AVPackets" 如果 the caller 设置s
+     *   @ref AV_CODEC_标志_复制_OPAQUE.
      *
-     * @see opaque_ref the reference-counted analogue
+     * @参见 opaque_ref the 引用-counted analogue
      */
     void *opaque;
 
     /**
-     * Number of fields in this frame which should be repeated, i.e. the total
-     * duration of this frame should be repeat_pict + 2 normal field durations.
+     * 数量 的 fields 中 this 帧 which should be repeated, i.e. the total
+     * 持续时间 的 this 帧 should be repeat_pict + 2 normal field 持续时间s.
      *
-     * For interlaced frames this field may be set to 1, which signals that this
-     * frame should be presented as 3 fields: beginning with the first field (as
-     * determined by AV_FRAME_FLAG_TOP_FIELD_FIRST being set or not), followed
-     * by the second field, and then the first field again.
+     * For interlaced 帧s this field may be 设置 到 1, which signals that this
+     * 帧 should be presented as 3 fields: beginning，使用 the first field (as
+     * determined by AV_帧_标志_TOP_FIELD_FIRST being 设置 或 not), followed
+     * by the second field, 和 then the first field again.
      *
-     * For progressive frames this field may be set to a multiple of 2, which
-     * signals that this frame's duration should be (repeat_pict + 2) / 2
-     * normal frame durations.
+     * For progressive 帧s this field may be 设置 到 a multiple 的 2, which
+     * signals that this 帧's 持续时间 should be (repeat_pict + 2) / 2
+     * normal 帧 持续时间s.
      *
-     * @note This field is computed from MPEG2 repeat_first_field flag and its
-     * associated flags, H.264 pic_struct from picture timing SEI, and
-     * their analogues in other codecs. Typically it should only be used when
-     * higher-layer timing information is not available.
+     * @note This field is computed，来自 MPEG2 repeat_first_field 标志 和 its
+     * associated 标志, H.264 pic_struct，来自 picture timing SEI, and
+     * their analogues 中 other codecs. Typically it should only be used 当
+     * higher-layer timing in格式ion is not available.
      */
     int repeat_pict;
 
     /**
-     * Sample rate of the audio data.
+     * 采样率 的 the 音频 data.
      */
     int sample_rate;
 
     /**
-     * AVBuffer references backing the data for this frame. All the pointers in
-     * data and extended_data must point inside one of the buffers in buf or
-     * extended_buf. This array must be filled contiguously -- if buf[i] is
-     * non-NULL then buf[j] must also be non-NULL for all j < i.
+     * AV缓冲区 引用s backing the data 用于 this 帧. All the 指针s in
+     * data 和 extended_data must point inside one 的 the 缓冲区 中 buf or
+     * extended_buf. This 数组 must be filled contiguously -- 如果 buf[i] is
+     * non-NULL then buf[j] must also be non-NULL 用于 all j < i.
      *
-     * There may be at most one AVBuffer per data plane, so for video this array
-     * always contains all the references. For planar audio with more than
-     * AV_NUM_DATA_POINTERS channels, there may be more buffers than can fit in
-     * this array. Then the extra AVBufferRef pointers are stored in the
-     * extended_buf array.
+     * There may be at most one AV缓冲区 per data plane, so 用于 视频 this 数组
+     * always 包含 all the 引用s. For planar 音频，使用 more than
+     * AV_NUM_DATA_指针S 声道数, there may be more 缓冲区 than can fit in
+     * this 数组. Then the extra AV缓冲区Ref 指针s are stored 中 the
+     * extended_buf 数组.
      */
     AVBufferRef *buf[AV_NUM_DATA_POINTERS];
 
     /**
-     * For planar audio which requires more than AV_NUM_DATA_POINTERS
-     * AVBufferRef pointers, this array will hold all the references which
-     * cannot fit into AVFrame.buf.
+     * For planar 音频 which requires more than AV_NUM_DATA_指针S
+     * AV缓冲区Ref 指针s, this 数组 will hold all the 引用s which
+     * cannot fit into AV帧.buf.
      *
-     * Note that this is different from AVFrame.extended_data, which always
-     * contains all the pointers. This array only contains the extra pointers,
-     * which cannot fit into AVFrame.buf.
+     * Note that this is d如果ferent，来自 AV帧.extended_data, which always
+     * 包含 all the 指针s. This 数组 only 包含 extra 指针s,
+     * which cannot fit into AV帧.buf.
      *
-     * This array is always allocated using av_malloc() by whoever constructs
-     * the frame. It is freed in av_frame_unref().
+     * This 数组 is always 分配d using av_malloc() by whoever constructs
+     * the 帧. It is 释放d 中 av_帧_unref().
      */
     AVBufferRef **extended_buf;
     /**
-     * Number of elements in extended_buf.
+     * 数量 的 elements 中 extended_buf.
      */
     int        nb_extended_buf;
 
@@ -670,40 +670,40 @@ typedef struct AVFrame {
     int            nb_side_data;
 
 /**
- * @defgroup lavu_frame_flags AV_FRAME_FLAGS
- * @ingroup lavu_frame
- * Flags describing additional frame properties.
+ * @defgroup lavu_帧_标志 AV_帧_标志
+ * @ingroup lavu_帧
+ * 标志 describing additional 帧 properties.
  *
  * @{
  */
 
 /**
- * The frame data may be corrupted, e.g. due to decoding errors.
+ * 帧 data may be corrupted, e.g. due 到 解码 errors.
  */
 #define AV_FRAME_FLAG_CORRUPT       (1 << 0)
 /**
- * A flag to mark frames that are keyframes.
+ * 标志 到 mark 帧s that are key帧s.
  */
 #define AV_FRAME_FLAG_KEY (1 << 1)
 /**
- * A flag to mark the frames which need to be decoded, but shouldn't be output.
+ * 标志 到 mark the 帧s which need 到 be decoded, but shouldn't be 输出.
  */
 #define AV_FRAME_FLAG_DISCARD   (1 << 2)
 /**
- * A flag to mark frames whose content is interlaced.
+ * 标志 到 mark 帧s whose content is interlaced.
  */
 #define AV_FRAME_FLAG_INTERLACED (1 << 3)
 /**
- * A flag to mark frames where the top field is displayed first if the content
+ * 标志 到 mark 帧s where the top field is displayed first 如果 the content
  * is interlaced.
  */
 #define AV_FRAME_FLAG_TOP_FIELD_FIRST (1 << 4)
 /**
- * A decoder can use this flag to mark frames which were originally encoded losslessly.
+ * 解码器 can use this 标志 到 mark 帧s which were originally encoded losslessly.
  *
- * For coding bitstream formats which support both lossless and lossy
- * encoding, it is sometimes possible for a decoder to determine which method
- * was used when the bitstream was encoded.
+ * For coding bitstream 格式s which support both lossless 和 lossy
+ * 编码, it is sometimes possible 用于 a 解码器 到 determine which method
+ * was used 当 the bitstream was encoded.
  */
 #define AV_FRAME_FLAG_LOSSLESS        (1 << 5)
 /**
@@ -711,14 +711,14 @@ typedef struct AVFrame {
  */
 
     /**
-     * Frame flags, a combination of @ref lavu_frame_flags
+     * 帧 标志, a combination 的 @ref lavu_帧_标志
      */
     int flags;
 
     /**
      * MPEG vs JPEG YUV range.
-     * - encoding: Set by user
-     * - decoding: Set by libavcodec
+     * - 编码: 设置 by user
+     * - 解码: 设置 by libavcodec
      */
     enum AVColorRange color_range;
 
@@ -728,33 +728,33 @@ typedef struct AVFrame {
 
     /**
      * YUV colorspace type.
-     * - encoding: Set by user
-     * - decoding: Set by libavcodec
+     * - 编码: 设置 by user
+     * - 解码: 设置 by libavcodec
      */
     enum AVColorSpace colorspace;
 
     enum AVChromaLocation chroma_location;
 
     /**
-     * frame timestamp estimated using various heuristics, in stream time base
-     * - encoding: unused
-     * - decoding: set by libavcodec, read by user.
+     * 帧 时间戳 estimated using various heuristics, 中 stream 时间基
+     * - 编码: unused
+     * - 解码: 设置 by libavcodec, read by user.
      */
     int64_t best_effort_timestamp;
 
     /**
-     * metadata.
-     * - encoding: Set by user.
-     * - decoding: Set by libavcodec.
+     * 元数据.
+     * - 编码: 设置 by user.
+     * - 解码: 设置 by libavcodec.
      */
     AVDictionary *metadata;
 
     /**
-     * decode error flags of the frame, set to a combination of
-     * FF_DECODE_ERROR_xxx flags if the decoder produced a frame, but there
-     * were errors during the decoding.
-     * - encoding: unused
-     * - decoding: set by libavcodec, read by user.
+     * decode error 标志 的 the 帧, 设置 到 a combination of
+     * FF_DECODE_ERROR_xxx 标志 如果 the 解码器 produced a 帧, but there
+     * were errors during the 解码.
+     * - 编码: unused
+     * - 解码: 设置 by libavcodec, read by user.
      */
     int decode_error_flags;
 #define FF_DECODE_ERROR_INVALID_BITSTREAM   1
@@ -763,33 +763,33 @@ typedef struct AVFrame {
 #define FF_DECODE_ERROR_DECODE_SLICES       8
 
     /**
-     * For hwaccel-format frames, this should be a reference to the
-     * AVHWFramesContext describing the frame.
+     * For hwaccel-格式 帧s, this should be a 引用 到 the
+     * AVHW帧s上下文 describing the 帧.
      */
     AVBufferRef *hw_frames_ctx;
 
     /**
-     * Frame owner's private data.
+     * 帧 owner's 私有 data.
      *
-     * This field may be set by the code that allocates/owns the frame data.
+     * This field may be 设置 by the code that 分配s/owns the 帧 data.
      * It is then not touched by any library functions, except:
-     * - a new reference to the underlying buffer is propagated by
-     *   av_frame_copy_props() (and hence by av_frame_ref());
-     * - it is unreferenced in av_frame_unref();
-     * - on the caller's explicit request. E.g. libavcodec encoders/decoders
-     *   will propagate a new reference to/from @ref AVPacket "AVPackets" if the
-     *   caller sets @ref AV_CODEC_FLAG_COPY_OPAQUE.
+     * - a new 引用 到 the underlying 缓冲区 is propagated by
+     *   av_帧_复制_props() (and hence by av_帧_ref());
+     * - it is un引用d 中 av_帧_unref();
+     * - 上 the caller's explicit request. E.g. libavcodec 编码器s/解码器s
+     *   will propagate a new 引用 to/from @ref AVPacket "AVPackets" 如果 the
+     *   caller 设置s @ref AV_CODEC_标志_复制_OPAQUE.
      *
-     * @see opaque the plain pointer analogue
+     * @参见 opaque the plain 指针 analogue
      */
     AVBufferRef *opaque_ref;
 
     /**
      * @anchor cropping
      * @name Cropping
-     * Video frames only. The number of pixels to discard from the
-     * top/bottom/left/right border of the frame to obtain the sub-rectangle of
-     * the frame intended for presentation.
+     * 视频 帧s only. 数量 的 像素s 到 discard，来自 the
+     * top/bottom/left/right border 的 the 帧 到 obtain the sub-rectangle of
+     * the 帧 intended 用于 presentation.
      * @{
      */
     size_t crop_top;
@@ -801,218 +801,218 @@ typedef struct AVFrame {
      */
 
     /**
-     * RefStruct reference for internal use by a single libav* library.
-     * Must not be used to transfer data between libraries.
-     * Has to be NULL when ownership of the frame leaves the respective library.
+     * RefStruct 引用 用于 internal use by a single libav* library.
+     * Must not be 用于 transfer data between libraries.
+     * Has 到 be NULL 当 ownership 的 the 帧 leaves the respective library.
      *
-     * Code outside the FFmpeg libs must never check or change private_ref.
+     * Code outside the FFmpeg libs must never 检查 或 change 私有_ref.
      */
     void *private_ref;
 
     /**
-     * Channel layout of the audio data.
+     * 声道布局 的 the 音频 data.
      */
     AVChannelLayout ch_layout;
 
     /**
-     * Duration of the frame, in the same units as pts. 0 if unknown.
+     * 持续时间 的 the 帧, 中 the same units as pts. 0 如果 unknown.
      */
     int64_t duration;
 
     /**
-     * Indicates how the alpha channel of the video is to be handled.
-     * - encoding: Set by user
-     * - decoding: Set by libavcodec
+     * Indicates how the alpha 声道 的 the 视频 is 到 be handled.
+     * - 编码: 设置 by user
+     * - 解码: 设置 by libavcodec
      */
     enum AVAlphaMode alpha_mode;
 } AVFrame;
 
 
 /**
- * Allocate an AVFrame and set its fields to default values.  The resulting
- * struct must be freed using av_frame_free().
+ * 分配 an AV帧 和 设置 its fields 到 默认 值.  resulting
+ * struct must be 释放d using av_帧_释放().
  *
- * @return An AVFrame filled with default values or NULL on failure.
+ * @返回 AV帧 filled，使用 默认 值 或 NULL 上 failure.
  *
- * @note this only allocates the AVFrame itself, not the data buffers. Those
- * must be allocated through other means, e.g. with av_frame_get_buffer() or
+ * @note this only 分配s the AV帧 itself, not the data 缓冲区. Those
+ * must be 分配d through other means, e.g.，使用 av_帧_get_缓冲区() or
  * manually.
  */
 AVFrame *av_frame_alloc(void);
 
 /**
- * Free the frame and any dynamically allocated objects in it,
- * e.g. extended_data. If the frame is reference counted, it will be
- * unreferenced first.
+ * 释放 the 帧 和 any dynamically 分配d objects 中 it,
+ * e.g. extended_data. 如果 the 帧 is 引用 counted, it will be
+ * un引用d first.
  *
- * @param frame frame to be freed. The pointer will be set to NULL.
+ * @param 帧 帧 到 be 释放d. 指针 will be 设置 到 NULL.
  */
 void av_frame_free(AVFrame **frame);
 
 /**
- * Set up a new reference to the data described by the source frame.
+ * 设置 up a new 引用 到 the data described by the source 帧.
  *
- * Copy frame properties from src to dst and create a new reference for each
- * AVBufferRef from src.
+ * 复制 帧 properties，来自 src 到 dst 和 创建 a new 引用 用于 each
+ * AV缓冲区Ref，来自 src.
  *
- * If src is not reference counted, new buffers are allocated and the data is
+ * 如果 src is not 引用 counted, new 缓冲区 are 分配d 和 the data is
  * copied.
  *
- * @warning: dst MUST have been either unreferenced with av_frame_unref(dst),
- *           or newly allocated with av_frame_alloc() before calling this
- *           function, or undefined behavior will occur.
+ * @warning: dst MUST have been either un引用d，使用 av_帧_unref(dst),
+ *           或 newly 分配d，使用 av_帧_alloc() before calling this
+ *           function, 或 undefined behavior will occur.
  *
- * @return 0 on success, a negative AVERROR on error
+ * @返回 0 上 success, a negative AVERROR 上 error
  */
 int av_frame_ref(AVFrame *dst, const AVFrame *src);
 
 /**
- * Ensure the destination frame refers to the same data described by the source
- * frame, either by creating a new reference for each AVBufferRef from src if
- * they differ from those in dst, by allocating new buffers and copying data if
- * src is not reference counted, or by unreferencing it if src is empty.
+ * Ensure the destination 帧 refers 到 the same data described by the source
+ * 帧, either by creating a new 引用 用于 each AV缓冲区Ref，来自 src 如果
+ * they d如果fer，来自 those 中 dst, by allocating new 缓冲区 和 复制ing data 如果
+ * src is not 引用 counted, 或 by unreferencing it 如果 src is empty.
  *
- * Frame properties on dst will be replaced by those from src.
+ * 帧 properties 上 dst will be replaced by those，来自 src.
  *
- * @return 0 on success, a negative AVERROR on error. On error, dst is
- *         unreferenced.
+ * @返回 0 上 success, a negative AVERROR 上 error. On error, dst is
+ *         un引用d.
  */
 int av_frame_replace(AVFrame *dst, const AVFrame *src);
 
 /**
- * Create a new frame that references the same data as src.
+ * 创建 a new 帧 that 引用s the same data as src.
  *
- * This is a shortcut for av_frame_alloc()+av_frame_ref().
+ * This is a shortcut 用于 av_帧_alloc()+av_帧_ref().
  *
- * @return newly created AVFrame on success, NULL on error.
+ * @返回 newly 创建d AV帧 上 success, NULL 上 error.
  */
 AVFrame *av_frame_clone(const AVFrame *src);
 
 /**
- * Unreference all the buffers referenced by frame and reset the frame fields.
+ * Un引用 all the 缓冲区 引用d by 帧 和 re设置 the 帧 fields.
  */
 void av_frame_unref(AVFrame *frame);
 
 /**
- * Move everything contained in src to dst and reset src.
+ * Move everything contained 中 src 到 dst 和 re设置 src.
  *
- * @warning: dst is not unreferenced, but directly overwritten without reading
- *           or deallocating its contents. Call av_frame_unref(dst) manually
- *           before calling this function to ensure that no memory is leaked.
+ * @warning: dst is not un引用d, but directly overwritten without reading
+ *           或 deallocating its contents. Call av_帧_unref(dst) manually
+ *           before calling this function 到 ensure that no 内存 is leaked.
  */
 void av_frame_move_ref(AVFrame *dst, AVFrame *src);
 
 /**
- * Allocate new buffer(s) for audio or video data.
+ * 分配 new 缓冲区(s) 用于 音频 或 视频 data.
  *
- * The following fields must be set on frame before calling this function:
- * - format (pixel format for video, sample format for audio)
- * - width and height for video
- * - nb_samples and ch_layout for audio
+ * following fields must be 设置 上 帧 before calling this function:
+ * - 格式 (像素格式 用于 视频, 采样格式 用于 音频)
+ * - 宽度 和 高度 用于 视频
+ * - nb_采样s 和 ch_layout 用于 音频
  *
- * This function will fill AVFrame.data and AVFrame.buf arrays and, if
- * necessary, allocate and fill AVFrame.extended_data and AVFrame.extended_buf.
- * For planar formats, one buffer will be allocated for each plane.
+ * 此函数 will fill AV帧.data 和 AV帧.buf 数组s and, 如果
+ * necessary, 分配 和 fill AV帧.extended_data 和 AV帧.extended_buf.
+ * For planar 格式s, one 缓冲区 will be 分配d 用于 each plane.
  *
- * @warning: if frame already has been allocated, calling this function will
- *           leak memory. In addition, undefined behavior can occur in certain
+ * @warning: 如果 帧 already has been 分配d, calling this function will
+ *           leak 内存. In addition, undefined behavior can occur 中 certain
  *           cases.
  *
- * @param frame frame in which to store the new buffers.
- * @param align Required buffer size and data pointer alignment. If equal to 0,
- *              alignment will be chosen automatically for the current CPU.
- *              It is highly recommended to pass 0 here unless you know what
+ * @param 帧 帧 中 which 到 store the new 缓冲区.
+ * @param align Required 缓冲区 大小 和 data 指针 alignment. 如果 equal 到 0,
+ *              alignment will be chosen automatically 用于 the current CPU.
+ *              It is highly recommended 到 pass 0 here unless you know what
  *              you are doing.
  *
- * @return 0 on success, a negative AVERROR on error.
+ * @返回 0 上 success, a negative AVERROR 上 error.
  */
 int av_frame_get_buffer(AVFrame *frame, int align);
 
 /**
- * Check if the frame data is writable.
+ * 检查 如果 the 帧 data is writable.
  *
- * @return A positive value if the frame data is writable (which is true if and
- * only if each of the underlying buffers has only one reference, namely the one
- * stored in this frame). Return 0 otherwise.
+ * @返回 positive 值 如果 the 帧 data is writable (which is true 如果 and
+ * only 如果 each 的 the underlying 缓冲区 has only one 引用, namely the one
+ * stored 中 this 帧). 返回 0 otherwise.
  *
- * If 1 is returned the answer is valid until av_buffer_ref() is called on any
- * of the underlying AVBufferRefs (e.g. through av_frame_ref() or directly).
+ * 如果 1 is 返回ed the answer is valid until av_缓冲区_ref() is called 上 any
+ * 的 the underlying AV缓冲区Refs (e.g. through av_帧_ref() 或 directly).
  *
- * @see av_frame_make_writable(), av_buffer_is_writable()
+ * @参见 av_帧_make_writable(), av_缓冲区_is_writable()
  */
 int av_frame_is_writable(AVFrame *frame);
 
 /**
- * Ensure that the frame data is writable, avoiding data copy if possible.
+ * Ensure that the 帧 data is writable, avoiding data 复制 如果 possible.
  *
- * Do nothing if the frame is writable, allocate new buffers and copy the data
- * if it is not. Non-refcounted frames behave as non-writable, i.e. a copy
+ * Do nothing 如果 the 帧 is writable, 分配 new 缓冲区 和 复制 the data
+ * 如果 it is not. Non-refcounted 帧s behave as non-writable, i.e. a 复制
  * is always made.
  *
- * @return 0 on success, a negative AVERROR on error.
+ * @返回 0 上 success, a negative AVERROR 上 error.
  *
- * @see av_frame_is_writable(), av_buffer_is_writable(),
- * av_buffer_make_writable()
+ * @参见 av_帧_is_writable(), av_缓冲区_is_writable(),
+ * av_缓冲区_make_writable()
  */
 int av_frame_make_writable(AVFrame *frame);
 
 /**
- * Copy the frame data from src to dst.
+ * 复制 the 帧 data，来自 src 到 dst.
  *
- * This function does not allocate anything, dst must be already initialized and
- * allocated with the same parameters as src.
+ * 此函数 does not 分配 anything, dst must be already 初始化d and
+ * 分配d，使用 the same parameters as src.
  *
- * This function only copies the frame data (i.e. the contents of the data /
- * extended data arrays), not any other properties.
+ * 此函数 only copies the 帧 data (i.e. the contents 的 the data /
+ * extended data 数组s), not any other properties.
  *
- * @return >= 0 on success, a negative AVERROR on error.
+ * @返回 >= 0 上 success, a negative AVERROR 上 error.
  */
 int av_frame_copy(AVFrame *dst, const AVFrame *src);
 
 /**
- * Copy only "metadata" fields from src to dst.
+ * 复制 only "元数据" fields，来自 src 到 dst.
  *
- * Metadata for the purpose of this function are those fields that do not affect
- * the data layout in the buffers.  E.g. pts, sample rate (for audio) or sample
- * aspect ratio (for video), but not width/height or channel layout.
+ * 元数据 用于 the purpose 的 this function are those fields that do not affect
+ * the data layout 中 the 缓冲区.  E.g. pts, 采样率 (for 音频) 或 采样
+ * aspect ratio (for 视频), but not 宽度/高度 或 声道布局.
  * Side data is also copied.
  */
 int av_frame_copy_props(AVFrame *dst, const AVFrame *src);
 
 /**
- * Get the buffer reference a given data plane is stored in.
+ * 获取 the 缓冲区 引用 a given data plane is stored in.
  *
- * @param frame the frame to get the plane's buffer from
- * @param plane index of the data plane of interest in frame->extended_data.
+ * @param 帧 the 帧 到 get the plane's 缓冲区 from
+ * @param plane index 的 the data plane 的 interest 中 帧->extended_data.
  *
- * @return the buffer reference that contains the plane or NULL if the input
- * frame is not valid.
+ * @返回 the 缓冲区 引用 that 包含 plane 或 NULL 如果 the 输入
+ * 帧 is not valid.
  */
 AVBufferRef *av_frame_get_plane_buffer(const AVFrame *frame, int plane);
 
 /**
- * Add a new side data to a frame.
+ * Add a new side data 到 a 帧.
  *
- * @param frame a frame to which the side data should be added
- * @param type type of the added side data
- * @param size size of the side data
+ * @param 帧 a 帧 到 which the side data should be added
+ * @param type type 的 the added side data
+ * @param 大小 大小 的 the side data
  *
- * @return newly added side data on success, NULL on error
+ * @返回 newly added side data 上 success, NULL 上 error
  */
 AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
                                         enum AVFrameSideDataType type,
                                         size_t size);
 
 /**
- * Add a new side data to a frame from an existing AVBufferRef
+ * Add a new side data 到 a 帧，来自 an existing AV缓冲区Ref
  *
- * @param frame a frame to which the side data should be added
- * @param type  the type of the added side data
- * @param buf   an AVBufferRef to add as side data. The ownership of
- *              the reference is transferred to the frame.
+ * @param 帧 a 帧 到 which the side data should be added
+ * @param type  the type 的 the added side data
+ * @param buf   an AV缓冲区Ref 到 add as side data. ownership of
+ *              the 引用 is transferred 到 the 帧.
  *
- * @return newly added side data on success, NULL on error. On failure
- *         the frame is unchanged and the AVBufferRef remains owned by
+ * @返回 newly added side data 上 success, NULL 上 error. On failure
+ *         the 帧 is unchanged 和 the AV缓冲区Ref remains owned by
  *         the caller.
  */
 AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
@@ -1020,70 +1020,70 @@ AVFrameSideData *av_frame_new_side_data_from_buf(AVFrame *frame,
                                                  AVBufferRef *buf);
 
 /**
- * @return a pointer to the side data of a given type on success, NULL if there
- * is no side data with such type in this frame.
+ * @返回 a 指针 到 the side data 的 a given type 上 success, NULL 如果 there
+ * is no side data，使用 such type 中 this 帧.
  */
 AVFrameSideData *av_frame_get_side_data(const AVFrame *frame,
                                         enum AVFrameSideDataType type);
 
 /**
- * Remove and free all side data instances of the given type.
+ * Remove 和 释放 all side data instances 的 the given type.
  */
 void av_frame_remove_side_data(AVFrame *frame, enum AVFrameSideDataType type);
 
 
 /**
- * Flags for frame cropping.
+ * 标志 用于 帧 cropping.
  */
 enum {
     /**
-     * Apply the maximum possible cropping, even if it requires setting the
-     * AVFrame.data[] entries to unaligned pointers. Passing unaligned data
-     * to FFmpeg API is generally not allowed, and causes undefined behavior
-     * (such as crashes). You can pass unaligned data only to FFmpeg APIs that
-     * are explicitly documented to accept it. Use this flag only if you
+     * Apply the maximum possible cropping, even 如果 it requires 设置ting the
+     * AV帧.data[] entries 到 unaligned 指针s. Passing unaligned data
+     * 到 FFmpeg API is generally not allowed, 和 causes undefined behavior
+     * (such as crashes). You can pass unaligned data only 到 FFmpeg APIs that
+     * are explicitly documented 到 accept it. Use this 标志 only 如果 you
      * absolutely know what you are doing.
      */
     AV_FRAME_CROP_UNALIGNED     = 1 << 0,
 };
 
 /**
- * Crop the given video AVFrame according to its crop_left/crop_top/crop_right/
- * crop_bottom fields. If cropping is successful, the function will adjust the
- * data pointers and the width/height fields, and set the crop fields to 0.
+ * Crop the given 视频 AV帧 according 到 its crop_left/crop_top/crop_right/
+ * crop_bottom fields. 如果 cropping is successful, the function will adjust the
+ * data 指针s 和 the 宽度/高度 fields, 和 设置 the crop fields 到 0.
  *
- * In all cases, the cropping boundaries will be rounded to the inherent
- * alignment of the pixel format. In some cases, such as for opaque hwaccel
- * formats, the left/top cropping is ignored. The crop fields are set to 0 even
- * if the cropping was rounded or ignored.
+ * In all cases, the cropping boundaries will be rounded 到 the inherent
+ * alignment 的 the 像素格式. In some cases, such as 用于 opaque hwaccel
+ * 格式s, the left/top cropping is ignored. crop fields are 设置 到 0 even
+ * 如果 the cropping was rounded 或 ignored.
  *
- * @param frame the frame which should be cropped
- * @param flags Some combination of AV_FRAME_CROP_* flags, or 0.
+ * @param 帧 the 帧 which should be cropped
+ * @param 标志 Some combination 的 AV_帧_CROP_* 标志, 或 0.
  *
- * @return >= 0 on success, a negative AVERROR on error. If the cropping fields
- * were invalid, AVERROR(ERANGE) is returned, and nothing is changed.
+ * @返回 >= 0 上 success, a negative AVERROR 上 error. 如果 the cropping fields
+ * were invalid, AVERROR(ERANGE) is 返回ed, 和 nothing is changed.
  */
 int av_frame_apply_cropping(AVFrame *frame, int flags);
 
 /**
- * @return a string identifying the side data type
+ * @返回 a string ident如果ying the side data type
  */
 const char *av_frame_side_data_name(enum AVFrameSideDataType type);
 
 /**
- * @return side data descriptor corresponding to a given side data type, NULL
- *         when not available.
+ * @返回 side data 描述符 corresponding 到 a given side data type, NULL
+ *         当 not available.
  */
 const AVSideDataDescriptor *av_frame_side_data_desc(enum AVFrameSideDataType type);
 
 /**
- * Free all side data entries and their contents, then zeroes out the
- * values which the pointers are pointing to.
+ * 释放 all side data entries 和 their contents, then zeroes out the
+ * 值 which the 指针s are pointing to.
  *
- * @param sd    pointer to array of side data to free. Will be set to NULL
- *              upon return.
- * @param nb_sd pointer to an integer containing the number of entries in
- *              the array. Will be set to 0 upon return.
+ * @param sd    指针 到 数组 的 side data 到 释放. Will be 设置 到 NULL
+ *              upon 返回.
+ * @param nb_sd 指针 到 an integer containing the 数量 的 entries in
+ *              the 数组. Will be 设置 到 0 upon 返回.
  */
 void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd);
 
@@ -1092,58 +1092,58 @@ void av_frame_side_data_free(AVFrameSideData ***sd, int *nb_sd);
  */
 #define AV_FRAME_SIDE_DATA_FLAG_UNIQUE (1 << 0)
 /**
- * Don't add a new entry if another of the same type exists.
- * Applies only for side data types without the AV_SIDE_DATA_PROP_MULTI prop.
+ * Don't add a new entry 如果 another 的 the same type exists.
+ * Applies only 用于 side data types without the AV_SIDE_DATA_PROP_MULTI prop.
  */
 #define AV_FRAME_SIDE_DATA_FLAG_REPLACE (1 << 1)
 /**
- * Create a new reference to the passed in buffer instead of taking ownership
- * of it.
+ * 创建 a new 引用 到 the passed 中 缓冲区 instead 的 taking ownership
+ * 的 it.
  */
 #define AV_FRAME_SIDE_DATA_FLAG_NEW_REF (1 << 2)
 
 /**
- * Add new side data entry to an array.
+ * Add new side data entry 到 an 数组.
  *
- * @param sd    pointer to array of side data to which to add another entry,
- *              or to NULL in order to start a new array.
- * @param nb_sd pointer to an integer containing the number of entries in
- *              the array.
- * @param type  type of the added side data
- * @param size  size of the side data
- * @param flags Some combination of AV_FRAME_SIDE_DATA_FLAG_* flags, or 0.
+ * @param sd    指针 到 数组 的 side data 到 which 到 add another entry,
+ *              或 到 NULL 中 order 到 start a new 数组.
+ * @param nb_sd 指针 到 an integer containing the 数量 的 entries in
+ *              the 数组.
+ * @param type  type 的 the added side data
+ * @param 大小  大小 的 the side data
+ * @param 标志 Some combination 的 AV_帧_SIDE_DATA_标志_* 标志, 或 0.
  *
- * @return newly added side data on success, NULL on error.
- * @note In case of AV_FRAME_SIDE_DATA_FLAG_UNIQUE being set, entries of
- *       matching AVFrameSideDataType will be removed before the addition
+ * @返回 newly added side data 上 success, NULL 上 error.
+ * @note In case 的 AV_帧_SIDE_DATA_标志_UNIQUE being 设置, entries of
+ *       matching AV帧SideDataType will be removed before the addition
  *       is attempted.
- * @note In case of AV_FRAME_SIDE_DATA_FLAG_REPLACE being set, if an
- *       entry of the same type already exists, it will be replaced instead.
+ * @note In case 的 AV_帧_SIDE_DATA_标志_REPLACE being 设置, 如果 an
+ *       entry 的 the same type already exists, it will be replaced instead.
  */
 AVFrameSideData *av_frame_side_data_new(AVFrameSideData ***sd, int *nb_sd,
                                         enum AVFrameSideDataType type,
                                         size_t size, unsigned int flags);
 
 /**
- * Add a new side data entry to an array from an existing AVBufferRef.
+ * Add a new side data entry 到 an 数组，来自 an existing AV缓冲区Ref.
  *
- * @param sd    pointer to array of side data to which to add another entry,
- *              or to NULL in order to start a new array.
- * @param nb_sd pointer to an integer containing the number of entries in
- *              the array.
- * @param type  type of the added side data
- * @param buf   Pointer to AVBufferRef to add to the array. On success,
- *              the function takes ownership of the AVBufferRef and *buf is
- *              set to NULL, unless AV_FRAME_SIDE_DATA_FLAG_NEW_REF is set
- *              in which case the ownership will remain with the caller.
- * @param flags Some combination of AV_FRAME_SIDE_DATA_FLAG_* flags, or 0.
+ * @param sd    指针 到 数组 的 side data 到 which 到 add another entry,
+ *              或 到 NULL 中 order 到 start a new 数组.
+ * @param nb_sd 指针 到 an integer containing the 数量 的 entries in
+ *              the 数组.
+ * @param type  type 的 the added side data
+ * @param buf   指针 到 AV缓冲区Ref 到 add 到 the 数组. On success,
+ *              the function takes ownership 的 the AV缓冲区Ref 和 *buf is
+ *              设置 到 NULL, unless AV_帧_SIDE_DATA_标志_NEW_REF is 设置
+ *              中 which case the ownership will remain，使用 the caller.
+ * @param 标志 Some combination 的 AV_帧_SIDE_DATA_标志_* 标志, 或 0.
  *
- * @return newly added side data on success, NULL on error.
- * @note In case of AV_FRAME_SIDE_DATA_FLAG_UNIQUE being set, entries of
- *       matching AVFrameSideDataType will be removed before the addition
+ * @返回 newly added side data 上 success, NULL 上 error.
+ * @note In case 的 AV_帧_SIDE_DATA_标志_UNIQUE being 设置, entries of
+ *       matching AV帧SideDataType will be removed before the addition
  *       is attempted.
- * @note In case of AV_FRAME_SIDE_DATA_FLAG_REPLACE being set, if an
- *       entry of the same type already exists, it will be replaced instead.
+ * @note In case 的 AV_帧_SIDE_DATA_标志_REPLACE being 设置, 如果 an
+ *       entry 的 the same type already exists, it will be replaced instead.
  *
  */
 AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
@@ -1151,46 +1151,46 @@ AVFrameSideData *av_frame_side_data_add(AVFrameSideData ***sd, int *nb_sd,
                                         AVBufferRef **buf, unsigned int flags);
 
 /**
- * Add a new side data entry to an array based on existing side data, taking
- * a reference towards the contained AVBufferRef.
+ * Add a new side data entry 到 an 数组 based 上 existing side data, taking
+ * a 引用 towards the contained AV缓冲区Ref.
  *
- * @param sd    pointer to array of side data to which to add another entry,
- *              or to NULL in order to start a new array.
- * @param nb_sd pointer to an integer containing the number of entries in
- *              the array.
- * @param src   side data to be cloned, with a new reference utilized
- *              for the buffer.
- * @param flags Some combination of AV_FRAME_SIDE_DATA_FLAG_* flags, or 0.
+ * @param sd    指针 到 数组 的 side data 到 which 到 add another entry,
+ *              或 到 NULL 中 order 到 start a new 数组.
+ * @param nb_sd 指针 到 an integer containing the 数量 的 entries in
+ *              the 数组.
+ * @param src   side data 到 be cloned,，使用 a new 引用 utilized
+ *              用于 the 缓冲区.
+ * @param 标志 Some combination 的 AV_帧_SIDE_DATA_标志_* 标志, 或 0.
  *
- * @return negative error code on failure, >=0 on success.
- * @note In case of AV_FRAME_SIDE_DATA_FLAG_UNIQUE being set, entries of
- *       matching AVFrameSideDataType will be removed before the addition
+ * @返回 negative error code 上 failure, >=0 上 success.
+ * @note In case 的 AV_帧_SIDE_DATA_标志_UNIQUE being 设置, entries of
+ *       matching AV帧SideDataType will be removed before the addition
  *       is attempted.
- * @note In case of AV_FRAME_SIDE_DATA_FLAG_REPLACE being set, if an
- *       entry of the same type already exists, it will be replaced instead.
+ * @note In case 的 AV_帧_SIDE_DATA_标志_REPLACE being 设置, 如果 an
+ *       entry 的 the same type already exists, it will be replaced instead.
  */
 int av_frame_side_data_clone(AVFrameSideData ***sd, int *nb_sd,
                              const AVFrameSideData *src, unsigned int flags);
 
 /**
- * Get a side data entry of a specific type from an array.
+ * 获取 a side data entry 的 a spec如果ic type，来自 an 数组.
  *
- * @param sd    array of side data.
- * @param nb_sd integer containing the number of entries in the array.
- * @param type  type of side data to be queried
+ * @param sd    数组 的 side data.
+ * @param nb_sd integer containing the 数量 的 entries 中 the 数组.
+ * @param type  type 的 side data 到 be queried
  *
- * @return a pointer to the side data of a given type on success, NULL if there
- *         is no side data with such type in this set.
+ * @返回 a 指针 到 the side data 的 a given type 上 success, NULL 如果 there
+ *         is no side data，使用 such type 中 this 设置.
  */
 const AVFrameSideData *av_frame_side_data_get_c(const AVFrameSideData * const *sd,
                                                 const int nb_sd,
                                                 enum AVFrameSideDataType type);
 
 /**
- * Wrapper around av_frame_side_data_get_c() to workaround the limitation
- * that for any type T the conversion from T * const * to const T * const *
- * is not performed automatically in C.
- * @see av_frame_side_data_get_c()
+ * Wrapper around av_帧_side_data_get_c() 到 workaround the limitation
+ * that 用于 any type T the conversion，来自 T * const * 到 const T * const *
+ * is not performed automatically 中 C.
+ * @参见 av_帧_side_data_get_c()
  */
 static inline
 const AVFrameSideData *av_frame_side_data_get(AVFrameSideData * const *sd,
@@ -1202,14 +1202,14 @@ const AVFrameSideData *av_frame_side_data_get(AVFrameSideData * const *sd,
 }
 
 /**
- * Remove and free all side data instances of the given type from an array.
+ * Remove 和 释放 all side data instances 的 the given type，来自 an 数组.
  */
 void av_frame_side_data_remove(AVFrameSideData ***sd, int *nb_sd,
                                enum AVFrameSideDataType type);
 
 /**
- * Remove and free all side data instances that match any of the given
- * side data properties. (See enum AVSideDataProps)
+ * Remove 和 释放 all side data instances that match any 的 the given
+ * side data properties. (参见 enum AVSideDataProps)
  */
 void av_frame_side_data_remove_by_props(AVFrameSideData ***sd, int *nb_sd,
                                         int props);

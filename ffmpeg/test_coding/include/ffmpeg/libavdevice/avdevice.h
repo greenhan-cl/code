@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -21,32 +21,30 @@
 
 #include "version_major.h"
 #ifndef HAVE_AV_CONFIG_H
-/* When included as part of the ffmpeg build, only include the major version
- * to avoid unnecessary rebuilds. When included externally, keep including
- * the full version information. */
+/* 作为 ffmpeg 构建的一部分被包含时，仅包含主版本号，
+ * 以避免不必要的重新构建。从外部包含时，仍包含
+ * 完整的版本信息。 */
 #include "version.h"
 #endif
 
 /**
  * @file
  * @ingroup lavd
- * Main libavdevice API header
+ * libavdevice 的主要 API 头文件
  */
 
 /**
  * @defgroup lavd libavdevice
- * Special devices muxing/demuxing library.
+ * 特殊设备复用/解复用库。
  *
- * Libavdevice is a complementary library to @ref libavf "libavformat". It
- * provides various "special" platform-specific muxers and demuxers, e.g. for
- * grabbing devices, audio capture and playback etc. As a consequence, the
- * (de)muxers in libavdevice are of the AVFMT_NOFILE type (they use their own
- * I/O functions). The filename passed to avformat_open_input() often does not
- * refer to an actually existing file, but has some special device-specific
- * meaning - e.g. for xcbgrab it is the display name.
+ * Libavdevice 是 @ref libavf "libavformat" 的补充库。它提供各种平台特定的
+ * “特殊”复用器和解复用器，例如采集设备、音频捕获与播放等。因此，
+ * libavdevice 中的（解）复用器属于 AVFMT_NOFILE 类型（它们使用自己的
+ * I/O 函数）。传给 avformat_open_input() 的文件名通常并不指向一个真实存在的
+ * 文件，而是具有设备特定的含义——例如，对 xcbgrab 而言，它表示显示器名称。
  *
- * To use libavdevice, simply call avdevice_register_all() to register all
- * compiled muxers and demuxers. They all use standard libavformat API.
+ * 要使用 libavdevice，只需调用 avdevice_register_all() 注册所有已编译的
+ * 复用器和解复用器。它们都使用标准的 libavformat API。
  *
  * @{
  */
@@ -57,333 +55,326 @@
 #include "libavformat/avformat.h"
 
 /**
- * Return the LIBAVDEVICE_VERSION_INT constant.
+ * 返回 LIBAVDEVICE_VERSION_INT 常量。
  */
 unsigned avdevice_version(void);
 
 /**
- * Return the libavdevice build-time configuration.
+ * 返回 libavdevice 的构建时配置。
  */
 const char *avdevice_configuration(void);
 
 /**
- * Return the libavdevice license.
+ * 返回 libavdevice 的许可证文本。
  */
 const char *avdevice_license(void);
 
 /**
- * Initialize libavdevice and register all the input and output devices.
+ * 初始化 libavdevice，并注册所有输入和输出设备。
  */
 void avdevice_register_all(void);
 
 /**
- * Audio input devices iterator.
+ * 音频输入设备迭代器。
  *
- * If d is NULL, returns the first registered input audio/video device,
- * if d is non-NULL, returns the next registered input audio/video device after d
- * or NULL if d is the last one.
+ * 如果 d 为 NULL，则返回第一个已注册的输入音频/视频设备；
+ * 如果 d 非 NULL，则返回 d 之后的下一个已注册输入音频/视频设备；
+ * 如果 d 已是最后一个，则返回 NULL。
  */
 const AVInputFormat *av_input_audio_device_next(const AVInputFormat  *d);
 
 /**
- * Video input devices iterator.
+ * 视频输入设备迭代器。
  *
- * If d is NULL, returns the first registered input audio/video device,
- * if d is non-NULL, returns the next registered input audio/video device after d
- * or NULL if d is the last one.
+ * 如果 d 为 NULL，则返回第一个已注册的输入音频/视频设备；
+ * 如果 d 非 NULL，则返回 d 之后的下一个已注册输入音频/视频设备；
+ * 如果 d 已是最后一个，则返回 NULL。
  */
 const AVInputFormat *av_input_video_device_next(const AVInputFormat  *d);
 
 /**
- * Audio output devices iterator.
+ * 音频输出设备迭代器。
  *
- * If d is NULL, returns the first registered output audio/video device,
- * if d is non-NULL, returns the next registered output audio/video device after d
- * or NULL if d is the last one.
+ * 如果 d 为 NULL，则返回第一个已注册的输出音频/视频设备；
+ * 如果 d 非 NULL，则返回 d 之后的下一个已注册输出音频/视频设备；
+ * 如果 d 已是最后一个，则返回 NULL。
  */
 const AVOutputFormat *av_output_audio_device_next(const AVOutputFormat *d);
 
 /**
- * Video output devices iterator.
+ * 视频输出设备迭代器。
  *
- * If d is NULL, returns the first registered output audio/video device,
- * if d is non-NULL, returns the next registered output audio/video device after d
- * or NULL if d is the last one.
+ * 如果 d 为 NULL，则返回第一个已注册的输出音频/视频设备；
+ * 如果 d 非 NULL，则返回 d 之后的下一个已注册输出音频/视频设备；
+ * 如果 d 已是最后一个，则返回 NULL。
  */
 const AVOutputFormat *av_output_video_device_next(const AVOutputFormat *d);
 
 typedef struct AVDeviceRect {
-    int x;      /**< x coordinate of top left corner */
-    int y;      /**< y coordinate of top left corner */
-    int width;  /**< width */
-    int height; /**< height */
+    int x;      /**< 左上角的 x 坐标 */
+    int y;      /**< 左上角的 y 坐标 */
+    int width;  /**< 宽度 */
+    int height; /**< 高度 */
 } AVDeviceRect;
 
 /**
- * Message types used by avdevice_app_to_dev_control_message().
+ * avdevice_app_to_dev_control_message() 使用的消息类型。
  */
 enum AVAppToDevMessageType {
     /**
-     * Dummy message.
+     * 占位消息。
      */
     AV_APP_TO_DEV_NONE = MKBETAG('N','O','N','E'),
 
     /**
-     * Window size change message.
+     * 窗口大小变更消息。
      *
-     * Message is sent to the device every time the application changes the size
-     * of the window device renders to.
-     * Message should also be sent right after window is created.
+     * 每当应用程序改变设备渲染目标窗口的大小时，都会向设备发送此消息。
+     * 窗口创建后也应立即发送此消息。
      *
-     * data: AVDeviceRect: new window size.
+     * data：AVDeviceRect：新的窗口大小。
      */
     AV_APP_TO_DEV_WINDOW_SIZE = MKBETAG('G','E','O','M'),
 
     /**
-     * Repaint request message.
+     * 重绘请求消息。
      *
-     * Message is sent to the device when window has to be repainted.
+     * 需要重绘窗口时，将此消息发送给设备。
      *
-     * data: AVDeviceRect: area required to be repainted.
-     *       NULL: whole area is required to be repainted.
+     * data：AVDeviceRect：需要重绘的区域。
+     *       NULL：需要重绘整个区域。
      */
     AV_APP_TO_DEV_WINDOW_REPAINT = MKBETAG('R','E','P','A'),
 
     /**
-     * Request pause/play.
+     * 请求暂停/播放。
      *
-     * Application requests pause/unpause playback.
-     * Mostly usable with devices that have internal buffer.
-     * By default devices are not paused.
+     * 应用程序请求暂停或恢复播放。
+     * 主要适用于具有内部缓冲区的设备。
+     * 默认情况下设备不处于暂停状态。
      *
-     * data: NULL
+     * data：NULL
      */
     AV_APP_TO_DEV_PAUSE        = MKBETAG('P', 'A', 'U', ' '),
     AV_APP_TO_DEV_PLAY         = MKBETAG('P', 'L', 'A', 'Y'),
     AV_APP_TO_DEV_TOGGLE_PAUSE = MKBETAG('P', 'A', 'U', 'T'),
 
     /**
-     * Volume control message.
+     * 音量控制消息。
      *
-     * Set volume level. It may be device-dependent if volume
-     * is changed per stream or system wide. Per stream volume
-     * change is expected when possible.
+     * 设置音量级别。音量是按流修改还是在系统范围内修改，可能取决于设备。
+     * 在可能的情况下，期望按流修改音量。
      *
-     * data: double: new volume with range of 0.0 - 1.0.
+     * data：double：新的音量，范围为 0.0 - 1.0。
      */
     AV_APP_TO_DEV_SET_VOLUME = MKBETAG('S', 'V', 'O', 'L'),
 
     /**
-     * Mute control messages.
+     * 静音控制消息。
      *
-     * Change mute state. It may be device-dependent if mute status
-     * is changed per stream or system wide. Per stream mute status
-     * change is expected when possible.
+     * 改变静音状态。静音状态是按流修改还是在系统范围内修改，可能取决于设备。
+     * 在可能的情况下，期望按流修改静音状态。
      *
-     * data: NULL.
+     * data：NULL。
      */
     AV_APP_TO_DEV_MUTE        = MKBETAG(' ', 'M', 'U', 'T'),
     AV_APP_TO_DEV_UNMUTE      = MKBETAG('U', 'M', 'U', 'T'),
     AV_APP_TO_DEV_TOGGLE_MUTE = MKBETAG('T', 'M', 'U', 'T'),
 
     /**
-     * Get volume/mute messages.
+     * 获取音量/静音状态的消息。
      *
-     * Force the device to send AV_DEV_TO_APP_VOLUME_LEVEL_CHANGED or
-     * AV_DEV_TO_APP_MUTE_STATE_CHANGED command respectively.
+     * 强制设备分别发送 AV_DEV_TO_APP_VOLUME_LEVEL_CHANGED 或
+     * AV_DEV_TO_APP_MUTE_STATE_CHANGED 命令。
      *
-     * data: NULL.
+     * data：NULL。
      */
     AV_APP_TO_DEV_GET_VOLUME = MKBETAG('G', 'V', 'O', 'L'),
     AV_APP_TO_DEV_GET_MUTE   = MKBETAG('G', 'M', 'U', 'T'),
 };
 
 /**
- * Message types used by avdevice_dev_to_app_control_message().
+ * avdevice_dev_to_app_control_message() 使用的消息类型。
  */
 enum AVDevToAppMessageType {
     /**
-     * Dummy message.
+     * 占位消息。
      */
     AV_DEV_TO_APP_NONE = MKBETAG('N','O','N','E'),
 
     /**
-     * Create window buffer message.
+     * 创建窗口缓冲区消息。
      *
-     * Device requests to create a window buffer. Exact meaning is device-
-     * and application-dependent. Message is sent before rendering first
-     * frame and all one-shot initializations should be done here.
-     * Application is allowed to ignore preferred window buffer size.
+     * 设备请求创建窗口缓冲区。确切含义取决于设备和应用程序。
+     * 此消息在渲染第一帧之前发送，所有一次性初始化都应在这里完成。
+     * 应用程序可以忽略首选的窗口缓冲区大小。
      *
-     * @note: Application is obligated to inform about window buffer size
-     *        with AV_APP_TO_DEV_WINDOW_SIZE message.
+     * @note 应用程序必须通过 AV_APP_TO_DEV_WINDOW_SIZE 消息告知窗口缓冲区大小。
      *
-     * data: AVDeviceRect: preferred size of the window buffer.
-     *       NULL: no preferred size of the window buffer.
+     * data：AVDeviceRect：窗口缓冲区的首选大小。
+     *       NULL：没有首选的窗口缓冲区大小。
      */
     AV_DEV_TO_APP_CREATE_WINDOW_BUFFER = MKBETAG('B','C','R','E'),
 
     /**
-     * Prepare window buffer message.
+     * 准备窗口缓冲区消息。
      *
-     * Device requests to prepare a window buffer for rendering.
-     * Exact meaning is device- and application-dependent.
-     * Message is sent before rendering of each frame.
+     * 设备请求为渲染准备窗口缓冲区。
+     * 确切含义取决于设备和应用程序。
+     * 每一帧渲染之前都会发送此消息。
      *
-     * data: NULL.
+     * data：NULL。
      */
     AV_DEV_TO_APP_PREPARE_WINDOW_BUFFER = MKBETAG('B','P','R','E'),
 
     /**
-     * Display window buffer message.
+     * 显示窗口缓冲区消息。
      *
-     * Device requests to display a window buffer.
-     * Message is sent when new frame is ready to be displayed.
-     * Usually buffers need to be swapped in handler of this message.
+     * 设备请求显示窗口缓冲区。
+     * 新帧准备好显示时会发送此消息。
+     * 通常需要在此消息的处理函数中交换缓冲区。
      *
-     * data: NULL.
+     * data：NULL。
      */
     AV_DEV_TO_APP_DISPLAY_WINDOW_BUFFER = MKBETAG('B','D','I','S'),
 
     /**
-     * Destroy window buffer message.
+     * 销毁窗口缓冲区消息。
      *
-     * Device requests to destroy a window buffer.
-     * Message is sent when device is about to be destroyed and window
-     * buffer is not required anymore.
+     * 设备请求销毁窗口缓冲区。
+     * 当设备即将被销毁且不再需要窗口缓冲区时，会发送此消息。
      *
-     * data: NULL.
+     * data：NULL。
      */
     AV_DEV_TO_APP_DESTROY_WINDOW_BUFFER = MKBETAG('B','D','E','S'),
 
     /**
-     * Buffer fullness status messages.
+     * 缓冲区充满状态消息。
      *
-     * Device signals buffer overflow/underflow.
+     * 设备报告缓冲区上溢/下溢。
      *
-     * data: NULL.
+     * data：NULL。
      */
     AV_DEV_TO_APP_BUFFER_OVERFLOW = MKBETAG('B','O','F','L'),
     AV_DEV_TO_APP_BUFFER_UNDERFLOW = MKBETAG('B','U','F','L'),
 
     /**
-     * Buffer readable/writable.
+     * 缓冲区可读/可写。
      *
-     * Device informs that buffer is readable/writable.
-     * When possible, device informs how many bytes can be read/write.
+     * 设备通知缓冲区可读/可写。
+     * 在可能的情况下，设备会告知可以读取/写入多少字节。
      *
-     * @warning Device may not inform when number of bytes than can be read/write changes.
+     * @warning 当可读/可写字节数发生变化时，设备可能不会通知。
      *
-     * data: int64_t: amount of bytes available to read/write.
-     *       NULL: amount of bytes available to read/write is not known.
+     * data：int64_t：可供读取/写入的字节数。
+     *       NULL：可供读取/写入的字节数未知。
      */
     AV_DEV_TO_APP_BUFFER_READABLE = MKBETAG('B','R','D',' '),
     AV_DEV_TO_APP_BUFFER_WRITABLE = MKBETAG('B','W','R',' '),
 
     /**
-     * Mute state change message.
+     * 静音状态变更消息。
      *
-     * Device informs that mute state has changed.
+     * 设备通知静音状态已改变。
      *
-     * data: int: 0 for not muted state, non-zero for muted state.
+     * data：int：0 表示未静音，非零表示已静音。
      */
     AV_DEV_TO_APP_MUTE_STATE_CHANGED = MKBETAG('C','M','U','T'),
 
     /**
-     * Volume level change message.
+     * 音量级别变更消息。
      *
-     * Device informs that volume level has changed.
+     * 设备通知音量级别已改变。
      *
-     * data: double: new volume with range of 0.0 - 1.0.
+     * data：double：新的音量，范围为 0.0 - 1.0。
      */
     AV_DEV_TO_APP_VOLUME_LEVEL_CHANGED = MKBETAG('C','V','O','L'),
 };
 
 /**
- * Send control message from application to device.
+ * 从应用程序向设备发送控制消息。
  *
- * @param s         device context.
- * @param type      message type.
- * @param data      message data. Exact type depends on message type.
- * @param data_size size of message data.
- * @return >= 0 on success, negative on error.
- *         AVERROR(ENOSYS) when device doesn't implement handler of the message.
+ * @param s         设备上下文。
+ * @param type      消息类型。
+ * @param data      消息数据。确切类型取决于消息类型。
+ * @param data_size 消息数据的大小。
+ * @return 成功时 >= 0，出错时为负值。
+ *         当设备未实现该消息的处理函数时返回 AVERROR(ENOSYS)。
  */
 int avdevice_app_to_dev_control_message(struct AVFormatContext *s,
                                         enum AVAppToDevMessageType type,
                                         void *data, size_t data_size);
 
 /**
- * Send control message from device to application.
+ * 从设备向应用程序发送控制消息。
  *
- * @param s         device context.
- * @param type      message type.
- * @param data      message data. Can be NULL.
- * @param data_size size of message data.
- * @return >= 0 on success, negative on error.
- *         AVERROR(ENOSYS) when application doesn't implement handler of the message.
+ * @param s         设备上下文。
+ * @param type      消息类型。
+ * @param data      消息数据，可以为 NULL。
+ * @param data_size 消息数据的大小。
+ * @return 成功时 >= 0，出错时为负值。
+ *         当应用程序未实现该消息的处理函数时返回 AVERROR(ENOSYS)。
  */
 int avdevice_dev_to_app_control_message(struct AVFormatContext *s,
                                         enum AVDevToAppMessageType type,
                                         void *data, size_t data_size);
 
 /**
- * Structure describes basic parameters of the device.
+ * 描述设备基本参数的结构体。
  */
 typedef struct AVDeviceInfo {
-    char *device_name;                   /**< device name, format depends on device */
-    char *device_description;            /**< human friendly name */
-    enum AVMediaType *media_types;       /**< array indicating what media types(s), if any, a device can provide. If null, cannot provide any */
-    int nb_media_types;                  /**< length of media_types array, 0 if device cannot provide any media types */
+    char *device_name;                   /**< 设备名称，其格式取决于设备 */
+    char *device_description;            /**< 便于用户理解的名称 */
+    enum AVMediaType *media_types;       /**< 表示设备能够提供哪些媒体类型（如果有）的数组。为 null 时表示不能提供任何媒体类型 */
+    int nb_media_types;                  /**< media_types 数组的长度；设备不能提供任何媒体类型时为 0 */
 } AVDeviceInfo;
 
 /**
- * List of devices.
+ * 设备列表。
  */
 typedef struct AVDeviceInfoList {
-    AVDeviceInfo **devices;              /**< list of autodetected devices */
-    int nb_devices;                      /**< number of autodetected devices */
-    int default_device;                  /**< index of default device or -1 if no default */
+    AVDeviceInfo **devices;              /**< 自动检测到的设备列表 */
+    int nb_devices;                      /**< 自动检测到的设备数量 */
+    int default_device;                  /**< 默认设备的索引；没有默认设备时为 -1 */
 } AVDeviceInfoList;
 
 /**
- * List devices.
+ * 列出设备。
  *
- * Returns available device names and their parameters.
+ * 返回可用设备的名称及其参数。
  *
- * @note: Some devices may accept system-dependent device names that cannot be
- *        autodetected. The list returned by this function cannot be assumed to
- *        be always completed.
+ * @note 某些设备可以接受依赖于系统、且无法自动检测的设备名称。
+ *       因此不能认为此函数返回的列表始终是完整的。
  *
- * @param s                device context.
- * @param[out] device_list list of autodetected devices.
- * @return count of autodetected devices, negative on error.
+ * @param s                设备上下文。
+ * @param[out] device_list 自动检测到的设备列表。
+ * @return 自动检测到的设备数量；出错时为负值。
  */
 int avdevice_list_devices(struct AVFormatContext *s, AVDeviceInfoList **device_list);
 
 /**
- * Convenient function to free result of avdevice_list_devices().
+ * 用于释放 avdevice_list_devices() 结果的便捷函数。
  *
- * @param device_list device list to be freed.
+ * @param device_list 要释放的设备列表。
  */
 void avdevice_free_list_devices(AVDeviceInfoList **device_list);
 
 /**
- * List devices.
+ * 列出设备。
  *
- * Returns available device names and their parameters.
- * These are convenient wrappers for avdevice_list_devices().
- * Device context is allocated and deallocated internally.
+ * 返回可用设备的名称及其参数。
+ * 这些函数是 avdevice_list_devices() 的便捷封装。
+ * 设备上下文会在内部进行分配和释放。
  *
- * @param device           device format. May be NULL if device name is set.
- * @param device_name      device name. May be NULL if device format is set.
- * @param device_options   An AVDictionary filled with device-private options. May be NULL.
- *                         The same options must be passed later to avformat_write_header() for output
- *                         devices or avformat_open_input() for input devices, or at any other place
- *                         that affects device-private options.
- * @param[out] device_list list of autodetected devices
- * @return count of autodetected devices, negative on error.
- * @note device argument takes precedence over device_name when both are set.
+ * @param device           设备格式。设置了设备名称时可以为 NULL。
+ * @param device_name      设备名称。设置了设备格式时可以为 NULL。
+ * @param device_options   填有设备私有选项的 AVDictionary，可以为 NULL。
+ *                         之后，对于输出设备，必须将相同的选项传给 avformat_write_header()；
+ *                         对于输入设备，必须传给 avformat_open_input()；在其他会影响设备私有
+ *                         选项的位置也必须传入相同选项。
+ * @param[out] device_list 自动检测到的设备列表
+ * @return 自动检测到的设备数量；出错时为负值。
+ * @note device 与 device_name 同时设置时，device 参数优先。
  */
 int avdevice_list_input_sources(const AVInputFormat *device, const char *device_name,
                                 AVDictionary *device_options, AVDeviceInfoList **device_list);

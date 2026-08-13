@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2016 Neil Birkbeck <neil.birkbeck@gmail.com>
  *
  * This file is part of FFmpeg.
@@ -26,111 +26,105 @@
 
 
 /**
- * Mastering display metadata capable of representing the color volume of
- * the display used to master the content (SMPTE 2086:2014).
+ * 能够表示内容制作时所用显示器色彩体积的母版显示元数据（SMPTE 2086:2014）。
  *
- * To be used as payload of a AVFrameSideData or AVPacketSideData with the
- * appropriate type.
+ * 用作具有适当类型的 AVFrameSideData 或 AVPacketSideData 的载荷。
  *
- * @note The struct should be allocated with av_mastering_display_metadata_alloc()
- *       and its size is not a part of the public ABI.
+ * @note 应使用 av_mastering_display_metadata_alloc() 分配该结构，其大小不属于
+ *       公共 ABI。
  */
 typedef struct AVMasteringDisplayMetadata {
     /**
-     * CIE 1931 xy chromaticity coords of color primaries (r, g, b order).
+     * 色度原色的 CIE 1931 xy 色度坐标（r、g、b 顺序）。
      */
     AVRational display_primaries[3][2];
 
     /**
-     * CIE 1931 xy chromaticity coords of white point.
+     * 白点的 CIE 1931 xy 色度坐标。
      */
     AVRational white_point[2];
 
     /**
-     * Min luminance of mastering display (cd/m^2).
+     * 母版显示器的最小亮度（cd/m^2）。
      */
     AVRational min_luminance;
 
     /**
-     * Max luminance of mastering display (cd/m^2).
+     * 母版显示器的最大亮度（cd/m^2）。
      */
     AVRational max_luminance;
 
     /**
-     * Flag indicating whether the display primaries (and white point) are set.
+     * 表示是否已设置显示原色（和白点）的标志。
      */
     int has_primaries;
 
     /**
-     * Flag indicating whether the luminance (min_ and max_) have been set.
+     * 表示是否已设置亮度（min_ 和 max_）的标志。
      */
     int has_luminance;
 
 } AVMasteringDisplayMetadata;
 
 /**
- * Allocate an AVMasteringDisplayMetadata structure and set its fields to
- * default values. The resulting struct can be freed using av_freep().
+ * 分配 AVMasteringDisplayMetadata 结构并将其字段设为默认值。结果结构可以使用
+ * av_freep() 释放。
  *
- * @return An AVMasteringDisplayMetadata filled with default values or NULL
- *         on failure.
+ * @return 填有默认值的 AVMasteringDisplayMetadata；失败时返回 NULL。
  */
 AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc(void);
 
 /**
- * Allocate an AVMasteringDisplayMetadata structure and set its fields to
- * default values. The resulting struct can be freed using av_freep().
+ * 分配 AVMasteringDisplayMetadata 结构并将其字段设为默认值。结果结构可以使用
+ * av_freep() 释放。
  *
- * @return An AVMasteringDisplayMetadata filled with default values or NULL
- *         on failure.
+ * @return 填有默认值的 AVMasteringDisplayMetadata；失败时返回 NULL。
  */
 AVMasteringDisplayMetadata *av_mastering_display_metadata_alloc_size(size_t *size);
 
 /**
- * Allocate a complete AVMasteringDisplayMetadata and add it to the frame.
+ * 分配完整的 AVMasteringDisplayMetadata 并将其添加到帧中。
  *
- * @param frame The frame which side data is added to.
+ * @param frame 要添加侧数据的帧。
  *
- * @return The AVMasteringDisplayMetadata structure to be filled by caller.
+ * @return 由调用者填充的 AVMasteringDisplayMetadata 结构。
  */
 AVMasteringDisplayMetadata *av_mastering_display_metadata_create_side_data(AVFrame *frame);
 
 /**
- * Content light level needed by to transmit HDR over HDMI (CTA-861.3).
+ * 通过 HDMI 传输 HDR 所需的内容光照级别（CTA-861.3）。
  *
- * To be used as payload of a AVFrameSideData or AVPacketSideData with the
- * appropriate type.
+ * 用作具有适当类型的 AVFrameSideData 或 AVPacketSideData 的载荷。
  *
- * @note The struct should be allocated with av_content_light_metadata_alloc()
- *       and its size is not a part of the public ABI.
+ * @note 应使用 av_content_light_metadata_alloc() 分配该结构，其大小不属于
+ *       公共 ABI。
  */
 typedef struct AVContentLightMetadata {
     /**
-     * Max content light level (cd/m^2).
+     * 最大内容光照级别（cd/m^2）。
      */
     unsigned MaxCLL;
 
     /**
-     * Max average light level per frame (cd/m^2).
+     * 每帧最大平均光照级别（cd/m^2）。
      */
     unsigned MaxFALL;
 } AVContentLightMetadata;
 
 /**
- * Allocate an AVContentLightMetadata structure and set its fields to
- * default values. The resulting struct can be freed using av_freep().
+ * 分配 AVContentLightMetadata 结构并将其字段设为默认值。结果结构可以使用
+ * av_freep() 释放。
  *
- * @return An AVContentLightMetadata filled with default values or NULL
- *         on failure.
+ * @return 填有默认值的 AVContentLightMetadata；失败时返回 NULL。
  */
 AVContentLightMetadata *av_content_light_metadata_alloc(size_t *size);
 
 /**
- * Allocate a complete AVContentLightMetadata and add it to the frame.
+ * 分配完整的 AVContentLightMetadata 并将其添加到帧中。
  *
- * @param frame The frame which side data is added to.
+ * @param frame 要添加侧数据的帧。
  *
- * @return The AVContentLightMetadata structure to be filled by caller.
+ * @return 由调用者填充的 AVContentLightMetadata 结构。
  */
 AVContentLightMetadata *av_content_light_metadata_create_side_data(AVFrame *frame);
 

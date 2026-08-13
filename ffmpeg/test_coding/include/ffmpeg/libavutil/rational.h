@@ -1,4 +1,4 @@
-/*
+﻿/*
  * rational numbers
  * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
  *
@@ -22,7 +22,7 @@
 /**
  * @file
  * @ingroup lavu_math_rational
- * Utilities for rational number calculation.
+ * 有理数计算工具。
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
@@ -36,36 +36,30 @@
 /**
  * @defgroup lavu_math_rational AVRational
  * @ingroup lavu_math
- * Rational number calculation.
+ * 有理数计算。
  *
- * While rational numbers can be expressed as floating-point numbers, the
- * conversion process is a lossy one, so are floating-point operations. On the
- * other hand, the nature of FFmpeg demands highly accurate calculation of
- * timestamps. This set of rational number utilities serves as a generic
- * interface for manipulating rational numbers as pairs of numerators and
- * denominators.
+ * 有理数虽可表示为浮点数，但转换和浮点运算都会损失精度；FFmpeg 又要求高精度时间戳计算。
+ * 因此，这组工具以分子/分母对形式提供操作有理数的通用接口。
  *
- * Many of the functions that operate on AVRational's have the suffix `_q`, in
- * reference to the mathematical symbol "ℚ" (Q) which denotes the set of all
- * rational numbers.
+ * 许多操作 AVRational 的函数以 `_q` 为后缀，对应表示全体有理数集合的数学符号“ℚ”(Q)。
  *
  * @{
  */
 
 /**
- * Rational number (pair of numerator and denominator).
+ * 有理数（分子与分母组成的数对）。
  */
 typedef struct AVRational{
-    int num; ///< Numerator
-    int den; ///< Denominator
+    int num; ///< 分子
+    int den; ///< 分母
 } AVRational;
 
 /**
- * Create an AVRational.
+ * 创建 AVRational。
  *
- * Useful for compilers that do not support compound literals.
+ * 适用于不支持复合字面量的编译器。
  *
- * @note The return value is not reduced.
+ * @note 返回值未约分。
  * @see av_reduce()
  */
 static inline AVRational av_make_q(int num, int den)
@@ -75,16 +69,16 @@ static inline AVRational av_make_q(int num, int den)
 }
 
 /**
- * Compare two rationals.
+ * 比较两个有理数。
  *
- * @param a First rational
- * @param b Second rational
+ * @param a 第一个有理数
+ * @param b 第二个有理数
  *
- * @return One of the following values:
- *         - 0 if `a == b`
- *         - 1 if `a > b`
- *         - -1 if `a < b`
- *         - `INT_MIN` if one of the values is of the form `0 / 0`
+ * @return 下列值之一：
+ *         - `a == b` 时为 0
+ *         - `a > b` 时为 1
+ *         - `a < b` 时为 -1
+ *         - 任一值形如 `0 / 0` 时为 `INT_MIN`
  */
 static inline int av_cmp_q(AVRational a, AVRational b){
     const int64_t tmp= a.num * (int64_t)b.den - b.num * (int64_t)a.den;
@@ -96,9 +90,9 @@ static inline int av_cmp_q(AVRational a, AVRational b){
 }
 
 /**
- * Convert an AVRational to a `double`.
- * @param a AVRational to convert
- * @return `a` in floating-point form
+ * 将 AVRational 转换为 `double`。
+ * @param a 要转换的 AVRational
+ * @return `a` 的浮点形式
  * @see av_d2q()
  */
 static inline double av_q2d(AVRational a){
@@ -106,54 +100,54 @@ static inline double av_q2d(AVRational a){
 }
 
 /**
- * Reduce a fraction.
+ * 约分分数。
  *
- * This is useful for framerate calculations.
+ * 适用于帧率计算。
  *
- * @param[out] dst_num Destination numerator
- * @param[out] dst_den Destination denominator
- * @param[in]      num Source numerator
- * @param[in]      den Source denominator
- * @param[in]      max Maximum allowed values for `dst_num` & `dst_den`
- * @return 1 if the operation is exact, 0 otherwise
+ * @param[out] dst_num 目标分子
+ * @param[out] dst_den 目标分母
+ * @param[in]      num 源分子
+ * @param[in]      den 源分母
+ * @param[in]      max `dst_num` 和 `dst_den` 允许的最大值
+ * @return 操作精确时返回 1，否则返回 0
  */
 int av_reduce(int *dst_num, int *dst_den, int64_t num, int64_t den, int64_t max);
 
 /**
- * Multiply two rationals.
- * @param b First rational
- * @param c Second rational
+ * 两个有理数相乘。
+ * @param b 第一个有理数
+ * @param c 第二个有理数
  * @return b*c
  */
 AVRational av_mul_q(AVRational b, AVRational c) av_const;
 
 /**
- * Divide one rational by another.
- * @param b First rational
- * @param c Second rational
+ * 一个有理数除以另一个有理数。
+ * @param b 第一个有理数
+ * @param c 第二个有理数
  * @return b/c
  */
 AVRational av_div_q(AVRational b, AVRational c) av_const;
 
 /**
- * Add two rationals.
- * @param b First rational
- * @param c Second rational
+ * 两个有理数相加。
+ * @param b 第一个有理数
+ * @param c 第二个有理数
  * @return b+c
  */
 AVRational av_add_q(AVRational b, AVRational c) av_const;
 
 /**
- * Subtract one rational from another.
- * @param b First rational
- * @param c Second rational
+ * 从一个有理数中减去另一个有理数。
+ * @param b 第一个有理数
+ * @param c 第二个有理数
  * @return b-c
  */
 AVRational av_sub_q(AVRational b, AVRational c) av_const;
 
 /**
- * Invert a rational.
- * @param q value
+ * 对有理数求倒数。
+ * @param q 值
  * @return 1 / q
  */
 static av_always_inline AVRational av_inv_q(AVRational q)
@@ -163,58 +157,50 @@ static av_always_inline AVRational av_inv_q(AVRational q)
 }
 
 /**
- * Convert a double precision floating point number to a rational.
+ * 将双精度浮点数转换为有理数。
  *
- * In case of infinity, the returned value is expressed as `{1, 0}` or
- * `{-1, 0}` depending on the sign.
+ * 对于无穷大，根据符号将返回值表示为 `{1, 0}` 或 `{-1, 0}`。
  *
- * In general rational numbers with |num| <= 1<<26 && |den| <= 1<<26
- * can be recovered exactly from their double representation.
- * (no exceptions were found within 1B random ones)
+ * 通常，|num| <= 1<<26 且 |den| <= 1<<26 的有理数可从 double 表示精确恢复。
+ * （在 10 亿个随机值中未发现例外）
  *
- * @param d   `double` to convert
- * @param max Maximum allowed numerator and denominator
- * @return `d` in AVRational form
+ * @param d   要转换的 `double`
+ * @param max 允许的最大分子和分母
+ * @return AVRational 形式的 `d`
  * @see av_q2d()
  */
 AVRational av_d2q(double d, int max) av_const;
 
 /**
- * Find which of the two rationals is closer to another rational.
+ * 判断两个有理数中哪个更接近另一个有理数。
  *
- * @param q     Rational to be compared against
- * @param q1    Rational to be tested
- * @param q2    Rational to be tested
- * @return One of the following values:
- *         - 1 if `q1` is nearer to `q` than `q2`
- *         - -1 if `q2` is nearer to `q` than `q1`
- *         - 0 if they have the same distance
+ * @param q     比较基准有理数
+ * @param q1    待测试有理数
+ * @param q2    待测试有理数
+ * @return 下列值之一：q1 更近时为 1，q2 更近时为 -1，距离相同时为 0
  */
 int av_nearer_q(AVRational q, AVRational q1, AVRational q2);
 
 /**
- * Find the value in a list of rationals nearest a given reference rational.
+ * 在有理数列表中查找最接近给定参考有理数的值。
  *
- * @param q      Reference rational
- * @param q_list Array of rationals terminated by `{0, 0}`
- * @return Index of the nearest value found in the array
+ * @param q      参考有理数
+ * @param q_list 以 `{0, 0}` 结尾的有理数数组
+ * @return 数组中最近值的索引
  */
 int av_find_nearest_q_idx(AVRational q, const AVRational* q_list);
 
 /**
- * Convert an AVRational to a IEEE 32-bit `float` expressed in fixed-point
- * format.
+ * 将 AVRational 转换为以定点格式表示的 IEEE 32 位 `float`。
  *
- * @param q Rational to be converted
- * @return Equivalent floating-point value, expressed as an unsigned 32-bit
- *         integer.
- * @note The returned value is platform-indepedant.
+ * @param q 要转换的有理数
+ * @return 等效浮点值，以无符号 32 位整数表示
+ * @note 返回值与平台无关。
  */
 uint32_t av_q2intfloat(AVRational q);
 
 /**
- * Return the best rational so that a and b are multiple of it.
- * If the resulting denominator is larger than max_den, return def.
+ * 返回使 a 和 b 都是其倍数的最佳有理数。所得分母大于 max_den 时返回 def。
  */
 AVRational av_gcd_q(AVRational a, AVRational b, int max_den, AVRational def);
 

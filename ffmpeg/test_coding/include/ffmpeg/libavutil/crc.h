@@ -1,4 +1,4 @@
-/*
+﻿/*
  * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -21,7 +21,7 @@
 /**
  * @file
  * @ingroup lavu_crc32
- * Public header for CRC hash function implementation.
+ * CRC 哈希函数实现的公共头文件。
  */
 
 #ifndef AVUTIL_CRC_H
@@ -34,11 +34,10 @@
 /**
  * @defgroup lavu_crc32 CRC
  * @ingroup lavu_hash
- * CRC (Cyclic Redundancy Check) hash function implementation.
+ * CRC（循环冗余校验）哈希函数实现。
  *
- * This module supports numerous CRC polynomials, in addition to the most
- * widely used CRC-32-IEEE. See @ref AVCRCId for a list of available
- * polynomials.
+ * 除最常用的 CRC-32-IEEE 外，此模块还支持多种 CRC 多项式。可用多项式列表
+ * 参见 @ref AVCRCId。
  *
  * @{
  */
@@ -50,47 +49,43 @@ typedef enum {
     AV_CRC_16_ANSI,
     AV_CRC_16_CCITT,
     AV_CRC_32_IEEE,
-    AV_CRC_32_IEEE_LE,  /*< reversed bitorder version of AV_CRC_32_IEEE */
-    AV_CRC_16_ANSI_LE,  /*< reversed bitorder version of AV_CRC_16_ANSI */
+    AV_CRC_32_IEEE_LE,  /*< AV_CRC_32_IEEE 的位序反转版本 */
+    AV_CRC_16_ANSI_LE,  /*< AV_CRC_16_ANSI 的位序反转版本 */
     AV_CRC_24_IEEE,
     AV_CRC_8_EBU,
-    AV_CRC_MAX,         /*< Not part of public API! Do not use outside libavutil. */
+    AV_CRC_MAX,         /*< 不属于公共 API！不要在 libavutil 之外使用。 */
 }AVCRCId;
 
 /**
- * Initialize a CRC table.
- * @param ctx must be an array of size sizeof(AVCRC)*257 or sizeof(AVCRC)*1024
- * @param le If 1, the lowest bit represents the coefficient for the highest
- *           exponent of the corresponding polynomial (both for poly and
- *           actual CRC).
- *           If 0, you must swap the CRC parameter and the result of av_crc
- *           if you need the standard representation (can be simplified in
- *           most cases to e.g. bswap16):
+ * 初始化 CRC 表。
+ * @param ctx 必须是大小为 sizeof(AVCRC)*257 或 sizeof(AVCRC)*1024 的数组
+ * @param le 为 1 时，最低位表示对应多项式最高次幂的系数（对 poly 和实际 CRC
+ *           都如此）。为 0 时，如果需要标准表示，则必须交换 CRC 参数和 av_crc
+ *           的结果（大多数情况下可简化为例如 bswap16）：
  *           av_bswap32(crc << (32-bits))
- * @param bits number of bits for the CRC
- * @param poly generator polynomial without the x**bits coefficient, in the
- *             representation as specified by le
- * @param ctx_size size of ctx in bytes
- * @return <0 on failure
+ * @param bits CRC 的位数
+ * @param poly 不包含 x**bits 系数的生成多项式，采用 le 指定的表示方式
+ * @param ctx_size ctx 的字节大小
+ * @return 失败时返回 <0
  */
 int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size);
 
 /**
- * Get an initialized standard CRC table.
- * @param crc_id ID of a standard CRC
- * @return a pointer to the CRC table or NULL on failure
+ * 获取已初始化的标准 CRC 表。
+ * @param crc_id 标准 CRC 的 ID
+ * @return 指向 CRC 表的指针；失败时返回 NULL
  */
 const AVCRC *av_crc_get_table(AVCRCId crc_id);
 
 /**
- * Calculate the CRC of a block.
- * @param ctx initialized AVCRC array (see av_crc_init())
- * @param crc CRC of previous blocks if any or initial value for CRC
- * @param buffer buffer whose CRC to calculate
- * @param length length of the buffer
- * @return CRC updated with the data from the given block
+ * 计算数据块的 CRC。
+ * @param ctx 已初始化的 AVCRC 数组（参见 av_crc_init()）
+ * @param crc 前面数据块的 CRC（如果有），或 CRC 初始值
+ * @param buffer 要计算 CRC 的缓冲区
+ * @param length 缓冲区长度
+ * @return 使用给定数据块更新后的 CRC
  *
- * @see av_crc_init() "le" parameter
+ * @see av_crc_init() 的 "le" 参数
  */
 uint32_t av_crc(const AVCRC *ctx, uint32_t crc,
                 const uint8_t *buffer, size_t length) av_pure;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DXVA2 HW acceleration
  *
  * copyright (c) 2009 Laurent Aimar
@@ -26,7 +26,7 @@
 /**
  * @file
  * @ingroup lavc_codec_hwaccel_dxva2
- * Public libavcodec DXVA2 header.
+ * libavcodec 的公共 DXVA2 头文件。
  */
 
 #if !defined(_WIN32_WINNT) || _WIN32_WINNT < 0x0602
@@ -46,39 +46,38 @@
  */
 
 /**
- * This structure is used to provides the necessary configurations and data
- * to the DXVA2 FFmpeg HWAccel implementation.
+ * 此结构体用于向 FFmpeg 的 DXVA2 HWAccel 实现提供必要的配置和数据。
  *
- * The application must make it available as AVCodecContext.hwaccel_context.
+ * 应用程序必须通过 AVCodecContext.hwaccel_context 提供此结构体。
  */
 struct dxva_context {
     /**
-     * DXVA2 decoder object
+     * DXVA2 解码器对象
      */
     IDirectXVideoDecoder *decoder;
 
     /**
-     * DXVA2 configuration used to create the decoder
+     * 用于创建解码器的 DXVA2 配置
      */
     const DXVA2_ConfigPictureDecode *cfg;
 
     /**
-     * The number of surface in the surface array
+     * surface 数组中的表面数量
      */
     unsigned surface_count;
 
     /**
-     * The array of Direct3D surfaces used to create the decoder
+     * 用于创建解码器的 Direct3D 表面数组
      */
     LPDIRECT3DSURFACE9 *surface;
 
     /**
-     * A bit field configuring the workarounds needed for using the decoder
+     * 配置使用解码器所需规避措施的位字段
      */
     uint64_t workaround;
 
     /**
-     * Private to the FFmpeg AVHWAccel implementation
+     * FFmpeg AVHWAccel 实现的私有字段
      */
     unsigned report_id;
 };

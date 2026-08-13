@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -24,144 +24,129 @@
 
 /**
  * @file
- * API-specific header for AV_HWDEVICE_TYPE_DRM.
+ * AV_HWDEVICE_TYPE_DRM 专用 API 头文件。
  *
- * Internal frame allocation is not currently supported - all frames
- * must be allocated by the user.  Thus AVHWFramesContext is always
- * NULL, though this may change if support for frame allocation is
- * added in future.
+ * 当前不支持内部帧分配，所有帧都必须由用户分配。因此 AVHWFramesContext
+ * 始终为 NULL；未来加入帧分配支持后可能改变。
  */
 
 enum {
     /**
-     * The maximum number of layers/planes in a DRM frame.
+     * DRM 帧中的最大层数/平面数。
      */
     AV_DRM_MAX_PLANES = 4
 };
 
 /**
- * DRM object descriptor.
+ * DRM 对象描述符。
  *
- * Describes a single DRM object, addressing it as a PRIME file
- * descriptor.
+ * 描述单个 DRM 对象，以 PRIME 文件描述符寻址。
  */
 typedef struct AVDRMObjectDescriptor {
     /**
-     * DRM PRIME fd for the object.
+     * 对象的 DRM PRIME 文件描述符。
      */
     int fd;
     /**
-     * Total size of the object.
+     * 对象的总大小。
      *
-     * (This includes any parts not which do not contain image data.)
+     * （包括不含图像数据的部分。）
      */
     size_t size;
     /**
-     * Format modifier applied to the object (DRM_FORMAT_MOD_*).
+     * 应用于对象的格式修饰符（DRM_FORMAT_MOD_*）。
      *
-     * If the format modifier is unknown then this should be set to
-     * DRM_FORMAT_MOD_INVALID.
+     * 格式修饰符未知时应设为 DRM_FORMAT_MOD_INVALID。
      */
     uint64_t format_modifier;
 } AVDRMObjectDescriptor;
 
 /**
- * DRM plane descriptor.
+ * DRM 平面描述符。
  *
- * Describes a single plane of a layer, which is contained within
- * a single object.
+ * 描述层中的单个平面，该平面包含在单个对象内。
  */
 typedef struct AVDRMPlaneDescriptor {
     /**
-     * Index of the object containing this plane in the objects
-     * array of the enclosing frame descriptor.
+     * 包含此平面的对象在所属帧描述符 objects 数组中的索引。
      */
     int object_index;
     /**
-     * Offset within that object of this plane.
+     * 此平面在该对象内的偏移。
      */
     ptrdiff_t offset;
     /**
-     * Pitch (linesize) of this plane.
+     * 此平面的 pitch（linesize）。
      */
     ptrdiff_t pitch;
 } AVDRMPlaneDescriptor;
 
 /**
- * DRM layer descriptor.
+ * DRM 层描述符。
  *
- * Describes a single layer within a frame.  This has the structure
- * defined by its format, and will contain one or more planes.
+ * 描述帧中的单个层。其结构由格式定义，包含一个或多个平面。
  */
 typedef struct AVDRMLayerDescriptor {
     /**
-     * Format of the layer (DRM_FORMAT_*).
+     * 层的格式（DRM_FORMAT_*）。
      */
     uint32_t format;
     /**
-     * Number of planes in the layer.
+     * 层中的平面数。
      *
-     * This must match the number of planes required by format.
+     * 必须与 format 要求的平面数匹配。
      */
     int nb_planes;
     /**
-     * Array of planes in this layer.
+     * 此层中的平面数组。
      */
     AVDRMPlaneDescriptor planes[AV_DRM_MAX_PLANES];
 } AVDRMLayerDescriptor;
 
 /**
- * DRM frame descriptor.
+ * DRM 帧描述符。
  *
- * This is used as the data pointer for AV_PIX_FMT_DRM_PRIME frames.
- * It is also used by user-allocated frame pools - allocating in
- * AVHWFramesContext.pool must return AVBufferRefs which contain
- * an object of this type.
+ * 用作 AV_PIX_FMT_DRM_PRIME 帧的 data 指针，也供用户分配的帧池使用；
+ * AVHWFramesContext.pool 中的分配必须返回包含此类型对象的 AVBufferRef。
  *
- * The fields of this structure should be set such it can be
- * imported directly by EGL using the EGL_EXT_image_dma_buf_import
- * and EGL_EXT_image_dma_buf_import_modifiers extensions.
- * (Note that the exact layout of a particular format may vary between
- * platforms - we only specify that the same platform should be able
- * to import it.)
+ * 应设置此结构体字段，使 EGL 可使用 EGL_EXT_image_dma_buf_import 和
+ * EGL_EXT_image_dma_buf_import_modifiers 扩展直接导入。
+ * （注意，特定格式的确切布局可能因平台而异；这里只规定同一平台应能导入它。）
  *
- * The total number of planes must not exceed AV_DRM_MAX_PLANES, and
- * the order of the planes by increasing layer index followed by
- * increasing plane index must be the same as the order which would
- * be used for the data pointers in the equivalent software format.
+ * 平面总数不得超过 AV_DRM_MAX_PLANES；按层索引递增、再按平面索引递增的顺序，
+ * 必须与等效软件格式中 data 指针采用的顺序相同。
  */
 typedef struct AVDRMFrameDescriptor {
     /**
-     * Number of DRM objects making up this frame.
+     * 构成此帧的 DRM 对象数量。
      */
     int nb_objects;
     /**
-     * Array of objects making up the frame.
+     * 构成帧的对象数组。
      */
     AVDRMObjectDescriptor objects[AV_DRM_MAX_PLANES];
     /**
-     * Number of layers in the frame.
+     * 帧中的层数。
      */
     int nb_layers;
     /**
-     * Array of layers in the frame.
+     * 帧中的层数组。
      */
     AVDRMLayerDescriptor layers[AV_DRM_MAX_PLANES];
 } AVDRMFrameDescriptor;
 
 /**
- * DRM device.
+ * DRM 设备。
  *
- * Allocated as AVHWDeviceContext.hwctx.
+ * 作为 AVHWDeviceContext.hwctx 分配。
  */
 typedef struct AVDRMDeviceContext {
     /**
-     * File descriptor of DRM device.
+     * DRM 设备的文件描述符。
      *
-     * This is used as the device to create frames on, and may also be
-     * used in some derivation and mapping operations.
+     * 用作创建帧的设备，也可能用于某些派生和映射操作。
      *
-     * If no device is required, set to -1.
+     * 不需要设备时设为 -1。
      */
     int fd;
 } AVDRMDeviceContext;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -23,14 +23,14 @@
 
 /**
  * @file
- * An API-specific header for AV_HWDEVICE_TYPE_VDPAU.
+ * AV_HWDEVICE_TYPE_VDPAU 专用 API 头文件。
  *
- * This API supports dynamic frame pools. AVHWFramesContext.pool must return
- * AVBufferRefs whose data pointer is a VdpVideoSurface.
+ * 此 API 支持动态帧池。AVHWFramesContext.pool 必须返回数据指针为
+ * VdpVideoSurface 的 AVBufferRef。
  */
 
 /**
- * This struct is allocated as AVHWDeviceContext.hwctx
+ * 此结构被分配为 AVHWDeviceContext.hwctx。
  */
 typedef struct AVVDPAUDeviceContext {
     VdpDevice          device;
@@ -38,7 +38,7 @@ typedef struct AVVDPAUDeviceContext {
 } AVVDPAUDeviceContext;
 
 /**
- * AVHWFramesContext.hwctx is currently not used
+ * AVHWFramesContext.hwctx 当前未使用。
  */
 
 #endif /* AVUTIL_HWCONTEXT_VDPAU_H */

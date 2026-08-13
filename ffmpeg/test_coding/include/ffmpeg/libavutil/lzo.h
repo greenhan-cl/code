@@ -1,4 +1,4 @@
-/*
+﻿/*
  * LZO 1x decompression
  * copyright (c) 2006 Reimar Doeffinger
  *
@@ -31,15 +31,15 @@
 
 #include <stdint.h>
 
-/** @name Error flags returned by av_lzo1x_decode
+/** @name av_lzo1x_decode 返回的错误标志
  * @{ */
-/// end of the input buffer reached before decoding finished
+/// 解码完成前已到达输入缓冲区末尾
 #define AV_LZO_INPUT_DEPLETED  1
-/// decoded data did not fit into output buffer
+/// 解码数据无法放入输出缓冲区
 #define AV_LZO_OUTPUT_FULL     2
-/// a reference to previously decoded data was wrong
+/// 对先前解码数据的引用错误
 #define AV_LZO_INVALID_BACKPTR 4
-/// a non-specific error in the compressed bitstream
+/// 压缩比特流中的非特定错误
 #define AV_LZO_ERROR           8
 /** @} */
 
@@ -47,15 +47,15 @@
 #define AV_LZO_OUTPUT_PADDING 12
 
 /**
- * @brief Decodes LZO 1x compressed data.
- * @param out output buffer
- * @param outlen size of output buffer, number of bytes left are returned here
- * @param in input buffer
- * @param inlen size of input buffer, number of bytes left are returned here
- * @return 0 on success, otherwise a combination of the error flags above
+ * @brief 解码 LZO 1x 压缩数据。
+ * @param out 输出缓冲区
+ * @param outlen 输出缓冲区大小；剩余字节数会通过此参数返回
+ * @param in 输入缓冲区
+ * @param inlen 输入缓冲区大小；剩余字节数会通过此参数返回
+ * @return 成功时返回 0，否则返回上述错误标志的组合
  *
- * Make sure all buffers are appropriately padded, in must provide
- * AV_LZO_INPUT_PADDING, out must provide AV_LZO_OUTPUT_PADDING additional bytes.
+ * 确保所有缓冲区均正确填充：in 必须额外提供 AV_LZO_INPUT_PADDING 字节，
+ * out 必须额外提供 AV_LZO_OUTPUT_PADDING 字节。
  */
 int av_lzo1x_decode(void *out, int *outlen, const void *in, int *inlen);
 

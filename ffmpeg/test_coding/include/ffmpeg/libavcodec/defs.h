@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  * This file is part of FFmpeg.
  *
@@ -23,7 +23,7 @@
 /**
  * @file
  * @ingroup libavc
- * Misc types and constants that do not belong anywhere else.
+ * 不适合归入其他位置的杂项类型和常量。
  */
 
 #include <stdint.h>
@@ -31,35 +31,32 @@
 
 /**
  * @ingroup lavc_decoding
- * Required number of additionally allocated bytes at the end of the input bitstream for decoding.
- * This is mainly needed because some optimized bitstream readers read
- * 32 or 64 bit at once and could read over the end.<br>
- * Note: If the first 23 bits of the additional bytes are not 0, then damaged
- * MPEG bitstreams could cause overread and segfault.
+ * 解码时必须在输入比特流末尾额外分配的字节数。
+ * 主要原因是某些优化的比特流读取器一次读取 32 或 64 位，可能越过末尾。<br>
+ * 注意：如果额外字节的前 23 位不为 0，损坏的 MPEG 比特流可能导致越界读取和段错误。
  */
 #define AV_INPUT_BUFFER_PADDING_SIZE 64
 
 /**
- * Verify checksums embedded in the bitstream (could be of either encoded or
- * decoded data, depending on the format) and print an error message on mismatch.
- * If AV_EF_EXPLODE is also set, a mismatching checksum will result in the
- * decoder/demuxer returning an error.
+ * 验证嵌入比特流的校验和（取决于格式，可能属于编码或解码数据），
+ * 不匹配时打印错误消息。如果同时设置 AV_EF_EXPLODE，校验和不匹配会使
+ * 解码器/解封装器返回错误。
  */
 #define AV_EF_CRCCHECK       (1<<0)
-#define AV_EF_BITSTREAM      (1<<1)   ///< detect bitstream specification deviations
-#define AV_EF_BUFFER         (1<<2)   ///< detect improper bitstream length
-#define AV_EF_EXPLODE        (1<<3)   ///< abort decoding on minor error detection
+#define AV_EF_BITSTREAM      (1<<1)   ///< 检测比特流规范偏差
+#define AV_EF_BUFFER         (1<<2)   ///< 检测不正确的比特流长度
+#define AV_EF_EXPLODE        (1<<3)   ///< 检测到轻微错误时中止解码
 
-#define AV_EF_IGNORE_ERR     (1<<15)  ///< ignore errors and continue
-#define AV_EF_CAREFUL        (1<<16)  ///< consider things that violate the spec, are fast to calculate and have not been seen in the wild as errors
-#define AV_EF_COMPLIANT      (1<<17)  ///< consider all spec non compliances as errors
-#define AV_EF_AGGRESSIVE     (1<<18)  ///< consider things that a sane encoder/muxer should not do as an error
+#define AV_EF_IGNORE_ERR     (1<<15)  ///< 忽略错误并继续
+#define AV_EF_CAREFUL        (1<<16)  ///< 将违反规范、易于计算且现实中尚未出现的情况视为错误
+#define AV_EF_COMPLIANT      (1<<17)  ///< 将所有不符合规范的情况视为错误
+#define AV_EF_AGGRESSIVE     (1<<18)  ///< 将正常编码器/封装器不应执行的操作视为错误
 
-#define FF_COMPLIANCE_VERY_STRICT   2 ///< Strictly conform to an older more strict version of the spec or reference software.
-#define FF_COMPLIANCE_STRICT        1 ///< Strictly conform to all the things in the spec no matter what consequences.
+#define FF_COMPLIANCE_VERY_STRICT   2 ///< 严格遵循较旧且更严格的规范版本或参考软件。
+#define FF_COMPLIANCE_STRICT        1 ///< 不计后果地严格遵循规范中的所有要求。
 #define FF_COMPLIANCE_NORMAL        0
-#define FF_COMPLIANCE_UNOFFICIAL   -1 ///< Allow unofficial extensions
-#define FF_COMPLIANCE_EXPERIMENTAL -2 ///< Allow nonstandardized experimental things.
+#define FF_COMPLIANCE_UNOFFICIAL   -1 ///< 允许非官方扩展
+#define FF_COMPLIANCE_EXPERIMENTAL -2 ///< 允许未标准化的实验性内容。
 
 
 #define AV_PROFILE_UNKNOWN        -99
@@ -104,8 +101,8 @@
 #define AV_PROFILE_MPEG2_MAIN          4
 #define AV_PROFILE_MPEG2_SIMPLE        5
 
-#define AV_PROFILE_H264_CONSTRAINED  (1<<9)  // 8+1; constraint_set1_flag
-#define AV_PROFILE_H264_INTRA        (1<<11) // 8+3; constraint_set3_flag
+#define AV_PROFILE_H264_CONSTRAINED  (1<<9)  // 8+1；constraint_set1_flag
+#define AV_PROFILE_H264_INTRA        (1<<11) // 8+3；constraint_set3_flag
 
 #define AV_PROFILE_H264_BASELINE             66
 #define AV_PROFILE_H264_CONSTRAINED_BASELINE (66|AV_PROFILE_H264_CONSTRAINED)
@@ -211,25 +208,25 @@
 enum AVFieldOrder {
     AV_FIELD_UNKNOWN,
     AV_FIELD_PROGRESSIVE,
-    AV_FIELD_TT,          ///< Top coded_first, top displayed first
-    AV_FIELD_BB,          ///< Bottom coded first, bottom displayed first
-    AV_FIELD_TB,          ///< Top coded first, bottom displayed first
-    AV_FIELD_BT,          ///< Bottom coded first, top displayed first
+    AV_FIELD_TT,          ///< 顶场先编码，顶场先显示
+    AV_FIELD_BB,          ///< 底场先编码，底场先显示
+    AV_FIELD_TB,          ///< 顶场先编码，底场先显示
+    AV_FIELD_BT,          ///< 底场先编码，顶场先显示
 };
 
 /**
  * @ingroup lavc_decoding
  */
 enum AVDiscard{
-    /* We leave some space between them for extensions (drop some
-     * keyframes for intra-only or drop just some bidir frames). */
-    AVDISCARD_NONE    =-16, ///< discard nothing
-    AVDISCARD_DEFAULT =  0, ///< discard useless packets like 0 size packets in avi
-    AVDISCARD_NONREF  =  8, ///< discard all non reference
-    AVDISCARD_BIDIR   = 16, ///< discard all bidirectional frames
-    AVDISCARD_NONINTRA= 24, ///< discard all non intra frames
-    AVDISCARD_NONKEY  = 32, ///< discard all frames except keyframes
-    AVDISCARD_ALL     = 48, ///< discard all
+    /* 在各值之间保留一些空间用于扩展（例如仅帧内编码时丢弃部分关键帧，
+     * 或仅丢弃部分双向帧）。 */
+    AVDISCARD_NONE    =-16, ///< 不丢弃任何内容
+    AVDISCARD_DEFAULT =  0, ///< 丢弃无用数据包，例如 AVI 中大小为 0 的包
+    AVDISCARD_NONREF  =  8, ///< 丢弃所有非参考帧
+    AVDISCARD_BIDIR   = 16, ///< 丢弃所有双向帧
+    AVDISCARD_NONINTRA= 24, ///< 丢弃所有非帧内帧
+    AVDISCARD_NONKEY  = 32, ///< 丢弃除关键帧外的所有帧
+    AVDISCARD_ALL     = 48, ///< 全部丢弃
 };
 
 enum AVAudioServiceType {
@@ -242,120 +239,109 @@ enum AVAudioServiceType {
     AV_AUDIO_SERVICE_TYPE_EMERGENCY         = 6,
     AV_AUDIO_SERVICE_TYPE_VOICE_OVER        = 7,
     AV_AUDIO_SERVICE_TYPE_KARAOKE           = 8,
-    AV_AUDIO_SERVICE_TYPE_NB                   , ///< Not part of ABI
+    AV_AUDIO_SERVICE_TYPE_NB                   , ///< 不属于 ABI
 };
 
 /**
- * Pan Scan area.
- * This specifies the area which should be displayed.
- * Note there may be multiple such areas for one frame.
+ * 平移扫描区域。
+ * 指定应显示的区域。注意一帧可能包含多个此类区域。
  */
 typedef struct AVPanScan {
     /**
      * id
-     * - encoding: Set by user.
-     * - decoding: Set by libavcodec.
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
     int id;
 
     /**
-     * width and height in 1/16 pel
-     * - encoding: Set by user.
-     * - decoding: Set by libavcodec.
+     * 以 1/16 像素为单位的宽度和高度
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
     int width;
     int height;
 
     /**
-     * position of the top left corner in 1/16 pel for up to 3 fields/frames
-     * - encoding: Set by user.
-     * - decoding: Set by libavcodec.
+     * 最多 3 个场/帧的左上角位置，单位为 1/16 像素
+     * - 编码：由用户设置。
+     * - 解码：由 libavcodec 设置。
      */
     int16_t position[3][2];
 } AVPanScan;
 
 /**
- * This structure describes the bitrate properties of an encoded bitstream. It
- * roughly corresponds to a subset the VBV parameters for MPEG-2 or HRD
- * parameters for H.264/HEVC.
+ * 此结构体描述编码比特流的码率属性。它大致对应 MPEG-2 的部分 VBV 参数，
+ * 或 H.264/HEVC 的部分 HRD 参数。
  */
 typedef struct AVCPBProperties {
     /**
-     * Maximum bitrate of the stream, in bits per second.
-     * Zero if unknown or unspecified.
+     * 流的最大码率，单位为 bit/s。未知或未指定时为 0。
      */
     int64_t max_bitrate;
     /**
-     * Minimum bitrate of the stream, in bits per second.
-     * Zero if unknown or unspecified.
+     * 流的最小码率，单位为 bit/s。未知或未指定时为 0。
      */
     int64_t min_bitrate;
     /**
-     * Average bitrate of the stream, in bits per second.
-     * Zero if unknown or unspecified.
+     * 流的平均码率，单位为 bit/s。未知或未指定时为 0。
      */
     int64_t avg_bitrate;
 
     /**
-     * The size of the buffer to which the ratecontrol is applied, in bits.
-     * Zero if unknown or unspecified.
+     * 应用码率控制的缓冲区大小，单位为 bit。未知或未指定时为 0。
      */
     int64_t buffer_size;
 
     /**
-     * The delay between the time the packet this structure is associated with
-     * is received and the time when it should be decoded, in periods of a 27MHz
-     * clock.
+     * 从收到与此结构体关联的数据包，到应当解码该数据包之间的延迟，
+     * 以 27MHz 时钟周期为单位。
      *
-     * UINT64_MAX when unknown or unspecified.
+     * 未知或未指定时为 UINT64_MAX。
      */
     uint64_t vbv_delay;
 } AVCPBProperties;
 
 /**
- * Allocate a CPB properties structure and initialize its fields to default
- * values.
+ * 分配 CPB 属性结构体，并将字段初始化为默认值。
  *
- * @param size if non-NULL, the size of the allocated struct will be written
- *             here. This is useful for embedding it in side data.
+ * @param size 非 NULL 时，将在此写入所分配结构体的大小。这对于将其嵌入侧数据很有用。
  *
- * @return the newly allocated struct or NULL on failure
+ * @return 新分配的结构体，失败时返回 NULL
  */
 AVCPBProperties *av_cpb_properties_alloc(size_t *size);
 
 /**
- * This structure supplies correlation between a packet timestamp and a wall clock
- * production time. The definition follows the Producer Reference Time ('prft')
- * as defined in ISO/IEC 14496-12
+ * 此结构体提供数据包时间戳与挂钟生成时间之间的对应关系。
+ * 定义遵循 ISO/IEC 14496-12 中的生产者参考时间（'prft'）。
  */
 typedef struct AVProducerReferenceTime {
     /**
-     * A UTC timestamp, in microseconds, since Unix epoch (e.g, av_gettime()).
+     * 自 Unix 纪元以来的 UTC 时间戳，单位为微秒（例如 av_gettime()）。
      */
     int64_t wallclock;
     int flags;
 } AVProducerReferenceTime;
 
 /**
- * RTCP SR (Sender Report) information
+ * RTCP SR（发送方报告）信息
  *
- * The received sender report information for an RTSP
- * stream, exposed as AV_PKT_DATA_RTCP_SR side data.
+ * 接收到的 RTSP 流发送方报告信息，以 AV_PKT_DATA_RTCP_SR 侧数据形式公开。
  */
 typedef struct AVRTCPSenderReport {
-    uint32_t ssrc; ///< Synchronization source identifier
-    uint64_t ntp_timestamp; ///< NTP time when the report was sent
-    uint32_t rtp_timestamp; ///< RTP time when the report was sent
-    uint32_t sender_nb_packets; ///< Total number of packets sent
-    uint32_t sender_nb_bytes; ///< Total number of bytes sent (excluding headers or padding)
+    uint32_t ssrc; ///< 同步源标识符
+    uint64_t ntp_timestamp; ///< 发送报告时的 NTP 时间
+    uint32_t rtp_timestamp; ///< 发送报告时的 RTP 时间
+    uint32_t sender_nb_packets; ///< 已发送的数据包总数
+    uint32_t sender_nb_bytes; ///< 已发送的总字节数（不含头或填充）
 } AVRTCPSenderReport;
 
 /**
- * Encode extradata length to a buffer. Used by xiph codecs.
+ * 将 extradata 长度编码到缓冲区。供 xiph 编解码器使用。
  *
- * @param s buffer to write to; must be at least (v/255+1) bytes long
- * @param v size of extradata in bytes
- * @return number of bytes written to the buffer.
+ * @param s 要写入的缓冲区；长度必须至少为 (v/255+1) 字节
+ * @param v extradata 大小，单位为字节
+ * @return 写入缓冲区的字节数。
  */
 unsigned int av_xiphlacing(unsigned char *s, unsigned int v);
 

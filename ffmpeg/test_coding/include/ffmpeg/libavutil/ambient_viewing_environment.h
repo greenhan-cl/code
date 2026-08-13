@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2023 Jan Ekström <jeebjp@gmail.com>
  *
  * This file is part of FFmpeg.
@@ -26,46 +26,42 @@
 #include "rational.h"
 
 /**
- * Ambient viewing environment metadata as defined by H.274. The values are
- * saved in AVRationals so that they keep their exactness, while allowing for
- * easy access to a double value with f.ex. av_q2d.
+ * H.274 定义的环境观看条件元数据。这些值保存在 AVRational 中，以保持精确性，
+ * 同时可通过例如 av_q2d 方便地取得 double 值。
  *
- * @note sizeof(AVAmbientViewingEnvironment) is not part of the public ABI, and
- *       it must be allocated using av_ambient_viewing_environment_alloc.
+ * @note sizeof(AVAmbientViewingEnvironment) 不属于公共 ABI，必须使用
+ *       av_ambient_viewing_environment_alloc 分配该结构。
  */
 typedef struct AVAmbientViewingEnvironment {
     /**
-     * Environmental illuminance of the ambient viewing environment in lux.
+     * 环境观看条件的环境照度，单位为 lux。
      */
     AVRational ambient_illuminance;
 
     /**
-     * Normalized x chromaticity coordinate of the environmental ambient light
-     * in the nominal viewing environment according to the CIE 1931 definition
-     * of x and y as specified in ISO/CIE 11664-1.
+     * 按 ISO/CIE 11664-1 规定的 CIE 1931 x、y 定义，标称观看环境中环境光的
+     * 归一化 x 色度坐标。
      */
     AVRational ambient_light_x;
 
     /**
-     * Normalized y chromaticity coordinate of the environmental ambient light
-     * in the nominal viewing environment according to the CIE 1931 definition
-     * of x and y as specified in ISO/CIE 11664-1.
+     * 按 ISO/CIE 11664-1 规定的 CIE 1931 x、y 定义，标称观看环境中环境光的
+     * 归一化 y 色度坐标。
      */
     AVRational ambient_light_y;
 } AVAmbientViewingEnvironment;
 
 /**
- * Allocate an AVAmbientViewingEnvironment structure.
+ * 分配 AVAmbientViewingEnvironment 结构。
  *
- * @return the newly allocated struct or NULL on failure
+ * @return 新分配的结构；失败时返回 NULL
  */
 AVAmbientViewingEnvironment *av_ambient_viewing_environment_alloc(size_t *size);
 
 /**
- * Allocate and add an AVAmbientViewingEnvironment structure to an existing
- * AVFrame as side data.
+ * 分配 AVAmbientViewingEnvironment 结构，并将其作为侧数据添加到现有 AVFrame。
  *
- * @return the newly allocated struct, or NULL on failure
+ * @return 新分配的结构；失败时返回 NULL
  */
 AVAmbientViewingEnvironment *av_ambient_viewing_environment_create_side_data(AVFrame *frame);
 
