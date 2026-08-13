@@ -1,0 +1,13 @@
+# 压缩包仅保留在本地资料目录中，不纳入版本管理。
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+*.tar.bz2
+*.tgz
+*.tbz
+*.tbz2
+*.gz
+*.bz2
+*.xz
